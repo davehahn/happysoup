@@ -1,4 +1,4 @@
-<aura:component >
+<aura:component>
   <aura:attribute name="boats" type="Array" />
   <aura:attribute name="motors" type="Array" />
   <aura:attribute name="trailers" type="Array" />
@@ -6,11 +6,11 @@
   <aura:attribute name="isEditable" type="Boolean" default="false" />
 
   <!-- EVENTS -->
-  <aura:handler name="render" value="{!this}" action="{!c.onRender}"/>
+  <aura:handler name="render" value="{!this}" action="{!c.onRender}" />
   <aura:registerEvent name="actionEvent" type="c:lgndP_DealerOrderLinesTableAction_Event" />
   <aura:registerEvent name="deleteEvent" type="c:lgndP_DealerOrderLinesTable_Delete_Event" />
   <!-- METHODS -->
-<!--   <aura:method name="doInit" access="public" /> -->
+  <!--   <aura:method name="doInit" access="public" /> -->
 
   <div class="slds-spinner_container toggle" aura:id="busy-indicator">
     <div role="status" class="slds-spinner slds-spinner_medium">
@@ -20,8 +20,7 @@
     </div>
   </div>
 
-  <table class="slds-table slds-table_bordered
-                slds-max-medium-table_stacked ">
+  <table class="slds-table slds-table_bordered slds-max-medium-table_stacked">
     <thead>
       <tr class="slds-text-title_caps">
         <th scope="col" class="slds-size_1-of-12">
@@ -108,16 +107,12 @@
               <lightning:formattedNumber value="{! item.grandTotal }" style="currency" currencyCode="CAD" />
             </td>
             <td data-label="Actions" class="action-cell slds-text-align_right">
-              <lightning:buttonMenu menuAlignment="right"
-                                    onselect="{! c.handleTableAction }">
-                  <lightning:menuItem label="View"
-                                      value="{! 'view:' + item.orderGroupId }" />
-                  <aura:if isTrue="{! v.isEditable}">
-                    <lightning:menuItem label="Edit"
-                                        value="{! 'edit:' + item.orderGroupId }" />
-                    <lightning:menuItem label="Delete"
-                                        value="{! 'delete:' + item.orderGroupId + ':boats' }"/>
-                  </aura:if>
+              <lightning:buttonMenu menuAlignment="right" onselect="{! c.handleTableAction }">
+                <lightning:menuItem label="View" value="{! 'view:' + item.orderGroupId }" />
+                <aura:if isTrue="{! v.isEditable}">
+                  <lightning:menuItem label="Edit" value="{! 'edit:' + item.orderGroupId }" />
+                  <lightning:menuItem label="Delete" value="{! 'delete:' + item.orderGroupId + ':boats' }" />
+                </aura:if>
               </lightning:buttonMenu>
             </td>
           </tr>
@@ -139,16 +134,12 @@
               <lightning:formattedNumber value="{! item.grandTotal }" style="currency" currencyCode="CAD" />
             </td>
             <td data-label="Actions" class="slds-text-align_right">
-              <lightning:buttonMenu menuAlignment="right"
-                                    onselect="{! c.handleTableAction }">
-                  <lightning:menuItem label="View"
-                                      value="{! 'view:' + item.orderGroupId }" />
-                  <aura:if isTrue="{! v.isEditable}">
-                    <lightning:menuItem label="Edit"
-                                        value="{! 'edit:' + item.orderGroupId }" />
-                    <lightning:menuItem label="Delete"
-                                        value="{! 'delete:' + item.orderGroupId + ':motors' }"/>
-                  </aura:if>
+              <lightning:buttonMenu menuAlignment="right" onselect="{! c.handleTableAction }">
+                <lightning:menuItem label="View" value="{! 'view:' + item.orderGroupId }" />
+                <aura:if isTrue="{! v.isEditable}">
+                  <lightning:menuItem label="Edit" value="{! 'edit:' + item.orderGroupId }" />
+                  <lightning:menuItem label="Delete" value="{! 'delete:' + item.orderGroupId + ':motors' }" />
+                </aura:if>
               </lightning:buttonMenu>
             </td>
           </tr>
@@ -170,16 +161,12 @@
               <lightning:formattedNumber value="{! item.grandTotal }" style="currency" currencyCode="CAD" />
             </td>
             <td data-label="Actions" class="slds-text-align_right">
-              <lightning:buttonMenu menuAlignment="right"
-                                    onselect="{! c.handleTableAction }">
-                  <lightning:menuItem label="View"
-                                      value="{! 'view:' + item.orderGroupId }" />
-                  <aura:if isTrue="{! v.isEditable}">
-                    <lightning:menuItem label="Edit"
-                                        value="{! 'edit:' + item.orderGroupId }" />
-                    <lightning:menuItem label="Delete"
-                                        value="{! 'delete:' + item.orderGroupId + ':trailers' }"/>
-                  </aura:if>
+              <lightning:buttonMenu menuAlignment="right" onselect="{! c.handleTableAction }">
+                <lightning:menuItem label="View" value="{! 'view:' + item.orderGroupId }" />
+                <aura:if isTrue="{! v.isEditable}">
+                  <lightning:menuItem label="Edit" value="{! 'edit:' + item.orderGroupId }" />
+                  <lightning:menuItem label="Delete" value="{! 'delete:' + item.orderGroupId + ':trailers' }" />
+                </aura:if>
               </lightning:buttonMenu>
             </td>
           </tr>
@@ -201,15 +188,11 @@
               <lightning:formattedNumber value="{! item.grandTotal }" style="currency" currencyCode="CAD" />
             </td>
             <td data-label="Actions" class="slds-text-align_right">
-              <lightning:buttonMenu menuAlignment="right"
-                                    onselect="{! c.handleTableAction }">
-                <lightning:menuItem label="View"
-                                    value="{! 'view:' + item.orderGroupId }" />
+              <lightning:buttonMenu menuAlignment="right" onselect="{! c.handleTableAction }">
+                <lightning:menuItem label="View" value="{! 'view:' + item.orderGroupId }" />
                 <aura:if isTrue="{! v.isEditable}">
-                  <lightning:menuItem label="Edit"
-                                      value="{! 'edit:' + item.orderGroupId }" />
-                  <lightning:menuItem label="Delete"
-                                      value="{! 'delete:' + item.orderGroupId + ':trollingMotors' }"/>
+                  <lightning:menuItem label="Edit" value="{! 'edit:' + item.orderGroupId }" />
+                  <lightning:menuItem label="Delete" value="{! 'delete:' + item.orderGroupId + ':trollingMotors' }" />
                 </aura:if>
               </lightning:buttonMenu>
             </td>
@@ -219,5 +202,4 @@
       <!-- ===== /TROLLING MOTOR LINES ======== -->
     </tbody>
   </table>
-
 </aura:component>

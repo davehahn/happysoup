@@ -4,8 +4,10 @@
   <aura:attribute type="String" name="className" default="" access="global" />
   <aura:attribute type="Object" name="option" />
 
-  <ltng:require scripts="{!join(',', $Resource.Libraries +'/js/LightningApex.js',
-                                     $Resource.Libraries +'/js/LightningUtils.js') }" />
+  <ltng:require
+    scripts="{!join(',', $Resource.Libraries +'/js/LightningApex.js',
+                                     $Resource.Libraries +'/js/LightningUtils.js') }"
+  />
 
   <!-- Events -->
   <aura:registerEvent name="optionChanged" type="c:lgnd_BoatConfig_optionChanged_Event" />
@@ -14,22 +16,26 @@
   <div class="{! 'slds-grid option-row slds-wrap ' + v.className}">
     <div class="slds-col slds-size--1-of-1 slds-medium-size--2-of-12 slds-large-size--2-of-12">
       <aura:if isTrue="{!v.option.isCheckbox}">
-        <lightning:input type="toggle"
+        <lightning:input
+          type="toggle"
           name="{!v.option.name + '-toggle'}"
           label="{!v.option.name}"
           checked="{!v.option.isSelected}"
           disabled="{!v.option.isDisabled}"
           onchange="{!c.toggleSelected}"
           messageToggleActive=""
-          messageToggleInactive="" />
+          messageToggleInactive=""
+        />
       </aura:if>
 
       <aura:if isTrue="{! not(v.option.isCheckbox) }">
         <div class="select-container">
-          <lightning:select label="{!v.option.name}"
-                            variant="label-hidden"
-                            value="{!v.option.quantitySelected}"
-                            onchange="{!c.selectChanged}">
+          <lightning:select
+            label="{!v.option.name}"
+            variant="label-hidden"
+            value="{!v.option.quantitySelected}"
+            onchange="{!c.selectChanged}"
+          >
             <aura:iteration items="{!v.option.quantityOptions}" var="q">
               <aura:if isTrue="{! equals( q, v.option.quantitySelected)}">
                 <option value="{!q}" selected="true">{!q}</option>
@@ -43,12 +49,12 @@
       </aura:if>
     </div>
     <div class="slds-col slds-size--1-of-1 slds-medium-size--8-of-12 slds-large-size--8-of-12">
-      <div class="slds-truncate">
-        {!v.option.name}
-      </div>
+      <div class="slds-truncate">{!v.option.name}</div>
     </div>
     <div class="slds-col slds-size--1-of-1 slds-medium-size--2-of-12 slds-large-size--2-of-12 slds-text-align--right">
-      <aura:if isTrue="{! and( greaterthan(v.option.quantitySelected, 0), equals(v.option.quantityStandard, v.option.quantitySelected))}">
+      <aura:if
+        isTrue="{! and( greaterthan(v.option.quantitySelected, 0), equals(v.option.quantityStandard, v.option.quantitySelected))}"
+      >
         <span>Included</span>
         <aura:set attribute="else">
           <lightning:formattedNumber value="{!v.option.individualCost}" style="currency" currencyCode="CAD" /> ea.
@@ -58,9 +64,7 @@
   </div>
   <!-- <aura:renderIf isTrue="{!!empty(v.subOptions)}"> -->
   <aura:iteration items="{!v.option.subOptions}" var="sub">
-    <c:lgnd_boatConfig_optionSelect pricebookId="{!v.pricebookId}"
-                                    className="subOption"
-                                    option="{!sub}"/>
+    <c:lgnd_boatConfig_optionSelect pricebookId="{!v.pricebookId}" className="subOption" option="{!sub}" />
   </aura:iteration>
 
   <!-- </aura:renderIf> -->

@@ -1,80 +1,86 @@
 <aura:component controller="SalesAndServiceCalendar_Controller">
-
   <aura:attribute name="recordId" type="String" />
   <aura:attribute name="scheduleStartDate" type="String" />
   <aura:attribute name="scheduleEndDate" type="String" />
   <aura:attribute name="eventData" type="Object" />
   <aura:attribute name="settings" type="Object" />
 
-
-  <ltng:require scripts="{!join(',', $Resource.Libraries + '/js/LightningApex.js',
+  <ltng:require
+    scripts="{!join(',', $Resource.Libraries + '/js/LightningApex.js',
                                      $Resource.Libraries + '/js/LightningUtils.js') }"
-                afterScriptsLoaded="{!c.afterScripts}" />
+    afterScriptsLoaded="{!c.afterScripts}"
+  />
 
-  <aura:registerEvent name="CloseModal" type="c:SalesServiceCalendar_CloseEventDetails_Event_dh"/>
-  <aura:registerEvent name="ModalLoaded" type="c:SalesServiceCalendar_ModalLoaded_Event_dh"/>
-  <aura:registerEvent name="UpdateSuccess" type="c:SalesServiceCalendar_UpdateSuccess_Event_dh"/>
+  <aura:registerEvent name="CloseModal" type="c:SalesServiceCalendar_CloseEventDetails_Event_dh" />
+  <aura:registerEvent name="ModalLoaded" type="c:SalesServiceCalendar_ModalLoaded_Event_dh" />
+  <aura:registerEvent name="UpdateSuccess" type="c:SalesServiceCalendar_UpdateSuccess_Event_dh" />
 
-  <lightning:spinner variant="brand"
-                      size="large"
-                      class="slds-is-fixed slds-hide"
-                      aura:id="spinner" />
+  <lightning:spinner variant="brand" size="large" class="slds-is-fixed slds-hide" aura:id="spinner" />
 
   <aura:if isTrue="{! not(empty(v.eventData))}">
-    <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+    <section
+      role="dialog"
+      tabindex="-1"
+      aria-labelledby="modal-heading-01"
+      aria-modal="true"
+      aria-describedby="modal-content-id-1"
+      class="slds-modal slds-fade-in-open"
+    >
       <div class="slds-modal__container">
         <header class="slds-modal__header">
-          <lightning:buttonIcon iconName="utility:close"
-                                class="slds-modal__close slds-button_icon-inverse"
-                                alternativeText="Close"
-                                onclick="{!c.handleCancel}" />
+          <lightning:buttonIcon
+            iconName="utility:close"
+            class="slds-modal__close slds-button_icon-inverse"
+            alternativeText="Close"
+            onclick="{!c.handleCancel}"
+          />
           <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">
-            <lightning:icon iconName="{!v.eventData.iconName}"
-                            class="slds-float_left" />
-            <a href="javscript:void()"
-               data-record-id="{!v.eventData.Id}"
-               onclick="{!c.handleNavToRecord}">
+            <lightning:icon iconName="{!v.eventData.iconName}" class="slds-float_left" />
+            <a href="javscript:void()" data-record-id="{!v.eventData.Id}" onclick="{!c.handleNavToRecord}">
               {! v.eventData.accountName} - {! v.eventData.woNumber }
             </a>
           </h2>
         </header>
-        <div class="slds-modal__content" >
-
+        <div class="slds-modal__content">
           <div class="slds-p-around_medium">
-
-            <lightning:tabset >
-
+            <lightning:tabset>
               <lightning:tab label="Event Details">
                 <!-- EVENT DETAILS -->
                 <div class="slds-p-around_medium">
-                  <lightning:layout >
+                  <lightning:layout>
                     <lightning:layoutItem size="6" padding="around-small">
-                      <lightning:input type="datetime-local"
-                                       label="Pickup Date"
-                                       value="{!v.eventData.startDateTime}"
-                                       disabled="{! not(v.settings.canEditPickupDate)}" />
+                      <lightning:input
+                        type="datetime-local"
+                        label="Pickup Date"
+                        value="{!v.eventData.startDateTime}"
+                        disabled="{! not(v.settings.canEditPickupDate)}"
+                      />
                     </lightning:layoutItem>
                     <lightning:layoutItem size="6" padding="around-small">
-                      <lightning:select name="pickupLocationSelect"
-                                        label="Pickup Location"
-                                        value="{!v.eventData.pickupLocation}"
-                                        disabled="{! not(v.settings.canEditPickupLocation) }">
+                      <lightning:select
+                        name="pickupLocationSelect"
+                        label="Pickup Location"
+                        value="{!v.eventData.pickupLocation}"
+                        disabled="{! not(v.settings.canEditPickupLocation) }"
+                      >
                         <option value="">- Select Location -</option>
-                        <aura:iteration items="{!v.settings.pickupLocations}" var="loc" >
+                        <aura:iteration items="{!v.settings.pickupLocations}" var="loc">
                           <option value="{!loc}">{!loc}</option>
                         </aura:iteration>
                       </lightning:select>
                     </lightning:layoutItem>
                   </lightning:layout>
-                  <lightning:layout >
+                  <lightning:layout>
                     <lightning:layoutItem size="6" padding="around-small">
-                      <lightning:input type="toggle"
-                                       label="On Water Orientation"
-                                       name="onWaterOrientation"
-                                       checked="{!v.eventData.onWaterOrientation}"
-                                       messageToggleInactive=""
-                                       messageToggleActive=""
-                                       disabled="{! not(v.settings.canEditOnWaterOrientation) }"/>
+                      <lightning:input
+                        type="toggle"
+                        label="On Water Orientation"
+                        name="onWaterOrientation"
+                        checked="{!v.eventData.onWaterOrientation}"
+                        messageToggleInactive=""
+                        messageToggleActive=""
+                        disabled="{! not(v.settings.canEditOnWaterOrientation) }"
+                      />
                     </lightning:layoutItem>
                   </lightning:layout>
                 </div>
@@ -106,7 +112,6 @@
 
                 <!-- **** OPPORTUNITY FIELDS *** -->
                 <aura:if isTrue="{! equals('opportunity', v.eventData.origin) }">
-
                   <lightning:recordViewForm recordId="{!v.recordId}" objectApiName="Opportunity">
                     <lightning:layout horizontalAlign="center">
                       <lightning:layoutItem size="6" padding="around-small">
@@ -130,26 +135,29 @@
                 <forceChatter:publisher context="RECORD" recordId="{!v.recordId}" />
                 <forceChatter:feed subjectId="{!v.recordId}" type="Record" />
               </lightning:tab>
-
             </lightning:tabset>
-
           </div>
-
         </div>
 
         <footer class="slds-modal__footer">
-          <button class="slds-button slds-button_neutral slds-float_left"
-                  onclick="{!c.handleUnschedule}"
-                  disabled="{! not(v.settings.canEditPickupDate) }">UnSchedule</button>
-          <button class="slds-button slds-button_neutral"
-                  onclick="{!c.handleCancel}">Cancel</button>
-          <button class="slds-button slds-button_brand"
-                  onclick="{!c.handleUpdate}"
-                  disabled="{! empty(v.eventData.pickupLocation)}">Update</button>
+          <button
+            class="slds-button slds-button_neutral slds-float_left"
+            onclick="{!c.handleUnschedule}"
+            disabled="{! not(v.settings.canEditPickupDate) }"
+          >
+            UnSchedule
+          </button>
+          <button class="slds-button slds-button_neutral" onclick="{!c.handleCancel}">Cancel</button>
+          <button
+            class="slds-button slds-button_brand"
+            onclick="{!c.handleUpdate}"
+            disabled="{! empty(v.eventData.pickupLocation)}"
+          >
+            Update
+          </button>
         </footer>
       </div>
     </section>
     <div class="slds-backdrop slds-backdrop_open"></div>
   </aura:if>
-
 </aura:component>

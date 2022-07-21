@@ -1,60 +1,53 @@
 <aura:component implements="forceCommunity:themeLayout" access="global">
-    <ltng:require styles="{!join(',',
+  <ltng:require
+    styles="{!join(',',
         $Resource.GothamHTF + '/fonts.css',
         $Resource.Idlewild + '/fonts.css',
         $Resource.communitySharedResources + '/css/layout.css',
         $Resource.communitySharedResources + '/css/headings.css',
         $Resource.communitySharedResources + '/css/colours.css',
         $Resource.communitySharedResources + '/css/buttons.css'
-    )}"/>
-    <aura:attribute name="storeLogo" type="Aura.Component[]"/>
-    <aura:attribute name="storeLocationAndHours" type="Aura.Component[]"/>
-    <aura:attribute name="storePhoneNumbers" type="Aura.Component[]"/>
-    <aura:attribute name="storeNavigation" type="Aura.Component[]"/>
-    <aura:attribute name="storeDetails" type="Aura.Component[]"/>
-    <aura:attribute name="storeTools" type="Aura.Component[]"/>
-    <aura:attribute name="storeLegal" type="Aura.Component[]"/>
-    <aura:attribute name="storePolicyLinks" type="Aura.Component[]"/>
-    <aura:attribute name="channelMenu" type="Aura.Component[]"/>
-    <lightning:navigation aura:id="navService"/>
-    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
-<!--    <aura:handler name="render" value="{!this}" action="{!c.onRender}"/>-->
-<!--    <aura:attribute name="isDoneRendering" type="Boolean" default="false"/>-->
+    )}"
+  />
+  <aura:attribute name="storeLogo" type="Aura.Component[]" />
+  <aura:attribute name="storeLocationAndHours" type="Aura.Component[]" />
+  <aura:attribute name="storePhoneNumbers" type="Aura.Component[]" />
+  <aura:attribute name="storeNavigation" type="Aura.Component[]" />
+  <aura:attribute name="storeDetails" type="Aura.Component[]" />
+  <aura:attribute name="storeTools" type="Aura.Component[]" />
+  <aura:attribute name="storeLegal" type="Aura.Component[]" />
+  <aura:attribute name="storePolicyLinks" type="Aura.Component[]" />
+  <aura:attribute name="channelMenu" type="Aura.Component[]" />
+  <lightning:navigation aura:id="navService" />
+  <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+  <!--    <aura:handler name="render" value="{!this}" action="{!c.onRender}"/>-->
+  <!--    <aura:attribute name="isDoneRendering" type="Boolean" default="false"/>-->
 
-    <header class="storeHeader">
-        <div class="storeDetails">
-            <div class="locationAndHours">
-                {!v.storeLogo}
-                {!v.storeLocationAndHours}
-            </div>
-            <div class="phoneNumbers">
-                {!v.storePhoneNumbers}
-            </div>
-            <aura:if isTrue="{!$Locale.language == 'en'}">
-                <a class="corporateLogo" href="https://www.legendboats.com" target="_blank"></a>
-                <aura:set attribute="else">
-                    <a class="corporateLogo corporateLogo--fr" href="https://www.legendboats.com/fr/" target="_blank"></a>
-                </aura:set>
-            </aura:if>
-        </div>
-        <nav class="mainNavigation">
-            <c:factoryStoreMainNavigation></c:factoryStoreMainNavigation>
-        </nav>
-    </header>
-	  <article class="storeMain">
-    	  {!v.body}
-    </article>
-    <c:factoryStoreFooterStayInTouch></c:factoryStoreFooterStayInTouch>
-    <footer class="storeFooter">
-        {!v.storeTools}
-        {!v.storeDetails}
-        <section class="footerLegal">
-            {!v.storePolicyLinks}
-            <c:communitySharedFooterCopyright></c:communitySharedFooterCopyright>
-            {!v.storeLegal}
-            <c:factoryStoreFooterAllInPricing></c:factoryStoreFooterAllInPricing>
-        </section>
-        {!v.channelMenu}
-    </footer>
-
+  <header class="storeHeader">
+    <div class="storeDetails">
+      <div class="locationAndHours">{!v.storeLogo} {!v.storeLocationAndHours}</div>
+      <div class="phoneNumbers">{!v.storePhoneNumbers}</div>
+      <aura:if isTrue="{!$Locale.language == 'en'}">
+        <a class="corporateLogo" href="https://www.legendboats.com" target="_blank"></a>
+        <aura:set attribute="else">
+          <a class="corporateLogo corporateLogo--fr" href="https://www.legendboats.com/fr/" target="_blank"></a>
+        </aura:set>
+      </aura:if>
+    </div>
+    <nav class="mainNavigation">
+      <c:factoryStoreMainNavigation></c:factoryStoreMainNavigation>
+    </nav>
+  </header>
+  <article class="storeMain">{!v.body}</article>
+  <c:factoryStoreFooterStayInTouch></c:factoryStoreFooterStayInTouch>
+  <footer class="storeFooter">
+    {!v.storeTools} {!v.storeDetails}
+    <section class="footerLegal">
+      {!v.storePolicyLinks}
+      <c:communitySharedFooterCopyright></c:communitySharedFooterCopyright>
+      {!v.storeLegal}
+      <c:factoryStoreFooterAllInPricing></c:factoryStoreFooterAllInPricing>
+    </section>
+    {!v.channelMenu}
+  </footer>
 </aura:component>

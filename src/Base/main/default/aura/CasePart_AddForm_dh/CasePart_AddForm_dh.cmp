@@ -1,5 +1,4 @@
 <aura:component controller="lgnd_newClaimController">
-
   <aura:attribute name="caseId" type="String" />
   <aura:attribute name="parts" type="Case_Part__c[]" default="[]" />
   <aura:attribute name="pricebookId" type="String" />
@@ -8,9 +7,7 @@
   <aura:attribute name="partLookupQuantityValue" type="Decimal" />
   <aura:attribute name="partLookupOrderQuantityValue" type="Decimal" />
 
-  <aura:handler name="init"
-                value="{!this}"
-                action="{!c.doInit}" />
+  <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
 
   <aura:method name="resetForm" action="{!c.resetForm}" />
 
@@ -20,12 +17,12 @@
     <table class="slds-table slds-table_bordered">
       <thead>
         <tr class="slds-text-title_caps" style="line-height: 1.8rem">
-          <th style="width: 40%;">Part</th>
-          <th style="width: 10%;" class="slds-text-align_center">Claim Qty</th>
-          <th style="width: 10%;" class="slds-text-align_center">Order Qty</th>
-          <th style="width: 15%;" class="slds-text-align_center">Unit Price</th>
-          <th style="width: 15%;" class="slds-text-align_center">Cost</th>
-          <th style="width: 10%;"></th>
+          <th style="width: 40%">Part</th>
+          <th style="width: 10%" class="slds-text-align_center">Claim Qty</th>
+          <th style="width: 10%" class="slds-text-align_center">Order Qty</th>
+          <th style="width: 15%" class="slds-text-align_center">Unit Price</th>
+          <th style="width: 15%" class="slds-text-align_center">Cost</th>
+          <th style="width: 10%"></th>
         </tr>
       </thead>
       <tbody>
@@ -36,17 +33,17 @@
             </td>
             <td class="slds-text-align_center">{!part.Quantity__c}</td>
             <td class="slds-text-align_center">{!part.Order_Quantity__c}</td>
-            <td class="slds-text-align_center">
-              $<ui:outputNumber value="{!part.Unit_Price__c}" format=".00" />
-            </td>
+            <td class="slds-text-align_center">$<ui:outputNumber value="{!part.Unit_Price__c}" format=".00" /></td>
             <td class="slds-text-align_center">
               $<ui:outputNumber value="{! part.Quantity__c * part.Unit_Price__c }" format=".00" />
             </td>
             <td class="slds-text-align_right slds-p-right_x-small">
-              <lightning:buttonIcon iconName="utility:delete"
-                                    variant="bare"
-                                    onclick="{!c.removePart}"
-                                    value="{!index}" />
+              <lightning:buttonIcon
+                iconName="utility:delete"
+                variant="bare"
+                onclick="{!c.removePart}"
+                value="{!index}"
+              />
             </td>
           </tr>
         </aura:iteration>
@@ -56,7 +53,6 @@
 
   <lightning:layout class="slds-m-top_medium add-form">
     <lightning:layoutItem size="7" class="slds-p-around_x-small">
-
       <!-- <c:LightningLookup aura:id="partLookup"
                             type="Product2"
                             label="Product Search"
@@ -66,23 +62,25 @@
                             value="{!v.partLookupValue}"
                             secondaryField="ProductCode" /> -->
       <label class="slds-form-element__label">Product Search</label>
-      <c:Product_Lookup_mp aura:id="partLookup"
-                           selectionId="{!v.partLookupValue}"
-                           actAsUserType="PowerPartner" />
+      <c:Product_Lookup_mp aura:id="partLookup" selectionId="{!v.partLookupValue}" actAsUserType="PowerPartner" />
     </lightning:layoutItem>
 
     <lightning:layoutItem size="2" class="slds-p-around_x-small">
-      <ui:inputNumber label="Claim Qty"
-                      labelClass="slds-form-element__label"
-                      aura:id="partLookupQuantity"
-                      value="{!v.partLookupQuantityValue}"  />
+      <ui:inputNumber
+        label="Claim Qty"
+        labelClass="slds-form-element__label"
+        aura:id="partLookupQuantity"
+        value="{!v.partLookupQuantityValue}"
+      />
     </lightning:layoutItem>
 
     <lightning:layoutItem size="2" class="slds-p-around_x-small">
-      <ui:inputNumber label="Order Qty"
-                      labelClass="slds-form-element__label"
-                      aura:id="partLookupOrderQuantity"
-                      value="{!v.partLookupOrderQuantityValue}"  />
+      <ui:inputNumber
+        label="Order Qty"
+        labelClass="slds-form-element__label"
+        aura:id="partLookupOrderQuantity"
+        value="{!v.partLookupOrderQuantityValue}"
+      />
     </lightning:layoutItem>
 
     <lightning:layoutItem size="1" class="slds-text-align_right slds-p-around_x-small">
@@ -90,11 +88,9 @@
         <label class="slds-form-element__label"></label>
         <div class="slds-form-element__control">
           <!-- <button class="slds-button" onclick="{!c.addPart}">Add</button> -->
-          <lightning:buttonIcon iconName="utility:add" onclick="{!c.addPart}" class="slds-m-top_xxx-small"/>
+          <lightning:buttonIcon iconName="utility:add" onclick="{!c.addPart}" class="slds-m-top_xxx-small" />
         </div>
       </div>
     </lightning:layoutItem>
-
   </lightning:layout>
-
 </aura:component>

@@ -1,5 +1,4 @@
 <aura:component controller="BusinessOffice_Controller">
-
   <aura:attribute name="recordId" type="String" />
   <aura:attribute name="pricebookId" type="String" />
   <aura:attribute name="pricebookName" type="String" />
@@ -8,12 +7,13 @@
   <aura:attribute name="ppsa_value" type="Decimal" />
   <aura:attribute name="loading" type="Boolean" default="true" />
 
-  <ltng:require scripts="{!join(',', $Resource.Libraries +'/js/LightningApex.js',
+  <ltng:require
+    scripts="{!join(',', $Resource.Libraries +'/js/LightningApex.js',
                                      $Resource.Libraries +'/js/LightningUtils.js') }"
-                afterScriptsLoaded="{!c.afterScripts}" />
+    afterScriptsLoaded="{!c.afterScripts}"
+  />
 
   <div class="slds-card">
-
     <aura:if isTrue="{! v.loading }">
       <div class="slds-spinner_container">
         <div role="status" class="slds-spinner slds-spinner_medium">
@@ -24,16 +24,16 @@
       </div>
     </aura:if>
 
-
     <aura:if isTrue="{! not(v.loading) }">
-
       <aura:if isTrue="{! empty(v.pricebookEntryId) }">
         <div class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_error" role="alert">
           <span class="slds-icon_container slds-icon-utility-ban slds-m-right_x-small">
             <lightning:icon iconName="utility:ban" />
           </span>
-          <h2>There is no PPSA Fee entry in pricebook: {!v.pricebook.Name}.  <br />
-              Please contact an administrator to help resolve this issue</h2>
+          <h2>
+            There is no PPSA Fee entry in pricebook: {!v.pricebook.Name}. <br /> Please contact an administrator to help
+            resolve this issue
+          </h2>
         </div>
       </aura:if>
 
@@ -49,9 +49,6 @@
           <div class="slds-col slds-size_3-of-12 slds-p-horizontal_small"></div>
         </div>
       </aura:if>
-
     </aura:if>
-
   </div>
-
 </aura:component>

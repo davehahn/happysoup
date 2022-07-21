@@ -32,10 +32,7 @@
   <!-- <aura:handler name="change"
                 value="{!v.currentTaxZoneId}"
                 action="{!c.handleTaxZoneChange}" /> -->
-  <aura:registerEvent
-    name="paymentsChangedEvent"
-    type="c:CPQ_PaymentCalculator_PaymentsChanged_Event"
-  />
+  <aura:registerEvent name="paymentsChangedEvent" type="c:CPQ_PaymentCalculator_PaymentsChanged_Event" />
 
   <aura:method name="calculate" action="{!c.calculate}" />
 
@@ -47,31 +44,19 @@
           <lightning:layoutItem size="4" class="payment-cell">
             <span>Weekly</span>
             <span>
-              <lightning:formattedNumber
-                value="{!v.weeklyPayment}"
-                style="currency"
-                currencyCode="CAD"
-              />
+              <lightning:formattedNumber value="{!v.weeklyPayment}" style="currency" currencyCode="CAD" />
             </span>
           </lightning:layoutItem>
           <lightning:layoutItem size="4" class="payment-cell">
             <span>Bi-Weekly</span>
             <span>
-              <lightning:formattedNumber
-                value="{!v.biWeeklyPayment}"
-                style="currency"
-                currencyCode="CAD"
-              />
+              <lightning:formattedNumber value="{!v.biWeeklyPayment}" style="currency" currencyCode="CAD" />
             </span>
           </lightning:layoutItem>
           <lightning:layoutItem size="4" class="payment-cell">
             <span>Monthly</span>
             <span>
-              <lightning:formattedNumber
-                value="{!v.monthlyPayment}"
-                style="currency"
-                currencyCode="CAD"
-              />
+              <lightning:formattedNumber value="{!v.monthlyPayment}" style="currency" currencyCode="CAD" />
             </span>
           </lightning:layoutItem>
         </lightning:layout>
@@ -80,11 +65,7 @@
           <lightning:layoutItem size="12" class="payment-cell">
             <span>Principal After Term</span>
             <span>
-              <lightning:formattedNumber
-                value="{!v.remaining}"
-                style="currency"
-                currencyCode="CAD"
-              />
+              <lightning:formattedNumber value="{!v.remaining}" style="currency" currencyCode="CAD" />
             </span>
           </lightning:layoutItem>
         </lightning:layout>
@@ -128,16 +109,10 @@
           </lightning:layoutItem>
         </lightning:layout>
 
-        <lightning:layout
-          pullToBoundary="small"
-          horizontalAlign="center"
-          class="ir-deposit-row"
-        >
+        <lightning:layout pullToBoundary="small" horizontalAlign="center" class="ir-deposit-row">
           <lightning:layoutItem size="5" padding="horizontal-small">
             <div class="slds-form-element">
-              <label class="slds-form-element__label" for="deposit"
-                >Intrest Rate
-              </label>
+              <label class="slds-form-element__label" for="deposit">Intrest Rate </label>
               <div class="slds-form-element__control">
                 <lightning:input
                   type="number"
@@ -155,9 +130,7 @@
           </lightning:layoutItem>
           <lightning:layoutItem size="5" padding="horizontal-small">
             <div class="slds-form-element">
-              <label class="slds-form-element__label" for="deposit"
-                >Deposit
-              </label>
+              <label class="slds-form-element__label" for="deposit">Deposit </label>
               <div class="slds-form-element__control">
                 <span>$</span>
                 <lightning:input
@@ -180,12 +153,7 @@
         <lightning:layout>
           <lightning:layoutItem
             size="4"
-            class="
-              slds-p-right_small
-              slds-p-top_small
-              slds-p-bottom_small
-              slds-p-left_large
-            "
+            class="slds-p-right_small slds-p-top_small slds-p-bottom_small slds-p-left_large"
           >
             <label class="slds-form-element__label">
               <span>Tax Exempt?</span>

@@ -1,144 +1,170 @@
-<aura:component controller="lgnd_form_address"
-								implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,lightning:availableForFlowScreens"
-								access="global">
-
-	<aura:attribute name="location" 	 type="String" default="46.3845690,-81.2905780"/>
-	<aura:attribute name="radius" 		 type="String" default="50000" />
-	<aura:attribute name="apiKey" 		 type="String" />
-	<aura:attribute name="search" 		 type="String" />
-	<aura:attribute name="addressList" type="Object" />
-	<aura:attribute name="street" 		 type="String" />
-	<aura:attribute name="city" 			 type="String" />
-	<aura:attribute name="provinces"	 type="List" 	/>
-	<aura:attribute name="province"		 type="String" />
+<aura:component
+  controller="lgnd_form_address"
+  implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,lightning:availableForFlowScreens"
+  access="global"
+>
+  <aura:attribute name="location" type="String" default="46.3845690,-81.2905780" />
+  <aura:attribute name="radius" type="String" default="50000" />
+  <aura:attribute name="apiKey" type="String" />
+  <aura:attribute name="search" type="String" />
+  <aura:attribute name="addressList" type="Object" />
+  <aura:attribute name="street" type="String" />
+  <aura:attribute name="city" type="String" />
+  <aura:attribute name="provinces" type="List" />
+  <aura:attribute name="province" type="String" />
   <aura:attribute name="province_code" type="String" />
-	<aura:attribute name="countries"	 type="List" />
-	<aura:attribute name="country"		 type="String" />
+  <aura:attribute name="countries" type="List" />
+  <aura:attribute name="country" type="String" />
   <aura:attribute name="country_code" type="String" />
-	<aura:attribute name="zip"				 type="String" />
-	<aura:attribute name="componentId" type="String" default="addressSearch"/>
-	<aura:attribute name="inFocus"		 type="String" />
-	<aura:attribute name="allRequired" type="Boolean" default="false" />
+  <aura:attribute name="zip" type="String" />
+  <aura:attribute name="componentId" type="String" default="addressSearch" />
+  <aura:attribute name="inFocus" type="String" />
+  <aura:attribute name="allRequired" type="Boolean" default="false" />
 
-	<aura:handler name="init" value="{!this}" action="{!c.doInit}" />
-	<aura:handler name="change" value="{!v.search}" action="{!c.findPlaces}" />
-	<aura:handler name="render" value="{!this}" action="{!c.onRender}" />
+  <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+  <aura:handler name="change" value="{!v.search}" action="{!c.findPlaces}" />
+  <aura:handler name="render" value="{!this}" action="{!c.onRender}" />
 
-	<aura:method name="isValid" action="{!c.isValid}" access="public" />
+  <aura:method name="isValid" action="{!c.isValid}" access="public" />
 
-	<div class="lgnd_form_address" id="{!v.componentId}">
+  <div class="lgnd_form_address" id="{!v.componentId}">
+    <lightning:layout multipleRows="true">
+      <lightning:layoutItem size="12" class="slds-p-around_x-small">
+        <div class="slds-combobox_container">
+          <div
+            class="slds-combobox slds-dropdown-trigger slds-dropdown-trigger--click slds-is-closed"
+            aria-expanded="true"
+            aria-haspopup="listbox"
+            role="combobox"
+            aura:id="address_combobox"
+          >
+            <div class="slds-form-element">
+              <lightning:input
+                name="Search"
+                type="search"
+                label="{!$Label.c.AddressForm_Search}"
+                placeholder="{!$Label.c.AddressForm_Search_Placeholder}"
+                value="{!v.search}"
+                aura:id="search"
+              />
+            </div>
 
-		<lightning:layout multipleRows="true">
-
-			<lightning:layoutItem size="12" class="slds-p-around_x-small">
-				<div class="slds-combobox_container">
-	      	<div class="slds-combobox
-	      							slds-dropdown-trigger
-	      							slds-dropdown-trigger--click
-	      							slds-is-closed"
-	      			 aria-expanded="true"
-	      			 aria-haspopup="listbox"
-	      			 role="combobox"
-	      			 aura:id="address_combobox">
-
-		        <div class="slds-form-element">
-		        	<lightning:input name="Search" type="search" label="{!$Label.c.AddressForm_Search}" placeholder="{!$Label.c.AddressForm_Search_Placeholder}" value="{!v.search}" aura:id="search" />
-		        </div>
-
-		        <div id="listbox-unique-id" role="listbox">
-		          <ul class="slds-listbox slds-listbox_vertical slds-dropdown slds-dropdown_fluid" role="presentation">
-		            <aura:iteration items="{!v.addressList}" var="item" indexVar="i">
-			            <li role="option"
-			            	class="slds-listbox__item"
-			            	onclick="{!c.fillInAddress}"
-			            	data-address-id="{!i}">
-			            	<a href="javascript:void(0);" role="option" id="{!'listbox-option-unique-id-' + i}">
-				              <span class="slds-media slds-listbox__option slds-listbox__option_entity slds-listbox__option_has-meta" role="option">
-				                <span class="slds-media__body">
-				                  <span class="slds-listbox__option-text slds-listbox__option-text_entity">{!item.structured_formatting.main_text}</span>
-				                  <span class="slds-listbox__option-meta slds-listbox__option-meta_entity">{!item.structured_formatting.secondary_text}</span>
-				                </span>
-				              </span>
-				            </a>
-			            </li>
-			          </aura:iteration>
-		          </ul>
-		        </div><!-- role[listbox] -->
-		      </div><!-- .slds-combobox -->
-		    </div><!-- .slds-combobox_container -->
-		  </lightning:layoutItem>
-
-		  <lightning:layoutItem size="12" class="slds-p-around_x-small">
-		  	<lightning:textarea label="{!$Label.c.AddressForm_Street}"
-														aura:id="required-field"
-														value="{!v.street}"
-														required="{!v.allRequired}"
-														messageWhenValueMissing="{!$Label.c.AddressForm_Street_Error}" />
-		  </lightning:layoutItem>
-
-		  <lightning:layoutItem size="12"
-                            smallDeviceSize="12"
-                            mediumDeviceSize="6"
-                            largeDeviceSize="8"
-                            class="slds-p-around_x-small">
-        <lightning:input type="text"
-												 label="{!$Label.c.AddressForm_City}"
-												 aura:id="required-field"
-												 value="{!v.city}"
-												 required="{!v.allRequired}"
-												 messageWhenValueMissing="{!$Label.c.AddressForm_City_Error}" />
+            <div id="listbox-unique-id" role="listbox">
+              <ul class="slds-listbox slds-listbox_vertical slds-dropdown slds-dropdown_fluid" role="presentation">
+                <aura:iteration items="{!v.addressList}" var="item" indexVar="i">
+                  <li role="option" class="slds-listbox__item" onclick="{!c.fillInAddress}" data-address-id="{!i}">
+                    <a href="javascript:void(0);" role="option" id="{!'listbox-option-unique-id-' + i}">
+                      <span
+                        class="slds-media slds-listbox__option slds-listbox__option_entity slds-listbox__option_has-meta"
+                        role="option"
+                      >
+                        <span class="slds-media__body">
+                          <span class="slds-listbox__option-text slds-listbox__option-text_entity"
+                            >{!item.structured_formatting.main_text}</span
+                          >
+                          <span class="slds-listbox__option-meta slds-listbox__option-meta_entity"
+                            >{!item.structured_formatting.secondary_text}</span
+                          >
+                        </span>
+                      </span>
+                    </a>
+                  </li>
+                </aura:iteration>
+              </ul>
+            </div>
+            <!-- role[listbox] -->
+          </div>
+          <!-- .slds-combobox -->
+        </div>
+        <!-- .slds-combobox_container -->
       </lightning:layoutItem>
 
-      <lightning:layoutItem size="12"
-                            smallDeviceSize="12"
-                            mediumDeviceSize="6"
-                            largeDeviceSize="4"
-                            class="slds-p-around_x-small">
-        <lightning:select name="select"
-													label="{!$Label.c.AddressForm_Province}"
-													aura:id="required-field"
-													value="{!v.province_code}"
-													required="{!v.allRequired}"
-													messageWhenValueMissing="{!$Label.c.AddressForm_Province_Error}">
-					<aura:iteration items="{!v.provinces}" var="item">
-						<option text="{!item.label}" value="{!item.value}" selected="{!item.selected}" />
-					</aura:iteration>
-				</lightning:select>
-
+      <lightning:layoutItem size="12" class="slds-p-around_x-small">
+        <lightning:textarea
+          label="{!$Label.c.AddressForm_Street}"
+          aura:id="required-field"
+          value="{!v.street}"
+          required="{!v.allRequired}"
+          messageWhenValueMissing="{!$Label.c.AddressForm_Street_Error}"
+        />
       </lightning:layoutItem>
 
-      <lightning:layoutItem size="12"
-                            smallDeviceSize="12"
-                            mediumDeviceSize="6"
-                            largeDeviceSize="8"
-                            class="slds-p-around_x-small">
-         <lightning:input type="text"
-													label="{!$Label.c.AddressForm_Postal}"
-													aura:id="required-field"
-													value="{!v.zip}"
-													required="{!v.allRequired}"
-													messageWhenValueMissing="{!$Label.c.AddressForm_Postal_Error}" />
+      <lightning:layoutItem
+        size="12"
+        smallDeviceSize="12"
+        mediumDeviceSize="6"
+        largeDeviceSize="8"
+        class="slds-p-around_x-small"
+      >
+        <lightning:input
+          type="text"
+          label="{!$Label.c.AddressForm_City}"
+          aura:id="required-field"
+          value="{!v.city}"
+          required="{!v.allRequired}"
+          messageWhenValueMissing="{!$Label.c.AddressForm_City_Error}"
+        />
       </lightning:layoutItem>
 
-      <lightning:layoutItem size="12"
-                            smallDeviceSize="12"
-                            mediumDeviceSize="6"
-                            largeDeviceSize="4"
-                            class="slds-p-around_x-small">
-        <lightning:select name="select"
-													label="{!$Label.c.AddressForm_Country}"
-													aura:id="required-field"
-													value="{!v.country}"
-													required="{!v.allRequired}"
-													messageWhenValueMissing="{!$Label.c.AddressForm_Country_Error}">
-					<aura:iteration items="{!v.countries}" var="item">
-						<option text="{!item.label}" value="{!item.value}" selected="{!item.selected}" />
-					</aura:iteration>
-				</lightning:select>
+      <lightning:layoutItem
+        size="12"
+        smallDeviceSize="12"
+        mediumDeviceSize="6"
+        largeDeviceSize="4"
+        class="slds-p-around_x-small"
+      >
+        <lightning:select
+          name="select"
+          label="{!$Label.c.AddressForm_Province}"
+          aura:id="required-field"
+          value="{!v.province_code}"
+          required="{!v.allRequired}"
+          messageWhenValueMissing="{!$Label.c.AddressForm_Province_Error}"
+        >
+          <aura:iteration items="{!v.provinces}" var="item">
+            <option text="{!item.label}" value="{!item.value}" selected="{!item.selected}" />
+          </aura:iteration>
+        </lightning:select>
       </lightning:layoutItem>
 
-		</lightning:layout>
+      <lightning:layoutItem
+        size="12"
+        smallDeviceSize="12"
+        mediumDeviceSize="6"
+        largeDeviceSize="8"
+        class="slds-p-around_x-small"
+      >
+        <lightning:input
+          type="text"
+          label="{!$Label.c.AddressForm_Postal}"
+          aura:id="required-field"
+          value="{!v.zip}"
+          required="{!v.allRequired}"
+          messageWhenValueMissing="{!$Label.c.AddressForm_Postal_Error}"
+        />
+      </lightning:layoutItem>
 
-	</div><!-- .lgnd_form_address -->
-
+      <lightning:layoutItem
+        size="12"
+        smallDeviceSize="12"
+        mediumDeviceSize="6"
+        largeDeviceSize="4"
+        class="slds-p-around_x-small"
+      >
+        <lightning:select
+          name="select"
+          label="{!$Label.c.AddressForm_Country}"
+          aura:id="required-field"
+          value="{!v.country}"
+          required="{!v.allRequired}"
+          messageWhenValueMissing="{!$Label.c.AddressForm_Country_Error}"
+        >
+          <aura:iteration items="{!v.countries}" var="item">
+            <option text="{!item.label}" value="{!item.value}" selected="{!item.selected}" />
+          </aura:iteration>
+        </lightning:select>
+      </lightning:layoutItem>
+    </lightning:layout>
+  </div>
+  <!-- .lgnd_form_address -->
 </aura:component>

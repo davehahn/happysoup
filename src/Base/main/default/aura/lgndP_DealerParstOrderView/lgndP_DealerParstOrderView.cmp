@@ -1,177 +1,138 @@
-<aura:component controller="DealerPartsOrderController"
-                access="global"
-                implements="forceCommunity:availableForAllPageTypes,force:hasRecordId">
-
-  <aura:attribute name="isFound" type="Boolean" default="false"/>
+<aura:component
+  controller="DealerPartsOrderController"
+  access="global"
+  implements="forceCommunity:availableForAllPageTypes,force:hasRecordId"
+>
+  <aura:attribute name="isFound" type="Boolean" default="false" />
   <aura:attribute name="erpOrder" type="AcctSeed__Project__c" />
   <aura:attribute name="record" type="Id" />
-  <aura:attribute name="materials" type="DealerPartsOrderController.MaterialWrapper[]"/>
+  <aura:attribute name="materials" type="DealerPartsOrderController.MaterialWrapper[]" />
 
   <aura:handler name="init" value="{!this}" action="{!c.init}" />
-  <aura:handler event="c:lgndP_DealerPartsOrderReload_Event" action="{!c.init}"/>
+  <aura:handler event="c:lgndP_DealerPartsOrderReload_Event" action="{!c.init}" />
 
   <div class="recordHomePrimaryContent">
-    <div aura:id="firstDetail"
-          id="tab-default-1"
-          class="slds-tabs--default__content slds-show"
-          role="tabpanel"
-          aria-labelledby="tab-default-1__item">
-
+    <div
+      aura:id="firstDetail"
+      id="tab-default-1"
+      class="slds-tabs--default__content slds-show"
+      role="tabpanel"
+      aria-labelledby="tab-default-1__item"
+    >
       <div class="lgnd">
-
         <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-max-medium-table--stacked">
           <thead>
-          <tr>
-            <th scope="col" class="slds-text-align_center">
-              Qty
-            </th>
-            <th scope="col">
-              Name
-            </th>
-            <th scope="col" class="slds-text-align_center">
-              Code
-            </th>
-            <th scope="col" class="slds-text-align_center">
-              Qty Shipped
-            </th>
-            <th scope="col" class="slds-text-align_center">
-              Qty Remaining
-            </th>
-            <th scope="col" class="slds-text-align_center">
-              Unit Price
-            </th>
-            <th scope="col" class="slds-text-align_right">
-              Total
-            </th>
-          </tr>
+            <tr>
+              <th scope="col" class="slds-text-align_center">Qty</th>
+              <th scope="col">Name</th>
+              <th scope="col" class="slds-text-align_center">Code</th>
+              <th scope="col" class="slds-text-align_center">Qty Shipped</th>
+              <th scope="col" class="slds-text-align_center">Qty Remaining</th>
+              <th scope="col" class="slds-text-align_center">Unit Price</th>
+              <th scope="col" class="slds-text-align_right">Total</th>
+            </tr>
           </thead>
           <tbody>
-          <aura:iteration items="{!v.materials}" var="mat">
-            <tr>
-              <td class="slds-text-align_center" data-label="Quantity">
-                {!mat.matQuantity}
-              </td>
-              <td data-label="Name">
-                <div class="slds-truncate">{!mat.pdtName}</div>
-              </td>
-              <td class="slds-text-align_center" data-label="Code">
-                {!mat.pdtcode}
-              </td>
-              <td class="slds-text-align_center" data-label="Quantity Shipped">
-                <aura:if isTrue="{!mat.hasKitParts}">
-                  <span> - </span>
-                  <aura:set attribute="else">
-                    {!mat.matQuantityShipped}
-                  </aura:set>
-                </aura:if>
-              </td>
-              <td class="slds-text-align_center" data-label="Quantity Remaining">
-                <div class="quantity-remaining">
-                  <div>
-                    <aura:if isTrue="{!mat.hasKitParts}">
-                      <span> - </span>
-                      <aura:set attribute="else">
-                        {!mat.matQuantityOutstanding}
-                      </aura:set>
-                    </aura:if>
-                  </div>
-                  <aura:if isTrue="{!mat.onBackOrder}">
-                    <div>
-                      <div class="slds-grid slds-grid_vertical-align-center">
-                        <lightning:icon iconName="utility:warning"
-                                        size="x-small"
-                                        variant="error"
-                                        class="slds-m-left_small"></lightning:icon>
-                        <span style="color:#c23a35" class="slds-m-left_x-small">
-                          On Backorder
-                        </span>
-                      </div>
-                      <div class="eta">
-                        ETA:
-                        <span class="slds-m-left_xx-small">
-                          <aura:if isTrue="{! !empty(mat.estimatedArrivalDate)}">
-                            <lightning:formattedDateTime value="{!mat.estimatedArrivalDate}" />
-                            <aura:set attribute="else">
-                              unknown
-                            </aura:set>
-                          </aura:if>
-                        </span>
-                      </div>
-                    </div>
-                  </aura:if>
-                </div>
-
-              </td>
-              <td class="slds-text-align_center" data-label="Unit Price">
-                <lightning:formattedNumber value="{!mat.pricePerQuantity}"
-                                           style="currency"
-                                           currencyCode="CAD" />
-              </td>
-              <td class="slds-text-align_right" data-label="Total">
-                <lightning:formattedNumber value="{!mat.totalPrice}"
-                                           style="currency"
-                                           currencyCode="CAD" />
-              </td>
-            </tr>
-            <aura:iteration items="{!mat.kitParts}" var="kitPart" indexVar="idx">
-              <tr class="{! if(equals(idx, 0), 'kit-part-row row-one', 'kit-part-row')}">
-                <td data-label="Quantity">
-                  {!kitPart.matQuantity}
+            <aura:iteration items="{!v.materials}" var="mat">
+              <tr>
+                <td class="slds-text-align_center" data-label="Quantity">{!mat.matQuantity}</td>
+                <td data-label="Name">
+                  <div class="slds-truncate">{!mat.pdtName}</div>
                 </td>
-                <td class="slds-p-left_medium" data-label="Name">
-                  <div class="slds-truncate">{!kitPart.pdtName}</div>
-                </td>
-                <td class="slds-text-align_center" data-label="Code">
-                  {!kitPart.pdtcode}
-                </td>
+                <td class="slds-text-align_center" data-label="Code">{!mat.pdtcode}</td>
                 <td class="slds-text-align_center" data-label="Quantity Shipped">
-                  {!kitPart.matQuantityShipped}
+                  <aura:if isTrue="{!mat.hasKitParts}">
+                    <span> - </span>
+                    <aura:set attribute="else"> {!mat.matQuantityShipped} </aura:set>
+                  </aura:if>
                 </td>
                 <td class="slds-text-align_center" data-label="Quantity Remaining">
                   <div class="quantity-remaining">
                     <div>
-                      {!kitPart.matQuantityOutstanding}
+                      <aura:if isTrue="{!mat.hasKitParts}">
+                        <span> - </span>
+                        <aura:set attribute="else"> {!mat.matQuantityOutstanding} </aura:set>
+                      </aura:if>
                     </div>
-                    <aura:if isTrue="{!kitPart.onBackOrder}">
+                    <aura:if isTrue="{!mat.onBackOrder}">
                       <div>
                         <div class="slds-grid slds-grid_vertical-align-center">
-                          <lightning:icon iconName="utility:warning"
-                                          size="x-small"
-                                          variant="error"
-                                          class="slds-m-left_small"></lightning:icon>
-                          <span style="color:#c23a35" class="slds-m-left_x-small">
-                          On Backorder
-                        </span>
+                          <lightning:icon
+                            iconName="utility:warning"
+                            size="x-small"
+                            variant="error"
+                            class="slds-m-left_small"
+                          ></lightning:icon>
+                          <span style="color: #c23a35" class="slds-m-left_x-small"> On Backorder </span>
                         </div>
                         <div class="eta">
                           ETA:
                           <span class="slds-m-left_xx-small">
-                          <aura:if isTrue="{! !empty(kitPart.estimatedArrivalDate)}">
-                            <lightning:formattedDateTime value="{!kitPart.estimatedArrivalDate}" />
-                            <aura:set attribute="else">
-                              unknown
-                            </aura:set>
-                          </aura:if>
-                        </span>
+                            <aura:if isTrue="{! !empty(mat.estimatedArrivalDate)}">
+                              <lightning:formattedDateTime value="{!mat.estimatedArrivalDate}" />
+                              <aura:set attribute="else"> unknown </aura:set>
+                            </aura:if>
+                          </span>
                         </div>
                       </div>
                     </aura:if>
                   </div>
-
                 </td>
                 <td class="slds-text-align_center" data-label="Unit Price">
-                  <lightning:formattedNumber value="{!kitPart.pricePerQuantity}"
-                                             style="currency"
-                                             currencyCode="CAD" />
+                  <lightning:formattedNumber value="{!mat.pricePerQuantity}" style="currency" currencyCode="CAD" />
                 </td>
                 <td class="slds-text-align_right" data-label="Total">
-                  <lightning:formattedNumber value="{!kitPart.totalPrice}"
-                                             style="currency"
-                                             currencyCode="CAD" />
+                  <lightning:formattedNumber value="{!mat.totalPrice}" style="currency" currencyCode="CAD" />
                 </td>
               </tr>
+              <aura:iteration items="{!mat.kitParts}" var="kitPart" indexVar="idx">
+                <tr class="{! if(equals(idx, 0), 'kit-part-row row-one', 'kit-part-row')}">
+                  <td data-label="Quantity">{!kitPart.matQuantity}</td>
+                  <td class="slds-p-left_medium" data-label="Name">
+                    <div class="slds-truncate">{!kitPart.pdtName}</div>
+                  </td>
+                  <td class="slds-text-align_center" data-label="Code">{!kitPart.pdtcode}</td>
+                  <td class="slds-text-align_center" data-label="Quantity Shipped">{!kitPart.matQuantityShipped}</td>
+                  <td class="slds-text-align_center" data-label="Quantity Remaining">
+                    <div class="quantity-remaining">
+                      <div>{!kitPart.matQuantityOutstanding}</div>
+                      <aura:if isTrue="{!kitPart.onBackOrder}">
+                        <div>
+                          <div class="slds-grid slds-grid_vertical-align-center">
+                            <lightning:icon
+                              iconName="utility:warning"
+                              size="x-small"
+                              variant="error"
+                              class="slds-m-left_small"
+                            ></lightning:icon>
+                            <span style="color: #c23a35" class="slds-m-left_x-small"> On Backorder </span>
+                          </div>
+                          <div class="eta">
+                            ETA:
+                            <span class="slds-m-left_xx-small">
+                              <aura:if isTrue="{! !empty(kitPart.estimatedArrivalDate)}">
+                                <lightning:formattedDateTime value="{!kitPart.estimatedArrivalDate}" />
+                                <aura:set attribute="else"> unknown </aura:set>
+                              </aura:if>
+                            </span>
+                          </div>
+                        </div>
+                      </aura:if>
+                    </div>
+                  </td>
+                  <td class="slds-text-align_center" data-label="Unit Price">
+                    <lightning:formattedNumber
+                      value="{!kitPart.pricePerQuantity}"
+                      style="currency"
+                      currencyCode="CAD"
+                    />
+                  </td>
+                  <td class="slds-text-align_right" data-label="Total">
+                    <lightning:formattedNumber value="{!kitPart.totalPrice}" style="currency" currencyCode="CAD" />
+                  </td>
+                </tr>
+              </aura:iteration>
             </aura:iteration>
-          </aura:iteration>
           </tbody>
         </table>
       </div>
@@ -182,7 +143,11 @@
       <div class="slds-modal__container">
         <div class="slds-modal__header">
           <button class="slds-button slds-modal__close slds-button--icon-inverse" onclick="{!c.toggleDelete}">
-            <c:svg class="slds-button__icon slds-button__icon--large" xlinkHref="/resource/SLDS/assets/icons/action-sprite/svg/symbols.svg#close" ariaHidden="true" />
+            <c:svg
+              class="slds-button__icon slds-button__icon--large"
+              xlinkHref="/resource/SLDS/assets/icons/action-sprite/svg/symbols.svg#close"
+              ariaHidden="true"
+            />
             <span class="slds-assistive-text">Close</span>
           </button>
           <h2 id="header43" class="slds-text-heading--medium">Delete Order</h2>

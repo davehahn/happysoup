@@ -1,9 +1,12 @@
-<aura:component controller="Registration_ByAccount_Controller"
-                implements="force:hasRecordId,force:appHostable,flexipage:availableForAllPageTypes,forceCommunity:availableForAllPageTypes">
-
-  <ltng:require scripts="{!join(',', $Resource.Libraries +'/js/LightningApex.js',
+<aura:component
+  controller="Registration_ByAccount_Controller"
+  implements="force:hasRecordId,force:appHostable,flexipage:availableForAllPageTypes,forceCommunity:availableForAllPageTypes"
+>
+  <ltng:require
+    scripts="{!join(',', $Resource.Libraries +'/js/LightningApex.js',
                                      $Resource.Libraries +'/js/LightningUtils.js') }"
-                afterScriptsLoaded="{!c.doInit}" />
+    afterScriptsLoaded="{!c.doInit}"
+  />
 
   <aura:attribute name="recordId" type="String" />
   <aura:attribute name="regData" type="Map" />
@@ -14,14 +17,13 @@
   <div class="slds-card">
     <aura:if isTrue="{! !empty(v.regData) }">
       <lightning:layout horizontalAlign="center">
-        <lightning:layoutItem size="10"
-                              smallDeviceSize="10"
-                              mediumDeviceSize="4"
-                              largeDeviceSize="3">
-          <lightning:select label="Registration Year"
-                            value="{!v.selectedYear}"
-                            onchange="{!c.handleYearSelect}"
-                            class="slds-m-bottom_medium">
+        <lightning:layoutItem size="10" smallDeviceSize="10" mediumDeviceSize="4" largeDeviceSize="3">
+          <lightning:select
+            label="Registration Year"
+            value="{!v.selectedYear}"
+            onchange="{!c.handleYearSelect}"
+            class="slds-m-bottom_medium"
+          >
             <aura:iteration items="{!v.yearOptions}" var="opt">
               <option value="{!opt.value}">{!opt.label}</option>
             </aura:iteration>
@@ -30,11 +32,8 @@
       </lightning:layout>
 
       <aura:if isTrue="{! !empty(v.mapMarkers) }">
-        <lightning:map mapMarkers="{!v.mapMarkers}"
-                       markersTitle="Your Customers"
-                       listView="hidden"/>
+        <lightning:map mapMarkers="{!v.mapMarkers}" markersTitle="Your Customers" listView="hidden" />
       </aura:if>
     </aura:if>
   </div>
-
 </aura:component>

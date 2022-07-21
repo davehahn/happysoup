@@ -1,60 +1,63 @@
-<aura:component controller="Flow_FinalizeSales"
-								implements="force:hasRecordId,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome"
-								access="global">
-
-	<aura:attribute type="Integer" name="step" default="0" />
-	<aura:attribute type="Decimal" name="f_1120" default="0.00" />
-	<aura:attribute type="Decimal" name="f_1125" default="0.00" />
-	<!--aura:attribute type="Decimal" name="f_1130" default="0.00" />
+<aura:component
+  controller="Flow_FinalizeSales"
+  implements="force:hasRecordId,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome"
+  access="global"
+>
+  <aura:attribute type="Integer" name="step" default="0" />
+  <aura:attribute type="Decimal" name="f_1120" default="0.00" />
+  <aura:attribute type="Decimal" name="f_1125" default="0.00" />
+  <!--aura:attribute type="Decimal" name="f_1130" default="0.00" />
 	<aura:attribute type="Decimal" name="f_1131" default="0.00" /-->
-	<aura:attribute type="Decimal" name="f_2180" default="0.00" />
-	<aura:attribute type="Decimal" name="f_2190" default="0.00" />
-	<aura:attribute type="Decimal" name="f_2195" default="0.00" />
-	<aura:attribute type="Decimal" name="f_2300a" default="0.00" />
-	<aura:attribute type="Decimal" name="f_2300b" default="0.00" />
-	<aura:attribute type="Decimal" name="f_2300c" default="0.00" />
-	<aura:attribute type="Decimal" name="f_2300d" default="0.00" />
-	<aura:attribute type="Decimal" 	name="f_2300c_hint" default="0.00" />
-	<aura:attribute type="Decimal" 	name="f_2300d_hint" default="0.00" />
-	<aura:attribute type="Decimal" name="f_2300e" default="0.00" />
-	<!--aura:attribute type="Decimal" name="f_4000" default="0.00" />
+  <aura:attribute type="Decimal" name="f_2180" default="0.00" />
+  <aura:attribute type="Decimal" name="f_2190" default="0.00" />
+  <aura:attribute type="Decimal" name="f_2195" default="0.00" />
+  <aura:attribute type="Decimal" name="f_2300a" default="0.00" />
+  <aura:attribute type="Decimal" name="f_2300b" default="0.00" />
+  <aura:attribute type="Decimal" name="f_2300c" default="0.00" />
+  <aura:attribute type="Decimal" name="f_2300d" default="0.00" />
+  <aura:attribute type="Decimal" name="f_2300c_hint" default="0.00" />
+  <aura:attribute type="Decimal" name="f_2300d_hint" default="0.00" />
+  <aura:attribute type="Decimal" name="f_2300e" default="0.00" />
+  <!--aura:attribute type="Decimal" name="f_4000" default="0.00" />
 	<aura:attribute type="Decimal" name="f_4100" default="0.00" /-->
-	<aura:attribute type="Decimal" name="f_5600" default="0.00" />
-	<!--aura:attribute type="Decimal" name="f_5000a" default="0.00" />
+  <aura:attribute type="Decimal" name="f_5600" default="0.00" />
+  <!--aura:attribute type="Decimal" name="f_5000a" default="0.00" />
 	<aura:attribute type="Decimal" name="f_5000b" default="0.00" /-->
-	<aura:attribute type="Decimal" name="f_5200_CostOfProductProtection" default="0.00" />
-	<aura:attribute type="Decimal" name="f_5200_Premium" default="0.00" />
-	<aura:attribute type="Decimal" name="f_5210_CostOfLifeAndDisabilityInsurance" default="0.00" />
-	<!--aura:attribute type="Decimal" name="f_5380" default="0.00" /-->
-	<aura:attribute type="Decimal" name="f_5420a" default="0.00" />
-	<aura:attribute type="Decimal" name="f_5420b" default="0.00" />
-	<aura:attribute type="String"  name="f_2300a_who" />
-	<aura:attribute type="String"  name="f_2300b_who" />
-	<aura:attribute type="String"  name="f_2300c_who" />
-	<aura:attribute type="String"  name="f_2300d_who" />
-	<aura:attribute type="String"  name="f_2300e_who" />
-	<aura:attribute type="Object[]" name="pricebooks" />
-	<aura:attribute type="String" name="selectedPricebook" />
+  <aura:attribute type="Decimal" name="f_5200_CostOfProductProtection" default="0.00" />
+  <aura:attribute type="Decimal" name="f_5200_Premium" default="0.00" />
+  <aura:attribute type="Decimal" name="f_5210_CostOfLifeAndDisabilityInsurance" default="0.00" />
+  <!--aura:attribute type="Decimal" name="f_5380" default="0.00" /-->
+  <aura:attribute type="Decimal" name="f_5420a" default="0.00" />
+  <aura:attribute type="Decimal" name="f_5420b" default="0.00" />
+  <aura:attribute type="String" name="f_2300a_who" />
+  <aura:attribute type="String" name="f_2300b_who" />
+  <aura:attribute type="String" name="f_2300c_who" />
+  <aura:attribute type="String" name="f_2300d_who" />
+  <aura:attribute type="String" name="f_2300e_who" />
+  <aura:attribute type="Object[]" name="pricebooks" />
+  <aura:attribute type="String" name="selectedPricebook" />
 
-	<ltng:require scripts="{!join(',', $Resource.Libraries +'/js/LightningApex.js',
+  <ltng:require
+    scripts="{!join(',', $Resource.Libraries +'/js/LightningApex.js',
                          						 $Resource.Libraries +'/js/LightningUtils.js') }"
-    						afterScriptsLoaded="{!c.doInit}" />
+    afterScriptsLoaded="{!c.doInit}"
+  />
 
-	<div class="slds-scope">
-		<div class="slds-card slds-p-around_medium">
-  		<h1 class="slds-text-heading_large slds-p-bottom_large">Finalize Sale</h1>
-  		<aura:if isTrue="{! v.step eq 0 }">
-  			<lightning:select label="Select a Pricebook to be used:" value="{!v.selectedPricebook}">
-  				<option text="-- select a pricebook --" />
-  				<aura:iteration items="{!v.pricebooks}" var="pb">
-  					<option text="{!pb.Name}" value="{!pb.Id}" selected="{!pb.selected}" />
-  				</aura:iteration>
-  			</lightning:select>
-  			<br/>
-  			<button class="slds-button slds-button_brand" onclick="{!c.next}">Next</button>
-  		</aura:if>
-			<aura:if isTrue="{! and(v.step gt 0, v.step lt 2) }">
-				<!--c:Flow_FinalizeSales_Validations_mp step="{!v.step}"
+  <div class="slds-scope">
+    <div class="slds-card slds-p-around_medium">
+      <h1 class="slds-text-heading_large slds-p-bottom_large">Finalize Sale</h1>
+      <aura:if isTrue="{! v.step eq 0 }">
+        <lightning:select label="Select a Pricebook to be used:" value="{!v.selectedPricebook}">
+          <option text="-- select a pricebook --" />
+          <aura:iteration items="{!v.pricebooks}" var="pb">
+            <option text="{!pb.Name}" value="{!pb.Id}" selected="{!pb.selected}" />
+          </aura:iteration>
+        </lightning:select>
+        <br />
+        <button class="slds-button slds-button_brand" onclick="{!c.next}">Next</button>
+      </aura:if>
+      <aura:if isTrue="{! and(v.step gt 0, v.step lt 2) }">
+        <!--c:Flow_FinalizeSales_Validations_mp step="{!v.step}"
 																						 recordId="{!v.recordId}"
 																						 f_1120="{!v.f_1120}"
 																						 f_1125="{!v.f_1125}"
@@ -86,33 +89,35 @@
 																						 f_5420b="{!v.f_5420b}"
 																						 selectedPricebook="{!v.selectedPricebook}" /-->
 
-				<c:Flow_FinalizeSales_Validations_mp step="{!v.step}"
-																						 recordId="{!v.recordId}"
-																						 f_1120="{!v.f_1120}"
-																						 f_1125="{!v.f_1125}"
-																						 f_2180="{!v.f_2180}"
-																						 f_2190="{!v.f_2190}"
-																						 f_2195="{!v.f_2195}"
-																						 f_2300a="{!v.f_2300a}"
-																						 f_2300a_who="{!v.f_2300a_who}"
-																						 f_2300b="{!v.f_2300b}"
-																						 f_2300b_who="{!v.f_2300b_who}"
-																						 f_2300c="{!v.f_2300c}"
-																						 f_2300d="{!v.f_2300d}"
-																						 f_2300c_hint="{!v.f_2300c_hint}"
-																						 f_2300d_hint="{!v.f_2300d_hint}"
-																						 f_2300e="{!v.f_2300e}"
-																						 f_2300e_who="{!v.f_2300e_who}"
-																						 f_5600="{!v.f_5600}"
-																						 f_5200_CostOfProductProtection="{!v.f_5200_CostOfProductProtection}"
-																						 f_5200_Premium="{!v.f_5200_Premium}"
-																						 f_5210_CostOfLifeAndDisabilityInsurance="{!v.f_5210_CostOfLifeAndDisabilityInsurance}"
-																						 f_5420a="{!v.f_5420a}"
-																						 f_5420b="{!v.f_5420b}"
-																						 selectedPricebook="{!v.selectedPricebook}" />
-			</aura:if>
-			<aura:if isTrue="{! v.step eq 2 }">
-				<!--c:Flow_FinalizeSales_JournalEntries_mp step="{!v.step}"
+        <c:Flow_FinalizeSales_Validations_mp
+          step="{!v.step}"
+          recordId="{!v.recordId}"
+          f_1120="{!v.f_1120}"
+          f_1125="{!v.f_1125}"
+          f_2180="{!v.f_2180}"
+          f_2190="{!v.f_2190}"
+          f_2195="{!v.f_2195}"
+          f_2300a="{!v.f_2300a}"
+          f_2300a_who="{!v.f_2300a_who}"
+          f_2300b="{!v.f_2300b}"
+          f_2300b_who="{!v.f_2300b_who}"
+          f_2300c="{!v.f_2300c}"
+          f_2300d="{!v.f_2300d}"
+          f_2300c_hint="{!v.f_2300c_hint}"
+          f_2300d_hint="{!v.f_2300d_hint}"
+          f_2300e="{!v.f_2300e}"
+          f_2300e_who="{!v.f_2300e_who}"
+          f_5600="{!v.f_5600}"
+          f_5200_CostOfProductProtection="{!v.f_5200_CostOfProductProtection}"
+          f_5200_Premium="{!v.f_5200_Premium}"
+          f_5210_CostOfLifeAndDisabilityInsurance="{!v.f_5210_CostOfLifeAndDisabilityInsurance}"
+          f_5420a="{!v.f_5420a}"
+          f_5420b="{!v.f_5420b}"
+          selectedPricebook="{!v.selectedPricebook}"
+        />
+      </aura:if>
+      <aura:if isTrue="{! v.step eq 2 }">
+        <!--c:Flow_FinalizeSales_JournalEntries_mp step="{!v.step}"
 																						 		recordId="{!v.recordId}"
 																						 		erpId="{!v.recordId}"
 																								f_1120="{!v.f_1120}"
@@ -144,32 +149,34 @@
 																								f_5420a="{!v.f_5420a}"
 																								f_5420b="{!v.f_5420b}"
 																						 		selectedPricebook="{!v.selectedPricebook}" /-->
-				<c:Flow_FinalizeSales_JournalEntries_mp step="{!v.step}"
-																						 		recordId="{!v.recordId}"
-																						 		erpId="{!v.recordId}"
-																								f_1120="{!v.f_1120}"
-																								f_1125="{!v.f_1125}"
-																								f_2180="{!v.f_2180}"
-																								f_2190="{!v.f_2190}"
-																								f_2195="{!v.f_2195}"
-																								f_2300a="{!v.f_2300a}"
-																								f_2300a_who="{!v.f_2300a_who}"
-																								f_2300b="{!v.f_2300b}"
-																								f_2300b_who="{!v.f_2300b_who}"
-																								f_2300c="{!v.f_2300c}"
-																								f_2300d="{!v.f_2300d}"
-																						 		f_2300c_hint="{!v.f_2300c_hint}"
-																						 		f_2300d_hint="{!v.f_2300d_hint}"
-																								f_2300e="{!v.f_2300e}"
-																								f_2300e_who="{!v.f_2300e_who}"
-																								f_5600="{!v.f_5600}"
-																								f_5200_CostOfProductProtection="{!v.f_5200_CostOfProductProtection}"
-																								f_5200_Premium="{!v.f_5200_Premium}"
-																								f_5210_CostOfLifeAndDisabilityInsurance="{!v.f_5210_CostOfLifeAndDisabilityInsurance}"
-																								f_5420a="{!v.f_5420a}"
-																								f_5420b="{!v.f_5420b}"
-																						 		selectedPricebook="{!v.selectedPricebook}" />
-			</aura:if>
-		</div>
-	</div>
+        <c:Flow_FinalizeSales_JournalEntries_mp
+          step="{!v.step}"
+          recordId="{!v.recordId}"
+          erpId="{!v.recordId}"
+          f_1120="{!v.f_1120}"
+          f_1125="{!v.f_1125}"
+          f_2180="{!v.f_2180}"
+          f_2190="{!v.f_2190}"
+          f_2195="{!v.f_2195}"
+          f_2300a="{!v.f_2300a}"
+          f_2300a_who="{!v.f_2300a_who}"
+          f_2300b="{!v.f_2300b}"
+          f_2300b_who="{!v.f_2300b_who}"
+          f_2300c="{!v.f_2300c}"
+          f_2300d="{!v.f_2300d}"
+          f_2300c_hint="{!v.f_2300c_hint}"
+          f_2300d_hint="{!v.f_2300d_hint}"
+          f_2300e="{!v.f_2300e}"
+          f_2300e_who="{!v.f_2300e_who}"
+          f_5600="{!v.f_5600}"
+          f_5200_CostOfProductProtection="{!v.f_5200_CostOfProductProtection}"
+          f_5200_Premium="{!v.f_5200_Premium}"
+          f_5210_CostOfLifeAndDisabilityInsurance="{!v.f_5210_CostOfLifeAndDisabilityInsurance}"
+          f_5420a="{!v.f_5420a}"
+          f_5420b="{!v.f_5420b}"
+          selectedPricebook="{!v.selectedPricebook}"
+        />
+      </aura:if>
+    </div>
+  </div>
 </aura:component>

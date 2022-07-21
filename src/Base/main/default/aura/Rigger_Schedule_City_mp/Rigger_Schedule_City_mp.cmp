@@ -1,184 +1,199 @@
-<aura:component controller="Rigger_Schedule_mp"
-								implements="force:appHostable,flexipage:availableForAllPageTypes">
+<aura:component controller="Rigger_Schedule_mp" implements="force:appHostable,flexipage:availableForAllPageTypes">
+  <aura:attribute type="Boolean" name="openNewForm" default="false" />
+  <aura:attribute type="Boolean" name="draggingPlaceholder" default="false" />
+  <aura:attribute type="Boolean" name="limitToCity" default="false" />
+  <aura:attribute type="Boolean" name="readyForInit" default="false" />
+  <aura:attribute type="Boolean" name="isDoneRendering" default="false" />
+  <aura:attribute type="Boolean" name="lockSearch" default="false" />
+  <aura:attribute type="Boolean" name="lockCompleted" default="false" />
+  <aura:attribute type="Employee__c[]" name="riggers" />
+  <aura:attribute type="Id" name="selectedJobId" access="global" />
+  <aura:attribute type="Integer" name="completedJobsCount" />
+  <aura:attribute type="Integer" name="pageNum" default="1" />
+  <aura:attribute type="Integer" name="maxHeight" />
+  <aura:attribute type="Map" name="assigned_jobs" />
+  <aura:attribute type="Map" name="completed_jobs" />
+  <aura:attribute type="Rigger_Job__c[]" name="backlogged_jobs" />
+  <aura:attribute type="Rigger_Job__c[]" name="backlogged_results" />
+  <aura:attribute type="String" name="city" />
+  <aura:attribute type="String" name="draggedItemId" access="global" />
+  <aura:attribute type="String" name="selectedBacklogFilter" />
+  <aura:attribute type="String" name="backlogSearch" />
+  <aura:attribute type="String" name="backlogSearch2" />
+  <aura:attribute type="String" name="doneCSS" default="slds-card slds-p-around_small done" />
+  <aura:attribute type="String" name="team" />
+  <aura:attribute type="String" name="completedSearch" />
 
-	<aura:attribute type="Boolean" name="openNewForm" default="false" />
-	<aura:attribute type="Boolean" name="draggingPlaceholder" default="false" />
-	<aura:attribute type="Boolean" name="limitToCity" default="false" />
-	<aura:attribute type="Boolean" name="readyForInit" default="false" />
-	<aura:attribute type="Boolean" name="isDoneRendering" default="false"/>
-	<aura:attribute type="Boolean" name="lockSearch" default="false"/>
-	<aura:attribute type="Boolean" name="lockCompleted" default="false"/>
-	<aura:attribute type="Employee__c[]" name="riggers" />
-	<aura:attribute type="Id" name="selectedJobId" access="global"/>
-	<aura:attribute type="Integer" name="completedJobsCount" />
-	<aura:attribute type="Integer" name="pageNum" default="1" />
-	<aura:attribute type="Integer" name="maxHeight" />
-	<aura:attribute type="Map" name="assigned_jobs" />
-	<aura:attribute type="Map" name="completed_jobs" />
-	<aura:attribute type="Rigger_Job__c[]" name="backlogged_jobs" />
-	<aura:attribute type="Rigger_Job__c[]" name="backlogged_results" />
-	<aura:attribute type="String" name="city" />
-	<aura:attribute type="String" name="draggedItemId" access="global" />
-	<aura:attribute type="String" name="selectedBacklogFilter"/>
-	<aura:attribute type="String" name="backlogSearch"/>
-	<aura:attribute type="String" name="backlogSearch2"/>
-	<aura:attribute type="String" name="doneCSS" default="slds-card slds-p-around_small done" />
-	<aura:attribute type="String" name="team" />
-	<aura:attribute type="String"  name="completedSearch" />
+  <aura:handler event="aura:doneRendering" action="{!c.doneRendering}" />
 
-	<aura:handler event="aura:doneRendering" action="{!c.doneRendering}"/>
-
-	<ltng:require scripts="{! join(',', $Resource.Libraries +'/js/LightningApex.js',
+  <ltng:require
+    scripts="{! join(',', $Resource.Libraries +'/js/LightningApex.js',
                           						$Resource.Libraries +'/js/LightningUtils.js') }"
-    						afterScriptsLoaded="{! c.readyForInit }" />
+    afterScriptsLoaded="{! c.readyForInit }"
+  />
 
-  <aura:method name="doInit" action="{!c.doInit}"/>
+  <aura:method name="doInit" action="{!c.doInit}" />
 
-	<!-- aura:handler name="change" value="{!v.selectedJobId}" action="{!c.editItem}"/ -->
-	<aura:handler name="change" value="{!v.team}" action="{!c.teamChange}"/>
-	<aura:handler name="change" value="{!v.openNewForm}" action="{!c.doInit}"/>
+  <!-- aura:handler name="change" value="{!v.selectedJobId}" action="{!c.editItem}"/ -->
+  <aura:handler name="change" value="{!v.team}" action="{!c.teamChange}" />
+  <aura:handler name="change" value="{!v.openNewForm}" action="{!c.doInit}" />
 
-	<aura:registerEvent name="riggingItemDropped" type="c:Rigging_ItemDropped_Event" />
-	<aura:handler event="c:Rigging_ItemDropped_Event" action="{!c.handleDroppedItem}"/>
+  <aura:registerEvent name="riggingItemDropped" type="c:Rigging_ItemDropped_Event" />
+  <aura:handler event="c:Rigging_ItemDropped_Event" action="{!c.handleDroppedItem}" />
 
-	<aura:if isTrue="{!v.selectedJobId != null}">
-		<div role="dialog" class="slds-modal slds-fade-in-open" aura:id="editForm">
-			<c:Rigger_Schedule_EditForm_mp selectedJobId="{!v.selectedJobId}" aura:id="editFormComponent"/>
-		</div>
-  	<div class="slds-backdrop slds-backdrop_open"></div>
-	</aura:if>
+  <aura:if isTrue="{!v.selectedJobId != null}">
+    <div role="dialog" class="slds-modal slds-fade-in-open" aura:id="editForm">
+      <c:Rigger_Schedule_EditForm_mp selectedJobId="{!v.selectedJobId}" aura:id="editFormComponent" />
+    </div>
+    <div class="slds-backdrop slds-backdrop_open"></div>
+  </aura:if>
 
-	<aura:if isTrue="{!v.openNewForm == true}">
-		<div role="dialog" class="slds-modal slds-fade-in-open" aura:id="newForm">
-			<c:Rigger_Schedule_NewForm_mp openNewForm="{!v.openNewForm}" aura:id="newFormComponent"/>
-		</div>
-  	<div class="slds-backdrop slds-backdrop_open"></div>
-	</aura:if>
+  <aura:if isTrue="{!v.openNewForm == true}">
+    <div role="dialog" class="slds-modal slds-fade-in-open" aura:id="newForm">
+      <c:Rigger_Schedule_NewForm_mp openNewForm="{!v.openNewForm}" aura:id="newFormComponent" />
+    </div>
+    <div class="slds-backdrop slds-backdrop_open"></div>
+  </aura:if>
 
-	<div class="slds-grid slds-wrap slds-grid_pull-padded">
+  <div class="slds-grid slds-wrap slds-grid_pull-padded">
+    <lightning:spinner aura:id="citySpinner" class="slds-hide" />
 
-		<lightning:spinner aura:id="citySpinner" class="slds-hide"/>
+    <!-- BACKLOG -->
+    <div class="slds-p-around_small slds-size_1-of-8">
+      <div class="slds-card slds-p-around_small backlog">
+        <button class="slds-button slds-button_inverse slds-float_right button-backlog_new" onclick="{!c.openNewForm}">
+          New
+        </button>
+        <h1 class="slds-text-heading_medium">
+          Backlog &nbsp;<span class="grey"
+            ><lightning:icon
+              iconName="utility:success"
+              size="xx-small"
+              variant="inverse"
+            />&nbsp;{!v.backlogged_results[0].jobCount}</span
+          >
+        </h1>
 
-		<!-- BACKLOG -->
-		<div class="slds-p-around_small slds-size_1-of-8">
-			<div class="slds-card slds-p-around_small backlog">
-				<button class="slds-button slds-button_inverse slds-float_right button-backlog_new"
-								onclick="{!c.openNewForm}">New</button>
-				<h1 class="slds-text-heading_medium">
-					Backlog &nbsp;<span class="grey"><lightning:icon iconName="utility:success" size="xx-small" variant="inverse" />&nbsp;{!v.backlogged_results[0].jobCount}</span>
-				</h1>
+        <div class="dropContainer" aura:id="dropContainer" id="backlog">
+          <div class="dropzone" ondrop="{!c.drop}" ondragover="{!c.allowDrop}">Drag items to unassign</div>
 
-				<div class="dropContainer" aura:id="dropContainer" id="backlog">
-					<div class="dropzone" ondrop="{!c.drop}" ondragover="{!c.allowDrop}">
-						Drag items to unassign
-					</div>
+          <lightning:input
+            value="{!v.backlogSearch}"
+            placeholder="Search"
+            onchange="{!c.searchBacklog}"
+            class="noLabel"
+            aura:id="backlogSearchInput"
+          />
 
-					<lightning:input value="{!v.backlogSearch}"
-													 placeholder="Search"
-													 onchange="{!c.searchBacklog}"
-													 class="noLabel"
-													 aura:id="backlogSearchInput" />
+          <div class="slds-grid slds-wrap">
+            <div class="slds-size_1-of-1">
+              <lightning:select
+                name="select"
+                label=""
+                required="false"
+                value="{!v.selectedBacklogFilter}"
+                onchange="{!c.filterBacklog}"
+                class="noLabel"
+              >
+                <option value="">- ERP Type -</option>
+                <option value="retail" text="Retail Boat Sale"></option>
+                <option value="partner" text="Partner Boat Sale"></option>
+                <option value="manufacturing" text="Manufacturing Work Order"></option>
+                <option value="service" text="Service Work Order"></option>
+                <option value="tradein" text="Trade In"></option>
+                <option value="LegendFixedAsset" text="Legend Fixed Asset"></option>
+                <option value="Placeholder" text="Placeholder"></option>
+              </lightning:select>
+            </div>
+            <div class="slds-size_1-of-1">
+              <div class="slds-p-around_small">
+                <lightning:input
+                  type="checkbox"
+                  label="{!v.city + ' only'}"
+                  name="allCities"
+                  checked="{!v.limitToCity}"
+                  class="city-filter"
+                  onchange="{!c.filterBacklog}"
+                />
+              </div>
+            </div>
+          </div>
 
-					<div class="slds-grid slds-wrap">
-						<div class="slds-size_1-of-1">
-						  <lightning:select name="select"
-						  									label=""
-						  									required="false"
-						  									value="{!v.selectedBacklogFilter}"
-						  									onchange="{!c.filterBacklog}"
-						  									class="noLabel">
-						    <option value="">- ERP Type -</option>
-						    <option value="retail" text="Retail Boat Sale"></option>
-						    <option value="partner" text="Partner Boat Sale"></option>
-						    <option value="manufacturing" text="Manufacturing Work Order"></option>
-						    <option value="service" text="Service Work Order"></option>
-						    <option value="tradein" text="Trade In"></option>
-							<option value="LegendFixedAsset" text="Legend Fixed Asset"></option>
-						    <option value="Placeholder" text="Placeholder"></option>
-						  </lightning:select>
-						</div>
-						<div class="slds-size_1-of-1">
-							<div class="slds-p-around_small">
-								<lightning:input type="checkbox"
-																 label="{!v.city + ' only'}"
-																 name="allCities"
-																 checked="{!v.limitToCity}"
-																 class="city-filter"
-																 onchange="{!c.filterBacklog}" />
-							</div>
-						</div>
-					</div>
+          <div class="jobsContainer" style="{! 'height: ' + ( v.maxHeight - 250 ) + 'px' }">
+            <aura:iteration items="{!v.backlogged_results}" var="j" indexVar="i">
+              <aura:if isTrue="{!i lt (v.pageNum * 25)}">
+                <span>
+                  <c:Rigger_Schedule_Backlog_mp
+                    job="{!j}"
+                    selectedJobId="{!v.selectedJobId}"
+                    draggedItemId="{!v.draggedItemId}"
+                    openNewForm="{!v.openNewForm}"
+                  />
+                </span>
+              </aura:if>
+            </aura:iteration>
+            <br />
+            <button class="slds-button slds-button_brand" onclick="{!c.loadMore}">Load More</button>
+          </div>
+        </div>
+      </div>
+    </div>
 
-					<div class="jobsContainer" style="{! 'height: ' + ( v.maxHeight - 250 ) + 'px' }">
-						<aura:iteration items="{!v.backlogged_results}" var="j" indexVar="i">
-							<aura:if isTrue="{!i lt (v.pageNum * 25)}">
-								<span>
-									<c:Rigger_Schedule_Backlog_mp job="{!j}"
-																							selectedJobId="{!v.selectedJobId}"
-																							draggedItemId="{!v.draggedItemId}"
-																							openNewForm="{!v.openNewForm}" />
-								</span>
-							</aura:if>
-						</aura:iteration>
-						<br/>
-						<button class="slds-button slds-button_brand" onclick="{!c.loadMore}">Load More</button>
-					</div>
-				</div>
-			</div>
-		</div>
+    <!-- ASSIGNED -->
+    <div class="slds-size_6-of-8">
+      <div class="riggers">
+        <div class="slds-grid">
+          <aura:iteration items="{!v.riggers}" var="rigger">
+            <c:Rigger_Schedule_Individual_mp
+              aura:id="{!v.rigger.Id}"
+              rigger="{!rigger}"
+              city="{!v.city}"
+              draggedItemId="{!v.draggedItemId}"
+              selectedJobId="{!v.selectedJobId}"
+              draggingPlaceholder="{!v.draggingPlaceholder}"
+              doneCSS="{!v.doneCSS}"
+              maxHeight="{!v.maxHeight}"
+            />
+          </aura:iteration>
+        </div>
+      </div>
+    </div>
 
-		<!-- ASSIGNED -->
-		<div class="slds-size_6-of-8">
-			<div class="riggers">
-				<div class="slds-grid">
-					<aura:iteration items="{!v.riggers}" var="rigger">
-						<c:Rigger_Schedule_Individual_mp aura:id="{!v.rigger.Id}"
-																						 rigger="{!rigger}"
-																						 city="{!v.city}"
-																						 draggedItemId="{!v.draggedItemId}"
-																						 selectedJobId="{!v.selectedJobId}"
-																						 draggingPlaceholder="{!v.draggingPlaceholder}"
-																						 doneCSS="{!v.doneCSS}"
-																						 maxHeight="{!v.maxHeight}" />
-					</aura:iteration>
-				</div>
-			</div>
-		</div>
-
-		<!-- DONE -->
-		<div class="slds-p-around_small slds-size_1-of-8">
-			<div class="{!v.doneCSS}" id="done">
-				<aura:if isTrue="{! v.lockCompleted }">
-					<lightning:spinner aura:id="completedSpinner" variant="brand" size="small" />
-				</aura:if>
-				<h1 class="slds-text-heading_medium">
-					<aura:if isTrue="{!v.draggingPlaceholder}">DELETE JOB</aura:if>
-					<aura:if isTrue="{!v.draggingPlaceholder == false}">
-						Completed Today &nbsp;<span class="grey"><lightning:icon iconName="utility:success" size="xx-small" variant="inverse" />&nbsp;{!v.completedJobsCount}</span>
-					</aura:if>
-				</h1>
-				<div class="dropContainer"
-						 aura:id="dropContainer"
-						 id="done">
-					<div class="dropzone" ondrop="{!c.drop}" ondragover="{!c.allowDrop}">
-						Drag items to complete
-					</div>
-					<lightning:input value="{!v.completedSearch}"
-													 placeholder="Search..."
-													 class="noLabel"/>
-					<c:Rigger_Schedule_Done_mp aura:id="completedColumn"
-																		 city="{!v.city}"
-																		 doneCSS="{!v.doneCSS}"
-																		 draggingPlaceholder="{!v.draggingPlaceholder}"
-																		 selectedJobId="{!v.selectedJobId}"
-																		 draggedItemId="{!v.draggedItemId}"
-																		 maxHeight="{!v.maxHeight}"
-																		 completedSearch="{!v.completedSearch}"
-																		 completedJobsCount="{!v.completedJobsCount}"
-																		 lockCompleted="{!v.lockCompleted}" />
-				</div>
-			</div>
-		</div>
-
-	</div>
+    <!-- DONE -->
+    <div class="slds-p-around_small slds-size_1-of-8">
+      <div class="{!v.doneCSS}" id="done">
+        <aura:if isTrue="{! v.lockCompleted }">
+          <lightning:spinner aura:id="completedSpinner" variant="brand" size="small" />
+        </aura:if>
+        <h1 class="slds-text-heading_medium">
+          <aura:if isTrue="{!v.draggingPlaceholder}">DELETE JOB</aura:if>
+          <aura:if isTrue="{!v.draggingPlaceholder == false}">
+            Completed Today &nbsp;<span class="grey"
+              ><lightning:icon
+                iconName="utility:success"
+                size="xx-small"
+                variant="inverse"
+              />&nbsp;{!v.completedJobsCount}</span
+            >
+          </aura:if>
+        </h1>
+        <div class="dropContainer" aura:id="dropContainer" id="done">
+          <div class="dropzone" ondrop="{!c.drop}" ondragover="{!c.allowDrop}">Drag items to complete</div>
+          <lightning:input value="{!v.completedSearch}" placeholder="Search..." class="noLabel" />
+          <c:Rigger_Schedule_Done_mp
+            aura:id="completedColumn"
+            city="{!v.city}"
+            doneCSS="{!v.doneCSS}"
+            draggingPlaceholder="{!v.draggingPlaceholder}"
+            selectedJobId="{!v.selectedJobId}"
+            draggedItemId="{!v.draggedItemId}"
+            maxHeight="{!v.maxHeight}"
+            completedSearch="{!v.completedSearch}"
+            completedJobsCount="{!v.completedJobsCount}"
+            lockCompleted="{!v.lockCompleted}"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
 </aura:component>

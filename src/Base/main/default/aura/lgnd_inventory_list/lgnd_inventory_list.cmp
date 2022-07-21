@@ -1,39 +1,41 @@
 <aura:component controller="lgnd_inventory" access="global">
-	<aura:attribute type="String" 		name="title" 					    default="Inventory" 					/>
-  <aura:attribute type="String"     name="registrationTitle"                                />
-  <aura:attribute type="String"			name="iconName" 			    default="custom:custom54" 		/>
-  <aura:attribute type="String"			name="selectedList"       default="All"								    />
-	<aura:attribute type="String"			name="Account"            default="" 										/>
-	<aura:attribute type="List"				name="Registrations" 																		/>
-	<aura:attribute type="String" 		name="serno" 																						/>
-  <aura:attribute type="String"     name="sernoId"                                          />
-	<aura:attribute type="String"			name="userId"  																					/>
-	<aura:attribute type="sObject[]" 	name="records" 						 															/>
-  <aura:attribute type="Integer" 		name="recordCount" 				 															/>
-  <aura:attribute type="Integer" 		name="totalRecordCount" 	 															/>
-  <aura:attribute type="Integer" 		name="pageNumber" 				default="1" 									/>
-  <aura:attribute type="Integer" 		name="totalPages" 				default="1" 									/>
-  <aura:attribute type="Integer" 		name="perPage" 						default="15" 									/>
-  <aura:attribute type="Integer[]" 	name="pageOptions" 				 															/>
-  <aura:attribute type="String" 		name="listSelectorFilter" default="isCurrent__c = true"	/>
-  <aura:attribute type="String" 		name="sortDir" 						default="DESC" 								/>
-  <aura:attribute type="String" 		name="sortField" 					default="Product_Record_Type__c" />
-  <aura:attribute type="String" 		name="sortedCol" 					 															/>
-  <aura:attribute type="String"     name="accountScope"                                     />
-  <aura:attribute type="Boolean"    name="productRegistered"  default="false"               />
-  <aura:attribute type="String"     name="sernoFilter"                                     />
-  <aura:attribute type="String[]"
-  								name="availableLists"
-  								default="All,Boat:'Boat',Trailer:'Trailer',Motor:'Motor',Trolling Motor:'Trolling Motor'"/>
+  <aura:attribute type="String" name="title" default="Inventory" />
+  <aura:attribute type="String" name="registrationTitle" />
+  <aura:attribute type="String" name="iconName" default="custom:custom54" />
+  <aura:attribute type="String" name="selectedList" default="All" />
+  <aura:attribute type="String" name="Account" default="" />
+  <aura:attribute type="List" name="Registrations" />
+  <aura:attribute type="String" name="serno" />
+  <aura:attribute type="String" name="sernoId" />
+  <aura:attribute type="String" name="userId" />
+  <aura:attribute type="sObject[]" name="records" />
+  <aura:attribute type="Integer" name="recordCount" />
+  <aura:attribute type="Integer" name="totalRecordCount" />
+  <aura:attribute type="Integer" name="pageNumber" default="1" />
+  <aura:attribute type="Integer" name="totalPages" default="1" />
+  <aura:attribute type="Integer" name="perPage" default="15" />
+  <aura:attribute type="Integer[]" name="pageOptions" />
+  <aura:attribute type="String" name="listSelectorFilter" default="isCurrent__c = true" />
+  <aura:attribute type="String" name="sortDir" default="DESC" />
+  <aura:attribute type="String" name="sortField" default="Product_Record_Type__c" />
+  <aura:attribute type="String" name="sortedCol" />
+  <aura:attribute type="String" name="accountScope" />
+  <aura:attribute type="Boolean" name="productRegistered" default="false" />
+  <aura:attribute type="String" name="sernoFilter" />
+  <aura:attribute
+    type="String[]"
+    name="availableLists"
+    default="All,Boat:'Boat',Trailer:'Trailer',Motor:'Motor',Trolling Motor:'Trolling Motor'"
+  />
 
-	<aura:handler name="init" value="{!this}" action="{!c.doInit}" />
-	<aura:handler event="c:lgnd_ListSelector_Event" action="{!c.handleListChange}" />
+  <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+  <aura:handler event="c:lgnd_ListSelector_Event" action="{!c.handleListChange}" />
   <aura:handler name="change" value="{!v.selectedList}" action="{!c.doInit}" />
 
   <aura:method name="refreshRegistrations" action="{!c.refreshRegistrations}" />
 
-	<div>
-		<div class="slds-page-header">
+  <div>
+    <div class="slds-page-header">
       <div class="slds-grid">
         <div class="slds-col slds-has-flexi-truncate">
           <div class="slds-media slds-no-space slds-grow">
@@ -43,87 +45,127 @@
             <div class="slds-media__body">
               <div class="slds-picklist slds-dropdown-trigger slds-dropdown-trigger--click">
                 <p class="slds-text-title--caps slds-line-height--reset">{!v.title}</p>
-                <c:lgnd_ListSelector value="{!v.selectedList}"
-                                     listOptions="{!v.availableLists}"
-                                     aura:id="listSelector--Cmp" />
+                <c:lgnd_ListSelector
+                  value="{!v.selectedList}"
+                  listOptions="{!v.availableLists}"
+                  aura:id="listSelector--Cmp"
+                />
               </div>
             </div>
           </div>
         </div>
         <div class="slds-col slds-has-flexi-truncate sernoFilter">
-          <lightning:input type="search" name="sernoFilter" label="sernoFilter" placeholder="Filter by serial number or product name" onchange="{!c.filterOnSerno}" value="{!v.sernoFilter}" />
+          <lightning:input
+            type="search"
+            name="sernoFilter"
+            label="sernoFilter"
+            placeholder="Filter by serial number or product name"
+            onchange="{!c.filterOnSerno}"
+            value="{!v.sernoFilter}"
+          />
         </div>
       </div>
     </div>
 
     <aura:if isTrue="{!v.productRegistered}">
-      <div class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_info" aura:id="success" role="alert">
+      <div
+        class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_info"
+        aura:id="success"
+        role="alert"
+      >
         <span class="slds-assistive-text">success</span>
         <p>Product has been registered. High five!</p>
-        <button class="slds-button slds-button_icon slds-notify__close slds-button_icon-inverse" onclick="{!c.closeAlert}" title="Close">
-          <lightning:icon iconName="utility:close" size="small"/>
+        <button
+          class="slds-button slds-button_icon slds-notify__close slds-button_icon-inverse"
+          onclick="{!c.closeAlert}"
+          title="Close"
+        >
+          <lightning:icon iconName="utility:close" size="small" />
           <span class="slds-assistive-text">Close</span>
         </button>
       </div>
     </aura:if>
 
-		<table class="slds-table slds-table_bordered slds-table_cell-buffer">
-			<thead>
-				<tr class="slds-text-title_caps slds-line-height_reset">
+    <table class="slds-table slds-table_bordered slds-table_cell-buffer">
+      <thead>
+        <tr class="slds-text-title_caps slds-line-height_reset">
           <th scope="col" class="slds-is-sortable slds-text-align_left" aura:id="serialNumber">
-            <a href="javascript:void(0);"
-               data-field-name="SerialNumber__c"
-               onclick="{!c.handleSort}"
-               class="{!'slds-th__action slds-text-link_reset' + if( equals(v.sortedCol,'Serial'), ' isSorted','')}">
-               <span class="slds-assistive-text">Sort </span>
-               <span class="slds-truncate translate" title="Serial Number">Serial Number</span>
-               <lightning:icon iconName="{!if( equals(v.sortDir, 'DESC'), 'utility:arrowdown', 'utility:arrowup')}" size="x-small" />
-               <span class="slds-assistive-text" aria-live="assertive" aria-atomic="true"></span>
+            <a
+              href="javascript:void(0);"
+              data-field-name="SerialNumber__c"
+              onclick="{!c.handleSort}"
+              class="{!'slds-th__action slds-text-link_reset' + if( equals(v.sortedCol,'Serial'), ' isSorted','')}"
+            >
+              <span class="slds-assistive-text">Sort </span>
+              <span class="slds-truncate translate" title="Serial Number">Serial Number</span>
+              <lightning:icon
+                iconName="{!if( equals(v.sortDir, 'DESC'), 'utility:arrowdown', 'utility:arrowup')}"
+                size="x-small"
+              />
+              <span class="slds-assistive-text" aria-live="assertive" aria-atomic="true"></span>
             </a>
           </th>
           <th scope="col" class="slds-is-sortable slds-text-align_left" aura:id="type">
-            <a href="javascript:void(0);"
-               data-field-name="Product_Record_Type__c"
-               onclick="{!c.handleSort}"
-               class="{!'slds-th__action slds-text-link_reset' + if( equals(v.sortedCol,'Type'), ' isSorted','')}">
-               <span class="slds-assistive-text">Sort </span>
-               <span class="slds-truncate" title="Type">Type</span>
-               <lightning:icon iconName="{!if( equals(v.sortDir, 'DESC'), 'utility:arrowdown', 'utility:arrowup')}" size="x-small" />
-               <span class="slds-assistive-text" aria-live="assertive" aria-atomic="true"></span>
+            <a
+              href="javascript:void(0);"
+              data-field-name="Product_Record_Type__c"
+              onclick="{!c.handleSort}"
+              class="{!'slds-th__action slds-text-link_reset' + if( equals(v.sortedCol,'Type'), ' isSorted','')}"
+            >
+              <span class="slds-assistive-text">Sort </span>
+              <span class="slds-truncate" title="Type">Type</span>
+              <lightning:icon
+                iconName="{!if( equals(v.sortDir, 'DESC'), 'utility:arrowdown', 'utility:arrowup')}"
+                size="x-small"
+              />
+              <span class="slds-assistive-text" aria-live="assertive" aria-atomic="true"></span>
             </a>
           </th>
-					<th scope="col" class="slds-is-sortable slds-text-align_left" aura:id="product">
-            <a href="javascript:void(0);"
-               data-field-name="Product_Name__c"
-               onclick="{!c.handleSort}"
-               class="{!'slds-th__action slds-text-link_reset' + if( equals(v.sortedCol,'Product'), ' isSorted','')}">
-               <span class="slds-assistive-text">Sort </span>
-               <span class="slds-truncate" title="Product">Product</span>
-               <lightning:icon iconName="{!if( equals(v.sortDir, 'DESC'), 'utility:arrowdown', 'utility:arrowup')}" size="x-small" />
-               <span class="slds-assistive-text" aria-live="assertive" aria-atomic="true"></span>
+          <th scope="col" class="slds-is-sortable slds-text-align_left" aura:id="product">
+            <a
+              href="javascript:void(0);"
+              data-field-name="Product_Name__c"
+              onclick="{!c.handleSort}"
+              class="{!'slds-th__action slds-text-link_reset' + if( equals(v.sortedCol,'Product'), ' isSorted','')}"
+            >
+              <span class="slds-assistive-text">Sort </span>
+              <span class="slds-truncate" title="Product">Product</span>
+              <lightning:icon
+                iconName="{!if( equals(v.sortDir, 'DESC'), 'utility:arrowdown', 'utility:arrowup')}"
+                size="x-small"
+              />
+              <span class="slds-assistive-text" aria-live="assertive" aria-atomic="true"></span>
             </a>
           </th>
-					<th scope="col" class="slds-is-sortable slds-text-align_left" aura:id="actions"></th>
-				</tr>
-			</thead>
-			<aura:iteration items="{!v.Registrations}" var="item">
-				<tr class="slds-hint-parent nest">
+          <th scope="col" class="slds-is-sortable slds-text-align_left" aura:id="actions"></th>
+        </tr>
+      </thead>
+      <aura:iteration items="{!v.Registrations}" var="item">
+        <tr class="slds-hint-parent nest">
           <td role="gridcell" aura:id="serialNumber">{!item.reg.SerialNumber__r.Name}</td>
-					<td role="gridcell" aura:id="type">{!item.reg.SerialNumber__r.Product_Record_Type__c}</td>
-					<td role="gridcell" aura:id="product">{!item.reg.SerialNumber__r.Product_Name__c}</td>
-					<td role="gridcell">
+          <td role="gridcell" aura:id="type">{!item.reg.SerialNumber__r.Product_Record_Type__c}</td>
+          <td role="gridcell" aura:id="product">{!item.reg.SerialNumber__r.Product_Name__c}</td>
+          <td role="gridcell">
             <div class="slds-float_right">
               <lightning:buttonMenu menuAlignment="right" onselect="{!c.handleTableAction }">
-                <lightning:menuItem label="Register to Customer" value="{! 'register:' + item.reg.SerialNumber__r.Id }" />
-                <lightning:menuItem label="Transfer to Another Dealer" value="{! 'transfer:' + item.reg.SerialNumber__r.Id }" />
+                <lightning:menuItem
+                  label="Register to Customer"
+                  value="{! 'register:' + item.reg.SerialNumber__r.Id }"
+                />
+                <lightning:menuItem
+                  label="Transfer to Another Dealer"
+                  value="{! 'transfer:' + item.reg.SerialNumber__r.Id }"
+                />
               </lightning:buttonMenu>
             </div>
           </td>
-				</tr>
+        </tr>
         <aura:if isTrue="{!item.nestedItems.length >= 0}">
           <aura:iteration items="{!item.nestedItems}" var="nestedItem">
             <tr class="nested">
-              <td role="gridcell" aura:id="serialNumber"><span class="arrow">&#8594;</span> &nbsp;{!nestedItem.reg.SerialNumber__r.Name}</td>
+              <td role="gridcell" aura:id="serialNumber">
+                <span class="arrow">&#8594;</span> &nbsp;{!nestedItem.reg.SerialNumber__r.Name}
+              </td>
               <td role="gridcell" aura:id="type">{!nestedItem.reg.SerialNumber__r.Product_Record_Type__c}</td>
               <td role="gridcell" aura:id="product">{!nestedItem.reg.SerialNumber__r.Product_Name__c}</td>
               <td role="gridcell">
@@ -135,12 +177,17 @@
             </tr>
           </aura:iteration>
         </aura:if>
-			</aura:iteration>
-		</table>
+      </aura:iteration>
+    </table>
 
-		<div class="pagination slds-grid loading" aura:id="paginationRow">
+    <div class="pagination slds-grid loading" aura:id="paginationRow">
       <div class="slds-col slds-large-size_4-of-12">
-        <lightning:select name="pageSelect" label="Records per page" value="{!v.perPage}" onchange="{!c.perPageChanged}">
+        <lightning:select
+          name="pageSelect"
+          label="Records per page"
+          value="{!v.perPage}"
+          onchange="{!c.perPageChanged}"
+        >
           <option value="15">15</option>
           <option value="25">25</option>
           <option value="50">50</option>
@@ -153,28 +200,28 @@
             <option value="{!po}" selected="{!po==v.pageNumber}">{!po}</option>
           </aura:iteration>
         </lightning:select>
-        <label class="slds-form-element__label">
-          of {!v.totalPages}
-        </label>
+        <label class="slds-form-element__label"> of {!v.totalPages} </label>
       </div>
       <div class="slds-col slds-large-size_4-of-12">
-        <lightning:buttonGroup >
+        <lightning:buttonGroup>
           <aura:if isTrue="{!v.pageNumber > 1}">
-            <lightning:button iconName="utility:chevronleft"
-                              iconPosition="left"
-                              label="Previous"
-                              onclick="{!c.prevPage}"/>
+            <lightning:button
+              iconName="utility:chevronleft"
+              iconPosition="left"
+              label="Previous"
+              onclick="{!c.prevPage}"
+            />
           </aura:if>
           <aura:if isTrue="{! and( v.totalPages > 1, v.pageNumber lt v.totalPages)}">
-            <lightning:button iconName="utility:chevronright"
-                              iconPosition="right"
-                              label="Next"
-                              onclick="{!c.nextPage}" />
+            <lightning:button
+              iconName="utility:chevronright"
+              iconPosition="right"
+              label="Next"
+              onclick="{!c.nextPage}"
+            />
           </aura:if>
         </lightning:buttonGroup>
       </div>
     </div>
-	</div>
-
-
+  </div>
 </aura:component>

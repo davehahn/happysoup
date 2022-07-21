@@ -1,109 +1,99 @@
-<aura:component controller="Rigger_Schedule_mp"
-								implements="force:appHostable,flexipage:availableForAllPageTypes">
+<aura:component controller="Rigger_Schedule_mp" implements="force:appHostable,flexipage:availableForAllPageTypes">
+  <aura:attribute type="Rigger_Job__c" name="job" />
+  <aura:attribute type="Id" name="selectedJobId" access="global" />
+  <aura:attribute type="String" name="draggedItemId" access="global" />
+  <aura:attribute type="Boolean" name="openNewForm" default="false" />
 
-	<aura:attribute type="Rigger_Job__c" name="job" />
-	<aura:attribute type="Id" name="selectedJobId" access="global"/>
-	<aura:attribute type="String" name="draggedItemId" access="global" />
-	<aura:attribute type="Boolean" name="openNewForm" default="false" />
+  <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
 
-	<aura:handler name="init" value="{!this}" action="{!c.doInit}" />
-
-	<div id="{!v.job.job.Id}"
-			 data-id="{!v.job.job.Id}"
-			 class="{!v.job.job.class}"
-			 draggable="true"
-			 ondragstart="{!c.drag}"
-			 ondrop="{!c.dropOnItem}"
-			 ondragover="{!c.allowDrop}">
-		<div class="overlay"
-		 	 id="{!v.job.job.Id}"
-		 	 onclick="{!c.setSelectedJobId}"></div>
-		<div class="hasERP">
-			<div class="RecordType">
-				{!v.job.job.ERP_Order__r.RecordType.Name}
-			</div>
-			<p class="age">
-				<aura:if isTrue="{!v.job.timeEstimate != null}">
-					<span>{!v.job.timeEstimate}</span> hours<br/>
-					<br/>
-				</aura:if>
-			</p>
-			<dl>
-				<aura:if isTrue="{!v.job.job.ERP_Order__r.AcctSeedERP__Work_Order_Number__c != null}">
-					<dt>ERP Orderrrr-modified #</dt>
-					<dd>{!v.job.job.ERP_Order__r.AcctSeedERP__Work_Order_Number__c}</dd>
-				</aura:if>
-				<aura:if isTrue="{!v.job.serviceDate != null}">
-					<dt>Service Date</dt>
-					<dd>{!v.job.serviceDate}</dd>
-				</aura:if>
-				<aura:if isTrue="{!v.job.job.ERP_Order__r.AcctSeed__Account__r.Name != null}">
-					<dt>Account:</dt>
-					<dd>{!v.job.job.ERP_Order__r.AcctSeed__Account__r.Name}</dd>
-				</aura:if>
-				<dt>Model Name:</dt>
-				<dd>
-					{!v.job.job.ERP_Order__r.Serial_Product__c}
-					<aura:if isTrue="{!v.job.job.ERP_Order__r.Serial_Product__c == null}">
-						{!v.job.job.Manufactured_Product_Name__c}
-						<aura:if isTrue="{!v.job.job.Manufactured_Product_Name__c == null}">
-							{!v.job.job.ERP_Order__r.Model_Name__c}
-							<aura:if isTrue="{!v.job.job.ERP_Order__r.Model_Name__c == null}">
-								{!v.job.job.ERP_Order__r.Manufactured_Product_Name__c}
-								<aura:if isTrue="{!v.job.job.ERP_Order__r.Manufactured_Product_Name__c == null}">
-									{!v.job.job.ERP_Order__r.AcctSeedERP__Manufactured_Product__r.Name}
-								</aura:if>
-							</aura:if>
-						</aura:if>
-					</aura:if>
-				</dd>
-				<aura:if isTrue="{!v.job.job.ERP_Order__r.Serial_Number__c != null}">
-					<dt>Serial Number</dt>
-					<dd>{!v.job.job.ERP_Order__r.Serial_Number__r.Name}</dd>
-				</aura:if>
-				<aura:if isTrue="{!v.job.materialsText != null}">
-					<dt>Canvas Options:</dt>
-					<dd>
-						{!v.job.materialsText}
-					</dd>
-				</aura:if>
-				<aura:iteration items="{!v.job.tasks}" var="task" indexVar="i">
-					<aura:if isTrue="{!task.Complaint_dh__c != null}">
-						<dt>Task #{!i+1}</dt>
-						<dd>
-							Complaint: {!task.Complaint_dh__c}
-						</dd>
-					</aura:if>
-				</aura:iteration>
-				<aura:if isTrue="{!v.job.job.ERP_Order__r.Rigging_Status__c != null}">
-					<dt>Notes:</dt>
-					<dd>
-						{!v.job.job.ERP_Order__r.Rigging_Status__c}
-					</dd>
-				</aura:if>
-				<aura:if isTrue="{!v.job.job.ERP_Order__r.Delivery_Date__c != null}">
-					<dt>Delivery Date:</dt>
-					<dd>{!v.job.job.ERP_Order__r.Delivery_Date__c}</dd>
-				</aura:if>
-<!--				<aura:if isTrue="{!and(v.job.job.ERP_Order__r.Inventory_ETA__c != null, v.job.job.ERP_Order__r.ERP_Order__r.WarehouseName__c!= null,ERP_Order__r.WarehouseName__c=='Whitefish')}" >-->
-<!--				-->
-				<aura:if isTrue="{!v.job.job.ERP_Order__r.Inventory_ETA__c != null}">
-					<dt>Inventory ETA Date:</dt>
-					<dd>{!v.job.job.ERP_Order__r.Inventory_ETA__c}</dd>
-				</aura:if>
-			</dl>
-		</div>
-		<div class="hasNoERP">
-			<dl>
-				<aura:if isTrue="{!v.job.job.Model__r.Name != null}">
-					<dt>Model Name:</dt>
-					<dd>{!v.job.job.Model__r.Name}</dd>
-				</aura:if>
-				<aura:if isTrue="{!v.job.job.Notes__c != null}">
-					<dt>Notes:</dt>
-					<dd>{!v.job.job.Notes__c}</dd>
-				</aura:if>
-			</dl>
-		</div>
-	</div>
+  <div
+    id="{!v.job.job.Id}"
+    data-id="{!v.job.job.Id}"
+    class="{!v.job.job.class}"
+    draggable="true"
+    ondragstart="{!c.drag}"
+    ondrop="{!c.dropOnItem}"
+    ondragover="{!c.allowDrop}"
+  >
+    <div class="overlay" id="{!v.job.job.Id}" onclick="{!c.setSelectedJobId}"></div>
+    <div class="hasERP">
+      <div class="RecordType">{!v.job.job.ERP_Order__r.RecordType.Name}</div>
+      <p class="age">
+        <aura:if isTrue="{!v.job.timeEstimate != null}">
+          <span>{!v.job.timeEstimate}</span> hours<br />
+          <br />
+        </aura:if>
+      </p>
+      <dl>
+        <aura:if isTrue="{!v.job.job.ERP_Order__r.AcctSeedERP__Work_Order_Number__c != null}">
+          <dt>ERP Orderrrr-modified #</dt>
+          <dd>{!v.job.job.ERP_Order__r.AcctSeedERP__Work_Order_Number__c}</dd>
+        </aura:if>
+        <aura:if isTrue="{!v.job.serviceDate != null}">
+          <dt>Service Date</dt>
+          <dd>{!v.job.serviceDate}</dd>
+        </aura:if>
+        <aura:if isTrue="{!v.job.job.ERP_Order__r.AcctSeed__Account__r.Name != null}">
+          <dt>Account:</dt>
+          <dd>{!v.job.job.ERP_Order__r.AcctSeed__Account__r.Name}</dd>
+        </aura:if>
+        <dt>Model Name:</dt>
+        <dd>
+          {!v.job.job.ERP_Order__r.Serial_Product__c}
+          <aura:if isTrue="{!v.job.job.ERP_Order__r.Serial_Product__c == null}">
+            {!v.job.job.Manufactured_Product_Name__c}
+            <aura:if isTrue="{!v.job.job.Manufactured_Product_Name__c == null}">
+              {!v.job.job.ERP_Order__r.Model_Name__c}
+              <aura:if isTrue="{!v.job.job.ERP_Order__r.Model_Name__c == null}">
+                {!v.job.job.ERP_Order__r.Manufactured_Product_Name__c}
+                <aura:if isTrue="{!v.job.job.ERP_Order__r.Manufactured_Product_Name__c == null}">
+                  {!v.job.job.ERP_Order__r.AcctSeedERP__Manufactured_Product__r.Name}
+                </aura:if>
+              </aura:if>
+            </aura:if>
+          </aura:if>
+        </dd>
+        <aura:if isTrue="{!v.job.job.ERP_Order__r.Serial_Number__c != null}">
+          <dt>Serial Number</dt>
+          <dd>{!v.job.job.ERP_Order__r.Serial_Number__r.Name}</dd>
+        </aura:if>
+        <aura:if isTrue="{!v.job.materialsText != null}">
+          <dt>Canvas Options:</dt>
+          <dd>{!v.job.materialsText}</dd>
+        </aura:if>
+        <aura:iteration items="{!v.job.tasks}" var="task" indexVar="i">
+          <aura:if isTrue="{!task.Complaint_dh__c != null}">
+            <dt>Task #{!i+1}</dt>
+            <dd>Complaint: {!task.Complaint_dh__c}</dd>
+          </aura:if>
+        </aura:iteration>
+        <aura:if isTrue="{!v.job.job.ERP_Order__r.Rigging_Status__c != null}">
+          <dt>Notes:</dt>
+          <dd>{!v.job.job.ERP_Order__r.Rigging_Status__c}</dd>
+        </aura:if>
+        <aura:if isTrue="{!v.job.job.ERP_Order__r.Delivery_Date__c != null}">
+          <dt>Delivery Date:</dt>
+          <dd>{!v.job.job.ERP_Order__r.Delivery_Date__c}</dd>
+        </aura:if>
+        <!--				<aura:if isTrue="{!and(v.job.job.ERP_Order__r.Inventory_ETA__c != null, v.job.job.ERP_Order__r.ERP_Order__r.WarehouseName__c!= null,ERP_Order__r.WarehouseName__c=='Whitefish')}" >-->
+        <!--				-->
+        <aura:if isTrue="{!v.job.job.ERP_Order__r.Inventory_ETA__c != null}">
+          <dt>Inventory ETA Date:</dt>
+          <dd>{!v.job.job.ERP_Order__r.Inventory_ETA__c}</dd>
+        </aura:if>
+      </dl>
+    </div>
+    <div class="hasNoERP">
+      <dl>
+        <aura:if isTrue="{!v.job.job.Model__r.Name != null}">
+          <dt>Model Name:</dt>
+          <dd>{!v.job.job.Model__r.Name}</dd>
+        </aura:if>
+        <aura:if isTrue="{!v.job.job.Notes__c != null}">
+          <dt>Notes:</dt>
+          <dd>{!v.job.job.Notes__c}</dd>
+        </aura:if>
+      </dl>
+    </div>
+  </div>
 </aura:component>

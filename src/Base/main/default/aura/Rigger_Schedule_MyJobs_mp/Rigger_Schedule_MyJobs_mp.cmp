@@ -1,116 +1,115 @@
 <aura:component controller="Rigger_Schedule_mp" implements="force:appHostable,flexipage:availableForAllPageTypes">
-	<aura:attribute type="Employee__c[]" name="riggers" />
-	<aura:attribute type="String" name="selectedRiggerId" />
-	<aura:attribute type="String" name="draggedItemId" access="global" />
-	<aura:attribute type="Rigger_Job__c[]" name="jobs"/>
-	<aura:attribute type="Rigger_Job__c[]" name="myCompletedJobs"/>
+  <aura:attribute type="Employee__c[]" name="riggers" />
+  <aura:attribute type="String" name="selectedRiggerId" />
+  <aura:attribute type="String" name="draggedItemId" access="global" />
+  <aura:attribute type="Rigger_Job__c[]" name="jobs" />
+  <aura:attribute type="Rigger_Job__c[]" name="myCompletedJobs" />
 
   <aura:handler name="init" action="{!c.doInit}" value="{!this}" />
 
   <div class="myJobs">
+    <div class="slds-card">
+      <div class="slds-p-around_small">
+        <lightning:select
+          name="select"
+          label="Select an employee"
+          required="true"
+          messageWhenValueMissing="Did you forget to select an employee?"
+          value="{!v.selectedRiggerId}"
+          onchange="{!c.loadMyJobs}"
+        >
+          <option value="">- None -</option>
+          <aura:iteration items="{!v.riggers}" var="rigger">
+            <option value="{!rigger.Id}" text="{!rigger.Name}"></option>
+          </aura:iteration>
+        </lightning:select>
+      </div>
+    </div>
 
-	  <div class="slds-card">
-	  	<div class="slds-p-around_small">
-			  <lightning:select name="select" label="Select an employee" required="true" messageWhenValueMissing="Did you forget to select an employee?" value="{!v.selectedRiggerId}" onchange="{!c.loadMyJobs}">
-			    <option value="">- None -</option>
-			    <aura:iteration items="{!v.riggers}" var="rigger">
-			      <option value="{!rigger.Id}" text="{!rigger.Name}"></option>
-			    </aura:iteration>
-			  </lightning:select>
-			</div>
-		</div>
+    <div class="slds-grid">
+      <div class="slds-size_7-of-8">
+        <div class="slds-grid slds-wrap">
+          <aura:iteration items="{!v.jobs}" var="job">
+            <div class="slds-p-around_small slds-size_1-of-8">
+              <div
+                id="{!job.Id}"
+                data-id="{!job.Id}"
+                class="{!job.class}"
+                draggable="true"
+                ondragstart="{!c.drag}"
+                ondrop="{!c.dropOnItem}"
+                ondragover="{!c.allowDrop}"
+                onclick="{!c.onclick}"
+              >
+                <div class="overlay"></div>
+                <div class="RecordType">{!job.ERP_Order__r.RecordType.Name}</div>
+                <aura:if isTrue="{!job.ExpectedTime__c != null}">
+                  <p class="age"><span>{!job.ExpectedTime__c}</span> hours</p>
+                </aura:if>
+                <dl>
+                  <dt>Account:</dt>
+                  <dd>{!job.ERP_Order__r.AcctSeed__Account__r.Name}</dd>
+                  <dt>Model Name:</dt>
+                  <dd>{!job.ERP_Order__r.Model_Name__c}</dd>
+                  <aura:if isTrue="{!job.ExpectedTime__c != null}">
+                    <dt>Expected Time:</dt>
+                    <dd>{!job.ExpectedTime__c}</dd>
+                  </aura:if>
+                  <aura:if isTrue="{!job.DueDate__c != null}">
+                    <dt>Deadline:</dt>
+                    <dd>{!job.DueDate__c}</dd>
+                  </aura:if>
+                </dl>
+              </div>
+            </div>
+          </aura:iteration>
+        </div>
+      </div>
 
-		<div class="slds-grid">
-
-			<div class="slds-size_7-of-8">
-				<div class="slds-grid slds-wrap">
-					<aura:iteration items="{!v.jobs}" var="job">
-						<div class="slds-p-around_small slds-size_1-of-8">
-							<div id="{!job.Id}" 
-									 data-id="{!job.Id}" 
-									 class="{!job.class}" 
-									 draggable="true" 
-									 ondragstart="{!c.drag}" 
-									 ondrop="{!c.dropOnItem}" 
-									 ondragover="{!c.allowDrop}"
-								 	 onclick="{!c.onclick}">
-								<div class="overlay"></div>
-								<div class="RecordType">
-									{!job.ERP_Order__r.RecordType.Name}
-								</div>
-								<aura:if isTrue="{!job.ExpectedTime__c != null}">
-									<p class="age">
-										<span>{!job.ExpectedTime__c}</span> hours
-									</p>
-								</aura:if>
-								<dl>
-									<dt>Account:</dt>
-									<dd>{!job.ERP_Order__r.AcctSeed__Account__r.Name}</dd>
-									<dt>Model Name:</dt>
-									<dd>{!job.ERP_Order__r.Model_Name__c}</dd>
-									<aura:if isTrue="{!job.ExpectedTime__c != null}">
-										<dt>Expected Time: </dt>
-										<dd>{!job.ExpectedTime__c}</dd>
-									</aura:if>
-									<aura:if isTrue="{!job.DueDate__c != null}">
-										<dt>Deadline: </dt>
-										<dd>{!job.DueDate__c}</dd>
-									</aura:if>
-								</dl>
-							</div>
-						</div>
-					</aura:iteration>
-				</div>
-			</div>
-
-			<aura:if isTrue="{!v.selectedRiggerId != ''}">
-				<div class="slds-p-around_small slds-size_1-of-8">
-					<div class="slds-card slds-p-around_small done" id="done">
-						<h1 class="slds-text-heading_medium">Completed Today &nbsp;<span class="grey">({!v.myCompletedJobs.length})</span></h1>
-						<div class="dropContainer" aura:id="dropContainer" id="done">
-							<div class="dropzone" ondrop="{!c.drop}" ondragover="{!c.allowDrop}">
-								Drag items to mark completed
-							</div>
-							<aura:iteration items="{!v.myCompletedJobs}" var="job" indexVar="i">
-								<div id="{!job.Id}" 
-										 data-id="{!job.Id}" 
-										 class="slds-box dragItem" 
-										 draggable="true" 
-										 ondragstart="{!c.drag}" 
-										 ondrop="{!c.dropOnItem}" 
-										 ondragover="{!c.allowDrop}"
-									 	 onclick="{!c.onclick}">
-									<div class="overlay"></div>
-									<div class="RecordType">
-										{!job.ERP_Order__r.RecordType.Name}
-									</div>
-									<aura:if isTrue="{!job.ExpectedTime__c != null}">
-										<p class="age">
-											<span>{!job.ExpectedTime__c}</span> hours
-										</p>
-									</aura:if>
-									<dl>
-										<dt>Account:</dt>
-										<dd>{!job.ERP_Order__r.AcctSeed__Account__r.Name}</dd>
-										<dt>Model Name:</dt>
-										<dd>{!job.ERP_Order__r.Model_Name__c}</dd>
-										<aura:if isTrue="{!job.ExpectedTime__c != null}">
-											<dt>Expected Time: </dt>
-											<dd>{!job.ExpectedTime__c}</dd>
-										</aura:if>
-										<aura:if isTrue="{!job.DueDate__c != null}">
-											<dt>Deadline: </dt>
-											<dd>{!job.DueDate__c}</dd>
-										</aura:if>
-									</dl>
-								</div>
-							</aura:iteration>
-						</div>
-					</div>
-				</div>
-			</aura:if>
-
-		</div>
-
-	</div>
+      <aura:if isTrue="{!v.selectedRiggerId != ''}">
+        <div class="slds-p-around_small slds-size_1-of-8">
+          <div class="slds-card slds-p-around_small done" id="done">
+            <h1 class="slds-text-heading_medium">
+              Completed Today &nbsp;<span class="grey">({!v.myCompletedJobs.length})</span>
+            </h1>
+            <div class="dropContainer" aura:id="dropContainer" id="done">
+              <div class="dropzone" ondrop="{!c.drop}" ondragover="{!c.allowDrop}">Drag items to mark completed</div>
+              <aura:iteration items="{!v.myCompletedJobs}" var="job" indexVar="i">
+                <div
+                  id="{!job.Id}"
+                  data-id="{!job.Id}"
+                  class="slds-box dragItem"
+                  draggable="true"
+                  ondragstart="{!c.drag}"
+                  ondrop="{!c.dropOnItem}"
+                  ondragover="{!c.allowDrop}"
+                  onclick="{!c.onclick}"
+                >
+                  <div class="overlay"></div>
+                  <div class="RecordType">{!job.ERP_Order__r.RecordType.Name}</div>
+                  <aura:if isTrue="{!job.ExpectedTime__c != null}">
+                    <p class="age"><span>{!job.ExpectedTime__c}</span> hours</p>
+                  </aura:if>
+                  <dl>
+                    <dt>Account:</dt>
+                    <dd>{!job.ERP_Order__r.AcctSeed__Account__r.Name}</dd>
+                    <dt>Model Name:</dt>
+                    <dd>{!job.ERP_Order__r.Model_Name__c}</dd>
+                    <aura:if isTrue="{!job.ExpectedTime__c != null}">
+                      <dt>Expected Time:</dt>
+                      <dd>{!job.ExpectedTime__c}</dd>
+                    </aura:if>
+                    <aura:if isTrue="{!job.DueDate__c != null}">
+                      <dt>Deadline:</dt>
+                      <dd>{!job.DueDate__c}</dd>
+                    </aura:if>
+                  </dl>
+                </div>
+              </aura:iteration>
+            </div>
+          </div>
+        </div>
+      </aura:if>
+    </div>
+  </div>
 </aura:component>

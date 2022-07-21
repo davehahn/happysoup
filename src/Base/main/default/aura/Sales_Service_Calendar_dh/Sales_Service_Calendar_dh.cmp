@@ -1,6 +1,7 @@
-<aura:component controller="SalesAndServiceCalendar_Controller"
-                implements="force:appHostable,flexipage:availableForAllPageTypes">
-
+<aura:component
+  controller="SalesAndServiceCalendar_Controller"
+  implements="force:appHostable,flexipage:availableForAllPageTypes"
+>
   <aura:attribute name="selectedLocation" type="String" />
   <aura:attribute name="locations" type="Array" />
   <aura:attribute name="eventTypes" type="Array" />
@@ -14,7 +15,8 @@
   <aura:attribute name="filterOpen" type="Boolean" default="false" />
   <aura:attribute name="excludeCompleted" type="Boolean" default="false" />
 
-  <ltng:require styles="{!join(',', $Resource.Libraries + '/css/FullCalendar-3.8.2/fullcalendar.min.css',
+  <ltng:require
+    styles="{!join(',', $Resource.Libraries + '/css/FullCalendar-3.8.2/fullcalendar.min.css',
                         $Resource.SalesServiceCalendar + '/css/sales_service_calendar.min.css')}"
     scripts="{!join(',', $Resource.Libraries + '/js/FullCalendar-3.8.2/lib/jquery.min.js',
                          $Resource.Libraries + '/js/FullCalendar-3.8.2/lib/jquery-ui.min.js',
@@ -22,29 +24,27 @@
                          $Resource.Libraries + '/js/FullCalendar-3.8.2/fullcalendar.js',
                          $Resource.Libraries + '/js/LightningApex.js',
                          $Resource.Libraries + '/js/LightningUtils.js') }"
-    afterScriptsLoaded="{!c.afterScripts}" />
-
+    afterScriptsLoaded="{!c.afterScripts}"
+  />
 
   <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
   <aura:handler name="change" value="{!v.schedulableOpen}" action="{!c.handleSchedulableOpen}" />
   <aura:handler name="change" value="{!v.excludeCompleted}" action="{!c.handleCompletedFilter}" />
-  <aura:handler name="CloseModal"
-                event="c:SalesServiceCalendar_CloseEventDetails_Event_dh"
-                action="{!c.closeModal}" />
-  <aura:handler name="ModalLoaded"
-                event="c:SalesServiceCalendar_ModalLoaded_Event_dh"
-                action="{!c.handleModalLoaded}" />
-  <aura:handler name="UpdateSuccess"
-                event="c:SalesServiceCalendar_UpdateSuccess_Event_dh"
-                action="{!c.handleUpdateSuccess}" />
+  <aura:handler name="CloseModal" event="c:SalesServiceCalendar_CloseEventDetails_Event_dh" action="{!c.closeModal}" />
+  <aura:handler
+    name="ModalLoaded"
+    event="c:SalesServiceCalendar_ModalLoaded_Event_dh"
+    action="{!c.handleModalLoaded}"
+  />
+  <aura:handler
+    name="UpdateSuccess"
+    event="c:SalesServiceCalendar_UpdateSuccess_Event_dh"
+    action="{!c.handleUpdateSuccess}"
+  />
 
   <div aura:id="modal-container"></div>
   <div class="slds-card">
-
-    <lightning:spinner variant="brand"
-                       size="large"
-                       class="slds-hide"
-                       aura:id="spinner" />
+    <lightning:spinner variant="brand" size="large" class="slds-hide" aura:id="spinner" />
 
     <div class="slds-page-header" role="banner">
       <div class="slds-grid slds-align-middle">
@@ -52,8 +52,8 @@
           <lightning:button label="Today" onclick="{!c.calNav}" value="today" />
         </div>
         <div class="slds-col slds-no-flex">
-          <lightning:buttonGroup >
-            <lightning:buttonIcon iconName="utility:chevronleft" onclick="{!c.calNav}" value="prev"/>
+          <lightning:buttonGroup>
+            <lightning:buttonIcon iconName="utility:chevronleft" onclick="{!c.calNav}" value="prev" />
             <lightning:buttonIcon iconName="utility:chevronright" onclick="{!c.calNav}" value="next" />
           </lightning:buttonGroup>
         </div>
@@ -63,40 +63,46 @@
         </div>
 
         <div class="slds-col slds-no-flex slds-container--right">
-
           <div class="slds-grid">
-
             <div class="slds-col slds-no-flex">
-              <lightning:buttonMenu iconName="standard:event"
-                                    menuAlignment="right"
-                                    iconSize="large"
-                                    value="{!v.calView}"
-                                    onselect="{!c.handleCalView}"
-                                    class="cal-select">
+              <lightning:buttonMenu
+                iconName="standard:event"
+                menuAlignment="right"
+                iconSize="large"
+                value="{!v.calView}"
+                onselect="{!c.handleCalView}"
+                class="cal-select"
+              >
                 <lightning:menuItem label="Month" value="month" />
                 <lightning:menuItem label="Week" value="agendaWeek" />
-                <lightning:menuItem label="Day" value="agendaDay"  />
+                <lightning:menuItem label="Day" value="agendaDay" />
               </lightning:buttonMenu>
             </div>
 
             <div class="slds-col slds-no-flex">
-              <lightning:buttonIcon iconName="utility:filterList"
-                                    onclick="{!c.filterToggle}"
-                                    class="slds-m-left_x-small"/>
+              <lightning:buttonIcon
+                iconName="utility:filterList"
+                onclick="{!c.filterToggle}"
+                class="slds-m-left_x-small"
+              />
             </div>
 
             <div class="slds-col slds-no-flex">
-              <lightning:buttonIcon iconName="utility:signpost"
-                                    onclick="{!c.scheduableToggle}"
-                                    class="slds-m-left_x-small" />
+              <lightning:buttonIcon
+                iconName="utility:signpost"
+                onclick="{!c.scheduableToggle}"
+                class="slds-m-left_x-small"
+              />
             </div>
 
             <div class="slds-col slds-no-flex location-selector">
               <aura:if isTrue="{! !empty(v.selectedLocation)}">
-                <lightning:select value="{!v.selectedLocation}"
-                                  variant="label-hidden"
-                                  class="slds-m-left_x-small"
-                                  onchange="{!c.handleLocationChange}">
+                <lightning:select
+                  value="{!v.selectedLocation}"
+                  variant="label-hidden"
+                  class="slds-m-left_x-small"
+                  onchange="{!c.handleLocationChange}"
+                >
                   <aura:iteration items="{!v.locations}" var="loc">
                     <option value="{!loc.value}">{!loc.label}</option>
                   </aura:iteration>
@@ -105,75 +111,67 @@
             </div>
 
             <div class="slds-col slds-no-flex slds-m-left_medium completed-filter">
-              <label class="slds-form-element__label">
-                Exclude Completed
-              </label>
-              <lightning:input type="toggle"
-                               label="Exclude Completed"
-                               name="input1"
-                               messageToggleInactive=""
-                               messageToggleActive=""
-                               variant="label-hidden"
-                               checked="{!v.excludeCompleted}"
-                               class="slds-m-left_large"/>
+              <label class="slds-form-element__label"> Exclude Completed </label>
+              <lightning:input
+                type="toggle"
+                label="Exclude Completed"
+                name="input1"
+                messageToggleInactive=""
+                messageToggleActive=""
+                variant="label-hidden"
+                checked="{!v.excludeCompleted}"
+                class="slds-m-left_large"
+              />
             </div>
-
           </div>
-
         </div>
-
       </div>
+    </div>
+    <!-- /.slds-page-header -->
 
-    </div><!-- /.slds-page-header -->
-
-    <div class="{!join(' ',
-                       'cal-container',
-                       if(v.schedulableOpen, 'scheduable-open', ''),
-                       if(v.filterOpen, 'filter-open', '') )}" aura:id="cal-container">
+    <div
+      class="{!join(' ', 'cal-container', if(v.schedulableOpen, 'scheduable-open', ''), if(v.filterOpen, 'filter-open', '') )}"
+      aura:id="cal-container"
+    >
       <div id="cal" class="calendar"></div>
 
       <div class="calendar-filters">
-        <h1 class="slds-text-heading_medium
-                   slds-text-align_center
-                   slds-border_bottom
-                   slds-border_top
-                   slds-p-top_x-small
-                   slds-p-bottom_small
-                   cal-side-header">Calendars</h1>
+        <h1
+          class="slds-text-heading_medium slds-text-align_center slds-border_bottom slds-border_top slds-p-top_x-small slds-p-bottom_small cal-side-header"
+        >
+          Calendars
+        </h1>
         <lightning:layout horizontalAlign="space" multipleRows="true">
           <aura:iteration items="{!v.eventTypes}" var="type">
             <lightning:layoutItem size="8" class="slds-m-top_small">
               <label class="{! join(' ', 'event-type', type.value)}">{!type.label}</label>
             </lightning:layoutItem>
             <lightning:layoutItem size="4" class="slds-m-top_small">
-              <lightning:input type="toggle"
-                               label="{!type.label}"
-                               name="{!type.value}"
-                               value="{!type.value}"
-                               messageToggleInactive=""
-                               messageToggleActive=""
-                               onchange="{!c.toggleEventSource}"
-                               class="{!join(' ', 'slds-float_right', 'slds-p-right_small', type.value)}"
-                               variant="label-hidden"
-                              aura:id="cal-select"/>
+              <lightning:input
+                type="toggle"
+                label="{!type.label}"
+                name="{!type.value}"
+                value="{!type.value}"
+                messageToggleInactive=""
+                messageToggleActive=""
+                onchange="{!c.toggleEventSource}"
+                class="{!join(' ', 'slds-float_right', 'slds-p-right_small', type.value)}"
+                variant="label-hidden"
+                aura:id="cal-select"
+              />
             </lightning:layoutItem>
           </aura:iteration>
         </lightning:layout>
       </div>
 
       <div class="scheduable-list" aura:id="schedulable-list">
-        <h1 class="slds-text-heading_medium
-                   slds-text-align_center
-                   slds-border_bottom
-                   slds-border_top
-                   slds-p-top_x-small
-                   slds-p-bottom_small
-                   cal-side-header">To Be Scheduled</h1>
+        <h1
+          class="slds-text-heading_medium slds-text-align_center slds-border_bottom slds-border_top slds-p-top_x-small slds-p-bottom_small cal-side-header"
+        >
+          To Be Scheduled
+        </h1>
         <div aura:id="schedulables"></div>
       </div>
     </div>
-
   </div>
-
-
 </aura:component>

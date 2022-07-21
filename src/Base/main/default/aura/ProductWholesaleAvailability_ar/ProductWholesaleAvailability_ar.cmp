@@ -1,69 +1,67 @@
-<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" controller="ProductWholesaleAvailability_ar" >
-	<aura:attribute name="idProduct" type="Id" />
-    <aura:attribute name="idLot" type="Id" />
-    <aura:attribute name="allAvailableBoats" type="sObject[]" />
-    <aura:attribute name="availAbility" type="decimal" default="0" />
-    <aura:attribute name="availAbilityDate" type="string" />
-    <aura:attribute name="datePositiveShipment" type="string" />
-    <aura:attribute name="datePositiveShipmentIsToday" type="Boolean" default="false" />
-    <aura:attribute name="showData" type="Boolean" default="false" />
+<aura:component
+  implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction"
+  access="global"
+  controller="ProductWholesaleAvailability_ar"
+>
+  <aura:attribute name="idProduct" type="Id" />
+  <aura:attribute name="idLot" type="Id" />
+  <aura:attribute name="allAvailableBoats" type="sObject[]" />
+  <aura:attribute name="availAbility" type="decimal" default="0" />
+  <aura:attribute name="availAbilityDate" type="string" />
+  <aura:attribute name="datePositiveShipment" type="string" />
+  <aura:attribute name="datePositiveShipmentIsToday" type="Boolean" default="false" />
+  <aura:attribute name="showData" type="Boolean" default="false" />
 
-    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+  <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
 
-    <div class="slds-m-around_none slds-theme_default">
-        <lightning:select name="allBoats"
-                          value="{!v.idProduct}"
-                          onchange="{!c.handleProductSelected}"
-                          class="productSelector slds-m-around_none slds-p-around_none"
-                          label="Select a Boat"
-                          variant="label-hidden">
-            <option value="" text="--Select a Product--"></option>
-            <aura:iteration items="{!v.allAvailableBoats}" var="option">
-                <aura:if isTrue="{!option.familyCounter == 'start'}">
-                    <optgroup label="{!option.Family}"/>
-                    <option value="{!option.Id}" text="{!'&nbsp;&nbsp;&nbsp;'+option.Name}"></option>
-                <aura:set attribute="else">
-                    <option value="{!option.Id}" text="{!'&nbsp;&nbsp;&nbsp;'+option.Name}"></option>
-                </aura:set>
-                </aura:if>
-            </aura:iteration>
-        </lightning:select>
-        <aura:if isTrue="{!v.showData}">
-        <table class="slds-box slds-table_bordered slds-table-col_bordered slds-p-top_small">
-            <thead>
-                <tr class="slds-text-title_caps">
-                    <th scope="col" width="50%">
-                        {!if(v.datePositiveShipmentIsToday,'In Stock','Available')}
-                    </th>
-                    <th scope="col">
-                        Date
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <th scope="row">
-                        {!v.availAbility}
-                    </th>
-                    <th scope="row">
-                        <aura:if isTrue="{!v.datePositiveShipment != null}">
-                            <ui:outputDate format="MMM-DD-YYYY" value="{!v.datePositiveShipment}" />
-                        <aura:set attribute="else">
-                            N/A
-                        </aura:set>
-                        </aura:if>
-                    </th>
-                </tr>
-            </tbody>
-        </table>
+  <div class="slds-m-around_none slds-theme_default">
+    <lightning:select
+      name="allBoats"
+      value="{!v.idProduct}"
+      onchange="{!c.handleProductSelected}"
+      class="productSelector slds-m-around_none slds-p-around_none"
+      label="Select a Boat"
+      variant="label-hidden"
+    >
+      <option value="" text="--Select a Product--"></option>
+      <aura:iteration items="{!v.allAvailableBoats}" var="option">
+        <aura:if isTrue="{!option.familyCounter == 'start'}">
+          <optgroup label="{!option.Family}" />
+          <option value="{!option.Id}" text="{!'&nbsp;&nbsp;&nbsp;'+option.Name}"></option>
+          <aura:set attribute="else">
+            <option value="{!option.Id}" text="{!'&nbsp;&nbsp;&nbsp;'+option.Name}"></option>
+          </aura:set>
         </aura:if>
-    </div>
-    <!-- <div class="slds-m-around_none">
+      </aura:iteration>
+    </lightning:select>
+    <aura:if isTrue="{!v.showData}">
+      <table class="slds-box slds-table_bordered slds-table-col_bordered slds-p-top_small">
+        <thead>
+          <tr class="slds-text-title_caps">
+            <th scope="col" width="50%">{!if(v.datePositiveShipmentIsToday,'In Stock','Available')}</th>
+            <th scope="col">Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">{!v.availAbility}</th>
+            <th scope="row">
+              <aura:if isTrue="{!v.datePositiveShipment != null}">
+                <ui:outputDate format="MMM-DD-YYYY" value="{!v.datePositiveShipment}" />
+                <aura:set attribute="else"> N/A </aura:set>
+              </aura:if>
+            </th>
+          </tr>
+        </tbody>
+      </table>
+    </aura:if>
+  </div>
+  <!-- <div class="slds-m-around_none">
         <div class="slds-box slds-p-around_none header-title">
             <div class="slds-m-around_none slds-p-around_none">
                 <h1 class="slds-text-heading_medium slds-text-align_center slds-border_bottom slds-p-around_small slds-p-top_small slds-text-color_inverse">Check Wholesale Inventory</h1>
             </div>
         </div>
     </div> -->
-	<lightning:spinner class="slds-hide" aura:id="spinner" />
+  <lightning:spinner class="slds-hide" aura:id="spinner" />
 </aura:component>

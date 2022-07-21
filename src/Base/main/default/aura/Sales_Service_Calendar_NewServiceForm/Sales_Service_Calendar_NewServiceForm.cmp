@@ -1,8 +1,9 @@
 <aura:component controller="SalesAndServiceCalendar_Controller">
-
-   <ltng:require scripts="{!join(',', $Resource.Libraries + '/js/LightningApex.js',
+  <ltng:require
+    scripts="{!join(',', $Resource.Libraries + '/js/LightningApex.js',
                                      $Resource.Libraries + '/js/LightningUtils.js') }"
-                afterScriptsLoaded="{!c.afterScripts}" />
+    afterScriptsLoaded="{!c.afterScripts}"
+  />
 
   <aura:attribute name="startAt" type="String" />
   <aura:attribute name="endAt" type="String" />
@@ -39,143 +40,118 @@
   <aura:attribute name="prepaids" type="Object" default="{}" />
 
   <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
-  <aura:handler name="accountSelectedEvent"
-                event="c:dh_AccountSelector_Selected_Event"
-                action="{!c.handleAccountSelected}" />
+  <aura:handler
+    name="accountSelectedEvent"
+    event="c:dh_AccountSelector_Selected_Event"
+    action="{!c.handleAccountSelected}"
+  />
 
   <aura:handler name="change" value="{!v.serialId}" action="{!c.handleStepNext}" />
   <aura:handler name="change" value="{!v.tasks}" action="{!c.updateDurationEstimate}" />
 
-  <aura:handler name="change" value="{!v.currentTaskName}" action="{!c.taskNameChanged} "/>
-  <aura:handler name="change" value="{!v.currentTaskComplaint}" action="{!c.complaintChanged} "/>
+  <aura:handler name="change" value="{!v.currentTaskName}" action="{!c.taskNameChanged} " />
+  <aura:handler name="change" value="{!v.currentTaskComplaint}" action="{!c.complaintChanged} " />
 
   <aura:handler name="change" value="{!v.warehouseId}" action="{!c.warehouseChanged}" />
 
-  <aura:registerEvent name="CloseModal"
-                      type="c:SalesServiceCalendar_CloseEventDetails_Event_dh"/>
-  <aura:registerEvent name="ModalLoaded"
-                      type="c:SalesServiceCalendar_ModalLoaded_Event_dh"/>
-  <aura:registerEvent name="UpdateSuccess"
-                      type="c:SalesServiceCalendar_UpdateSuccess_Event_dh"/>
+  <aura:registerEvent name="CloseModal" type="c:SalesServiceCalendar_CloseEventDetails_Event_dh" />
+  <aura:registerEvent name="ModalLoaded" type="c:SalesServiceCalendar_ModalLoaded_Event_dh" />
+  <aura:registerEvent name="UpdateSuccess" type="c:SalesServiceCalendar_UpdateSuccess_Event_dh" />
 
   <div>
-   <section role="dialog"
-            tabindex="-1"
-            class="slds-modal slds-fade-in-open">
+    <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
       <div class="slds-modal__container">
         <header class="slds-modal__header">
-          <lightning:buttonIcon iconName="utility:close"
-                                class="slds-modal__close slds-button_icon-inverse"
-                                alternativeText="Close"
-                                onclick="{!c.handleCancel}" />
+          <lightning:buttonIcon
+            iconName="utility:close"
+            class="slds-modal__close slds-button_icon-inverse"
+            alternativeText="Close"
+            onclick="{!c.handleCancel}"
+          />
           <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">
             Create a new Service Appointment
           </h2>
         </header>
-        <div class="slds-modal__content slds-p-around_medium slds-p-top_none" >
-
+        <div class="slds-modal__content slds-p-around_medium slds-p-top_none">
           <div>
-            <lightning:spinner variant="brand"
-                              size="large"
-                              class="slds-is-fixed slds-hide"
-                              aura:id="spinner" />
+            <lightning:spinner variant="brand" size="large" class="slds-is-fixed slds-hide" aura:id="spinner" />
           </div>
 
           <!-- DATES -->
           <lightning:layout class="slds-border_bottom slds-m-bottom_medium" horizontalAlign="spread">
             <lightning:layoutItem padding="around-small" size="6">
-              <lightning:input type="datetime-local"
-                               label="Start"
-                               value="{!v.startAt}" />
-              <lightning:select label="Location"
-                                class="slds-m-bottom_small"
-                                value="{!v.warehouseId}">
+              <lightning:input type="datetime-local" label="Start" value="{!v.startAt}" />
+              <lightning:select label="Location" class="slds-m-bottom_small" value="{!v.warehouseId}">
                 <aura:iteration items="{!v.warehouseOptions}" var="wh">
-                  <option value="{!wh.Id}"
-                          text="{!wh.Name}"
-                          selected="{! equals( wh.Id, v.warehouseId )}"></option>
+                  <option value="{!wh.Id}" text="{!wh.Name}" selected="{! equals( wh.Id, v.warehouseId )}"></option>
                 </aura:iteration>
               </lightning:select>
-              <lightning:select label="Parking Spot"
-                                class="slds-m-bottom_small"
-                                value="{!v.parkingSpot}">
+              <lightning:select label="Parking Spot" class="slds-m-bottom_small" value="{!v.parkingSpot}">
                 <option value="" text="-- None --"></option>
                 <aura:iteration items="{!v.parkingSpotOptions}" var="spot">
-                  <option value="{!spot}"
-                          text="{!spot}"
-                          selected="{! equals( spot, v.parkingSpot )}"></option>
+                  <option value="{!spot}" text="{!spot}" selected="{! equals( spot, v.parkingSpot )}"></option>
                 </aura:iteration>
               </lightning:select>
-              <lightning:select label="Rigger"
-                                class="slds-m-bottom_small"
-                                value="{!v.riggerId}">
+              <lightning:select label="Rigger" class="slds-m-bottom_small" value="{!v.riggerId}">
                 <option value="" text="-- None --"></option>
                 <aura:iteration items="{!v.riggers}" var="rigger">
-                  <option value="{!rigger.Id}"
-                          text="{!rigger.Name}"
-                          selected="{! equals( rigger.Id, v.riggerId )}"></option>
+                  <option
+                    value="{!rigger.Id}"
+                    text="{!rigger.Name}"
+                    selected="{! equals( rigger.Id, v.riggerId )}"
+                  ></option>
                 </aura:iteration>
               </lightning:select>
             </lightning:layoutItem>
-            <lightning:layoutItem padding="around-small"  size="6" class="slds-m-top_x-large">
-
+            <lightning:layoutItem padding="around-small" size="6" class="slds-m-top_x-large">
               <lightning:layout horizontalAlign="center" class="slds-m-bottom_small">
                 <lightning:layoutItem size="8">
-                  <p class="slds-text-heading_small slds-p-left_medium">
-                    Estimated Duration:
-                  </p>
+                  <p class="slds-text-heading_small slds-p-left_medium">Estimated Duration:</p>
                 </lightning:layoutItem>
                 <lightning:layoutItem size="4">
-                  <span class="estimation">
-                    {!v.estimatedDuration}
-                  </span>
+                  <span class="estimation"> {!v.estimatedDuration} </span>
                 </lightning:layoutItem>
               </lightning:layout>
 
               <aura:if isTrue="{! !empty(v.accountId)}">
                 <lightning:layout horizontalAlign="center" class="slds-m-bottom_small">
                   <lightning:layoutItem size="5">
-                    <p class="slds-text-heading_small slds-p-left_medium">
-                      Account:
-                    </p>
+                    <p class="slds-text-heading_small slds-p-left_medium">Account:</p>
                   </lightning:layoutItem>
                   <lightning:layoutItem size="6">
-                    <p class="slds-text-body_regular">
-                      {!v.accountName}
-                    </p>
+                    <p class="slds-text-body_regular">{!v.accountName}</p>
                   </lightning:layoutItem>
                   <lightning:layoutItem size="1">
-                    <lightning:buttonIcon iconName="utility:close"
-                                          variant="bare"
-                                          size="small"
-                                          alternativeText="Clear Account"
-                                          onclick="{!c.clearAccount}" />
+                    <lightning:buttonIcon
+                      iconName="utility:close"
+                      variant="bare"
+                      size="small"
+                      alternativeText="Clear Account"
+                      onclick="{!c.clearAccount}"
+                    />
                   </lightning:layoutItem>
                 </lightning:layout>
               </aura:if>
 
               <aura:if isTrue="{! !empty(v.serialId) }">
-                <lightning:layout horizontalAlign="center"  class="slds-m-bottom_small">
+                <lightning:layout horizontalAlign="center" class="slds-m-bottom_small">
                   <lightning:layoutItem size="5">
-                    <p class="slds-text-heading_small slds-p-left_medium">
-                      Serial Number:
-                    </p>
+                    <p class="slds-text-heading_small slds-p-left_medium">Serial Number:</p>
                   </lightning:layoutItem>
                   <lightning:layoutItem size="6">
-                    <p class="slds-text-body_regular">
-                      {!v.serialNumber}
-                    </p>
+                    <p class="slds-text-body_regular">{!v.serialNumber}</p>
                   </lightning:layoutItem>
                   <lightning:layoutItem size="1">
-                    <lightning:buttonIcon iconName="utility:close"
-                                          variant="bare"
-                                          size="small"
-                                          alternativeText="Clear Serial"
-                                          onclick="{!c.clearSerial}" />
+                    <lightning:buttonIcon
+                      iconName="utility:close"
+                      variant="bare"
+                      size="small"
+                      alternativeText="Clear Serial"
+                      onclick="{!c.clearSerial}"
+                    />
                   </lightning:layoutItem>
                 </lightning:layout>
               </aura:if>
-
             </lightning:layoutItem>
           </lightning:layout>
 
@@ -189,14 +165,13 @@
                 <div class="slds-media__body">
                   <h2 class="slds-text-heading_small slds-m-top_x-small">Who can we help?</h2>
                 </div>
-              </div><!-- /sdls-card_header -->
+              </div>
+              <!-- /sdls-card_header -->
 
               <div class="slds-card__body slds-m-top_medium">
-                <lightning:layout >
+                <lightning:layout>
                   <lightning:layoutItem size="2" padding="around-small">
-                    <lightning:select value="{!v.accountSearchScope}"
-                                      label="Account Type"
-                                      disabled="true">
+                    <lightning:select value="{!v.accountSearchScope}" label="Account Type" disabled="true">
                       <option value="customer" text="Customer" />
                       <option value="dealer" text="Dealer" />
                     </lightning:select>
@@ -205,10 +180,11 @@
                     <c:dh_AccountSelector accountScope="{!v.accountSearchScope}" />
                   </lightning:layoutItem>
                 </lightning:layout>
-              </div><!-- /slds-card_body -->
-            </div><!-- /slds-card-->
-          </aura:if><!-- /END STEP ONE -->
-
+              </div>
+              <!-- /slds-card_body -->
+            </div>
+            <!-- /slds-card--> </aura:if
+          ><!-- /END STEP ONE -->
 
           <!-- SELECT SERIAL NUMBER -->
           <aura:if isTrue="{! equals(v.currentStep, v.steps[1])}">
@@ -220,15 +196,20 @@
                 <div class="slds-media__body">
                   <h2 class="slds-text-heading_small slds-m-top_x-small">What will we be working on?</h2>
                 </div>
-              </div><!-- /sdls-card_header -->
+              </div>
+              <!-- /sdls-card_header -->
 
               <div class="slds-card__body slds-m-top_medium">
-                <c:SerialNumber_ByAccount_dh accountId="{!v.accountId}"
-                                             serialNumberId="{!v.serialId }"
-                                             serialNumber="{!v.serialNumber}" />
-              </div><!-- /slds-card_body -->
-            </div><!-- /slds-card-->
-          </aura:if><!-- /END STEP TWO -->
+                <c:SerialNumber_ByAccount_dh
+                  accountId="{!v.accountId}"
+                  serialNumberId="{!v.serialId }"
+                  serialNumber="{!v.serialNumber}"
+                />
+              </div>
+              <!-- /slds-card_body -->
+            </div>
+            <!-- /slds-card--> </aura:if
+          ><!-- /END STEP TWO -->
 
           <!-- Prepaids -->
           <aura:if isTrue="{! equals(v.currentStep, v.steps[2])}">
@@ -240,10 +221,11 @@
                 <div class="slds-media__body">
                   <h2 class="slds-text-heading_small slds-m-top_x-small">Prepaid Service Redemption</h2>
                 </div>
-              </div><!-- /sdls-card_header -->
+              </div>
+              <!-- /sdls-card_header -->
 
               <div class="slds-card__body slds-m-top_medium">
-                <lightning:layout >
+                <lightning:layout>
                   <lightning:layoutItem size="12" padding="around-small">
                     <aura:if isTrue="{! v.prepaids.length lt 1 }">
                       <p>There are no prepaid services on {! v.accountName }'s account.</p>
@@ -267,7 +249,15 @@
                                 <td>{!p.quantity}</td>
                                 <td>{!p.redeemed}</td>
                                 <td>{!p.balance}</td>
-                                <td><lightning:input type="number" value="{!p.toredeem}" min="0" max="{!p.balance}" variant="label-hidden"/></td>
+                                <td>
+                                  <lightning:input
+                                    type="number"
+                                    value="{!p.toredeem}"
+                                    min="0"
+                                    max="{!p.balance}"
+                                    variant="label-hidden"
+                                  />
+                                </td>
                               </tr>
                             </aura:if>
                           </aura:iteration>
@@ -276,10 +266,11 @@
                     </aura:if>
                   </lightning:layoutItem>
                 </lightning:layout>
-              </div><!-- /slds-card_body -->
-            </div><!-- /slds-card-->
-          </aura:if><!-- /END STEP THREE -->
-
+              </div>
+              <!-- /slds-card_body -->
+            </div>
+            <!-- /slds-card--> </aura:if
+          ><!-- /END STEP THREE -->
 
           <!-- ENTER PROBLEMS FOR ERP ORDER TASKS -->
           <aura:if isTrue="{! equals(v.currentStep, v.steps[3])}">
@@ -291,28 +282,29 @@
                 <div class="slds-media__body">
                   <h2 class="slds-text-heading_small slds-m-top_x-small">What is the problem?</h2>
                 </div>
-              </div><!-- /sdls-card_header -->
+              </div>
+              <!-- /sdls-card_header -->
 
               <div class="slds-card__body slds-m-top_medium">
-
                 <aura:if isTrue="{! !empty(v.tasks)}">
                   <div class="slds-pill_container">
                     <aura:iteration items="{!v.tasks}" var="task">
                       <span class="slds-pill slds-pill_link" aura:id="task-pill">
-                        <a href="javascript:void(0);"
+                        <a
+                          href="javascript:void(0);"
                           class="slds-pill__action"
                           title="{!task.name}"
                           onclick="{!c.handleTaskClick}"
-                          data-task-number="{!task.number}">
+                          data-task-number="{!task.number}"
+                        >
                           <span class="slds-pill__label">{!task.name}</span>
                         </a>
-                        <button class="slds-button
-                                       slds-button_icon
-                                       slds-button_icon
-                                       slds-pill__remove"
-                                title="Remove"
-                                onclick="{!c.handleRemoveTask}"
-                                data-task-number="{!task.number}">
+                        <button
+                          class="slds-button slds-button_icon slds-button_icon slds-pill__remove"
+                          title="Remove"
+                          onclick="{!c.handleRemoveTask}"
+                          data-task-number="{!task.number}"
+                        >
                           <lightning:icon iconName="utility:close" />
                           <span class="slds-assistive-text">Remove</span>
                         </button>
@@ -324,29 +316,42 @@
                 <!-- NEW TASK FORM -->
                 <lightning:layout verticalAlign="center">
                   <lightning:layoutItem size="6" padding="around-small">
-
                     <div class="slds-form-element">
                       <div class="slds-combobox_container">
-                        <div class="slds-combobox slds-dropdown-trigger slds-dropdown-trigger--click slds-is-closed" role="combobox" aura:id="task_combobox">
+                        <div
+                          class="slds-combobox slds-dropdown-trigger slds-dropdown-trigger--click slds-is-closed"
+                          role="combobox"
+                          aura:id="task_combobox"
+                        >
                           <div class="slds-form-element">
-                            <lightning:input type="search"
-                                             name="TaskSearch"
-                                             label="Task Name"
-                                             placeholder="Task Name"
-                                             value="{!v.currentTaskName}"
-                                             aura:id="currentTaskName"
-                                             onchange="{!c.taskSearch}" />
+                            <lightning:input
+                              type="search"
+                              name="TaskSearch"
+                              label="Task Name"
+                              placeholder="Task Name"
+                              value="{!v.currentTaskName}"
+                              aura:id="currentTaskName"
+                              onchange="{!c.taskSearch}"
+                            />
                           </div>
                           <div class="listbox-unique-id" role="listbox">
-                            <ul class="slds-listbox slds-listbox_vertical slds-dropdown slds-dropdown_fluid" role="presentation">
+                            <ul
+                              class="slds-listbox slds-listbox_vertical slds-dropdown slds-dropdown_fluid"
+                              role="presentation"
+                            >
                               <aura:iteration items="{!v.taskNameOptions}" var="item" indexVar="i">
                                 <li role="option" class="slds-listbox__item" data-address-id="{!i}">
-                                  <a href="javascript:void(0);"
-                                     role="option"
-                                     id="{!'listbox-option-unique-id-' + i}"
-                                     onclick="{!c.clickTaskName}"
-                                     data-name="{!item}">
-                                    <span class="slds-media slds-listbox__option slds-listbox__option_entity slds-listbox__option_has-meta" role="option">
+                                  <a
+                                    href="javascript:void(0);"
+                                    role="option"
+                                    id="{!'listbox-option-unique-id-' + i}"
+                                    onclick="{!c.clickTaskName}"
+                                    data-name="{!item}"
+                                  >
+                                    <span
+                                      class="slds-media slds-listbox__option slds-listbox__option_entity slds-listbox__option_has-meta"
+                                      role="option"
+                                    >
                                       {!item}
                                     </span>
                                   </a>
@@ -360,10 +365,8 @@
                   </lightning:layoutItem>
 
                   <lightning:layoutItem size="3" padding="around-small">
-                    <lightning:input type="text"
-                                     label="Estimated Time (hrs)"
-                                     value="{! v.currentTaskTimeEstimate }" />
-                     <!-- <lightning:input type="toggle"
+                    <lightning:input type="text" label="Estimated Time (hrs)" value="{! v.currentTaskTimeEstimate }" />
+                    <!-- <lightning:input type="toggle"
                                       label="Display On Customer Invoice"
                                       name="display on invoice"
                                       checked=""
@@ -374,25 +377,30 @@
                 </lightning:layout>
                 <lightning:layout>
                   <lightning:layoutItem size="12" padding="around-small">
-                    <lightning:textarea label="Complaint"
-                                        name="Complaint"
-                                        class="task-complaint"
-                                        value="{!v.currentTaskComplaint}" />
+                    <lightning:textarea
+                      label="Complaint"
+                      name="Complaint"
+                      class="task-complaint"
+                      value="{!v.currentTaskComplaint}"
+                    />
                   </lightning:layoutItem>
                 </lightning:layout>
 
                 <div class="slds-align_absolute-center">
-                  <lightning:button label="Add Another"
-                                    variant="neutral"
-                                    disabled="{! or( empty(v.currentTaskName), empty(v.currentTaskComplaint) )}"
-                                    onclick="{!c.handleAddAnotherTask}" />
+                  <lightning:button
+                    label="Add Another"
+                    variant="neutral"
+                    disabled="{! or( empty(v.currentTaskName), empty(v.currentTaskComplaint) )}"
+                    onclick="{!c.handleAddAnotherTask}"
+                  />
                 </div>
+              </div>
+              <!-- /slds-card_body -->
+            </div>
+            <!-- /slds-card--> </aura:if
+          ><!-- /END STEP THREE -->
 
-              </div><!-- /slds-card_body -->
-            </div><!-- /slds-card-->
-          </aura:if><!-- /END STEP THREE -->
-
-        <!-- Add any additional notes -->
+          <!-- Add any additional notes -->
           <aura:if isTrue="{! equals(v.currentStep, v.steps[4])}">
             <div class="slds-card">
               <div class="slds-car__header slds-grid">
@@ -402,78 +410,63 @@
                 <div class="slds-media__body">
                   <h2 class="slds-text-heading_small slds-m-top_x-small">Any addition information?</h2>
                 </div>
-              </div><!-- /sdls-card_header -->
+              </div>
+              <!-- /sdls-card_header -->
 
               <div class="slds-card__body slds-m-top_medium">
-                <lightning:layout >
+                <lightning:layout>
                   <lightning:layoutItem size="12" padding="around-small">
-                    <lightning:textarea label="Customer Notes"
-                                        value="{!v.notes}" />
+                    <lightning:textarea label="Customer Notes" value="{!v.notes}" />
                   </lightning:layoutItem>
                 </lightning:layout>
-              </div><!-- /slds-card_body -->
-            </div><!-- /slds-card-->
-          </aura:if><!-- /END STEP THREE -->
-
-        </div><!-- /slds-modal_content -->
+              </div>
+              <!-- /slds-card_body -->
+            </div>
+            <!-- /slds-card--> </aura:if
+          ><!-- /END STEP THREE -->
+        </div>
+        <!-- /slds-modal_content -->
 
         <footer class="slds-modal__footer slds-grid slds-grid_align-spread">
-
           <!-- Cancel Button -->
-          <lightning:button label="Cancel"
-                            variant="neutral"
-                            onclick="{!c.handleCancel}"
-                            class="slds-m-right_small" />
-
+          <lightning:button label="Cancel" variant="neutral" onclick="{!c.handleCancel}" class="slds-m-right_small" />
 
           <!-- Progress Indicator -->
           <lightning:progressIndicator currentStep="{!v.currentStep}" type="base">
-              <lightning:progressStep label="{!v.steps[0]}"
-                                      title="{!v.steps[0]}"
-                                      value="{!v.steps[0]}"/>
-              <lightning:progressStep label="{!v.steps[1]}"
-                                      title="{!v.steps[1]}"
-                                      value="{!v.steps[1]}"/>
-              <lightning:progressStep label="{!v.steps[2]}"
-                                      title="{!v.steps[2]}"
-                                      value="{!v.steps[2]}"/>
-              <lightning:progressStep label="{!v.steps[3]}"
-                                      title="{!v.steps[3]}"
-                                      value="{!v.steps[3]}"/>
-              <lightning:progressStep label="{!v.steps[4]}"
-                                      title="{!v.steps[4]}"
-                                      value="{!v.steps[4]}"/>
+            <lightning:progressStep label="{!v.steps[0]}" title="{!v.steps[0]}" value="{!v.steps[0]}" />
+            <lightning:progressStep label="{!v.steps[1]}" title="{!v.steps[1]}" value="{!v.steps[1]}" />
+            <lightning:progressStep label="{!v.steps[2]}" title="{!v.steps[2]}" value="{!v.steps[2]}" />
+            <lightning:progressStep label="{!v.steps[3]}" title="{!v.steps[3]}" value="{!v.steps[3]}" />
+            <lightning:progressStep label="{!v.steps[4]}" title="{!v.steps[4]}" value="{!v.steps[4]}" />
           </lightning:progressIndicator>
 
           <!-- Back Button -->
-          <lightning:button label="Back"
-                            variant="neutral"
-                            onclick="{!c.handleStepBack}"
-                            disabled="{! equals( v.currentStep, v.steps[0] )}"
-                            class="slds-m-left_small" />
+          <lightning:button
+            label="Back"
+            variant="neutral"
+            onclick="{!c.handleStepBack}"
+            disabled="{! equals( v.currentStep, v.steps[0] )}"
+            class="slds-m-left_small"
+          />
 
           <!-- Next Button -->
           <aura:if isTrue="{! !equals( v.currentStep, v.steps[ 4 ] )}">
-            <lightning:button label="Next"
-                              variant="brand"
-                              disabled="{! and( equals( v.currentStep, v.steps[0] ),
+            <lightning:button
+              label="Next"
+              variant="brand"
+              disabled="{! and( equals( v.currentStep, v.steps[0] ),
                                                 empty( v.accountId ) )}"
-                              onclick="{!c.handleStepNext}" />
+              onclick="{!c.handleStepNext}"
+            />
           </aura:if>
 
           <!-- Create Button -->
           <aura:if isTrue="{! equals( v.currentStep, v.steps[ 4 ] )}">
-            <lightning:button label="Save"
-                              variant="success"
-                              onclick="{!c.handleCreate}" />
+            <lightning:button label="Save" variant="success" onclick="{!c.handleCreate}" />
           </aura:if>
-
         </footer>
-
       </div>
-
     </section>
     <div class="slds-backdrop slds-backdrop_open"></div>
   </div>
-
 </aura:component>

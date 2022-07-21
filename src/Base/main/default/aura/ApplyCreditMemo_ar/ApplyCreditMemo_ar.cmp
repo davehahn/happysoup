@@ -1,96 +1,140 @@
-<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,force:hasRecordId,force:lightningQuickAction,force:LightningQuickActionWithoutHeader" access="global" controller="ApplyCreditMemo_ar">
-    <aura:attribute name="recordId" type="Id" />
-    <aura:attribute name="originalBalance" type="Decimal" default="0" />
-    <aura:attribute name="totalCanBeApplied" type="Decimal" default="0" />
-    <aura:attribute name="totalApplied" type="Decimal" default="0" />
-    <aura:attribute name="billingCM" type="AcctSeed__Billing__c" />
-    <aura:attribute name="billingCMData" type="AcctSeed__Billing__c[]" />
-    <aura:attribute name="btnDisabled" type="Boolean" default="true" />
-    <aura:attribute name="notInvoice" type="Boolean" default="true" />
-	<lightning:notificationsLibrary aura:id="notifLib"/>
-    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
-	<section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
-		<div class="slds-modal__container">
-			<header class="slds-modal__header">
-				<h1 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Apply Credit Memo</h1>
-				<br/>
-				<div class="slds-box slds-theme_shade slds-text-align_left">
-			    	<lightning:recordViewForm recordId="{!v.recordId}" objectApiName="AcctSeed__Billing__c">
-				        <lightning:layout horizontalAlign="spread" verticalAlign="start">
-				            <lightning:outputField class="slds-text-title" fieldName="AcctSeed__Customer__c" />
-				        </lightning:layout>
-				        <lightning:layout horizontalAlign="spread" verticalAlign="start">
-				            <lightning:outputField fieldName="AcctSeed__Total__c" />
-				            <lightning:outputField fieldName="AcctSeed__Credit_Memo_Applied_Amount__c" />
-				            <lightning:outputField fieldName="AcctSeed__Balance__c" />
-				            <lightning:input type="number" name="amount" readonly="true" value="{!v.totalApplied}" label="Applied Amount" formatter="currency"/>
-				        </lightning:layout> 
-				    </lightning:recordViewForm>
-				</div>
-			</header>
-			<aura:if isTrue="{!v.notInvoice}">
-			<div class="slds-modal__content slds-p-around_medium">
-				<aura:iteration items="{!v.billingCMData}" var="bcm" indexVar="ind">
-				<lightning:recordEditForm aura:id="{!bcm.Id + '_billingRecordForm'}" recordId="{!bcm.Id}" objectApiName="AcctSeed__Billing__c">
-			    <div class="slds-box slds-m-around_none">
-				    <lightning:layout horizontalAlign="spread" verticalAlign="start">
-			            <lightning:layoutItem padding="around-none" class="slds-m-around_none">
-					        <div class="slds-m-top_small">
-				        	<lightning:outputField fieldName="Name" />
-					        </div>
-			            </lightning:layoutItem>
-			            <lightning:layoutItem padding="around-none" class="slds-m-around_none">
-					        <div class="slds-m-top_small">
-					        	<lightning:outputField fieldName="GMBLASERP__Project__c" />
-					        </div>
-			            </lightning:layoutItem>
-			            <lightning:layoutItem padding="around-none" class="slds-m-around_none">
-					        <div class="slds-m-top_small">
-					        	<lightning:outputField fieldName="AcctSeed__Total__c" />
-					        </div>
-			            </lightning:layoutItem>
-			            <lightning:layoutItem padding="around-none" class="slds-m-around_none">
-					        <div class="slds-m-top_small">
-					        	<lightning:outputField fieldName="AcctSeed__Credit_Memo_Applied_Amount__c" />
-					        </div>
-			            </lightning:layoutItem>
-			        </lightning:layout>
-			        <lightning:layout horizontalAlign="spread" verticalAlign="start">
-				        <lightning:layoutItem padding="around-none" class="slds-m-around_none">
-				        	<div class="slds-m-top_small">
-				        		<lightning:inputField aura:id="billingPeriodField" id="{!bcm.Id + '_' + bcm.AcctSeed__Accounting_Period__c + '_period'}" fieldName="AcctSeed__Accounting_Period__c" onchange="" value="{!bcm.AcctSeed__Accounting_Period__c}" />
-				        	</div>
-				        </lightning:layoutItem>
-				        <lightning:layoutItem padding="around-none" class="slds-m-around_none">
-				        	<div class="slds-m-top_small">
-				        		<lightning:outputField fieldName="AcctSeed__Balance__c" label="Billing Balance" />
-				        	</div>
-				        </lightning:layoutItem>
-				        <lightning:layoutItem padding="around-none" class="slds-m-around_none">
-				        	<div class="slds-m-top_small">
-				        		<br/>
-				        		<lightning:button class="{!bcm.Id + '_' + bcm.AcctSeed__Balance__c}" variant="Neutral" label=" >> " title=" >> " onclick="{! c.loadBalance }"/>
-				        	</div>
-				        </lightning:layoutItem>
-				        <lightning:layoutItem padding="around-none" class="slds-m-around_none">
-				        	<div class="slds-m-top_small">
-				            	<p class="slds-text-title" title="Bill Amount">
-				            		<lightning:input aura:id="billAmount" id="{!bcm.Id + '_input'}" class="{!bcm.Id}" label="Amount to Apply" type="number" value="0" formatter="currency" step="0.01" onchange="{!c.amountChanged}" />
-				            	</p>
-			            	</div>
-			        	</lightning:layoutItem>
-			        </lightning:layout>
-			    </div>
-				</lightning:recordEditForm>
-				<br/>
-				</aura:iteration>
-			</div>
-			<footer class="slds-modal__footer">
-        		<lightning:button label=" Cancel " onclick="{!c.closeWindow}" />
-        		<lightning:button variant="brand" label="Apply" onclick="{!c.processCMApply}" disabled="{!v.btnDisabled}" />
-			</footer>
-			</aura:if>
-		</div>
-	</section>
-    <lightning:spinner aura:id="spinner" />
+<aura:component
+  implements="force:appHostable,flexipage:availableForAllPageTypes,force:hasRecordId,force:lightningQuickAction,force:LightningQuickActionWithoutHeader"
+  access="global"
+  controller="ApplyCreditMemo_ar"
+>
+  <aura:attribute name="recordId" type="Id" />
+  <aura:attribute name="originalBalance" type="Decimal" default="0" />
+  <aura:attribute name="totalCanBeApplied" type="Decimal" default="0" />
+  <aura:attribute name="totalApplied" type="Decimal" default="0" />
+  <aura:attribute name="billingCM" type="AcctSeed__Billing__c" />
+  <aura:attribute name="billingCMData" type="AcctSeed__Billing__c[]" />
+  <aura:attribute name="btnDisabled" type="Boolean" default="true" />
+  <aura:attribute name="notInvoice" type="Boolean" default="true" />
+  <lightning:notificationsLibrary aura:id="notifLib" />
+  <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+  <section
+    role="dialog"
+    tabindex="-1"
+    aria-labelledby="modal-heading-01"
+    aria-modal="true"
+    aria-describedby="modal-content-id-1"
+    class="slds-modal slds-fade-in-open"
+  >
+    <div class="slds-modal__container">
+      <header class="slds-modal__header">
+        <h1 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Apply Credit Memo</h1>
+        <br />
+        <div class="slds-box slds-theme_shade slds-text-align_left">
+          <lightning:recordViewForm recordId="{!v.recordId}" objectApiName="AcctSeed__Billing__c">
+            <lightning:layout horizontalAlign="spread" verticalAlign="start">
+              <lightning:outputField class="slds-text-title" fieldName="AcctSeed__Customer__c" />
+            </lightning:layout>
+            <lightning:layout horizontalAlign="spread" verticalAlign="start">
+              <lightning:outputField fieldName="AcctSeed__Total__c" />
+              <lightning:outputField fieldName="AcctSeed__Credit_Memo_Applied_Amount__c" />
+              <lightning:outputField fieldName="AcctSeed__Balance__c" />
+              <lightning:input
+                type="number"
+                name="amount"
+                readonly="true"
+                value="{!v.totalApplied}"
+                label="Applied Amount"
+                formatter="currency"
+              />
+            </lightning:layout>
+          </lightning:recordViewForm>
+        </div>
+      </header>
+      <aura:if isTrue="{!v.notInvoice}">
+        <div class="slds-modal__content slds-p-around_medium">
+          <aura:iteration items="{!v.billingCMData}" var="bcm" indexVar="ind">
+            <lightning:recordEditForm
+              aura:id="{!bcm.Id + '_billingRecordForm'}"
+              recordId="{!bcm.Id}"
+              objectApiName="AcctSeed__Billing__c"
+            >
+              <div class="slds-box slds-m-around_none">
+                <lightning:layout horizontalAlign="spread" verticalAlign="start">
+                  <lightning:layoutItem padding="around-none" class="slds-m-around_none">
+                    <div class="slds-m-top_small">
+                      <lightning:outputField fieldName="Name" />
+                    </div>
+                  </lightning:layoutItem>
+                  <lightning:layoutItem padding="around-none" class="slds-m-around_none">
+                    <div class="slds-m-top_small">
+                      <lightning:outputField fieldName="GMBLASERP__Project__c" />
+                    </div>
+                  </lightning:layoutItem>
+                  <lightning:layoutItem padding="around-none" class="slds-m-around_none">
+                    <div class="slds-m-top_small">
+                      <lightning:outputField fieldName="AcctSeed__Total__c" />
+                    </div>
+                  </lightning:layoutItem>
+                  <lightning:layoutItem padding="around-none" class="slds-m-around_none">
+                    <div class="slds-m-top_small">
+                      <lightning:outputField fieldName="AcctSeed__Credit_Memo_Applied_Amount__c" />
+                    </div>
+                  </lightning:layoutItem>
+                </lightning:layout>
+                <lightning:layout horizontalAlign="spread" verticalAlign="start">
+                  <lightning:layoutItem padding="around-none" class="slds-m-around_none">
+                    <div class="slds-m-top_small">
+                      <lightning:inputField
+                        aura:id="billingPeriodField"
+                        id="{!bcm.Id + '_' + bcm.AcctSeed__Accounting_Period__c + '_period'}"
+                        fieldName="AcctSeed__Accounting_Period__c"
+                        onchange=""
+                        value="{!bcm.AcctSeed__Accounting_Period__c}"
+                      />
+                    </div>
+                  </lightning:layoutItem>
+                  <lightning:layoutItem padding="around-none" class="slds-m-around_none">
+                    <div class="slds-m-top_small">
+                      <lightning:outputField fieldName="AcctSeed__Balance__c" label="Billing Balance" />
+                    </div>
+                  </lightning:layoutItem>
+                  <lightning:layoutItem padding="around-none" class="slds-m-around_none">
+                    <div class="slds-m-top_small">
+                      <br />
+                      <lightning:button
+                        class="{!bcm.Id + '_' + bcm.AcctSeed__Balance__c}"
+                        variant="Neutral"
+                        label=" >> "
+                        title=" >> "
+                        onclick="{! c.loadBalance }"
+                      />
+                    </div>
+                  </lightning:layoutItem>
+                  <lightning:layoutItem padding="around-none" class="slds-m-around_none">
+                    <div class="slds-m-top_small">
+                      <p class="slds-text-title" title="Bill Amount">
+                        <lightning:input
+                          aura:id="billAmount"
+                          id="{!bcm.Id + '_input'}"
+                          class="{!bcm.Id}"
+                          label="Amount to Apply"
+                          type="number"
+                          value="0"
+                          formatter="currency"
+                          step="0.01"
+                          onchange="{!c.amountChanged}"
+                        />
+                      </p>
+                    </div>
+                  </lightning:layoutItem>
+                </lightning:layout>
+              </div>
+            </lightning:recordEditForm>
+            <br />
+          </aura:iteration>
+        </div>
+        <footer class="slds-modal__footer">
+          <lightning:button label=" Cancel " onclick="{!c.closeWindow}" />
+          <lightning:button variant="brand" label="Apply" onclick="{!c.processCMApply}" disabled="{!v.btnDisabled}" />
+        </footer>
+      </aura:if>
+    </div>
+  </section>
+  <lightning:spinner aura:id="spinner" />
 </aura:component>

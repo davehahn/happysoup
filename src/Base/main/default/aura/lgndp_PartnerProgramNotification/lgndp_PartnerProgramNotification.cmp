@@ -3,50 +3,43 @@
  -->
 
 <aura:component description="lgndp_PartnerProgramNotification">
-
   <aura:attribute name="message" type="Map" default="{}" />
 
   <aura:if isTrue="{!not(empty(v.message))}">
     <aura:if isTrue="{!not(empty(v.message.appliedDiscountNames))}">
       <lightning:layout horizontalAlign="center">
-        <lightning:layoutItem size="12"
-                              largeDeviceSize="6"
-                              mediumDeviceSize="6"
-                              smallDeviceSize="12">
+        <lightning:layoutItem size="12" largeDeviceSize="6" mediumDeviceSize="6" smallDeviceSize="12">
           <div class="promotion-message slds-theme_alert-texture slds-theme_success" role="alert">
-            <lightning:buttonIcon iconName="utility:close"
-                                  size="small"
-                                  variant="bare-inverse"
-                                  onclick="{!c.closeSuccess}"/>
+            <lightning:buttonIcon
+              iconName="utility:close"
+              size="small"
+              variant="bare-inverse"
+              onclick="{!c.closeSuccess}"
+            />
             <h1>Congratulations!</h1>
             <h3>Order qualifies for the following discounts under the Partner Program:</h3>
             <table>
               <aura:iteration items="{!v.message.appliedDiscounts}" var="discount">
                 <tr>
                   <td>
-                    <lightning:formattedNumber value="{!discount.percentage / 100}"
-                                               style="percent" />
+                    <lightning:formattedNumber value="{!discount.percentage / 100}" style="percent" />
                   </td>
-                  <td>
-                    {!discount.name}
-                  </td>
+                  <td>{!discount.name}</td>
                 </tr>
               </aura:iteration>
             </table>
-<!--            <ul>-->
-<!--              <aura:iteration items="{!v.message.appliedDiscountNames}" var="discount">-->
-<!--                <li>{!discount}</li>-->
-<!--              </aura:iteration>-->
-<!--            </ul>-->
+            <!--            <ul>-->
+            <!--              <aura:iteration items="{!v.message.appliedDiscountNames}" var="discount">-->
+            <!--                <li>{!discount}</li>-->
+            <!--              </aura:iteration>-->
+            <!--            </ul>-->
             <h2>
-              You saved a total of <lightning:formattedNumber value="{!v.message.totalSavings}"
-                                                              style="currency"
-                                                              currencyCode="CAD" />
+              You saved a total of
+              <lightning:formattedNumber value="{!v.message.totalSavings}" style="currency" currencyCode="CAD" />
             </h2>
           </div>
         </lightning:layoutItem>
       </lightning:layout>
     </aura:if>
   </aura:if>
-
 </aura:component>

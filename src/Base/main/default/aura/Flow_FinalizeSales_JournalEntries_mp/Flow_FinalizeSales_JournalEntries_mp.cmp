@@ -1,58 +1,63 @@
-<aura:component controller="Flow_FinalizeSales" implements="force:hasRecordId,lightning:availableForFlowScreens" access="global">
-
-	<aura:attribute type="Object[]" name="debit_lines" />
-	<aura:attribute type="Object[]" name="credit_lines" />
-	<aura:attribute type="Boolean" 	name="addedLinesBalance" default="true" />
-	<aura:attribute type="Boolean" 	name="journalEntryMade" default="false" />
-	<aura:attribute type="Boolean"  name="isCommissionBalanced" default="false" />
-	<aura:attribute type="Decimal" 	name="f_1120" default="0.00" />
-	<aura:attribute type="Decimal" 	name="f_1125" default="0.00" />
-	<!--aura:attribute type="Decimal" 	name="f_1130" default="0.00" />
+<aura:component
+  controller="Flow_FinalizeSales"
+  implements="force:hasRecordId,lightning:availableForFlowScreens"
+  access="global"
+>
+  <aura:attribute type="Object[]" name="debit_lines" />
+  <aura:attribute type="Object[]" name="credit_lines" />
+  <aura:attribute type="Boolean" name="addedLinesBalance" default="true" />
+  <aura:attribute type="Boolean" name="journalEntryMade" default="false" />
+  <aura:attribute type="Boolean" name="isCommissionBalanced" default="false" />
+  <aura:attribute type="Decimal" name="f_1120" default="0.00" />
+  <aura:attribute type="Decimal" name="f_1125" default="0.00" />
+  <!--aura:attribute type="Decimal" 	name="f_1130" default="0.00" />
 	<aura:attribute type="Decimal" 	name="f_1131" default="0.00" /-->
-	<aura:attribute type="Decimal" 	name="f_2180" default="0.00" />
-	<aura:attribute type="Decimal" 	name="f_2190" default="0.00" />
-	<aura:attribute type="Decimal" 	name="f_2195" default="0.00" />
-	<aura:attribute type="Decimal" 	name="f_2300a" default="0.00" />
-	<aura:attribute type="Decimal" 	name="f_2300b" default="0.00" />
-	<aura:attribute type="Decimal" 	name="f_2300c" default="0.00" />
-	<aura:attribute type="Decimal" 	name="f_2300d" default="0.00" />
-	<aura:attribute type="Decimal" 	name="f_2300c_hint" default="0.00" />
-	<aura:attribute type="Decimal" 	name="f_2300d_hint" default="0.00" />
-	<aura:attribute type="Decimal" 	name="f_2300e" default="0.00" />
-	<!--aura:attribute type="Decimal" 	name="f_4000" default="0.00" />
+  <aura:attribute type="Decimal" name="f_2180" default="0.00" />
+  <aura:attribute type="Decimal" name="f_2190" default="0.00" />
+  <aura:attribute type="Decimal" name="f_2195" default="0.00" />
+  <aura:attribute type="Decimal" name="f_2300a" default="0.00" />
+  <aura:attribute type="Decimal" name="f_2300b" default="0.00" />
+  <aura:attribute type="Decimal" name="f_2300c" default="0.00" />
+  <aura:attribute type="Decimal" name="f_2300d" default="0.00" />
+  <aura:attribute type="Decimal" name="f_2300c_hint" default="0.00" />
+  <aura:attribute type="Decimal" name="f_2300d_hint" default="0.00" />
+  <aura:attribute type="Decimal" name="f_2300e" default="0.00" />
+  <!--aura:attribute type="Decimal" 	name="f_4000" default="0.00" />
 	<aura:attribute type="Decimal" 	name="f_4100" default="0.00" /-->
-	<aura:attribute type="Decimal" 	name="f_5600" default="0.00" />
-	<!--aura:attribute type="Decimal" 	name="f_5000a" default="0.00" />
+  <aura:attribute type="Decimal" name="f_5600" default="0.00" />
+  <!--aura:attribute type="Decimal" 	name="f_5000a" default="0.00" />
 	<aura:attribute type="Decimal" 	name="f_5000b" default="0.00" /-->
-	<aura:attribute type="Decimal" 	name="f_5200_CostOfProductProtection" default="0.00" />
-	<aura:attribute type="Decimal" 	name="f_5200_Premium" default="0.00" />
-	<aura:attribute type="Decimal" 	name="f_5210_CostOfLifeAndDisabilityInsurance" default="0.00" />
-	<!--aura:attribute type="Decimal" 	name="f_5380" default="0.00" /-->
-	<aura:attribute type="Decimal" 	name="f_5420a" default="0.00" />
-	<aura:attribute type="Decimal" 	name="f_5420b" default="0.00" />
-	<aura:attribute type="Integer" 	name="step" default="0" />
-	<aura:attribute type="Object" 	name="Boat" />
-	<aura:attribute type="String" 	name="f_2300a_who" />
-	<aura:attribute type="String" 	name="f_2300b_who" />
-	<aura:attribute type="String" 	name="f_2300c_who" />
-	<aura:attribute type="String" 	name="f_2300d_who" />
-	<aura:attribute type="String" 	name="f_2300e_who" />
-	<aura:attribute type="String" 	name="f_2300a_who_name" />
-	<aura:attribute type="String" 	name="f_2300b_who_name" />
-	<aura:attribute type="String" 	name="f_2300c_who_name" />
-	<aura:attribute type="String" 	name="f_2300d_who_name" />
-	<aura:attribute type="String" 	name="f_2300e_who_name" />
-	<aura:attribute type="String" 	name="f_2300a_who_glv4" />
-	<aura:attribute type="String" 	name="f_2300b_who_glv4" />
-	<aura:attribute type="String" 	name="f_2300c_who_glv4" />
-	<aura:attribute type="String" 	name="f_2300d_who_glv4" />
-	<aura:attribute type="String" 	name="f_2300e_who_glv4" />
-	<aura:attribute type="String" 	name="erpId" />
-	<aura:attribute type="String" name="selectedPricebook" />
+  <aura:attribute type="Decimal" name="f_5200_CostOfProductProtection" default="0.00" />
+  <aura:attribute type="Decimal" name="f_5200_Premium" default="0.00" />
+  <aura:attribute type="Decimal" name="f_5210_CostOfLifeAndDisabilityInsurance" default="0.00" />
+  <!--aura:attribute type="Decimal" 	name="f_5380" default="0.00" /-->
+  <aura:attribute type="Decimal" name="f_5420a" default="0.00" />
+  <aura:attribute type="Decimal" name="f_5420b" default="0.00" />
+  <aura:attribute type="Integer" name="step" default="0" />
+  <aura:attribute type="Object" name="Boat" />
+  <aura:attribute type="String" name="f_2300a_who" />
+  <aura:attribute type="String" name="f_2300b_who" />
+  <aura:attribute type="String" name="f_2300c_who" />
+  <aura:attribute type="String" name="f_2300d_who" />
+  <aura:attribute type="String" name="f_2300e_who" />
+  <aura:attribute type="String" name="f_2300a_who_name" />
+  <aura:attribute type="String" name="f_2300b_who_name" />
+  <aura:attribute type="String" name="f_2300c_who_name" />
+  <aura:attribute type="String" name="f_2300d_who_name" />
+  <aura:attribute type="String" name="f_2300e_who_name" />
+  <aura:attribute type="String" name="f_2300a_who_glv4" />
+  <aura:attribute type="String" name="f_2300b_who_glv4" />
+  <aura:attribute type="String" name="f_2300c_who_glv4" />
+  <aura:attribute type="String" name="f_2300d_who_glv4" />
+  <aura:attribute type="String" name="f_2300e_who_glv4" />
+  <aura:attribute type="String" name="erpId" />
+  <aura:attribute type="String" name="selectedPricebook" />
 
-	<ltng:require scripts="{!join(',', $Resource.Libraries +'/js/LightningApex.js',
+  <ltng:require
+    scripts="{!join(',', $Resource.Libraries +'/js/LightningApex.js',
                          						 $Resource.Libraries +'/js/LightningUtils.js') }"
-    						afterScriptsLoaded="{!c.doInit}" />
+    afterScriptsLoaded="{!c.doInit}"
+  />
 
   <c:Lgnd_Spinner_dh aura:id="spinner" />
 
@@ -61,7 +66,6 @@
   <aura:handler name="change" value="{!v.f_2300c_who}" action="{!c.handleWhoChange}" />
   <aura:handler name="change" value="{!v.f_2300d_who}" action="{!c.handleWhoChange}" />
   <aura:handler name="change" value="{!v.f_2300e_who}" action="{!c.handleWhoChange}" />
-
 
   <aura:handler name="change" value="{!v.f_1120}" action="{!c.sync}" />
   <aura:handler name="change" value="{!v.f_1125}" action="{!c.sync}" />
@@ -79,34 +83,34 @@
   <aura:handler name="change" value="{!v.f_5210_CostOfLifeAndDisabilityInsurance}" action="{!c.sync}" />
   <!--aura:handler name="change" value="{!v.f_5380}" action="{!c.sync}" /-->
 
-	<h2 class="slds-text-heading_medium slds-p-vertical_medium">Journal Entries</h2>
+  <h2 class="slds-text-heading_medium slds-p-vertical_medium">Journal Entries</h2>
   <aura:if isTrue="{! v.journalEntryMade }">
-  	<div class="slds-table_edit_container slds-is-relative">
-			<table>
-				<tr>
-					<th style="width: 50%; text-align: center; text-transform: uppercase">Debits</th>
-					<th style="width: 50%; text-align: center; text-transform: uppercase">Credits</th>
-				</tr>
-				<tr class="myTable">
-					<td class="myTableWrap" colspan="3">
-						<table>
-							<tr>
-								<td style="width: 50%">
-									<table class="slds-table" role="grid">
-										<thead>
-											<tr>
-												<th>GL Account</th>
-												<th>Item Name</th>
-												<th>Amount</th>
-											</tr>
-										</thead>
-										<tbody>
-											<tr>
-												<td>1125</td>
-												<td>For Partnership Program (0012)</td>
-												<td>{!v.f_1125}</td>
-											</tr>
-											<!--tr>
+    <div class="slds-table_edit_container slds-is-relative">
+      <table>
+        <tr>
+          <th style="width: 50%; text-align: center; text-transform: uppercase">Debits</th>
+          <th style="width: 50%; text-align: center; text-transform: uppercase">Credits</th>
+        </tr>
+        <tr class="myTable">
+          <td class="myTableWrap" colspan="3">
+            <table>
+              <tr>
+                <td style="width: 50%">
+                  <table class="slds-table" role="grid">
+                    <thead>
+                      <tr>
+                        <th>GL Account</th>
+                        <th>Item Name</th>
+                        <th>Amount</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>1125</td>
+                        <td>For Partnership Program (0012)</td>
+                        <td>{!v.f_1125}</td>
+                      </tr>
+                      <!--tr>
 												<td>1130</td>
 												<td>For Mercury Rebate (0014)</td>
 												<td>{!v.f_1130}</td>
@@ -116,118 +120,108 @@
 												<td>For Co-Op accural (0014A)</td>
 												<td>{!v.f_1131}</td>
 											</tr-->
-											<tr>
-												<td>1120</td>
-												<td>For Mercury Incentive Promo</td>
-												<td>{!v.f_1120}</td>
-											</tr>
-										</tbody>
-									</table>
-								</td>
-								<td style="width: 50%">
-									<table class="slds-table" role="grid">
-										<thead>
-											<tr class="">
-												<th>GL Account</th>
-												<th>Item Name</th>
-												<th>Amount</th>
-											</tr>
-										</thead>
-										<tbody>
-											<tr>
-												<td>5600</td>
-												<td>Mercury Rebates Total</td>
-												<td>{!v.f_5600}</td>
-											</tr>
-										</tbody>
-									</table>
-								</td>
-							</tr>
-						</table>
-					</td>
-				</tr>
+                      <tr>
+                        <td>1120</td>
+                        <td>For Mercury Incentive Promo</td>
+                        <td>{!v.f_1120}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </td>
+                <td style="width: 50%">
+                  <table class="slds-table" role="grid">
+                    <thead>
+                      <tr class="">
+                        <th>GL Account</th>
+                        <th>Item Name</th>
+                        <th>Amount</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>5600</td>
+                        <td>Mercury Rebates Total</td>
+                        <td>{!v.f_5600}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
 
-				<tr class="myTable">
-					<td class="myTableWrap" colspan="3">
-						<table>
-							<tr>
-								<td style="width: 50%">
-									<table class="slds-table" role="grid">
-										<thead>
-											<tr class="">
-												<th>GL Account</th>
-												<th>Item Name</th>
-												<th>Amount</th>
-											</tr>
-										</thead>
-										<tbody>
-											<tr>
-												<td>5420</td>
-												<td>Commission Expense (B.O. Portion)</td>
-												<td>{!v.f_5420a}</td>
-											</tr>
-											<tr>
-												<td>5420</td>
-												<td>Commission Expense (Sales Portion)</td>
-												<td>{!v.f_5420b}</td>
-											</tr>
-										</tbody>
-									</table>
-								</td>
-								<td style="width: 50%">
-									<table class="slds-table" role="grid">
-										<thead>
-											<tr class="">
-												<th>GL Account</th>
-												<th>Item Name</th>
-												<th>Amount</th>
-											</tr>
-										</thead>
-										<tbody>
-											<tr>
-												<td>2300</td>
-												<td>
-													{!v.f_2300a_who_name}
-												</td>
-												<td>{!v.f_2300a}</td>
-											</tr>
-											<tr>
-												<td>2300</td>
-												<td>
-													{!v.f_2300b_who_name}
-												</td>
-												<td>{!v.f_2300b}</td>
-											</tr>
-											<tr>
-												<td>2300</td>
-												<td>
-													{!v.f_2300c_who_name}
-												</td>
-												<td>{!v.f_2300c}</td>
-											</tr>
-											<tr>
-												<td>2300</td>
-												<td>
-													{!v.f_2300d_who_name}
-												</td>
-												<td>{!v.f_2300d}</td>
-											</tr>
-											<tr>
-												<td>2300</td>
-												<td>
-													{!v.f_2300e_who_name}
-												</td>
-												<td>{!v.f_2300e}</td>
-											</tr>
-										</tbody>
-									</table>
-								</td>
-							</tr>
-						</table>
-					</td>
-				</tr>
+        <tr class="myTable">
+          <td class="myTableWrap" colspan="3">
+            <table>
+              <tr>
+                <td style="width: 50%">
+                  <table class="slds-table" role="grid">
+                    <thead>
+                      <tr class="">
+                        <th>GL Account</th>
+                        <th>Item Name</th>
+                        <th>Amount</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>5420</td>
+                        <td>Commission Expense (B.O. Portion)</td>
+                        <td>{!v.f_5420a}</td>
+                      </tr>
+                      <tr>
+                        <td>5420</td>
+                        <td>Commission Expense (Sales Portion)</td>
+                        <td>{!v.f_5420b}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </td>
+                <td style="width: 50%">
+                  <table class="slds-table" role="grid">
+                    <thead>
+                      <tr class="">
+                        <th>GL Account</th>
+                        <th>Item Name</th>
+                        <th>Amount</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>2300</td>
+                        <td>{!v.f_2300a_who_name}</td>
+                        <td>{!v.f_2300a}</td>
+                      </tr>
+                      <tr>
+                        <td>2300</td>
+                        <td>{!v.f_2300b_who_name}</td>
+                        <td>{!v.f_2300b}</td>
+                      </tr>
+                      <tr>
+                        <td>2300</td>
+                        <td>{!v.f_2300c_who_name}</td>
+                        <td>{!v.f_2300c}</td>
+                      </tr>
+                      <tr>
+                        <td>2300</td>
+                        <td>{!v.f_2300d_who_name}</td>
+                        <td>{!v.f_2300d}</td>
+                      </tr>
+                      <tr>
+                        <td>2300</td>
+                        <td>{!v.f_2300e_who_name}</td>
+                        <td>{!v.f_2300e}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
 
-				<!--tr class="myTable">
+        <!--tr class="myTable">
 					<td class="myTableWrap" colspan="3">
 						<table>
 							<tr>
@@ -272,142 +266,142 @@
 					</td>
 				</tr-->
 
-				<tr class="myTable">
-					<td class="myTableWrap" colspan="3">
-						<table>
-							<tr>
-								<td style="width: 50%">
-									<table class="slds-table" role="grid">
-										<thead>
-											<tr class="">
-												<th>GL Account</th>
-												<th>Item Name</th>
-												<th>Amount</th>
-											</tr>
-										</thead>
-										<tbody>
-											<tr>
-												<td>5210</td>
-												<td>Cost of Life &amp; Disability Insurance</td>
-												<td>{!v.f_5210_CostOfLifeAndDisabilityInsurance}</td>
-											</tr>
-										</tbody>
-									</table>
-								</td>
-								<td style="width: 50%">
-									<table class="slds-table" role="grid">
-										<thead>
-											<tr class="">
-												<th>GL Account</th>
-												<th>Item Name</th>
-												<th>Amount</th>
-											</tr>
-										</thead>
-										<tbody>
-											<tr>
-												<td>2190</td>
-												<td>Life Insurance Payable (Portion we pay)</td>
-												<td>{!v.f_2190}</td>
-											</tr>
-										</tbody>
-									</table>
-								</td>
-							</tr>
-						</table>
-					</td>
-				</tr>
+        <tr class="myTable">
+          <td class="myTableWrap" colspan="3">
+            <table>
+              <tr>
+                <td style="width: 50%">
+                  <table class="slds-table" role="grid">
+                    <thead>
+                      <tr class="">
+                        <th>GL Account</th>
+                        <th>Item Name</th>
+                        <th>Amount</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>5210</td>
+                        <td>Cost of Life &amp; Disability Insurance</td>
+                        <td>{!v.f_5210_CostOfLifeAndDisabilityInsurance}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </td>
+                <td style="width: 50%">
+                  <table class="slds-table" role="grid">
+                    <thead>
+                      <tr class="">
+                        <th>GL Account</th>
+                        <th>Item Name</th>
+                        <th>Amount</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>2190</td>
+                        <td>Life Insurance Payable (Portion we pay)</td>
+                        <td>{!v.f_2190}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
 
-				<tr class="myTable">
-					<td class="myTableWrap" colspan="3">
-						<table>
-							<tr>
-								<td style="width: 50%">
-									<table class="slds-table" role="grid">
-										<thead>
-											<tr class="">
-												<th>GL Account</th>
-												<th>Item Name</th>
-												<th>Amount</th>
-											</tr>
-										</thead>
-										<tbody>
-											<tr>
-												<td>5200</td>
-												<td>Cost of Product Protection (Warranty)</td>
-												<td>{!v.f_5200_CostOfProductProtection}</td>
-											</tr>
-										</tbody>
-									</table>
-								</td>
-								<td style="width: 50%">
-									<table class="slds-table" role="grid">
-										<thead>
-											<tr class="">
-												<th>GL Account</th>
-												<th>Item Name</th>
-												<th>Amount</th>
-											</tr>
-										</thead>
-										<tbody>
-											<tr>
-												<td>2180</td>
-												<td>Product Protection Clearing (Portion we pay)</td>
-												<td>{!v.f_2180}</td>
-											</tr>
-										</tbody>
-									</table>
-								</td>
-							</tr>
-						</table>
-					</td>
-				</tr>
+        <tr class="myTable">
+          <td class="myTableWrap" colspan="3">
+            <table>
+              <tr>
+                <td style="width: 50%">
+                  <table class="slds-table" role="grid">
+                    <thead>
+                      <tr class="">
+                        <th>GL Account</th>
+                        <th>Item Name</th>
+                        <th>Amount</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>5200</td>
+                        <td>Cost of Product Protection (Warranty)</td>
+                        <td>{!v.f_5200_CostOfProductProtection}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </td>
+                <td style="width: 50%">
+                  <table class="slds-table" role="grid">
+                    <thead>
+                      <tr class="">
+                        <th>GL Account</th>
+                        <th>Item Name</th>
+                        <th>Amount</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>2180</td>
+                        <td>Product Protection Clearing (Portion we pay)</td>
+                        <td>{!v.f_2180}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
 
-				<tr class="myTable">
-					<td class="myTableWrap" colspan="3">
-						<table>
-							<tr>
-								<td style="width: 50%">
-									<table class="slds-table" role="grid">
-										<thead>
-											<tr class="">
-												<th>GL Account</th>
-												<th>Item Name</th>
-												<th>Amount</th>
-											</tr>
-										</thead>
-										<tbody>
-											<tr>
-												<td>5200</td>
-												<td>Cost of Platinum Product Protection (Warranty)</td>
-												<td>{!v.f_5200_Premium}</td>
-											</tr>
-										</tbody>
-									</table>
-								</td>
-								<td style="width: 50%">
-									<table class="slds-table" role="grid">
-										<thead>
-											<tr class="">
-												<th>GL Account</th>
-												<th>Item Name</th>
-												<th>Amount</th>
-											</tr>
-										</thead>
-										<tbody>
-											<tr>
-												<td>2195</td>
-												<td>Boat Warranty Product Placement (Portion we pay)</td>
-												<td>{!v.f_2195}</td>
-											</tr>
-										</tbody>
-									</table>
-								</td>
-							</tr>
-						</table>
-					</td>
-				</tr>
+        <tr class="myTable">
+          <td class="myTableWrap" colspan="3">
+            <table>
+              <tr>
+                <td style="width: 50%">
+                  <table class="slds-table" role="grid">
+                    <thead>
+                      <tr class="">
+                        <th>GL Account</th>
+                        <th>Item Name</th>
+                        <th>Amount</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>5200</td>
+                        <td>Cost of Platinum Product Protection (Warranty)</td>
+                        <td>{!v.f_5200_Premium}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </td>
+                <td style="width: 50%">
+                  <table class="slds-table" role="grid">
+                    <thead>
+                      <tr class="">
+                        <th>GL Account</th>
+                        <th>Item Name</th>
+                        <th>Amount</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>2195</td>
+                        <td>Boat Warranty Product Placement (Portion we pay)</td>
+                        <td>{!v.f_2195}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
 
-				<!--tr class="myTable">
+        <!--tr class="myTable">
 					<td class="myTableWrap" colspan="3">
 						<table>
 							<tr>
@@ -457,93 +451,87 @@
 					</td>
 				</tr-->
 
-				<aura:if isTrue="{! v.debit_lines.length > 0 }">
-					<tr class="myTable">
-						<td class="myTableWrap" colspan="3">
-							<table>
-								<tr>
-									<td style="width: 50%">
-										<table class="slds-table" role="grid">
-											<thead>
-												<tr class="">
-													<th>GL Account</th>
-													<th>Item Name</th>
-													<th>Amount</th>
-												</tr>
-											</thead>
-											<tbody>
-												<aura:iteration items="{!v.debit_lines}" var="aline">
-													<tr>
-														<td colspan="2">
-															{!aline[0]}
-														</td>
-														<td>
-															{!aline[2]}
-														</td>
-													</tr>
-												</aura:iteration>
-											</tbody>
-										</table>
-									</td>
-									<td style="width: 50%">
-										<table class="slds-table" role="grid">
-											<thead>
-												<tr class="">
-													<th>GL Account</th>
-													<th>Item Name</th>
-													<th>Amount</th>
-												</tr>
-											</thead>
-											<tbody>
-												<aura:iteration items="{!v.credit_lines}" var="iline">
-													<tr>
-														<td colspan="2">
-															{!iline[0]}
-														</td>
-														<td>
-															{!iline[2]}
-														</td>
-													</tr>
-												</aura:iteration>
-											</tbody>
-										</table>
-									</td>
-								</tr>
-							</table>
-						</td>
-					</tr>
-				</aura:if>
-			</table>
-		</div>
+        <aura:if isTrue="{! v.debit_lines.length > 0 }">
+          <tr class="myTable">
+            <td class="myTableWrap" colspan="3">
+              <table>
+                <tr>
+                  <td style="width: 50%">
+                    <table class="slds-table" role="grid">
+                      <thead>
+                        <tr class="">
+                          <th>GL Account</th>
+                          <th>Item Name</th>
+                          <th>Amount</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <aura:iteration items="{!v.debit_lines}" var="aline">
+                          <tr>
+                            <td colspan="2">{!aline[0]}</td>
+                            <td>{!aline[2]}</td>
+                          </tr>
+                        </aura:iteration>
+                      </tbody>
+                    </table>
+                  </td>
+                  <td style="width: 50%">
+                    <table class="slds-table" role="grid">
+                      <thead>
+                        <tr class="">
+                          <th>GL Account</th>
+                          <th>Item Name</th>
+                          <th>Amount</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <aura:iteration items="{!v.credit_lines}" var="iline">
+                          <tr>
+                            <td colspan="2">{!iline[0]}</td>
+                            <td>{!iline[2]}</td>
+                          </tr>
+                        </aura:iteration>
+                      </tbody>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </aura:if>
+      </table>
+    </div>
 
-		<aura:set attribute="else">
-			<div class="slds-table_edit_container slds-is-relative">
-				<table>
-					<tr>
-						<th style="width: 47.5%; text-align: center; text-transform: uppercase">Debits</th>
-						<th style="width: 47.5%; text-align: center; text-transform: uppercase">Credits</th>
-						<th style="width:  5.0%; text-align: center; text-transform: uppercase">Balanced?</th>
-					</tr>
-					<tr class="myTable">
-						<td class="myTableWrap" colspan="3">
-							<table>
-								<tr>
-									<td style="width: 47.5%">
-										<table class="slds-table" role="grid">
-											<thead>
-												<tr>
-													<th>GL Account</th>
-													<th>Item Name</th>
-													<th>Amount</th>
-												</tr>
-											</thead>
-											<tbody>
-												<tr>
-													<td>1125</td>
-													<td>For Partnership Program (0012)</td>
-													<td><lightning:input type="number" value="{!v.f_1125}" formatter="currency" step="0.01"/></td>
-												</tr>
-												<!--tr>
+    <aura:set attribute="else">
+      <div class="slds-table_edit_container slds-is-relative">
+        <table>
+          <tr>
+            <th style="width: 47.5%; text-align: center; text-transform: uppercase">Debits</th>
+            <th style="width: 47.5%; text-align: center; text-transform: uppercase">Credits</th>
+            <th style="width: 5%; text-align: center; text-transform: uppercase">Balanced?</th>
+          </tr>
+          <tr class="myTable">
+            <td class="myTableWrap" colspan="3">
+              <table>
+                <tr>
+                  <td style="width: 47.5%">
+                    <table class="slds-table" role="grid">
+                      <thead>
+                        <tr>
+                          <th>GL Account</th>
+                          <th>Item Name</th>
+                          <th>Amount</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>1125</td>
+                          <td>For Partnership Program (0012)</td>
+                          <td>
+                            <lightning:input type="number" value="{!v.f_1125}" formatter="currency" step="0.01" />
+                          </td>
+                        </tr>
+                        <!--tr>
 													<td>1130</td>
 													<td>For Mercury Rebate (0014)</td>
 													<td><lightning:input type="number" value="{!v.f_1130}" formatter="currency" step="0.01"/></td>
@@ -553,252 +541,332 @@
 													<td>For Co-Op accural (0014A)</td>
 													<td><lightning:input type="number" value="{!v.f_1131}" formatter="currency" step="0.01"/></td>
 												</tr-->
-												<tr>
-													<td>1120</td>
-													<td>For Mercury Incentive Promo</td>
-													<td><lightning:input type="number" value="{!v.f_1120}" formatter="currency" step="0.01"/></td>
-												</tr>
-											</tbody>
-										</table>
-									</td>
-									<td style="width: 47.5%">
-										<table class="slds-table" role="grid">
-											<thead>
-												<tr class="">
-													<th>GL Account</th>
-													<th>Item Name</th>
-													<th>Amount</th>
-												</tr>
-											</thead>
-											<tbody>
-												<tr>
-													<td>5600</td>
-													<td>Mercury Rebates Total</td>
-													<td><lightning:input type="number" value="{!v.f_5600}" formatter="currency" step="0.01" readonly="true" /></td>
-												</tr>
-											</tbody>
-										</table>
-									</td>
-									<td style="width: 5%; text-align: center">
-										<br/>
-										<span class="slds-p-around_medium">
-											<!--aura:if isTrue="{! ( (v.f_1125*1) + (v.f_1130*1) + (v.f_1131*1) + (v.f_1120*1) ) == (v.f_5600*1) }"-->
-											<aura:if isTrue="{! ( (v.f_1125*1) + (v.f_1120*1) ) == (v.f_5600*1) }">
-												<lightning:icon iconName="action:check" size="xx-small" />
-												<aura:set attribute="else">
-													<lightning:icon iconName="action:reject" size="xx-small" />
-												</aura:set>
-											</aura:if>
-										</span>
-									</td>
-								</tr>
-								<tr>
-									<td style="width: 47.5%">
-										<table class="slds-table subtotals" role="grid">
-											<tbody>
-												<tr>
-													<td></td>
-													<td></td>
-													<td>
-														<!--lightning:input type="number"
+                        <tr>
+                          <td>1120</td>
+                          <td>For Mercury Incentive Promo</td>
+                          <td>
+                            <lightning:input type="number" value="{!v.f_1120}" formatter="currency" step="0.01" />
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </td>
+                  <td style="width: 47.5%">
+                    <table class="slds-table" role="grid">
+                      <thead>
+                        <tr class="">
+                          <th>GL Account</th>
+                          <th>Item Name</th>
+                          <th>Amount</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>5600</td>
+                          <td>Mercury Rebates Total</td>
+                          <td>
+                            <lightning:input
+                              type="number"
+                              value="{!v.f_5600}"
+                              formatter="currency"
+                              step="0.01"
+                              readonly="true"
+                            />
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </td>
+                  <td style="width: 5%; text-align: center">
+                    <br />
+                    <span class="slds-p-around_medium">
+                      <!--aura:if isTrue="{! ( (v.f_1125*1) + (v.f_1130*1) + (v.f_1131*1) + (v.f_1120*1) ) == (v.f_5600*1) }"-->
+                      <aura:if isTrue="{! ( (v.f_1125*1) + (v.f_1120*1) ) == (v.f_5600*1) }">
+                        <lightning:icon iconName="action:check" size="xx-small" />
+                        <aura:set attribute="else">
+                          <lightning:icon iconName="action:reject" size="xx-small" />
+                        </aura:set>
+                      </aura:if>
+                    </span>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="width: 47.5%">
+                    <table class="slds-table subtotals" role="grid">
+                      <tbody>
+                        <tr>
+                          <td></td>
+                          <td></td>
+                          <td>
+                            <!--lightning:input type="number"
 																							 value="{! (v.f_1125*1) + (v.f_1130*1) + (v.f_1131*1) + (v.f_1120*1) }"
 																							 formatter="currency"
 																							 step="0.01"
 																							 readonly="true"
 																							 data-test="test" /-->
-														<lightning:input type="number"
-																						 value="{! (v.f_1125*1) + (v.f_1120*1) }"
-																						 formatter="currency"
-																						 step="0.01"
-																						 readonly="true"
-																						 data-test="test" />
-													</td>
-												</tr>
-											</tbody>
-										</table>
-									</td>
-									<td style="width: 47.5%">
-										<table class="slds-table subtotals" role="grid">
-											<tbody>
-												<tr>
-													<td></td>
-													<td></td>
-													<td><lightning:input type="number" value="{! (v.f_5600*1) }" formatter="currency" step="0.01" readonly="true" /></td>
-												</tr>
-											</tbody>
-										</table>
-									</td>
-									<td style="width: 5%; text-align: center">
-									</td>
-								</tr>
-							</table>
-						</td>
-					</tr>
+                            <lightning:input
+                              type="number"
+                              value="{! (v.f_1125*1) + (v.f_1120*1) }"
+                              formatter="currency"
+                              step="0.01"
+                              readonly="true"
+                              data-test="test"
+                            />
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </td>
+                  <td style="width: 47.5%">
+                    <table class="slds-table subtotals" role="grid">
+                      <tbody>
+                        <tr>
+                          <td></td>
+                          <td></td>
+                          <td>
+                            <lightning:input
+                              type="number"
+                              value="{! (v.f_5600*1) }"
+                              formatter="currency"
+                              step="0.01"
+                              readonly="true"
+                            />
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </td>
+                  <td style="width: 5%; text-align: center"></td>
+                </tr>
+              </table>
+            </td>
+          </tr>
 
-					<tr class="myTable">
-						<td class="myTableWrap" colspan="3">
-							<table>
-								<tr>
-									<td style="width: 47.5%">
-										<table class="slds-table" role="grid">
-											<thead>
-												<tr class="">
-													<th>GL Account</th>
-													<th>Item Name</th>
-													<th>Amount</th>
-												</tr>
-											</thead>
-											<tbody>
-												<tr>
-													<td>5420</td>
-													<td>Commission Expense (B.O. Portion)</td>
-													<td><lightning:input type="number" value="{!v.f_5420a}" formatter="currency" step="0.01" readonly="true" /></td>
-												</tr>
-												<tr>
-													<td>5420</td>
-													<td>Commission Expense (Sales Portion)</td>
-													<td><lightning:input type="number" value="{!v.f_5420b}" formatter="currency" step="0.01" readonly="true" /></td>
-												</tr>
-											</tbody>
-										</table>
-									</td>
-									<td style="width: 47.5%">
-										<table class="slds-table" role="grid">
-											<thead>
-												<tr class="">
-													<th>GL Account</th>
-													<th>Item Name</th>
-													<th>Amount</th>
-												</tr>
-											</thead>
-											<tbody>
-												<tr>
-													<td>2300</td>
-													<td>
-														<c:LightningLookup type="AcctSeed__Accounting_Variable__c"
-																							 filters="[{
+          <tr class="myTable">
+            <td class="myTableWrap" colspan="3">
+              <table>
+                <tr>
+                  <td style="width: 47.5%">
+                    <table class="slds-table" role="grid">
+                      <thead>
+                        <tr class="">
+                          <th>GL Account</th>
+                          <th>Item Name</th>
+                          <th>Amount</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>5420</td>
+                          <td>Commission Expense (B.O. Portion)</td>
+                          <td>
+                            <lightning:input
+                              type="number"
+                              value="{!v.f_5420a}"
+                              formatter="currency"
+                              step="0.01"
+                              readonly="true"
+                            />
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>5420</td>
+                          <td>Commission Expense (Sales Portion)</td>
+                          <td>
+                            <lightning:input
+                              type="number"
+                              value="{!v.f_5420b}"
+                              formatter="currency"
+                              step="0.01"
+                              readonly="true"
+                            />
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </td>
+                  <td style="width: 47.5%">
+                    <table class="slds-table" role="grid">
+                      <thead>
+                        <tr class="">
+                          <th>GL Account</th>
+                          <th>Item Name</th>
+                          <th>Amount</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>2300</td>
+                          <td>
+                            <c:LightningLookup
+                              type="AcctSeed__Accounting_Variable__c"
+                              filters="[{
 																							 						field: 'AcctSeed__Type__c',
 																							 						comparator: '=',
 																							 						value: 'GL Account Variable 4'
 																											  }]"
-																							 placeholder="Salesperson A"
-																							 sobjectId="{! v.f_2300a_who_glv4 }"
-																							 value="{! v.f_2300a_who_name }" />
-													</td>
-													<td><lightning:input type="number" value="{!v.f_2300a}" formatter="currency" step="0.01"/></td>
-												</tr>
-												<tr>
-													<td>2300</td>
-													<td>
-														<c:LightningLookup type="AcctSeed__Accounting_Variable__c"
-																							 filters="[{
+                              placeholder="Salesperson A"
+                              sobjectId="{! v.f_2300a_who_glv4 }"
+                              value="{! v.f_2300a_who_name }"
+                            />
+                          </td>
+                          <td>
+                            <lightning:input type="number" value="{!v.f_2300a}" formatter="currency" step="0.01" />
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>2300</td>
+                          <td>
+                            <c:LightningLookup
+                              type="AcctSeed__Accounting_Variable__c"
+                              filters="[{
 																							 						field: 'AcctSeed__Type__c',
 																							 						comparator: '=',
 																							 						value: 'GL Account Variable 4'
 																											  }]"
-																							 placeholder="Salesperson B"
-																							 sobjectId="{! v.f_2300b_who_glv4 }"
-																							 value="{! v.f_2300b_who_name }" />
-													</td>
-													<td><lightning:input type="number" value="{!v.f_2300b}" formatter="currency" step="0.01"/></td>
-												</tr>
-												<tr>
-													<td>2300</td>
-													<td>
-														<c:LightningLookup type="AcctSeed__Accounting_Variable__c"
-																							 filters="[{
+                              placeholder="Salesperson B"
+                              sobjectId="{! v.f_2300b_who_glv4 }"
+                              value="{! v.f_2300b_who_name }"
+                            />
+                          </td>
+                          <td>
+                            <lightning:input type="number" value="{!v.f_2300b}" formatter="currency" step="0.01" />
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>2300</td>
+                          <td>
+                            <c:LightningLookup
+                              type="AcctSeed__Accounting_Variable__c"
+                              filters="[{
 																							 						field: 'AcctSeed__Type__c',
 																							 						comparator: '=',
 																							 						value: 'GL Account Variable 4'
 																											  }]"
-																							 placeholder="Sales Manager A"
-																							 sobjectId="{! v.f_2300c_who_glv4 }"
-																							 value="{! v.f_2300c_who_name }" />
-														<span class="hint">(25% = <lightning:formattedNumber value="{!v.f_2300c_hint}" style="currency" currencyCode="CAD"/>)</span>
-													</td>
-													<td><lightning:input type="number" value="{!v.f_2300c}" formatter="currency" step="0.01"/></td>
-												</tr>
-												<tr>
-													<td>2300</td>
-													<td>
-														<c:LightningLookup type="AcctSeed__Accounting_Variable__c"
-																							 filters="[{
+                              placeholder="Sales Manager A"
+                              sobjectId="{! v.f_2300c_who_glv4 }"
+                              value="{! v.f_2300c_who_name }"
+                            />
+                            <span class="hint"
+                              >(25% =
+                              <lightning:formattedNumber
+                                value="{!v.f_2300c_hint}"
+                                style="currency"
+                                currencyCode="CAD"
+                              />)</span
+                            >
+                          </td>
+                          <td>
+                            <lightning:input type="number" value="{!v.f_2300c}" formatter="currency" step="0.01" />
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>2300</td>
+                          <td>
+                            <c:LightningLookup
+                              type="AcctSeed__Accounting_Variable__c"
+                              filters="[{
 																							 						field: 'AcctSeed__Type__c',
 																							 						comparator: '=',
 																							 						value: 'GL Account Variable 4'
 																											  }]"
-																							 placeholder="Sales Manager B"
-																							 sobjectId="{! v.f_2300d_who_glv4 }"
-																							 value="{! v.f_2300d_who_name }" />
-														<span class="hint">(25% = <lightning:formattedNumber value="{!v.f_2300d_hint}" style="currency" currencyCode="CAD"/>)</span>
-													</td>
-													<td><lightning:input type="number" value="{!v.f_2300d}" formatter="currency" step="0.01"/></td>
-												</tr>
-												<tr>
-													<td>2300</td>
-													<td>
-														<c:LightningLookup type="AcctSeed__Accounting_Variable__c"
-																							 filters="[{
+                              placeholder="Sales Manager B"
+                              sobjectId="{! v.f_2300d_who_glv4 }"
+                              value="{! v.f_2300d_who_name }"
+                            />
+                            <span class="hint"
+                              >(25% =
+                              <lightning:formattedNumber
+                                value="{!v.f_2300d_hint}"
+                                style="currency"
+                                currencyCode="CAD"
+                              />)</span
+                            >
+                          </td>
+                          <td>
+                            <lightning:input type="number" value="{!v.f_2300d}" formatter="currency" step="0.01" />
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>2300</td>
+                          <td>
+                            <c:LightningLookup
+                              type="AcctSeed__Accounting_Variable__c"
+                              filters="[{
 																							 						field: 'AcctSeed__Type__c',
 																							 						comparator: '=',
 																							 						value: 'GL Account Variable 4'
 																											  }]"
-																							 placeholder="Business Manager"
-																							 sobjectId="{! v.f_2300e_who_glv4 }"
-																							 value="{! v.f_2300e_who_name }" />
-													</td>
-													<td><lightning:input type="number" value="{!v.f_2300e}" formatter="currency" step="0.01"/></td>
-												</tr>
-											</tbody>
-										</table>
-									</td>
-									<td style="width: 5%; text-align: center">
-										<br/>
-										<span class="slds-p-around_medium">
-											<aura:if isTrue="{! v.isCommissionBalanced }">
-												<lightning:icon iconName="action:check" size="xx-small" />
-												<aura:set attribute="else">
-													<lightning:icon iconName="action:reject" size="xx-small" />
-												</aura:set>
-											</aura:if>
-										</span>
-									</td>
-								</tr>
-								<tr>
-									<td style="width: 47.5%">
-										<table class="slds-table subtotals" role="grid">
-											<tbody>
-												<tr>
-													<td></td>
-													<td></td>
-													<td>
-														<lightning:input type="number" value="{! (v.f_5420a*1) + (v.f_5420b*1) }" formatter="currency" step="0.01" readonly="true" />
-													</td>
-												</tr>
-											</tbody>
-										</table>
-									</td>
-									<td style="width: 47.5%">
-										<table class="slds-table subtotals" role="grid">
-											<tbody>
-												<tr>
-													<td></td>
-													<td></td>
-													<td>
-														<lightning:input type="number" value="{! (v.f_2300a*1) + (v.f_2300b*1) + (v.f_2300c*1) + (v.f_2300d*1) + (v.f_2300e*1) }" formatter="currency" step="0.01" readonly="true" />
-													</td>
-												</tr>
-											</tbody>
-										</table>
-									</td>
-									<td style="width: 5%; text-align: center">
-									</td>
-								</tr>
-							</table>
-						</td>
-					</tr>
+                              placeholder="Business Manager"
+                              sobjectId="{! v.f_2300e_who_glv4 }"
+                              value="{! v.f_2300e_who_name }"
+                            />
+                          </td>
+                          <td>
+                            <lightning:input type="number" value="{!v.f_2300e}" formatter="currency" step="0.01" />
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </td>
+                  <td style="width: 5%; text-align: center">
+                    <br />
+                    <span class="slds-p-around_medium">
+                      <aura:if isTrue="{! v.isCommissionBalanced }">
+                        <lightning:icon iconName="action:check" size="xx-small" />
+                        <aura:set attribute="else">
+                          <lightning:icon iconName="action:reject" size="xx-small" />
+                        </aura:set>
+                      </aura:if>
+                    </span>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="width: 47.5%">
+                    <table class="slds-table subtotals" role="grid">
+                      <tbody>
+                        <tr>
+                          <td></td>
+                          <td></td>
+                          <td>
+                            <lightning:input
+                              type="number"
+                              value="{! (v.f_5420a*1) + (v.f_5420b*1) }"
+                              formatter="currency"
+                              step="0.01"
+                              readonly="true"
+                            />
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </td>
+                  <td style="width: 47.5%">
+                    <table class="slds-table subtotals" role="grid">
+                      <tbody>
+                        <tr>
+                          <td></td>
+                          <td></td>
+                          <td>
+                            <lightning:input
+                              type="number"
+                              value="{! (v.f_2300a*1) + (v.f_2300b*1) + (v.f_2300c*1) + (v.f_2300d*1) + (v.f_2300e*1) }"
+                              formatter="currency"
+                              step="0.01"
+                              readonly="true"
+                            />
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </td>
+                  <td style="width: 5%; text-align: center"></td>
+                </tr>
+              </table>
+            </td>
+          </tr>
 
-					<!--tr class="myTable">
+          <!--tr class="myTable">
 						<td class="myTableWrap" colspan="3">
 							<table>
 								<tr>
@@ -880,319 +948,415 @@
 						</td>
 					</tr-->
 
-					<tr class="myTable">
-						<td class="myTableWrap" colspan="3">
-							<table>
-								<tr>
-									<td style="width: 47.5%">
-										<table class="slds-table" role="grid">
-											<thead>
-												<tr class="">
-													<th>GL Account</th>
-													<th>Item Name</th>
-													<th>Amount</th>
-												</tr>
-											</thead>
-											<tbody>
-												<tr>
-													<td>5210</td>
-													<td>Cost of Life &amp; Disability Insurance</td>
-													<td><lightning:input type="number" value="{!v.f_5210_CostOfLifeAndDisabilityInsurance}" formatter="currency" step="0.01"/></td>
-												</tr>
-											</tbody>
-										</table>
-									</td>
-									<td style="width: 47.5%">
-										<table class="slds-table" role="grid">
-											<thead>
-												<tr class="">
-													<th>GL Account</th>
-													<th>Item Name</th>
-													<th>Amount</th>
-												</tr>
-											</thead>
-											<tbody>
-												<tr>
-													<td>2190</td>
-													<td>Life Insurance Payable (Portion we pay)</td>
-													<td><lightning:input type="number" value="{!v.f_2190}" formatter="currency" step="0.01" readonly="true"/></td>
-												</tr>
-											</tbody>
-										</table>
-									</td>
-									<td style="width: 5%; text-align: center">
-										<br/>
-										<span class="slds-p-around_medium">
-											<aura:if isTrue="{! (v.f_5210_CostOfLifeAndDisabilityInsurance*1) == (v.f_2190*1) }">
-												<lightning:icon iconName="action:check" size="xx-small" />
-												<aura:set attribute="else">
-													<lightning:icon iconName="action:reject" size="xx-small" />
-												</aura:set>
-											</aura:if>
-										</span>
-									</td>
-								</tr>
-								<tr>
-									<td style="width: 47.5%">
-										<table class="slds-table subtotals" role="grid">
-											<tbody>
-												<tr>
-													<td></td>
-													<td></td>
-													<td><lightning:input type="number" value="{! (v.f_5210_CostOfLifeAndDisabilityInsurance*1) }" formatter="currency" step="0.01" readonly="true" /></td>
-												</tr>
-											</tbody>
-										</table>
-									</td>
-									<td style="width: 47.5%">
-										<table class="slds-table subtotals" role="grid">
-											<tbody>
-												<tr>
-													<td></td>
-													<td></td>
-													<td><lightning:input type="number" value="{! (v.f_2190*1) }" formatter="currency" step="0.01" readonly="true" /></td>
-												</tr>
-											</tbody>
-										</table>
-									</td>
-									<td style="width: 5%; text-align: center">
-									</td>
-								</tr>
-							</table>
-						</td>
-					</tr>
+          <tr class="myTable">
+            <td class="myTableWrap" colspan="3">
+              <table>
+                <tr>
+                  <td style="width: 47.5%">
+                    <table class="slds-table" role="grid">
+                      <thead>
+                        <tr class="">
+                          <th>GL Account</th>
+                          <th>Item Name</th>
+                          <th>Amount</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>5210</td>
+                          <td>Cost of Life &amp; Disability Insurance</td>
+                          <td>
+                            <lightning:input
+                              type="number"
+                              value="{!v.f_5210_CostOfLifeAndDisabilityInsurance}"
+                              formatter="currency"
+                              step="0.01"
+                            />
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </td>
+                  <td style="width: 47.5%">
+                    <table class="slds-table" role="grid">
+                      <thead>
+                        <tr class="">
+                          <th>GL Account</th>
+                          <th>Item Name</th>
+                          <th>Amount</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>2190</td>
+                          <td>Life Insurance Payable (Portion we pay)</td>
+                          <td>
+                            <lightning:input
+                              type="number"
+                              value="{!v.f_2190}"
+                              formatter="currency"
+                              step="0.01"
+                              readonly="true"
+                            />
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </td>
+                  <td style="width: 5%; text-align: center">
+                    <br />
+                    <span class="slds-p-around_medium">
+                      <aura:if isTrue="{! (v.f_5210_CostOfLifeAndDisabilityInsurance*1) == (v.f_2190*1) }">
+                        <lightning:icon iconName="action:check" size="xx-small" />
+                        <aura:set attribute="else">
+                          <lightning:icon iconName="action:reject" size="xx-small" />
+                        </aura:set>
+                      </aura:if>
+                    </span>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="width: 47.5%">
+                    <table class="slds-table subtotals" role="grid">
+                      <tbody>
+                        <tr>
+                          <td></td>
+                          <td></td>
+                          <td>
+                            <lightning:input
+                              type="number"
+                              value="{! (v.f_5210_CostOfLifeAndDisabilityInsurance*1) }"
+                              formatter="currency"
+                              step="0.01"
+                              readonly="true"
+                            />
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </td>
+                  <td style="width: 47.5%">
+                    <table class="slds-table subtotals" role="grid">
+                      <tbody>
+                        <tr>
+                          <td></td>
+                          <td></td>
+                          <td>
+                            <lightning:input
+                              type="number"
+                              value="{! (v.f_2190*1) }"
+                              formatter="currency"
+                              step="0.01"
+                              readonly="true"
+                            />
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </td>
+                  <td style="width: 5%; text-align: center"></td>
+                </tr>
+              </table>
+            </td>
+          </tr>
 
-					<tr class="myTable">
-						<td class="myTableWrap" colspan="3">
-							<table>
-								<tr>
-									<td style="width: 47.5%">
-										<table class="slds-table" role="grid">
-											<thead>
-												<tr class="">
-													<th>GL Account</th>
-													<th>Item Name</th>
-													<th>Amount</th>
-												</tr>
-											</thead>
-											<tbody>
-												<tr>
-													<td>5200</td>
-													<td>
-														Cost of Product Protection (Warranty)
-														<lightning:button label="" iconName="utility:info" iconPosition="left" variant="bare" onclick="{! c.toggleWarrantyTable }" />
-														<br/>
-														<table class="slds-table slds-box slds-hide" aura:id="warrantyTable" style="max-width: 75%">
-															<thead>
-																<tr>
-																	<th>HP</th>
-																	<th>Retail Value</th>
-																	<th>Total 8 years<br/>Warranty Cost</th>
-																	<th>Commissionable<br/>Amount</th>
-																	<th>Commission<br/>Earned at 30%</th>
-																</tr>
-															</thead>
-															<tbody>
-																<tr>
-																	<td>2.5 to 14.9</td>
-																	<td>$275</td>
-																	<td>$140</td>
-																	<td>$135</td>
-																	<td>$40.50</td>
-																</tr>
-																<tr>
-																	<td>15 to 29.9</td>
-																	<td>$600</td>
-																	<td>$285</td>
-																	<td>$315</td>
-																	<td>$94.50</td>
-																</tr>
-																<tr>
-																	<td>40 to 74.9</td>
-																	<td>$1,270</td>
-																	<td>$565</td>
-																	<td>$705</td>
-																	<td>$211.50</td>
-																</tr>
-																<tr>
-																	<td>75 to 149.9</td>
-																	<td>$1,975</td>
-																	<td>$860</td>
-																	<td>$1,115</td>
-																	<td>$334.50</td>
-																</tr>
-																<tr>
-																	<td>150 to 199.9</td>
-																	<td>$2,545</td>
-																	<td>$1,265</td>
-																	<td>$1,280</td>
-																	<td>$384.00</td>
-																</tr>
-																<tr>
-																	<td>200 to 299.9</td>
-																	<td>$6,675</td>
-																	<td>$2,850</td>
-																	<td>$3,825</td>
-																	<td>$1,147.50</td>
-																</tr>
-																<tr>
-																	<td>300 to 399.9</td>
-																	<td>$9,875</td>
-																	<td>$3,860</td>
-																	<td>$6,015</td>
-																	<td>$1,804.50</td>
-																</tr>
-															</tbody>
-														</table>
-													</td>
-													<td><lightning:input type="number" value="{!v.f_5200_CostOfProductProtection}" formatter="currency" step="0.01"/></td>
-												</tr>
-											</tbody>
-										</table>
-									</td>
-									<td style="width: 47.5%">
-										<table class="slds-table" role="grid">
-											<thead>
-												<tr class="">
-													<th>GL Account</th>
-													<th>Item Name</th>
-													<th>Amount</th>
-												</tr>
-											</thead>
-											<tbody>
-												<tr>
-													<td>2180</td>
-													<td>Product Protection Clearing (Portion we pay)</td>
-													<td><lightning:input type="number" value="{!v.f_2180}" formatter="currency" step="0.01" readonly="true" /></td>
-												</tr>
-											</tbody>
-										</table>
-									</td>
-									<td style="width: 5%; text-align: center">
-										<br/>
-										<span class="slds-p-around_medium">
-											<aura:if isTrue="{! (v.f_5200_CostOfProductProtection*1) == (v.f_2180*1) }">
-												<lightning:icon iconName="action:check" size="xx-small" />
-												<aura:set attribute="else">
-													<lightning:icon iconName="action:reject" size="xx-small" />
-												</aura:set>
-											</aura:if>
-										</span>
-									</td>
-								</tr>
-								<tr>
-									<td style="width: 47.5%">
-										<table class="slds-table subtotals" role="grid">
-											<tbody>
-												<tr>
-													<td></td>
-													<td></td>
-													<td><lightning:input type="number" value="{! (v.f_5200_CostOfProductProtection*1) }" formatter="currency" step="0.01" readonly="true" /></td>
-												</tr>
-											</tbody>
-										</table>
-									</td>
-									<td style="width: 47.5%">
-										<table class="slds-table subtotals" role="grid">
-											<tbody>
-												<tr>
-													<td></td>
-													<td></td>
-													<td><lightning:input type="number" value="{! (v.f_2180*1) }" formatter="currency" step="0.01" readonly="true" /></td>
-												</tr>
-											</tbody>
-										</table>
-									</td>
-									<td style="width: 5%; text-align: center">
-									</td>
-								</tr>
-							</table>
-						</td>
-					</tr>
+          <tr class="myTable">
+            <td class="myTableWrap" colspan="3">
+              <table>
+                <tr>
+                  <td style="width: 47.5%">
+                    <table class="slds-table" role="grid">
+                      <thead>
+                        <tr class="">
+                          <th>GL Account</th>
+                          <th>Item Name</th>
+                          <th>Amount</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>5200</td>
+                          <td>
+                            Cost of Product Protection (Warranty)
+                            <lightning:button
+                              label=""
+                              iconName="utility:info"
+                              iconPosition="left"
+                              variant="bare"
+                              onclick="{! c.toggleWarrantyTable }"
+                            />
+                            <br />
+                            <table class="slds-table slds-box slds-hide" aura:id="warrantyTable" style="max-width: 75%">
+                              <thead>
+                                <tr>
+                                  <th>HP</th>
+                                  <th>Retail Value</th>
+                                  <th>Total 8 years<br />Warranty Cost</th>
+                                  <th>Commissionable<br />Amount</th>
+                                  <th>Commission<br />Earned at 30%</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <tr>
+                                  <td>2.5 to 14.9</td>
+                                  <td>$275</td>
+                                  <td>$140</td>
+                                  <td>$135</td>
+                                  <td>$40.50</td>
+                                </tr>
+                                <tr>
+                                  <td>15 to 29.9</td>
+                                  <td>$600</td>
+                                  <td>$285</td>
+                                  <td>$315</td>
+                                  <td>$94.50</td>
+                                </tr>
+                                <tr>
+                                  <td>40 to 74.9</td>
+                                  <td>$1,270</td>
+                                  <td>$565</td>
+                                  <td>$705</td>
+                                  <td>$211.50</td>
+                                </tr>
+                                <tr>
+                                  <td>75 to 149.9</td>
+                                  <td>$1,975</td>
+                                  <td>$860</td>
+                                  <td>$1,115</td>
+                                  <td>$334.50</td>
+                                </tr>
+                                <tr>
+                                  <td>150 to 199.9</td>
+                                  <td>$2,545</td>
+                                  <td>$1,265</td>
+                                  <td>$1,280</td>
+                                  <td>$384.00</td>
+                                </tr>
+                                <tr>
+                                  <td>200 to 299.9</td>
+                                  <td>$6,675</td>
+                                  <td>$2,850</td>
+                                  <td>$3,825</td>
+                                  <td>$1,147.50</td>
+                                </tr>
+                                <tr>
+                                  <td>300 to 399.9</td>
+                                  <td>$9,875</td>
+                                  <td>$3,860</td>
+                                  <td>$6,015</td>
+                                  <td>$1,804.50</td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </td>
+                          <td>
+                            <lightning:input
+                              type="number"
+                              value="{!v.f_5200_CostOfProductProtection}"
+                              formatter="currency"
+                              step="0.01"
+                            />
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </td>
+                  <td style="width: 47.5%">
+                    <table class="slds-table" role="grid">
+                      <thead>
+                        <tr class="">
+                          <th>GL Account</th>
+                          <th>Item Name</th>
+                          <th>Amount</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>2180</td>
+                          <td>Product Protection Clearing (Portion we pay)</td>
+                          <td>
+                            <lightning:input
+                              type="number"
+                              value="{!v.f_2180}"
+                              formatter="currency"
+                              step="0.01"
+                              readonly="true"
+                            />
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </td>
+                  <td style="width: 5%; text-align: center">
+                    <br />
+                    <span class="slds-p-around_medium">
+                      <aura:if isTrue="{! (v.f_5200_CostOfProductProtection*1) == (v.f_2180*1) }">
+                        <lightning:icon iconName="action:check" size="xx-small" />
+                        <aura:set attribute="else">
+                          <lightning:icon iconName="action:reject" size="xx-small" />
+                        </aura:set>
+                      </aura:if>
+                    </span>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="width: 47.5%">
+                    <table class="slds-table subtotals" role="grid">
+                      <tbody>
+                        <tr>
+                          <td></td>
+                          <td></td>
+                          <td>
+                            <lightning:input
+                              type="number"
+                              value="{! (v.f_5200_CostOfProductProtection*1) }"
+                              formatter="currency"
+                              step="0.01"
+                              readonly="true"
+                            />
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </td>
+                  <td style="width: 47.5%">
+                    <table class="slds-table subtotals" role="grid">
+                      <tbody>
+                        <tr>
+                          <td></td>
+                          <td></td>
+                          <td>
+                            <lightning:input
+                              type="number"
+                              value="{! (v.f_2180*1) }"
+                              formatter="currency"
+                              step="0.01"
+                              readonly="true"
+                            />
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </td>
+                  <td style="width: 5%; text-align: center"></td>
+                </tr>
+              </table>
+            </td>
+          </tr>
 
-					<tr class="myTable">
-						<td class="myTableWrap" colspan="3">
-							<table>
-								<tr>
-									<td style="width: 47.5%">
-										<table class="slds-table" role="grid">
-											<thead>
-												<tr class="">
-													<th>GL Account</th>
-													<th>Item Name</th>
-													<th>Amount</th>
-												</tr>
-											</thead>
-											<tbody>
-												<tr>
-													<td>5200</td>
-													<td>Cost of Platinum Product Protection (Warranty)</td>
-													<td><lightning:input type="number" value="{!v.f_5200_Premium}" formatter="currency" step="0.01"/></td>
-												</tr>
-											</tbody>
-										</table>
-									</td>
-									<td style="width: 47.5%">
-										<table class="slds-table" role="grid">
-											<thead>
-												<tr class="">
-													<th>GL Account</th>
-													<th>Item Name</th>
-													<th>Amount</th>
-												</tr>
-											</thead>
-											<tbody>
-												<tr>
-													<td>2195</td>
-													<td>Boat Warranty Product Placement (Portion we pay)</td>
-													<td><lightning:input type="number" value="{!v.f_2195}" formatter="currency" step="0.01" readonly="true" /></td>
-												</tr>
-											</tbody>
-										</table>
-									</td>
-									<td style="width: 5%; text-align: center">
-										<br/>
-										<span class="slds-p-around_medium">
-											<aura:if isTrue="{! (v.f_5200_Premium*1) == (v.f_2195*1) }">
-												<lightning:icon iconName="action:check" size="xx-small" />
-												<aura:set attribute="else">
-													<lightning:icon iconName="action:reject" size="xx-small" />
-												</aura:set>
-											</aura:if>
-										</span>
-									</td>
-								</tr>
-								<tr>
-									<td style="width: 47.5%">
-										<table class="slds-table subtotals" role="grid">
-											<tbody>
-												<tr>
-													<td></td>
-													<td></td>
-													<td><lightning:input type="number" value="{! (v.f_5200_Premium*1) }" formatter="currency" step="0.01" readonly="true" /></td>
-												</tr>
-											</tbody>
-										</table>
-									</td>
-									<td style="width: 47.5%">
-										<table class="slds-table subtotals" role="grid">
-											<tbody>
-												<tr>
-													<td></td>
-													<td></td>
-													<td><lightning:input type="number" value="{! (v.f_2195*1) }" formatter="currency" step="0.01" readonly="true" /></td>
-												</tr>
-											</tbody>
-										</table>
-									</td>
-									<td style="width: 5%; text-align: center">
-									</td>
-								</tr>
-							</table>
-						</td>
-					</tr>
+          <tr class="myTable">
+            <td class="myTableWrap" colspan="3">
+              <table>
+                <tr>
+                  <td style="width: 47.5%">
+                    <table class="slds-table" role="grid">
+                      <thead>
+                        <tr class="">
+                          <th>GL Account</th>
+                          <th>Item Name</th>
+                          <th>Amount</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>5200</td>
+                          <td>Cost of Platinum Product Protection (Warranty)</td>
+                          <td>
+                            <lightning:input
+                              type="number"
+                              value="{!v.f_5200_Premium}"
+                              formatter="currency"
+                              step="0.01"
+                            />
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </td>
+                  <td style="width: 47.5%">
+                    <table class="slds-table" role="grid">
+                      <thead>
+                        <tr class="">
+                          <th>GL Account</th>
+                          <th>Item Name</th>
+                          <th>Amount</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>2195</td>
+                          <td>Boat Warranty Product Placement (Portion we pay)</td>
+                          <td>
+                            <lightning:input
+                              type="number"
+                              value="{!v.f_2195}"
+                              formatter="currency"
+                              step="0.01"
+                              readonly="true"
+                            />
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </td>
+                  <td style="width: 5%; text-align: center">
+                    <br />
+                    <span class="slds-p-around_medium">
+                      <aura:if isTrue="{! (v.f_5200_Premium*1) == (v.f_2195*1) }">
+                        <lightning:icon iconName="action:check" size="xx-small" />
+                        <aura:set attribute="else">
+                          <lightning:icon iconName="action:reject" size="xx-small" />
+                        </aura:set>
+                      </aura:if>
+                    </span>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="width: 47.5%">
+                    <table class="slds-table subtotals" role="grid">
+                      <tbody>
+                        <tr>
+                          <td></td>
+                          <td></td>
+                          <td>
+                            <lightning:input
+                              type="number"
+                              value="{! (v.f_5200_Premium*1) }"
+                              formatter="currency"
+                              step="0.01"
+                              readonly="true"
+                            />
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </td>
+                  <td style="width: 47.5%">
+                    <table class="slds-table subtotals" role="grid">
+                      <tbody>
+                        <tr>
+                          <td></td>
+                          <td></td>
+                          <td>
+                            <lightning:input
+                              type="number"
+                              value="{! (v.f_2195*1) }"
+                              formatter="currency"
+                              step="0.01"
+                              readonly="true"
+                            />
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </td>
+                  <td style="width: 5%; text-align: center"></td>
+                </tr>
+              </table>
+            </td>
+          </tr>
 
-					<!--tr class="myTable">
+          <!--tr class="myTable">
 						<td class="myTableWrap" colspan="3">
 							<table>
 								<tr>
@@ -1279,92 +1443,98 @@
 						</td>
 					</tr-->
 
-					<aura:if isTrue="{! v.debit_lines.length > 0 }">
-						<tr class="myTable">
-							<td class="myTableWrap" colspan="3">
-								<table>
-									<tr>
-										<td style="width: 47.5%">
-											<table class="slds-table" role="grid">
-												<thead>
-													<tr class="">
-														<th>GL Account</th>
-														<th>Item Name</th>
-														<th>Amount</th>
-													</tr>
-												</thead>
-												<tbody>
-													<aura:iteration items="{!v.debit_lines}" var="aline">
-														<tr>
-															<td>
-																<c:LightningLookup type="AcctSeed__GL_Account__c" value="{!aline[0]}" />
-															</td>
-															<td>
-																{!aline[0]}
-															</td>
-															<td>
-																<lightning:input type="number" value="{!aline[2]}" formatter="currency" step="0.01" onchange="{!c.balanceAddedLines}" />
-															</td>
-														</tr>
-													</aura:iteration>
-												</tbody>
-											</table>
-										</td>
-										<td style="width: 47.5%">
-											<table class="slds-table" role="grid">
-												<thead>
-													<tr class="">
-														<th>GL Account</th>
-														<th>Item Name</th>
-														<th>Amount</th>
-													</tr>
-												</thead>
-												<tbody>
-													<aura:iteration items="{!v.credit_lines}" var="iline">
-														<tr>
-															<td>
-																<c:LightningLookup type="AcctSeed__GL_Account__c" value="{!iline[0]}" />
-															</td>
-															<td>
-																{!iline[0]}
-															</td>
-															<td>
-																<lightning:input type="number" value="{!iline[2]}" formatter="currency" step="0.01" onchange="{!c.balanceAddedLines}" />
-															</td>
-														</tr>
-													</aura:iteration>
-												</tbody>
-											</table>
-										</td>
-										<td style="width: 5%; text-align: center">
-											<br/>
-											<span class="slds-p-around_medium">
-												<aura:if isTrue="{! v.addedLinesBalance }">
-												<lightning:icon iconName="action:check" size="xx-small" />
-												<aura:set attribute="else">
-													<lightning:icon iconName="action:reject" size="xx-small" />
-												</aura:set>
-											</aura:if>
-											</span>
-										</td>
-									</tr>
-								</table>
-							</td>
-						</tr>
-					</aura:if>
-				</table>
-				<p>
-					<button class="slds-button slds-button_neutral" onclick="{!c.addLineItem}">Add Line Item</button>
-				</p>
-				<br/>
-				<p class="btnCreateJournalEntries">
-					<button class="slds-button" onclick="{!c.createEntries}">
-						<lightning:icon iconName="utility:note" variant="inverse" size="xx-small" />&nbsp; Create Journal Entries
-					</button>
-				</p>
-
-			</div>
-		</aura:set>
-
-	</aura:if>
+          <aura:if isTrue="{! v.debit_lines.length > 0 }">
+            <tr class="myTable">
+              <td class="myTableWrap" colspan="3">
+                <table>
+                  <tr>
+                    <td style="width: 47.5%">
+                      <table class="slds-table" role="grid">
+                        <thead>
+                          <tr class="">
+                            <th>GL Account</th>
+                            <th>Item Name</th>
+                            <th>Amount</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <aura:iteration items="{!v.debit_lines}" var="aline">
+                            <tr>
+                              <td>
+                                <c:LightningLookup type="AcctSeed__GL_Account__c" value="{!aline[0]}" />
+                              </td>
+                              <td>{!aline[0]}</td>
+                              <td>
+                                <lightning:input
+                                  type="number"
+                                  value="{!aline[2]}"
+                                  formatter="currency"
+                                  step="0.01"
+                                  onchange="{!c.balanceAddedLines}"
+                                />
+                              </td>
+                            </tr>
+                          </aura:iteration>
+                        </tbody>
+                      </table>
+                    </td>
+                    <td style="width: 47.5%">
+                      <table class="slds-table" role="grid">
+                        <thead>
+                          <tr class="">
+                            <th>GL Account</th>
+                            <th>Item Name</th>
+                            <th>Amount</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <aura:iteration items="{!v.credit_lines}" var="iline">
+                            <tr>
+                              <td>
+                                <c:LightningLookup type="AcctSeed__GL_Account__c" value="{!iline[0]}" />
+                              </td>
+                              <td>{!iline[0]}</td>
+                              <td>
+                                <lightning:input
+                                  type="number"
+                                  value="{!iline[2]}"
+                                  formatter="currency"
+                                  step="0.01"
+                                  onchange="{!c.balanceAddedLines}"
+                                />
+                              </td>
+                            </tr>
+                          </aura:iteration>
+                        </tbody>
+                      </table>
+                    </td>
+                    <td style="width: 5%; text-align: center">
+                      <br />
+                      <span class="slds-p-around_medium">
+                        <aura:if isTrue="{! v.addedLinesBalance }">
+                          <lightning:icon iconName="action:check" size="xx-small" />
+                          <aura:set attribute="else">
+                            <lightning:icon iconName="action:reject" size="xx-small" />
+                          </aura:set>
+                        </aura:if>
+                      </span>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </aura:if>
+        </table>
+        <p>
+          <button class="slds-button slds-button_neutral" onclick="{!c.addLineItem}">Add Line Item</button>
+        </p>
+        <br />
+        <p class="btnCreateJournalEntries">
+          <button class="slds-button" onclick="{!c.createEntries}">
+            <lightning:icon iconName="utility:note" variant="inverse" size="xx-small" />&nbsp; Create Journal Entries
+          </button>
+        </p>
+      </div>
+    </aura:set>
+  </aura:if>
 </aura:component>

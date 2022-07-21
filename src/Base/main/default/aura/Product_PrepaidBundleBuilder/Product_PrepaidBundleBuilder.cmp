@@ -1,53 +1,48 @@
-<aura:component controller="Product_PrepaidBundleBuilder_Controller"
-                implements="force:hasRecordId,lightning:actionOverride,force:appHostable,flexipage:availableForAllPageTypes,force:lightningQuickAction">
-
-  <aura:attribute type="String"   name="title"        default="Create New Package Bundle"/>
-  <aura:attribute type="Id"       name="recordId" />
+<aura:component
+  controller="Product_PrepaidBundleBuilder_Controller"
+  implements="force:hasRecordId,lightning:actionOverride,force:appHostable,flexipage:availableForAllPageTypes,force:lightningQuickAction"
+>
+  <aura:attribute type="String" name="title" default="Create New Package Bundle" />
+  <aura:attribute type="Id" name="recordId" />
   <aura:attribute type="List" name="availablePackages" />
   <aura:attribute type="List" name="filteredPackages" />
   <aura:attribute type="List" name="selectedPackages" />
-  <aura:attribute type="String"   name="searchFilter" />
-  <aura:attribute type="Boolean"  name="modified"     default="false" />
-  <aura:attribute type="Boolean"  name="showAvailablePackages" default="false" />
-  <aura:attribute type="Boolean"  name="displayQuantityModal" default="false" />
-  <aura:attribute type="Object"   name="newSelectedPackage" />
-  <aura:attribute type="Decimal"  name="newPackageQuantity" />
+  <aura:attribute type="String" name="searchFilter" />
+  <aura:attribute type="Boolean" name="modified" default="false" />
+  <aura:attribute type="Boolean" name="showAvailablePackages" default="false" />
+  <aura:attribute type="Boolean" name="displayQuantityModal" default="false" />
+  <aura:attribute type="Object" name="newSelectedPackage" />
+  <aura:attribute type="Decimal" name="newPackageQuantity" />
 
-  <ltng:require scripts="{!join(',', $Resource.Libraries +'/js/LightningApex.js',
+  <ltng:require
+    scripts="{!join(',', $Resource.Libraries +'/js/LightningApex.js',
                                      $Resource.Libraries +'/js/LightningUtils.js') }"
-                afterScriptsLoaded="{!c.doInit}" />
+    afterScriptsLoaded="{!c.doInit}"
+  />
 
-  <aura:handler name="change" value="{!v.searchFilter}"      action="{!c.search}" />
+  <aura:handler name="change" value="{!v.searchFilter}" action="{!c.search}" />
 
-  <c:lgnd_Confirm aura:id="lgnd-confirm"/>
-  <lightning:spinner aura:id="page-spinner" class="slds-hide"/>
+  <c:lgnd_Confirm aura:id="lgnd-confirm" />
+  <lightning:spinner aura:id="page-spinner" class="slds-hide" />
   <div>
     <!-- Quantity Modal -->
     <div class="{! if( v.displayQuantityModal,'slds-show', 'slds-hide')}">
       <section role="dialog" class="slds-modal slds-fade-in-open">
         <div class="slds-modal__container">
           <header class="slds-modal__header">
-            <h2 class="slds-text-heading_medium slds-hyphenate">
-              Set Quantity
-            </h2>
+            <h2 class="slds-text-heading_medium slds-hyphenate">Set Quantity</h2>
           </header>
           <div class="slds-modal__content slds-p-around_medium">
             <p class="slds-text-align_center slds-m-bottom_small">
               How many <strong>{!v.newSelectedPackage.Name}</strong>(s) would you like to add?
             </p>
-            <div style="width:40%; margin:auto">
-              <lightning:input label=''
-                               variant="label-hidden"
-                               type="number"
-                               value="{!v.newPackageQuantity}" />
+            <div style="width: 40%; margin: auto">
+              <lightning:input label="" variant="label-hidden" type="number" value="{!v.newPackageQuantity}" />
             </div>
           </div>
           <footer class="slds-modal__footer">
-            <lightning:button label="Cancel"
-                              onclick="{!c.handleNewPackageCancel}" />
-            <lightning:button label="Continue"
-                              variant="brand"
-                              onclick="{!c.handleNewPackageContinue}" />
+            <lightning:button label="Cancel" onclick="{!c.handleNewPackageCancel}" />
+            <lightning:button label="Continue" variant="brand" onclick="{!c.handleNewPackageContinue}" />
           </footer>
         </div>
       </section>
@@ -55,20 +50,20 @@
     </div>
 
     <lightning:card title="{!v.title}">
-      <lightning:spinner aura:id="spinner" class="slds-hide"/>
+      <lightning:spinner aura:id="spinner" class="slds-hide" />
 
       <!-- AVAILABLE PACKAGES -->
       <aura:if isTrue="{! v.showAvailablePackages }">
         <div class="available-packages slds-p-around_medium">
           <div class="slds-p-bottom_small">
-            <lightning:input placeholder="Search Packages"
-                             label="Filter Available Packages"
-                             variant="label-hidden"
-                             value="{!v.searchFilter}" />
+            <lightning:input
+              placeholder="Search Packages"
+              label="Filter Available Packages"
+              variant="label-hidden"
+              value="{!v.searchFilter}"
+            />
           </div>
-          <div class="table-header">
-            Available Packages
-          </div>
+          <div class="table-header">Available Packages</div>
           <div class="table-scroll">
             <table class="slds-table slds-table_bordered">
               <tbody>
@@ -79,16 +74,17 @@
                       <span class="slds-badge">{!p.ProductCode}</span>
                     </td>
                     <td class="button-col">
-                      <lightning:button label="Add"
-                                        value="{!p}"
-                                        onclick="{!c.handleAddPackage}" />
+                      <lightning:button label="Add" value="{!p}" onclick="{!c.handleAddPackage}" />
                     </td>
                   </tr>
                 </aura:iteration>
                 <aura:if isTrue="{! empty(v.filteredPackages)}">
                   <tr>
                     <td colspan="2">
-                      <div class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_warning" role="alert">
+                      <div
+                        class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_warning"
+                        role="alert"
+                      >
                         <lightning:icon iconName="utility:warning" size="xx-small" />
                         <h2 class="slds-m-left_small">No Packages Found</h2>
                       </div>
@@ -116,41 +112,36 @@
 
           <aura:iteration items="{!v.selectedPackages}" var="s">
             <lightning:layoutItem size="8" padding="horizontal-small" class="slds-m-bottom_small">
-              <div class="slds-cell-wrap">
-                {!s.Item__r.Name}
-              </div>
+              <div class="slds-cell-wrap">{!s.Item__r.Name}</div>
             </lightning:layoutItem>
             <lightning:layoutItem size="3" padding="horizontal-small" class="slds-m-bottom_small">
-              <lightning:input type="number"
-                               value="{!s.Quantity__c}"
-                               min="0"
-                               max="99"
-                               onchange="{!c.handleQuantityChange}"
-                               variant="label-hidden"
-                               class="slds-text-align_center" />
+              <lightning:input
+                type="number"
+                value="{!s.Quantity__c}"
+                min="0"
+                max="99"
+                onchange="{!c.handleQuantityChange}"
+                variant="label-hidden"
+                class="slds-text-align_center"
+              />
             </lightning:layoutItem>
             <lightning:layoutItem size="1" class="slds-m-bottom_small">
-              <lightning:buttonIcon value="{!s.Id}"
-                                    iconName="utility:delete"
-                                    onclick="{!c.handleRemovePackage}" />
+              <lightning:buttonIcon value="{!s.Id}" iconName="utility:delete" onclick="{!c.handleRemovePackage}" />
             </lightning:layoutItem>
           </aura:iteration>
-
         </lightning:layout>
       </aura:if>
 
       <!-- BUTTONS -->
       <div class="slds-p-around_medium">
-        <lightning:button label="{! if( v.showAvailablePackages, 'Cancel', 'Add New Package' )}"
-                          onclick="{!c.toggleAddNewPackage}" />
+        <lightning:button
+          label="{! if( v.showAvailablePackages, 'Cancel', 'Add New Package' )}"
+          onclick="{!c.toggleAddNewPackage}"
+        />
         <aura:if isTrue="{! v.modified }">
-          <lightning:button label="Update Quantities"
-                            variant="brand"
-                            onclick="{!c.handleUpdateQuantities}" />
+          <lightning:button label="Update Quantities" variant="brand" onclick="{!c.handleUpdateQuantities}" />
         </aura:if>
       </div>
     </lightning:card>
-
   </div>
-
 </aura:component>

@@ -1,6 +1,7 @@
-<aura:component controller="lgnd_ObjectHeaderController"
-                implements="forceCommunity:availableForAllPageTypes,force:hasRecordId">
-
+<aura:component
+  controller="lgnd_ObjectHeaderController"
+  implements="forceCommunity:availableForAllPageTypes,force:hasRecordId"
+>
   <!-- ATTRIBUTE -->
   <aura:attribute name="recordId" type="Id" />
   <aura:attribute name="record" type="sObject" />
@@ -16,19 +17,21 @@
   <aura:attribute name="nameField" type="String" />
   <aura:attribute name="displayFields" type="String" />
   <aura:attribute name="canEditFormula" type="String" />
-  <aura:attribute name="listViewURL" type="String"  />
+  <aura:attribute name="listViewURL" type="String" />
   <aura:attribute name="editURL" type="String" />
   <aura:attribute name="alwaysEditFields" type="String" />
   <aura:attribute name="alwaysEditFields_List" type="List" />
 
-  <ltng:require scripts="{!join(',', $Resource.Libraries + '/js/LightningApex.js',
-                                     $Resource.Libraries + '/js/LightningUtils.js') }" />
+  <ltng:require
+    scripts="{!join(',', $Resource.Libraries + '/js/LightningApex.js',
+                                     $Resource.Libraries + '/js/LightningUtils.js') }"
+  />
 
   <!-- Events -->
   <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
   <aura:handler event="force:refreshView" action="{!c.doInit}" />
 
-  <c:lgnd_Confirm aura:id="lgnd-confirm"/>
+  <c:lgnd_Confirm aura:id="lgnd-confirm" />
   <c:Lgnd_Spinner_dh aura:id="spinner" />
 
   <div class="slds-page-header slds-show_medium">
@@ -39,14 +42,11 @@
             <lightning:icon size="large" iconName="{!v.iconName}" />
           </div>
           <div class="slds-media__body">
-            <p class="slds-text-title_caps slds-line-height_reset">
-              {!v.title}
-            </p>
-            <h1 class="slds-page-header__title
-                       slds-m-right_small
-                       slds-align-middle
-                       slds-truncate"
-                 title="{!v.recordName}">
+            <p class="slds-text-title_caps slds-line-height_reset">{!v.title}</p>
+            <h1
+              class="slds-page-header__title slds-m-right_small slds-align-middle slds-truncate"
+              title="{!v.recordName}"
+            >
               {!v.recordName}
             </h1>
           </div>
@@ -54,51 +54,50 @@
       </div>
       <div class="slds-col slds-no-flex slds-grid slds-align-top">
         <div class="slds-button-group" role="group">
-          <button class="slds-button slds-button_neutral"
-                  onclick="{!c.returnToList}">
-            Return
-          </button>
+          <button class="slds-button slds-button_neutral" onclick="{!c.returnToList}">Return</button>
           <aura:if isTrue="{!v.canEdit}">
-            <button class="slds-button slds-button_neutral"
-                    onclick="{!c.editHandler}">Edit</button>
+            <button class="slds-button slds-button_neutral" onclick="{!c.editHandler}">Edit</button>
           </aura:if>
           <aura:if isTrue="{!v.canDelete}">
-            <button class="slds-button slds-button_neutral"
-                    onclick="{!c.deleteHandler}">Delete</button>
+            <button class="slds-button slds-button_neutral" onclick="{!c.deleteHandler}">Delete</button>
           </aura:if>
         </div>
       </div>
     </div>
     <aura:if isTrue="{!!empty( v.displayFieldData )}">
-      <lightning:recordViewForm objectApiName="Case" recordId="{!v.recordId}" class="slds-grid slds-page-header__detail-row">
+      <lightning:recordViewForm
+        objectApiName="Case"
+        recordId="{!v.recordId}"
+        class="slds-grid slds-page-header__detail-row"
+      >
         <aura:iteration items="{!v.displayFieldData}" var="field">
-            <lightning:outputField fieldName="{!field.name}" class="slds-page-header__detail-block  slds-truncate" />
+          <lightning:outputField fieldName="{!field.name}" class="slds-page-header__detail-block slds-truncate" />
         </aura:iteration>
       </lightning:recordViewForm>
-<!--      <ul class="slds-grid slds-page-header__detail-row">-->
-<!--        <aura:iteration items="{!v.displayFieldData}" var="field">-->
-<!--          <li class="slds-page-header__detail-block">-->
-<!--            <p class="slds-text-title slds-truncate slds-m-bottom_xx-small"-->
-<!--               title="{!field.label}">-->
-<!--              {!field.label}-->
-<!--            </p>-->
-<!--            <p class="slds-text-body_regular slds-truncate"-->
-<!--               title="{!field.value}">-->
-<!--              <aura:if isTrue="{!equals( field.format, 'STRING')}">-->
-<!--                {!field.value}-->
-<!--              </aura:if>-->
-<!--              <aura:if isTrue="{!equals( field.format, 'DATETIME')}">-->
-<!--                <ui:outputDateTime value="{!field.value}" />-->
-<!--              </aura:if>-->
-<!--              <aura:if isTrue="{!equals( field.format, 'CURRENCY')}">-->
-<!--                <lightning:formattedNumber value="{!field.value}"-->
-<!--                                           style="currency"-->
-<!--                                           currencyCode="CAD" />-->
-<!--              </aura:if>-->
-<!--            </p>-->
-<!--          </li>-->
-<!--        </aura:iteration>-->
-<!--      </ul>-->
+      <!--      <ul class="slds-grid slds-page-header__detail-row">-->
+      <!--        <aura:iteration items="{!v.displayFieldData}" var="field">-->
+      <!--          <li class="slds-page-header__detail-block">-->
+      <!--            <p class="slds-text-title slds-truncate slds-m-bottom_xx-small"-->
+      <!--               title="{!field.label}">-->
+      <!--              {!field.label}-->
+      <!--            </p>-->
+      <!--            <p class="slds-text-body_regular slds-truncate"-->
+      <!--               title="{!field.value}">-->
+      <!--              <aura:if isTrue="{!equals( field.format, 'STRING')}">-->
+      <!--                {!field.value}-->
+      <!--              </aura:if>-->
+      <!--              <aura:if isTrue="{!equals( field.format, 'DATETIME')}">-->
+      <!--                <ui:outputDateTime value="{!field.value}" />-->
+      <!--              </aura:if>-->
+      <!--              <aura:if isTrue="{!equals( field.format, 'CURRENCY')}">-->
+      <!--                <lightning:formattedNumber value="{!field.value}"-->
+      <!--                                           style="currency"-->
+      <!--                                           currencyCode="CAD" />-->
+      <!--              </aura:if>-->
+      <!--            </p>-->
+      <!--          </li>-->
+      <!--        </aura:iteration>-->
+      <!--      </ul>-->
     </aura:if>
   </div>
 
@@ -110,14 +109,11 @@
             <lightning:icon size="large" iconName="{!v.iconName}" />
           </div>
           <div class="slds-media__body">
-            <p class="slds-text-title_caps slds-line-height_reset">
-              {!v.title}
-            </p>
-            <h1 class="slds-page-header__title
-                       slds-m-right_small
-                       slds-align-middle
-                       slds-truncate"
-                 title="{!v.recordName}">
+            <p class="slds-text-title_caps slds-line-height_reset">{!v.title}</p>
+            <h1
+              class="slds-page-header__title slds-m-right_small slds-align-middle slds-truncate"
+              title="{!v.recordName}"
+            >
               {!v.recordName}
             </h1>
           </div>
@@ -125,50 +121,49 @@
       </div>
       <div class="slds-has-divider_bottom-space">
         <div class="slds-button-group" role="group">
-          <button class="slds-button slds-button_neutral"
-                  onclick="{!c.returnToList}">
-            Return
-          </button>
+          <button class="slds-button slds-button_neutral" onclick="{!c.returnToList}">Return</button>
           <aura:if isTrue="{!v.canEdit}">
-            <button class="slds-button slds-button_neutral"
-                    onclick="{!c.editHandler}">Edit</button>
+            <button class="slds-button slds-button_neutral" onclick="{!c.editHandler}">Edit</button>
           </aura:if>
           <aura:if isTrue="{!v.canDelete}">
-            <button class="slds-button slds-button_neutral"
-                    onclick="{!c.deleteHandler}">Delete</button>
+            <button class="slds-button slds-button_neutral" onclick="{!c.deleteHandler}">Delete</button>
           </aura:if>
         </div>
       </div>
     </div>
-    <lightning:recordViewForm objectApiName="Case" recordId="{!v.recordId}" class="slds-list_vertical-space-medium slds-m-left_xx-small">
+    <lightning:recordViewForm
+      objectApiName="Case"
+      recordId="{!v.recordId}"
+      class="slds-list_vertical-space-medium slds-m-left_xx-small"
+    >
       <aura:iteration items="{!v.displayFieldData}" var="field">
         <lightning:outputField fieldName="{!field.name}" class="slds-item" />
       </aura:iteration>
     </lightning:recordViewForm>
-<!--    <ul class="slds-list_vertical-space-medium slds-m-left_xx-smal">-->
-<!--      <aura:iteration items="{!v.displayFieldData}" var="field">-->
-<!--        <li class="slds-item">-->
-<!--          <p class="slds-text-title slds-truncate slds-m-bottom_xx-small"-->
-<!--             title="{!field.label}">-->
-<!--            {!field.label}-->
-<!--          </p>-->
-<!--          <p class="slds-text-body_regular slds-truncate"-->
-<!--             title="{!field.value}">-->
-<!--            <aura:if isTrue="{!equals( field.format, 'STRING')}">-->
-<!--              {!field.value}-->
-<!--            </aura:if>-->
-<!--            <aura:if isTrue="{!equals( field.format, 'DATETIME')}">-->
-<!--              <ui:outputDateTime value="{!field.value}" />-->
-<!--            </aura:if>-->
-<!--            <aura:if isTrue="{!equals( field.format, 'CURRENCY')}">-->
-<!--              <lightning:formattedNumber value="{!field.value}"-->
-<!--                                         style="currency"-->
-<!--                                         currencyCode="CAD" />-->
-<!--            </aura:if>-->
-<!--          </p>-->
-<!--        </li>-->
-<!--      </aura:iteration>-->
-<!--    </ul>-->
+    <!--    <ul class="slds-list_vertical-space-medium slds-m-left_xx-smal">-->
+    <!--      <aura:iteration items="{!v.displayFieldData}" var="field">-->
+    <!--        <li class="slds-item">-->
+    <!--          <p class="slds-text-title slds-truncate slds-m-bottom_xx-small"-->
+    <!--             title="{!field.label}">-->
+    <!--            {!field.label}-->
+    <!--          </p>-->
+    <!--          <p class="slds-text-body_regular slds-truncate"-->
+    <!--             title="{!field.value}">-->
+    <!--            <aura:if isTrue="{!equals( field.format, 'STRING')}">-->
+    <!--              {!field.value}-->
+    <!--            </aura:if>-->
+    <!--            <aura:if isTrue="{!equals( field.format, 'DATETIME')}">-->
+    <!--              <ui:outputDateTime value="{!field.value}" />-->
+    <!--            </aura:if>-->
+    <!--            <aura:if isTrue="{!equals( field.format, 'CURRENCY')}">-->
+    <!--              <lightning:formattedNumber value="{!field.value}"-->
+    <!--                                         style="currency"-->
+    <!--                                         currencyCode="CAD" />-->
+    <!--            </aura:if>-->
+    <!--          </p>-->
+    <!--        </li>-->
+    <!--      </aura:iteration>-->
+    <!--    </ul>-->
   </div>
 
   <aura:if isTrue="{!v.displayAlwaysEditForm}">
@@ -177,37 +172,36 @@
         <header class="slds-modal__header">
           <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Edit {!v.recordName}</h2>
         </header>
-        <lightning:recordEditForm recordId="{!v.recordId}"
-                                  objectApiName="{!v.sObjectName}"
-                                  onload="{!c.handleAlwayEditOnLoadAndSubmit}"
-                                  onsubmit="{!c.handleAlwayEditOnLoadAndSubmit}"
-                                  onsuccess="{!c.handleAlwaysEditSuccess}">
+        <lightning:recordEditForm
+          recordId="{!v.recordId}"
+          objectApiName="{!v.sObjectName}"
+          onload="{!c.handleAlwayEditOnLoadAndSubmit}"
+          onsubmit="{!c.handleAlwayEditOnLoadAndSubmit}"
+          onsuccess="{!c.handleAlwaysEditSuccess}"
+        >
           <div class="slds-modal__content slds-p-around_medium">
             <lightning:messages />
             <lightning:layout multipleRows="true">
               <aura:iteration items="{!v.alwaysEditFields_List}" var="fieldName">
-                <lightning:layoutItem padding="around-small"
-                                      size="12"
-                                      largeDeviceSize="6"
-                                      mediumDeviceSize="6"
-                                      smallDeviceSize="12">
+                <lightning:layoutItem
+                  padding="around-small"
+                  size="12"
+                  largeDeviceSize="6"
+                  mediumDeviceSize="6"
+                  smallDeviceSize="12"
+                >
                   <lightning:inputField fieldName="{!fieldName}" />
                 </lightning:layoutItem>
               </aura:iteration>
             </lightning:layout>
           </div>
           <footer class="slds-modal__footer">
-            <lightning:button variant="base"
-                              onclick="{!c.cancelAlwaysEdit}"
-                              label="Cancel" />
-            <lightning:button variant="brand"
-                              type="submit"
-                              label="Save" />
+            <lightning:button variant="base" onclick="{!c.cancelAlwaysEdit}" label="Cancel" />
+            <lightning:button variant="brand" type="submit" label="Save" />
           </footer>
         </lightning:recordEditForm>
       </div>
     </section>
     <div class="slds-backdrop slds-backdrop_open"></div>
   </aura:if>
-
 </aura:component>

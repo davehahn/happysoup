@@ -1,18 +1,15 @@
 <aura:component implements="lightning:availableForFlowScreens" description="Flow_Custom_Checkbox">
-    <aura:attribute name="LabelName" type="String" access="global" />
+  <aura:attribute name="LabelName" type="String" access="global" />
 
-    <aura:attribute name="isEnabled" type="Boolean" default="false" access="global" />
+  <aura:attribute name="isEnabled" type="Boolean" default="false" access="global" />
 
-    <lightning:layout>
+  <lightning:layout>
+    <lightning:layoutItem size="10" padding="around-small" largeDeviceSize="3" mediumDeviceSize="6">
+      {!v.LabelName}
+    </lightning:layoutItem>
 
-        <lightning:layoutItem size="10" padding="around-small" largeDeviceSize="3" mediumDeviceSize="6">
-            {!v.LabelName}
-        </lightning:layoutItem>
-
-        <lightning:layoutItem size="2" padding="around-small" largeDeviceSize="3" mediumDeviceSize="6">
-            <lightning:input type="checkbox" label="" checked="{!v.isEnabled}" />
-        </lightning:layoutItem>
-
-    </lightning:layout>
-
+    <lightning:layoutItem size="2" padding="around-small" largeDeviceSize="3" mediumDeviceSize="6">
+      <lightning:input type="checkbox" label="" checked="{!v.isEnabled}" />
+    </lightning:layoutItem>
+  </lightning:layout>
 </aura:component>

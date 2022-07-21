@@ -1,73 +1,74 @@
 <aura:component implements="forceCommunity:themeLayout" access="global">
-    <ltng:require styles="{!join(',',
+  <ltng:require
+    styles="{!join(',',
         $Resource.GothamHTF + '/fonts.css',
         $Resource.Idlewild + '/fonts.css',
         $Resource.CommunitySharedResources + '/css/layout.css',
         $Resource.CommunitySharedResources + '/css/headings.css',
         $Resource.CommunitySharedResources + '/css/colours.css',
         $Resource.CommunitySharedResources + '/css/buttons.css'
-    )}"/>
-    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
-    <aura:attribute name="currentLocale" type="String"/>
-    <aura:attribute name="isEN" type="Map" default='{"active":true}'/>
-    <aura:attribute name="search" type="Aura.Component[]"/>
-    <aura:attribute name="langSelector" type="Aura.Component[]"/>
-    <aura:attribute name="storePhoneNumbers" type="Aura.Component[]"/>
-    <aura:attribute name="storeNavigation" type="Aura.Component[]"/>
-    <aura:attribute name="storeTools" type="Aura.Component[]"/>
-    <aura:attribute name="storeLegal" type="Aura.Component[]"/>
-    <aura:attribute name="storePolicyLinks" type="Aura.Component[]"/>
-    <aura:attribute name="channelMenu" type="Aura.Component[]"/>
-    <aura:attribute name="contactUs" type="Aura.Component[]"/>
+    )}"
+  />
+  <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+  <aura:attribute name="currentLocale" type="String" />
+  <aura:attribute name="isEN" type="Map" default='{"active":true}' />
+  <aura:attribute name="search" type="Aura.Component[]" />
+  <aura:attribute name="langSelector" type="Aura.Component[]" />
+  <aura:attribute name="storePhoneNumbers" type="Aura.Component[]" />
+  <aura:attribute name="storeNavigation" type="Aura.Component[]" />
+  <aura:attribute name="storeTools" type="Aura.Component[]" />
+  <aura:attribute name="storeLegal" type="Aura.Component[]" />
+  <aura:attribute name="storePolicyLinks" type="Aura.Component[]" />
+  <aura:attribute name="channelMenu" type="Aura.Component[]" />
+  <aura:attribute name="contactUs" type="Aura.Component[]" />
 
-    <div class="headerWrap">
-        <header class="storeHeader">
-            <h1 class="storeLogo">
-                <a href="javascript:void(0)" class="storeLogoIcon forceCommunityThemeLogo" data-aura-class="forceCommunityThemeLogo">Legend Boats</a>
-            </h1>
+  <div class="headerWrap">
+    <header class="storeHeader">
+      <h1 class="storeLogo">
+        <a
+          href="javascript:void(0)"
+          class="storeLogoIcon forceCommunityThemeLogo"
+          data-aura-class="forceCommunityThemeLogo"
+          >Legend Boats</a
+        >
+      </h1>
 
-            <nav class="mainNavigation">
-                <c:customerCommMainNavigation></c:customerCommMainNavigation>
-            </nav>
+      <nav class="mainNavigation">
+        <c:customerCommMainNavigation></c:customerCommMainNavigation>
+      </nav>
 
-            <div class="langSelector">
-                {!v.langSelector}
-            </div>
-        </header>
-    </div>
+      <div class="langSelector">{!v.langSelector}</div>
+    </header>
+  </div>
 
-    <div class="searchRegion">
-        {!v.search}
-    </div>
+  <div class="searchRegion">{!v.search}</div>
 
-	  <article class="storeMain">
-    	  {!v.body}
-    </article>
-    <footer class="storeFooter">
-        <section class="contactUs">
-            <aura:if isTrue="{!v.isEN.active}">
-                <h3 class="heading heading-m maxWidth maxWidth--thin">Can't find what you're looking for?</h3>
-                <p class="copy copy-standard maxWidth maxWidth--thin">
-                    If you can't find what you're looking for in our support resources, contact customer support directly.
-                </p>
-                <aura:set attribute="else">
-                    <h3 class="heading heading-m maxWidth maxWidth--thin">Vous ne trouvez pas ce que vous cherchez?</h3>
-                    <p class="copy copy-standard maxWidth maxWidth--thin">
-                        Si vous n’arrivez pas à trouver ce que vous cherchez parmi nos ressources de soutien, contactez directement le soutien à la clientèle.
-                    </p>
-                </aura:set>
-            </aura:if>
+  <article class="storeMain">{!v.body}</article>
+  <footer class="storeFooter">
+    <section class="contactUs">
+      <aura:if isTrue="{!v.isEN.active}">
+        <h3 class="heading heading-m maxWidth maxWidth--thin">Can't find what you're looking for?</h3>
+        <p class="copy copy-standard maxWidth maxWidth--thin">
+          If you can't find what you're looking for in our support resources, contact customer support directly.
+        </p>
+        <aura:set attribute="else">
+          <h3 class="heading heading-m maxWidth maxWidth--thin">Vous ne trouvez pas ce que vous cherchez?</h3>
+          <p class="copy copy-standard maxWidth maxWidth--thin">
+            Si vous n’arrivez pas à trouver ce que vous cherchez parmi nos ressources de soutien, contactez directement
+            le soutien à la clientèle.
+          </p>
+        </aura:set>
+      </aura:if>
 
-            {!v.contactUs}
-        </section>
+      {!v.contactUs}
+    </section>
 
-        {!v.storeTools}
-        <section class="footerLegal">
-            {!v.storePolicyLinks}
-            <c:communitySharedFooterCopyright></c:communitySharedFooterCopyright>
-            {!v.storeLegal}
-        </section>
-        {!v.channelMenu}
-    </footer>
-
+    {!v.storeTools}
+    <section class="footerLegal">
+      {!v.storePolicyLinks}
+      <c:communitySharedFooterCopyright></c:communitySharedFooterCopyright>
+      {!v.storeLegal}
+    </section>
+    {!v.channelMenu}
+  </footer>
 </aura:component>

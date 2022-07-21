@@ -23,26 +23,10 @@
   <div class="slds-card">
     <aura:if isTrue="{! not( empty( v.cpq.theBoat ) ) }">
       <div class="">
-        <div
-          class="
-            slds-card
-            slds-border_top
-            slds-border_right
-            slds-border_bottom
-            slds-border_left
-          "
-        >
+        <div class="slds-card slds-border_top slds-border_right slds-border_bottom slds-border_left">
           <!-- Boat / Motor / Trailer / Trolling Motor -->
           <table
-            class="
-              slds-table
-              slds-table_bordered
-              slds-table_resizable-cols
-              slds-table_fixed-layout
-              slds-no-row-hover
-              summary-table
-              serialized
-            "
+            class="slds-table slds-table_bordered slds-table_resizable-cols slds-table_fixed-layout slds-no-row-hover summary-table serialized"
           >
             <!-- <thead>
               <tr class="slds-text-title_caps">
@@ -54,9 +38,7 @@
               <!-- THE BOAT -->
               <aura:if isTrue="{! not(empty( v.cpq.theBoat ) ) }">
                 <tr class="slds-text-title_caps header-row">
-                  <th scope="col" colspan="2" class="slds-text-align_left">
-                    Boat
-                  </th>
+                  <th scope="col" colspan="2" class="slds-text-align_left">Boat</th>
                 </tr>
                 <tr>
                   <td class="slds-text-align_left">{!v.cpq.theBoat.name}</td>
@@ -72,16 +54,12 @@
               <!-- THE MOTOR -->
               <aura:if isTrue="{! not(empty( v.cpq.theMotor ) ) }">
                 <tr class="slds-text-title_caps header-row">
-                  <th scope="col" colspan="2" class="slds-text-align_left">
-                    Motor
-                  </th>
+                  <th scope="col" colspan="2" class="slds-text-align_left">Motor</th>
                 </tr>
                 <tr>
                   <td class="slds-text-align_left">{!v.cpq.theMotor.name}</td>
                   <td class="slds-text-align_right">
-                    <aura:if
-                      isTrue="{! equals(v.cpq.theMotor.retailUpgradeCost, 0)}"
-                    >
+                    <aura:if isTrue="{! equals(v.cpq.theMotor.retailUpgradeCost, 0)}">
                       Included
                       <aura:set attribute="else">
                         <lightning:formattedNumber
@@ -97,14 +75,8 @@
                   <tr>
                     <td class="upgrade-options" colspan="2">
                       <table>
-                        <aura:iteration
-                          items="{!v.motorSaleItems}"
-                          var="mSaleItem"
-                        >
-                          <c:CPQ_RetailDetail_OptionLine
-                            saleItem="{!mSaleItem}"
-                            isSubOption="true"
-                          />
+                        <aura:iteration items="{!v.motorSaleItems}" var="mSaleItem">
+                          <c:CPQ_RetailDetail_OptionLine saleItem="{!mSaleItem}" isSubOption="true" />
                         </aura:iteration>
                       </table>
                     </td>
@@ -114,16 +86,12 @@
               <!-- THE TRAILER -->
               <aura:if isTrue="{! not(empty( v.cpq.theTrailer ) ) }">
                 <tr class="slds-text-title_caps header-row">
-                  <th scope="col" colspan="2" class="slds-text-align_left">
-                    Trailer
-                  </th>
+                  <th scope="col" colspan="2" class="slds-text-align_left">Trailer</th>
                 </tr>
                 <tr>
                   <td class="slds-text-align_left">{!v.cpq.theTrailer.name}</td>
                   <td class="slds-text-align_right">
-                    <aura:if
-                      isTrue="{! equals(v.cpq.theTrailer.retailUpgradeCost, 0)}"
-                    >
+                    <aura:if isTrue="{! equals(v.cpq.theTrailer.retailUpgradeCost, 0)}">
                       Included
                       <aura:set attribute="else">
                         <lightning:formattedNumber
@@ -139,14 +107,8 @@
                   <tr>
                     <td class="upgrade-options" colspan="2">
                       <table>
-                        <aura:iteration
-                          items="{!v.trailerSaleItems}"
-                          var="tSaleItem"
-                        >
-                          <c:CPQ_RetailDetail_OptionLine
-                            saleItem="{!tSaleItem}"
-                            isSubOption="true"
-                          />
+                        <aura:iteration items="{!v.trailerSaleItems}" var="tSaleItem">
+                          <c:CPQ_RetailDetail_OptionLine saleItem="{!tSaleItem}" isSubOption="true" />
                         </aura:iteration>
                       </table>
                     </td>
@@ -156,18 +118,12 @@
               <!-- THE TROLLING MOTOR -->
               <aura:if isTrue="{! not(empty( v.cpq.theTrollingMotor ) ) }">
                 <tr class="slds-text-title_caps header-row">
-                  <th scope="col" colspan="2" class="slds-text-align_left">
-                    Trolling Motor
-                  </th>
+                  <th scope="col" colspan="2" class="slds-text-align_left">Trolling Motor</th>
                 </tr>
                 <tr>
-                  <td class="slds-text-align_left">
-                    {!v.cpq.theTrollingMotor.name}
-                  </td>
+                  <td class="slds-text-align_left">{!v.cpq.theTrollingMotor.name}</td>
                   <td class="slds-text-align_right">
-                    <aura:if
-                      isTrue="{! equals(v.cpq.theTrollingMotor.retailUpgradeCost, 0)}"
-                    >
+                    <aura:if isTrue="{! equals(v.cpq.theTrollingMotor.retailUpgradeCost, 0)}">
                       Included
                       <aura:set attribute="else">
                         <lightning:formattedNumber
@@ -183,14 +139,8 @@
                   <tr>
                     <td class="upgrade-options" colspan="2">
                       <table>
-                        <aura:iteration
-                          items="{!v.trollingMotorSaleItems}"
-                          var="tmSaleItem"
-                        >
-                          <c:CPQ_RetailDetail_OptionLine
-                            saleItem="{!tmSaleItem}"
-                            isSubOption="true"
-                          />
+                        <aura:iteration items="{!v.trollingMotorSaleItems}" var="tmSaleItem">
+                          <c:CPQ_RetailDetail_OptionLine saleItem="{!tmSaleItem}" isSubOption="true" />
                         </aura:iteration>
                       </table>
                     </td>
@@ -202,44 +152,15 @@
 
           <!-- Sale Items -->
           <aura:if isTrue="{! not(empty( v.boatSaleItems )) }">
-            <div
-              class="
-                slds-text-title_caps
-                slds-m-top_large
-                slds-text-align_left
-                table-title
-              "
-            >
-              Options
-            </div>
+            <div class="slds-text-title_caps slds-m-top_large slds-text-align_left table-title">Options</div>
             <table
-              class="
-                slds-table
-                slds-table_bordered
-                slds-table_resizable-cols
-                slds-table_fixed-layout
-                summary-table
-              "
+              class="slds-table slds-table_bordered slds-table_resizable-cols slds-table_fixed-layout summary-table"
             >
               <thead>
                 <tr class="slds-text-title_caps">
-                  <th
-                    scope="col"
-                    class="slds-border_top"
-                    style="width: 10%; text-align: left"
-                  >
-                    Qty
-                  </th>
-                  <th
-                    scope="col"
-                    class="slds-border_top"
-                    style="width: 65%; text-align: left"
-                  >
-                    Product Name
-                  </th>
-                  <th scope="col" class="slds-border_top" style="width: 25%">
-                    Cost
-                  </th>
+                  <th scope="col" class="slds-border_top" style="width: 10%; text-align: left">Qty</th>
+                  <th scope="col" class="slds-border_top" style="width: 65%; text-align: left">Product Name</th>
+                  <th scope="col" class="slds-border_top" style="width: 25%">Cost</th>
                 </tr>
               </thead>
               <tbody>
@@ -254,44 +175,15 @@
 
           <!-- Custom Products -->
           <aura:if isTrue="{! not(empty( v.cpq.customProducts )) }">
-            <div
-              class="
-                slds-text-title_caps
-                slds-m-top_large
-                slds-text-align_left
-                table-title
-              "
-            >
-              Custom Products
-            </div>
+            <div class="slds-text-title_caps slds-m-top_large slds-text-align_left table-title">Custom Products</div>
             <table
-              class="
-                slds-table
-                slds-table_bordered
-                slds-table_resizable-cols
-                slds-table_fixed-layout
-                summary-table
-              "
+              class="slds-table slds-table_bordered slds-table_resizable-cols slds-table_fixed-layout summary-table"
             >
               <thead>
                 <tr class="slds-text-title_caps">
-                  <th
-                    scope="col"
-                    class="slds-border_top"
-                    style="width: 10%; text-align: left"
-                  >
-                    Qty
-                  </th>
-                  <th
-                    scope="col"
-                    class="slds-border_top"
-                    style="width: 65%; text-align: left"
-                  >
-                    Product Name
-                  </th>
-                  <th scope="col" class="slds-border_top" style="width: 25%">
-                    Cost
-                  </th>
+                  <th scope="col" class="slds-border_top" style="width: 10%; text-align: left">Qty</th>
+                  <th scope="col" class="slds-border_top" style="width: 65%; text-align: left">Product Name</th>
+                  <th scope="col" class="slds-border_top" style="width: 25%">Cost</th>
                 </tr>
               </thead>
               <tbody>
@@ -307,11 +199,7 @@
                       />
                       <aura:if isTrue="{! item.quantity > 1}">
                         <div>
-                          <lightning:formattedNumber
-                            value="{!item.amount}"
-                            style="currency"
-                            currencyCode="CAD"
-                          />
+                          <lightning:formattedNumber value="{!item.amount}" style="currency" currencyCode="CAD" />
                           ea.
                         </div>
                       </aura:if>
@@ -324,37 +212,14 @@
 
           <!-- Savings -->
           <aura:if isTrue="{! not(empty( v.cpq.savings )) }">
-            <div
-              class="
-                slds-text-title_caps
-                slds-m-top_large
-                slds-text-align_left
-                table-title
-              "
-            >
-              Savings
-            </div>
+            <div class="slds-text-title_caps slds-m-top_large slds-text-align_left table-title">Savings</div>
             <table
-              class="
-                slds-table
-                slds-table_bordered
-                slds-table_resizable-cols
-                slds-table_fixed-layout
-                summary-table
-              "
+              class="slds-table slds-table_bordered slds-table_resizable-cols slds-table_fixed-layout summary-table"
             >
               <thead>
                 <tr class="slds-text-title_caps">
-                  <th
-                    scope="col"
-                    class="slds-border_top"
-                    style="width: 75%; text-align: left"
-                  >
-                    Description
-                  </th>
-                  <th scope="col" class="slds-border_top" style="width: 25%">
-                    Amount
-                  </th>
+                  <th scope="col" class="slds-border_top" style="width: 75%; text-align: left">Description</th>
+                  <th scope="col" class="slds-border_top" style="width: 25%">Amount</th>
                 </tr>
               </thead>
               <tbody>
@@ -362,11 +227,7 @@
                   <tr>
                     <td>{!item.description}</td>
                     <td>
-                      <lightning:formattedNumber
-                        value="{!item.amount}"
-                        style="currency"
-                        currencyCode="CAD"
-                      />
+                      <lightning:formattedNumber value="{!item.amount}" style="currency" currencyCode="CAD" />
                     </td>
                   </tr>
                 </aura:iteration>
@@ -376,37 +237,14 @@
 
           <!-- Fees -->
           <aura:if isTrue="{! not(empty( v.hasFees )) }">
-            <div
-              class="
-                slds-text-title_caps
-                slds-m-top_large
-                slds-text-align_left
-                table-title
-              "
-            >
-              Fees
-            </div>
+            <div class="slds-text-title_caps slds-m-top_large slds-text-align_left table-title">Fees</div>
             <table
-              class="
-                slds-table
-                slds-table_bordered
-                slds-table_resizable-cols
-                slds-table_fixed-layout
-                summary-table
-              "
+              class="slds-table slds-table_bordered slds-table_resizable-cols slds-table_fixed-layout summary-table"
             >
               <thead>
                 <tr class="slds-text-title_caps">
-                  <th
-                    scope="col"
-                    class="slds-border_top"
-                    style="width: 75%; text-align: left"
-                  >
-                    Decription
-                  </th>
-                  <th scope="col" class="slds-border_top" style="width: 25%">
-                    Amount
-                  </th>
+                  <th scope="col" class="slds-border_top" style="width: 75%; text-align: left">Decription</th>
+                  <th scope="col" class="slds-border_top" style="width: 25%">Amount</th>
                 </tr>
               </thead>
               <tbody>
@@ -414,11 +252,7 @@
                   <tr>
                     <td>{!fee.feeName}</td>
                     <td>
-                      <lightning:formattedNumber
-                        value="{!fee.retailAmount}"
-                        style="currency"
-                        currencyCode="CAD"
-                      />
+                      <lightning:formattedNumber value="{!fee.retailAmount}" style="currency" currencyCode="CAD" />
                     </td>
                   </tr>
                 </aura:iteration>
@@ -427,11 +261,7 @@
                     <tr>
                       <td>{!fee.feeName}</td>
                       <td>
-                        <lightning:formattedNumber
-                          value="{!fee.retailAmount}"
-                          style="currency"
-                          currencyCode="CAD"
-                        />
+                        <lightning:formattedNumber value="{!fee.retailAmount}" style="currency" currencyCode="CAD" />
                       </td>
                     </tr>
                   </aura:iteration>
@@ -441,11 +271,7 @@
                     <tr>
                       <td>{!fee.feeName}</td>
                       <td>
-                        <lightning:formattedNumber
-                          value="{!fee.retailAmount}"
-                          style="currency"
-                          currencyCode="CAD"
-                        />
+                        <lightning:formattedNumber value="{!fee.retailAmount}" style="currency" currencyCode="CAD" />
                       </td>
                     </tr>
                   </aura:iteration>
@@ -456,16 +282,7 @@
 
           <!-- Trade In's -->
           <aura:if isTrue="{! not(empty( v.cpq.tradeIn.items )) }">
-            <div
-              class="
-                slds-text-title_caps
-                slds-m-top_large
-                slds-text-align_left
-                table-title
-              "
-            >
-              Trade In
-            </div>
+            <div class="slds-text-title_caps slds-m-top_large slds-text-align_left table-title">Trade In</div>
             <lightning:layout multipleRows="true" pullToBoundary="small">
               <lightning:layoutItem
                 size="12"
@@ -475,37 +292,13 @@
                 largeDeviceSize="8"
               >
                 <table
-                  class="
-                    slds-table
-                    slds-table_bordered
-                    slds-table_resizable-cols
-                    slds-table_fixed-layout
-                    summary-table
-                  "
+                  class="slds-table slds-table_bordered slds-table_resizable-cols slds-table_fixed-layout summary-table"
                 >
                   <thead>
                     <tr class="slds-text-title_caps">
-                      <th
-                        scope="col"
-                        class="slds-border_top"
-                        style="width: 33%; text-align: left"
-                      >
-                        Model Year
-                      </th>
-                      <th
-                        scope="col"
-                        class="slds-border_top"
-                        style="width: 33%"
-                      >
-                        Manufacturer
-                      </th>
-                      <th
-                        scope="col"
-                        class="slds-border_top"
-                        style="width: 33%"
-                      >
-                        Model
-                      </th>
+                      <th scope="col" class="slds-border_top" style="width: 33%; text-align: left">Model Year</th>
+                      <th scope="col" class="slds-border_top" style="width: 33%">Manufacturer</th>
+                      <th scope="col" class="slds-border_top" style="width: 33%">Model</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -528,46 +321,22 @@
                 class="slds-m-bottom_small"
               >
                 <lightning:layout multipleRows="true">
-                  <lightning:layoutItem
-                    size="8"
-                    class="slds-text-align_right slds-p-right_small"
-                  >
+                  <lightning:layoutItem size="8" class="slds-text-align_right slds-p-right_small">
                     Trade In Allowance
                   </lightning:layoutItem>
                   <lightning:layoutItem size="4" class="slds-text-align_right">
-                    <lightning:formattedNumber
-                      value="{!v.cpq.tradeIn.value}"
-                      style="currency"
-                      currencyCode="CAD"
-                    />
+                    <lightning:formattedNumber value="{!v.cpq.tradeIn.value}" style="currency" currencyCode="CAD" />
                   </lightning:layoutItem>
-                  <lightning:layoutItem
-                    size="8"
-                    class="slds-text-align_right slds-p-right_small"
-                  >
+                  <lightning:layoutItem size="8" class="slds-text-align_right slds-p-right_small">
                     Lien on Trade
                   </lightning:layoutItem>
                   <lightning:layoutItem size="4" class="slds-text-align_right">
-                    <lightning:formattedNumber
-                      value="{!v.cpq.tradeIn.lien}"
-                      style="currency"
-                      currencyCode="CAD"
-                    />
+                    <lightning:formattedNumber value="{!v.cpq.tradeIn.lien}" style="currency" currencyCode="CAD" />
                   </lightning:layoutItem>
-                  <lightning:layoutItem
-                    size="8"
-                    class="
-                      slds-text-align_right
-                      slds-p-right_small
-                      slds-border_top
-                    "
-                  >
+                  <lightning:layoutItem size="8" class="slds-text-align_right slds-p-right_small slds-border_top">
                     <strong>Total Trade In Value</strong>
                   </lightning:layoutItem>
-                  <lightning:layoutItem
-                    size="4"
-                    class="slds-text-align_right slds-border_top"
-                  >
+                  <lightning:layoutItem size="4" class="slds-text-align_right slds-border_top">
                     <strong
                       ><lightning:formattedNumber
                         value="{!v.cpq.tradeIn.value - v.cpq.tradeIn.lien}"
@@ -839,13 +608,7 @@
               class="slds-text-align_right"
             >
               <span
-                class="
-                  slds-p-left_small
-                  slds-p_right_small
-                  slds-border_top
-                  slds-text-heading_small
-                  slds-text-color_success
-                "
+                class="slds-p-left_small slds-p_right_small slds-border_top slds-text-heading_small slds-text-color_success"
               >
                 Grand Total:
               </span>
@@ -862,13 +625,7 @@
                 value="{!v.grandTotal}"
                 style="currency"
                 currencyCode="CAD"
-                class="
-                  slds-p-right_x-small
-                  slds-p-left-small
-                  slds-border_top
-                  slds-text-heading_small
-                  slds-text-color_success
-                "
+                class="slds-p-right_x-small slds-p-left-small slds-border_top slds-text-heading_small slds-text-color_success"
               />
             </lightning:layoutItem>
           </lightning:layout>

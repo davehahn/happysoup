@@ -1,5 +1,4 @@
-<aura:component >
-
+<aura:component>
   <aura:attribute name="record" type="sObject" />
   <aura:attribute name="field" type="String" />
   <aura:attribute name="typeMap" type="Object" />
@@ -29,7 +28,7 @@
       </div>
     </aura:if>
     <aura:if isTrue="{!v.fieldType == 'DATETIME'}">
-      <ui:outputDateTime value="{!v.fieldValue}"/>
+      <ui:outputDateTime value="{!v.fieldValue}" />
       <!-- <div class="slds-truncate" title="{!v.fieldValue}">{!v.fieldValue}</div> -->
     </aura:if>
     <aura:if isTrue="{!v.fieldType == 'PICKLIST'}">
@@ -37,12 +36,11 @@
     </aura:if>
     <aura:if isTrue="{!v.fieldType == 'BOOLEAN'}">
       <aura:if isTrue="{!v.fieldValue == true}">
-        <lightning:icon iconName="utility:check" size="x-small" class="boolean"/>
+        <lightning:icon iconName="utility:check" size="x-small" class="boolean" />
         <aura:set attribute="else">
           <div></div>
         </aura:set>
       </aura:if>
     </aura:if>
   </td>
-
 </aura:component>

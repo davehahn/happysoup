@@ -1,5 +1,4 @@
 <aura:component>
-
   <aura:attribute name="quote" type="Quote" />
   <aura:attribute name="showDetails" type="Boolean" default="false" />
   <aura:attribute name="syncedQuoteId" type="String" />
@@ -8,9 +7,9 @@
   <aura:attribute name="showIndicator" type="Boolean" default="true" />
 
   <aura:if isTrue="{! !empty( v.quote ) }">
-    <article class="{! join(' ', 'slds-card',
-                            if( equals( v.quote.Id, v.syncedQuoteId), 'synced-quote', ''),
-                            if( and( v.showIndicator, equals( v.quote.Id, v.selectedQuoteId ) ), 'selected', '') )}">
+    <article
+      class="{! join(' ', 'slds-card', if( equals( v.quote.Id, v.syncedQuoteId), 'synced-quote', ''), if( and( v.showIndicator, equals( v.quote.Id, v.selectedQuoteId ) ), 'selected', '') )}"
+    >
       <div class="slds-card__header slds-grid">
         <header class="slds-media slds-media_center slds-has-flexi-truncate">
           <div class="slds-media__figure">
@@ -19,29 +18,27 @@
           <div class="slds-media__body">
             <h2 class="slds-card__header-title center-align">
               <p class="slds-m-right_small">
-                <lightning:formattedNumber value="{!v.quote.Grand_Total__c - v.quote.Tax_Amount_Total__c}"
-                           style="currency"
-                           currencyCode="CAD" />
+                <lightning:formattedNumber
+                  value="{!v.quote.Grand_Total__c - v.quote.Tax_Amount_Total__c}"
+                  style="currency"
+                  currencyCode="CAD"
+                />
               </p>
               <p>{!v.quote.Name}</p>
             </h2>
           </div>
           <div class="slds-no-flex">
-              <lightning:buttonGroup>
-                <aura:if isTrue="{! !equals(v.quote.Id, v.selectedQuoteId) }">
-                  <lightning:button label="View"
-                                  value="{!v.quote.Id}"
-                                  onclick="{!c.handleView}" />
-                </aura:if>
-                <aura:if isTrue="{! not(v.showDetails) }">
-                  <lightning:buttonIcon iconName="utility:chevrondown"
-                                        onclick="{!c.handleShowDetails}" />
-                </aura:if>
-                <aura:if isTrue="{! v.showDetails}">
-                  <lightning:buttonIcon iconName="utility:chevronup"
-                                        onclick="{!c.handleShowDetails}" />
-                </aura:if>
-              </lightning:buttonGroup>
+            <lightning:buttonGroup>
+              <aura:if isTrue="{! !equals(v.quote.Id, v.selectedQuoteId) }">
+                <lightning:button label="View" value="{!v.quote.Id}" onclick="{!c.handleView}" />
+              </aura:if>
+              <aura:if isTrue="{! not(v.showDetails) }">
+                <lightning:buttonIcon iconName="utility:chevrondown" onclick="{!c.handleShowDetails}" />
+              </aura:if>
+              <aura:if isTrue="{! v.showDetails}">
+                <lightning:buttonIcon iconName="utility:chevronup" onclick="{!c.handleShowDetails}" />
+              </aura:if>
+            </lightning:buttonGroup>
           </div>
         </header>
       </div>
@@ -60,13 +57,15 @@
               </table>
             </lightning:tab>
             <lightning:tab label="Payments">
-              <c:CPQ_PaymentCalculator amount="{!v.quote.Grand_Total__c}"
-                                       term="{!v.quote.Finance_Term__c}"
-                                       amort="{!v.quote.Finance_Ammortization__c}"
-                                       deposit="{!v.quote.Deposit__c}"
-                                       interestRate="{!v.quote.Finance_Annual_Interest__c}"
-                                       updateViaButton="true"
-                                       recordId="{!v.quote.Id}" />
+              <c:CPQ_PaymentCalculator
+                amount="{!v.quote.Grand_Total__c}"
+                term="{!v.quote.Finance_Term__c}"
+                amort="{!v.quote.Finance_Ammortization__c}"
+                deposit="{!v.quote.Deposit__c}"
+                interestRate="{!v.quote.Finance_Annual_Interest__c}"
+                updateViaButton="true"
+                recordId="{!v.quote.Id}"
+              />
             </lightning:tab>
           </lightning:tabset>
         </div>

@@ -1,310 +1,314 @@
-<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,force:hasRecordId,force:lightningQuickAction" access="global" controller="gcSearchBalance">
-    
-    <aura:attribute name="txnFound" type="AcctSeed__Transaction__c[]" />
-    <aura:attribute name="billFound" type="AcctSeed__Billing__c[]" />
-    <aura:attribute name="payableFound" type="AcctSeed__Account_Payable__c[]" />
-    <aura:attribute name="disbursementFound" type="AcctSeed__Cash_Disbursement__c[]" />
-    <aura:attribute name="receiptFound" type="AcctSeed__Cash_Receipt__c[]" />
-    <aura:attribute name="journalFound" type="AcctSeed__Journal_Entry__c[]" />
-    <aura:attribute name="periodOptions" type="sObject[]" />
-    <aura:attribute name="idPeriod" type="String" />
+<aura:component
+  implements="force:appHostable,flexipage:availableForAllPageTypes,force:hasRecordId,force:lightningQuickAction"
+  access="global"
+  controller="gcSearchBalance"
+>
+  <aura:attribute name="txnFound" type="AcctSeed__Transaction__c[]" />
+  <aura:attribute name="billFound" type="AcctSeed__Billing__c[]" />
+  <aura:attribute name="payableFound" type="AcctSeed__Account_Payable__c[]" />
+  <aura:attribute name="disbursementFound" type="AcctSeed__Cash_Disbursement__c[]" />
+  <aura:attribute name="receiptFound" type="AcctSeed__Cash_Receipt__c[]" />
+  <aura:attribute name="journalFound" type="AcctSeed__Journal_Entry__c[]" />
+  <aura:attribute name="periodOptions" type="sObject[]" />
+  <aura:attribute name="idPeriod" type="String" />
 
-    <aura:attribute name="searchBalance" type="String" />
-   
-    <aura:attribute name="message" type="String" />
-    <aura:attribute name="messageType" type="String" default="success" />
+  <aura:attribute name="searchBalance" type="String" />
 
-    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
-    <aura:handler name="change" value="{!v.searchBalance}" action="{!c.onSearch}" />
-    <aura:handler name="change" value="{!v.idPeriod}" action="{!c.periodChanged}" />
+  <aura:attribute name="message" type="String" />
+  <aura:attribute name="messageType" type="String" default="success" />
 
-    <c:Toaster aura:id="toast" />
-    
-    <lightning:card >
-        <aura:set attribute="title">
-            Search by Amount
-        </aura:set>
+  <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+  <aura:handler name="change" value="{!v.searchBalance}" action="{!c.onSearch}" />
+  <aura:handler name="change" value="{!v.idPeriod}" action="{!c.periodChanged}" />
 
-        <div class="slds-form slds-form_stacked slds-m-horizontal_large">
-            <div class="slds-grid">
-                <div class="slds-form-element slds-col slds-size_1-of-3">
-                    <div class="slds-form-element__control period-selector">
-                        <lightning:select aura:id="selectPeriod" name="periods" label="Select Period" value="{!v.idPeriod}" onchange="">
-                            <aura:iteration items="{!v.periodOptions}" var="pr">
-                                <option value="{!pr.Id}" text="{!pr.Name}"></option>
-                            </aura:iteration>
-                        </lightning:select>
-                    </div>
-                </div>
-                <div class="slds-form-element slds-col slds-size_1-of-3">
-                    <div class="slds-form-element__control">
-                        <ui:inputText aura:id="balanceInput" value="{!v.searchBalance}" label="Enter Amount" updateon="keyup" keyup="{!c.balanceInputKeyUp}"  />
-                    </div>
-                </div>
-                <div class="slds-form-element slds-col slds-size_1-of-3">
-                    <div class="slds-form-element__control"><div>&nbsp;</div><div style="margin-top:5px;"></div>
-                        <lightning:button variant="brand" label="Search" onclick="{!c.onSearch}"/>
-                    </div>
-                </div>
-            </div>
+  <c:Toaster aura:id="toast" />
+
+  <lightning:card>
+    <aura:set attribute="title"> Search by Amount </aura:set>
+
+    <div class="slds-form slds-form_stacked slds-m-horizontal_large">
+      <div class="slds-grid">
+        <div class="slds-form-element slds-col slds-size_1-of-3">
+          <div class="slds-form-element__control period-selector">
+            <lightning:select
+              aura:id="selectPeriod"
+              name="periods"
+              label="Select Period"
+              value="{!v.idPeriod}"
+              onchange=""
+            >
+              <aura:iteration items="{!v.periodOptions}" var="pr">
+                <option value="{!pr.Id}" text="{!pr.Name}"></option>
+              </aura:iteration>
+            </lightning:select>
+          </div>
         </div>
-        
-    </lightning:card>
-    <br/>
-    <div style="height:500px; overflow-y:scroll;">
-    <lightning:card >
-        <aura:set attribute="title">
-            Transactions: {!v.txnFound.length}
-        </aura:set>
+        <div class="slds-form-element slds-col slds-size_1-of-3">
+          <div class="slds-form-element__control">
+            <ui:inputText
+              aura:id="balanceInput"
+              value="{!v.searchBalance}"
+              label="Enter Amount"
+              updateon="keyup"
+              keyup="{!c.balanceInputKeyUp}"
+            />
+          </div>
+        </div>
+        <div class="slds-form-element slds-col slds-size_1-of-3">
+          <div class="slds-form-element__control">
+            <div>&nbsp;</div>
+            <div style="margin-top: 5px"></div>
+            <lightning:button variant="brand" label="Search" onclick="{!c.onSearch}" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </lightning:card>
+  <br />
+  <div style="height: 500px; overflow-y: scroll">
+    <lightning:card>
+      <aura:set attribute="title"> Transactions: {!v.txnFound.length} </aura:set>
 
-        <table class="slds-table slds-table_bordered slds-table_cell-buffer">
-          <thead>
-            <tr class="slds-text-title_caps">
-              <th scope="col" width="20%">
-                <div class="slds-truncate" title="Name">Name</div>
+      <table class="slds-table slds-table_bordered slds-table_cell-buffer">
+        <thead>
+          <tr class="slds-text-title_caps">
+            <th scope="col" width="20%">
+              <div class="slds-truncate" title="Name">Name</div>
+            </th>
+            <th scope="col" width="30%">
+              <div class="slds-truncate" title="Type">Type</div>
+            </th>
+            <th scope="col" width="25%">
+              <div class="slds-truncate" title="Date">Date</div>
+            </th>
+            <th scope="col" width="25%">
+              <div class="slds-truncate" title="Amount">Amount</div>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <aura:iteration items="{!v.txnFound}" var="a">
+            <tr>
+              <th scope="row" data-label="Name">
+                <a href="{!'/one/one.app?#/sObject/'+ a.Id + '/view'}" target="_blank">{#a.Name}</a>
               </th>
-              <th scope="col" width="30%">
-                <div class="slds-truncate" title="Type">Type</div>
-              </th>
-              <th scope="col" width="25%">
-                <div class="slds-truncate" title="Date">Date</div>
-              </th>
-              <th scope="col" width="25%">
-                <div class="slds-truncate" title="Amount">Amount</div>
-              </th>
+              <td data-label="Type">
+                <div class="slds-truncate" title="{#a.Origin_Type__c}">{#a.Origin_Type__c}</div>
+              </td>
+              <td data-label="Date">
+                <div class="slds-truncate" title="{#a.AcctSeed__Date__c}">{#a.AcctSeed__Date__c}</div>
+              </td>
+              <td data-label="Amount">
+                <div class="slds-truncate" title="{#a.AcctSeed__Amount__c}">{#a.AcctSeed__Amount__c}</div>
+              </td>
             </tr>
-          </thead>
-          <tbody>
-			<aura:iteration items="{!v.txnFound}" var="a">
-                <tr>
-                  <th scope="row" data-label="Name">
-                      <a href="{!'/one/one.app?#/sObject/'+ a.Id + '/view'}" target="_blank">{#a.Name}</a>
-                  </th>
-                  <td data-label="Type">
-                    <div class="slds-truncate" title="{#a.Origin_Type__c}">{#a.Origin_Type__c}</div>
-                  </td>
-                  <td data-label="Date">
-                    <div class="slds-truncate" title="{#a.AcctSeed__Date__c}">{#a.AcctSeed__Date__c}</div>
-                  </td>
-                  <td data-label="Amount">
-                    <div class="slds-truncate" title="{#a.AcctSeed__Amount__c}">{#a.AcctSeed__Amount__c}</div>
-                  </td>
-                </tr>
-            </aura:iteration>
-          </tbody>
-        </table>
+          </aura:iteration>
+        </tbody>
+      </table>
     </lightning:card>
-   	<lightning:card >
-        <aura:set attribute="title">
-            Billings: {!v.billFound.length}
-        </aura:set>
+    <lightning:card>
+      <aura:set attribute="title"> Billings: {!v.billFound.length} </aura:set>
 
-        <table class="slds-table slds-table_bordered slds-table_cell-buffer">
-          <thead>
-            <tr class="slds-text-title_caps">
-              <th scope="col" width="20%">
-                <div class="slds-truncate" title="Name">Name</div>
+      <table class="slds-table slds-table_bordered slds-table_cell-buffer">
+        <thead>
+          <tr class="slds-text-title_caps">
+            <th scope="col" width="20%">
+              <div class="slds-truncate" title="Name">Name</div>
+            </th>
+            <th scope="col" width="30%">
+              <div class="slds-truncate" title="Type">Type</div>
+            </th>
+            <th scope="col" width="25%">
+              <div class="slds-truncate" title="Date">Date</div>
+            </th>
+            <th scope="col" width="25%">
+              <div class="slds-truncate" title="Amount">Amount</div>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <aura:iteration items="{!v.billFound}" var="a">
+            <tr>
+              <th scope="row" data-label="Name">
+                <a href="{!'/one/one.app?#/sObject/'+ a.Id + '/view'}" target="_blank">{#a.Name}</a>
               </th>
-              <th scope="col" width="30%">
-                <div class="slds-truncate" title="Type">Type</div>
-              </th>
-              <th scope="col" width="25%">
-                <div class="slds-truncate" title="Date">Date</div>
-              </th>
-              <th scope="col" width="25%">
-                <div class="slds-truncate" title="Amount">Amount</div>
-              </th>
+              <td data-label="Type">
+                <div class="slds-truncate" title="{#a.AcctSeed__Type__c}">{#a.AcctSeed__Type__c}</div>
+              </td>
+              <td data-label="Date">
+                <div class="slds-truncate" title="{#a.AcctSeed__Date__c}">{#a.AcctSeed__Date__c}</div>
+              </td>
+              <td data-label="Total">
+                <div class="slds-truncate" title="{#a.AcctSeed__Total__c}">{#a.AcctSeed__Total__c}</div>
+              </td>
             </tr>
-          </thead>
-          <tbody>
-			<aura:iteration items="{!v.billFound}" var="a">
-                <tr>
-                  <th scope="row" data-label="Name">
-                      <a href="{!'/one/one.app?#/sObject/'+ a.Id + '/view'}" target="_blank">{#a.Name}</a>
-                  </th>
-                  <td data-label="Type">
-                    <div class="slds-truncate" title="{#a.AcctSeed__Type__c}">{#a.AcctSeed__Type__c}</div>
-                  </td>
-                  <td data-label="Date">
-                    <div class="slds-truncate" title="{#a.AcctSeed__Date__c}">{#a.AcctSeed__Date__c}</div>
-                  </td>
-                  <td data-label="Total">
-                    <div class="slds-truncate" title="{#a.AcctSeed__Total__c}">{#a.AcctSeed__Total__c}</div>
-                  </td>
-                </tr>
-            </aura:iteration>
-          </tbody>
-        </table>
+          </aura:iteration>
+        </tbody>
+      </table>
     </lightning:card>
-    <lightning:card >
-        <aura:set attribute="title">
-            Payables: {!v.payableFound.length}
-        </aura:set>
+    <lightning:card>
+      <aura:set attribute="title"> Payables: {!v.payableFound.length} </aura:set>
 
-        <table class="slds-table slds-table_bordered slds-table_cell-buffer">
-          <thead>
-            <tr class="slds-text-title_caps">
-              <th scope="col" width="20%">
-                <div class="slds-truncate" title="Name">Name</div>
+      <table class="slds-table slds-table_bordered slds-table_cell-buffer">
+        <thead>
+          <tr class="slds-text-title_caps">
+            <th scope="col" width="20%">
+              <div class="slds-truncate" title="Name">Name</div>
+            </th>
+            <th scope="col" width="30%">
+              <div class="slds-truncate" title="Type">Type</div>
+            </th>
+            <th scope="col" width="25%">
+              <div class="slds-truncate" title="Date">Date</div>
+            </th>
+            <th scope="col" width="25%">
+              <div class="slds-truncate" title="Amount">Amount</div>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <aura:iteration items="{!v.payableFound}" var="a">
+            <tr>
+              <th scope="row" data-label="Name">
+                <a href="{!'/one/one.app?#/sObject/'+ a.Id + '/view'}" target="_blank">{#a.Name}</a>
               </th>
-              <th scope="col" width="30%">
-                <div class="slds-truncate" title="Type">Type</div>
-              </th>
-              <th scope="col" width="25%">
-                <div class="slds-truncate" title="Date">Date</div>
-              </th>
-              <th scope="col" width="25%">
-                <div class="slds-truncate" title="Amount">Amount</div>
-              </th>
+              <td data-label="Type">
+                <div class="slds-truncate" title="{#a.AcctSeed__Type__c}">{#a.AcctSeed__Type__c}</div>
+              </td>
+              <td data-label="Date">
+                <div class="slds-truncate" title="{#a.AcctSeed__Date__c}">{#a.AcctSeed__Date__c}</div>
+              </td>
+              <td data-label="Total">
+                <div class="slds-truncate" title="{#a.AcctSeed__Total__c}">{#a.AcctSeed__Total__c}</div>
+              </td>
             </tr>
-          </thead>
-          <tbody>
-			<aura:iteration items="{!v.payableFound}" var="a">
-                <tr>
-                  <th scope="row" data-label="Name">
-                      <a href="{!'/one/one.app?#/sObject/'+ a.Id + '/view'}" target="_blank">{#a.Name}</a>
-                  </th>
-                  <td data-label="Type">
-                    <div class="slds-truncate" title="{#a.AcctSeed__Type__c}">{#a.AcctSeed__Type__c}</div>
-                  </td>
-                  <td data-label="Date">
-                    <div class="slds-truncate" title="{#a.AcctSeed__Date__c}">{#a.AcctSeed__Date__c}</div>
-                  </td>
-                  <td data-label="Total">
-                    <div class="slds-truncate" title="{#a.AcctSeed__Total__c}">{#a.AcctSeed__Total__c}</div>
-                  </td>
-                </tr>
-            </aura:iteration>
-          </tbody>
-        </table>
+          </aura:iteration>
+        </tbody>
+      </table>
     </lightning:card>
-    <lightning:card >
-        <aura:set attribute="title">
-            Cash Disbursement: {!v.disbursementFound.length}
-        </aura:set>
+    <lightning:card>
+      <aura:set attribute="title"> Cash Disbursement: {!v.disbursementFound.length} </aura:set>
 
-        <table class="slds-table slds-table_bordered slds-table_cell-buffer">
-          <thead>
-            <tr class="slds-text-title_caps">
-              <th scope="col" width="20%">
-                <div class="slds-truncate" title="Name">Name</div>
+      <table class="slds-table slds-table_bordered slds-table_cell-buffer">
+        <thead>
+          <tr class="slds-text-title_caps">
+            <th scope="col" width="20%">
+              <div class="slds-truncate" title="Name">Name</div>
+            </th>
+            <th scope="col" width="30%">
+              <div class="slds-truncate" title="Type">Type</div>
+            </th>
+            <th scope="col" width="25%">
+              <div class="slds-truncate" title="Date">Date</div>
+            </th>
+            <th scope="col" width="25%">
+              <div class="slds-truncate" title="Amount">Amount</div>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <aura:iteration items="{!v.disbursementFound}" var="a">
+            <tr>
+              <th scope="row" data-label="Name">
+                <a href="{!'/one/one.app?#/sObject/'+ a.Id + '/view'}" target="_blank">{#a.Name}</a>
               </th>
-              <th scope="col" width="30%">
-                <div class="slds-truncate" title="Type">Type</div>
-              </th>
-              <th scope="col" width="25%">
-                <div class="slds-truncate" title="Date">Date</div>
-              </th>
-              <th scope="col" width="25%">
-                <div class="slds-truncate" title="Amount">Amount</div>
-              </th>
+              <td data-label="Type">
+                <div class="slds-truncate" title="{#a.AcctSeed__Type__c}">{#a.AcctSeed__Type__c}</div>
+              </td>
+              <td data-label="Date">
+                <div class="slds-truncate" title="{#a.AcctSeed__Disbursement_Date__c}">
+                  {#a.AcctSeed__Disbursement_Date__c}
+                </div>
+              </td>
+              <td data-label="Amount">
+                <div class="slds-truncate" title="{#a.AcctSeed__Amount__c}">{#a.AcctSeed__Amount__c}</div>
+              </td>
             </tr>
-          </thead>
-          <tbody>
-			<aura:iteration items="{!v.disbursementFound}" var="a">
-                <tr>
-                  <th scope="row" data-label="Name">
-                      <a href="{!'/one/one.app?#/sObject/'+ a.Id + '/view'}" target="_blank">{#a.Name}</a>
-                  </th>
-                  <td data-label="Type">
-                    <div class="slds-truncate" title="{#a.AcctSeed__Type__c}">{#a.AcctSeed__Type__c}</div>
-                  </td>
-                  <td data-label="Date">
-                    <div class="slds-truncate" title="{#a.AcctSeed__Disbursement_Date__c}">{#a.AcctSeed__Disbursement_Date__c}</div>
-                  </td>
-                  <td data-label="Amount">
-                    <div class="slds-truncate" title="{#a.AcctSeed__Amount__c}">{#a.AcctSeed__Amount__c}</div>
-                  </td>
-                </tr>
-            </aura:iteration>
-          </tbody>
-        </table>
+          </aura:iteration>
+        </tbody>
+      </table>
     </lightning:card>
-    <lightning:card >
-        <aura:set attribute="title">
-            Cash Receipts: {!v.receiptFound.length}
-        </aura:set>
+    <lightning:card>
+      <aura:set attribute="title"> Cash Receipts: {!v.receiptFound.length} </aura:set>
 
-        <table class="slds-table slds-table_bordered slds-table_cell-buffer">
-          <thead>
-            <tr class="slds-text-title_caps">
-              <th scope="col" width="20%">
-                <div class="slds-truncate" title="Name">Name</div>
+      <table class="slds-table slds-table_bordered slds-table_cell-buffer">
+        <thead>
+          <tr class="slds-text-title_caps">
+            <th scope="col" width="20%">
+              <div class="slds-truncate" title="Name">Name</div>
+            </th>
+            <th scope="col" width="30%">
+              <div class="slds-truncate" title="Type">Type</div>
+            </th>
+            <th scope="col" width="25%">
+              <div class="slds-truncate" title="Date">Date</div>
+            </th>
+            <th scope="col" width="25%">
+              <div class="slds-truncate" title="Amount">Amount</div>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <aura:iteration items="{!v.receiptFound}" var="a">
+            <tr>
+              <th scope="row" data-label="Name">
+                <a href="{!'/one/one.app?#/sObject/'+ a.Id + '/view'}" target="_blank">{#a.Name}</a>
               </th>
-              <th scope="col" width="30%">
-                <div class="slds-truncate" title="Type">Type</div>
-              </th>
-              <th scope="col" width="25%">
-                <div class="slds-truncate" title="Date">Date</div>
-              </th>
-              <th scope="col" width="25%">
-                <div class="slds-truncate" title="Amount">Amount</div>
-              </th>
+              <td data-label="Type">
+                <div class="slds-truncate" title="{#a.AcctSeed__Purpose__c}">{#a.AcctSeed__Purpose__c}</div>
+              </td>
+              <td data-label="Date">
+                <div class="slds-truncate" title="{#a.AcctSeed__Receipt_Date__c}">{#a.AcctSeed__Receipt_Date__c}</div>
+              </td>
+              <td data-label="Amount">
+                <div class="slds-truncate" title="{#a.AcctSeed__Amount__c}">{#a.AcctSeed__Amount__c}</div>
+              </td>
             </tr>
-          </thead>
-          <tbody>
-			<aura:iteration items="{!v.receiptFound}" var="a">
-                <tr>
-                  <th scope="row" data-label="Name">
-                      <a href="{!'/one/one.app?#/sObject/'+ a.Id + '/view'}" target="_blank">{#a.Name}</a>
-                  </th>
-                  <td data-label="Type">
-                    <div class="slds-truncate" title="{#a.AcctSeed__Purpose__c}">{#a.AcctSeed__Purpose__c}</div>
-                  </td>
-                  <td data-label="Date">
-                    <div class="slds-truncate" title="{#a.AcctSeed__Receipt_Date__c}">{#a.AcctSeed__Receipt_Date__c}</div>
-                  </td>
-                  <td data-label="Amount">
-                    <div class="slds-truncate" title="{#a.AcctSeed__Amount__c}">{#a.AcctSeed__Amount__c}</div>
-                  </td>
-                </tr>
-            </aura:iteration>
-          </tbody>
-        </table>
+          </aura:iteration>
+        </tbody>
+      </table>
     </lightning:card>
-    <lightning:card >
-        <aura:set attribute="title">
-            Journal Entries: {!v.journalFound.length}
-        </aura:set>
+    <lightning:card>
+      <aura:set attribute="title"> Journal Entries: {!v.journalFound.length} </aura:set>
 
-        <table class="slds-table slds-table_bordered slds-table_cell-buffer">
-          <thead>
-            <tr class="slds-text-title_caps">
-              <th scope="col" width="20%">
-                <div class="slds-truncate" title="Name">Name</div>
+      <table class="slds-table slds-table_bordered slds-table_cell-buffer">
+        <thead>
+          <tr class="slds-text-title_caps">
+            <th scope="col" width="20%">
+              <div class="slds-truncate" title="Name">Name</div>
+            </th>
+            <th scope="col" width="25%">
+              <div class="slds-truncate" title="Date">Date</div>
+            </th>
+            <th scope="col" width="25%">
+              <div class="slds-truncate" title="Credit">Credit</div>
+            </th>
+            <th scope="col" width="25%">
+              <div class="slds-truncate" title="Debit">Debit</div>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <aura:iteration items="{!v.journalFound}" var="a">
+            <tr>
+              <th scope="row" data-label="Name">
+                <a href="{!'/one/one.app?#/sObject/'+ a.Id + '/view'}" target="_blank">{#a.Name}</a>
               </th>
-              <th scope="col" width="25%">
-                <div class="slds-truncate" title="Date">Date</div>
-              </th>
-              <th scope="col" width="25%">
-                <div class="slds-truncate" title="Credit">Credit</div>
-              </th>
-              <th scope="col" width="25%">
-                <div class="slds-truncate" title="Debit">Debit</div>
-              </th>
+              <td data-label="Date">
+                <div class="slds-truncate" title="{#a.AcctSeed__Journal_Date__c}">{#a.AcctSeed__Journal_Date__c}</div>
+              </td>
+              <td data-label="Credits">
+                <div class="slds-truncate" title="{#a.AcctSeed__Total_Credits__c}">{#a.AcctSeed__Total_Credits__c}</div>
+              </td>
+              <td data-label="Debits">
+                <div class="slds-truncate" title="{#a.AcctSeed__Total_Debits__c}">{#a.AcctSeed__Total_Debits__c}</div>
+              </td>
             </tr>
-          </thead>
-          <tbody>
-			<aura:iteration items="{!v.journalFound}" var="a">
-                <tr>
-                  <th scope="row" data-label="Name">
-                      <a href="{!'/one/one.app?#/sObject/'+ a.Id + '/view'}" target="_blank">{#a.Name}</a>
-                  </th>
-                  <td data-label="Date">
-                    <div class="slds-truncate" title="{#a.AcctSeed__Journal_Date__c}">{#a.AcctSeed__Journal_Date__c}</div>
-                  </td>
-                  <td data-label="Credits">
-                    <div class="slds-truncate" title="{#a.AcctSeed__Total_Credits__c}">{#a.AcctSeed__Total_Credits__c}</div>
-                  </td>
-                  <td data-label="Debits">
-                    <div class="slds-truncate" title="{#a.AcctSeed__Total_Debits__c}">{#a.AcctSeed__Total_Debits__c}</div>
-                  </td>
-                </tr>
-            </aura:iteration>
-          </tbody>
-        </table>
+          </aura:iteration>
+        </tbody>
+      </table>
     </lightning:card>
     <lightning:spinner aura:id="spinner" />
-    </div>
-    <br /><br />
+  </div>
+  <br /><br />
 </aura:component>

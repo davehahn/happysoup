@@ -1,8 +1,12 @@
-<aura:component controller="BusinessOffice_Controller" implements="force:appHostable,flexipage:availableForAllPageTypes,force:hasRecordId">
-
-  <ltng:require scripts="{!join(',', $Resource.Libraries +'/js/LightningApex.js',
+<aura:component
+  controller="BusinessOffice_Controller"
+  implements="force:appHostable,flexipage:availableForAllPageTypes,force:hasRecordId"
+>
+  <ltng:require
+    scripts="{!join(',', $Resource.Libraries +'/js/LightningApex.js',
                                      $Resource.Libraries +'/js/LightningUtils.js') }"
-                afterScriptsLoaded="{!c.doInit}" />
+    afterScriptsLoaded="{!c.doInit}"
+  />
 
   <aura:attribute name="recordId" type="String" />
   <aura:attribute name="sObjectType" type="String" />
@@ -14,7 +18,6 @@
   <aura:handler event="force:refreshView" action="{!c.doInit}" />
 
   <div class="slds-card">
-
     <aura:if isTrue="{!v.loading}">
       <div class="slds-spinner_container">
         <div role="status" class="slds-spinner slds-spinner_medium">
@@ -26,54 +29,52 @@
     </aura:if>
 
     <aura:if isTrue="{!not(v.loading)}">
-
       <lightning:tabset variant="scoped">
-
         <lightning:tab label="Business Office Fields">
           <h3 class="slds-section__title">
-            <span class="slds-section__title-action">
-              Business Office Fields
-            </span>
+            <span class="slds-section__title-action"> Business Office Fields </span>
           </h3>
           <div>
-            <c:businessOfficeSpecificFields recordId="{!v.recordId}"
-                                            sObjectType="{!v.sObjectType}"></c:businessOfficeSpecificFields>
+            <c:businessOfficeSpecificFields
+              recordId="{!v.recordId}"
+              sObjectType="{!v.sObjectType}"
+            ></c:businessOfficeSpecificFields>
           </div>
           <h3 class="slds-section__title">
-            <span class="slds-section__title-action">
-              PPSA Fee
-            </span>
+            <span class="slds-section__title-action"> PPSA Fee </span>
           </h3>
           <div>
-            <c:BusinessOffice_PPSA_dh recordId="{!v.recordId}"
-                                      pricebookId="{!v.pricebookId}"
-                                      pricebookName="{!v.pricebookName}" />
+            <c:BusinessOffice_PPSA_dh
+              recordId="{!v.recordId}"
+              pricebookId="{!v.pricebookId}"
+              pricebookName="{!v.pricebookName}"
+            />
           </div>
         </lightning:tab>
 
         <lightning:tab label="Financing &amp; Insurance" onactive="{!c.reInitInsurance}">
-          <c:BusinessOffice_FI_dh recordId="{!v.recordId}"
-                                  pricebookId="{!v.pricebookId}"
-                                  pricebookName="{!v.pricebookName}"
-                                  aura:id="fi_CMP" />
+          <c:BusinessOffice_FI_dh
+            recordId="{!v.recordId}"
+            pricebookId="{!v.pricebookId}"
+            pricebookName="{!v.pricebookName}"
+            aura:id="fi_CMP"
+          />
         </lightning:tab>
 
         <lightning:tab label="Warranty &amp; Service">
-          <c:BusinessOffice_WarrService_dh recordId="{!v.recordId}"
-                                           pricebookId="{!v.pricebookId}"
-                                           pricebookName="{!v.pricebookName}" />
+          <c:BusinessOffice_WarrService_dh
+            recordId="{!v.recordId}"
+            pricebookId="{!v.pricebookId}"
+            pricebookName="{!v.pricebookName}"
+          />
         </lightning:tab>
 
         <aura:if isTrue="{!v.canViewInsuranceDocs}">
           <lightning:tab label="Insurance Documents" onactive="{!c.reInitInsuranceDocs}">
-            <c:arInsuranceDocuments recordId="{!v.recordId}"
-                                    aura:id="insurDocs_CMP" />
+            <c:arInsuranceDocuments recordId="{!v.recordId}" aura:id="insurDocs_CMP" />
           </lightning:tab>
         </aura:if>
-
       </lightning:tabset>
     </aura:if>
-
   </div>
-
 </aura:component>

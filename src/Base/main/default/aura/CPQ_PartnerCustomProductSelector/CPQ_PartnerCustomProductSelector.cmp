@@ -1,7 +1,8 @@
 <aura:component controller="CPQ_Controller_dh">
-
-  <ltng:require scripts="{!join(',', $Resource.Libraries +'/js/LightningApex.js',
-                                     $Resource.Libraries +'/js/LightningUtils.js') }"  />
+  <ltng:require
+    scripts="{!join(',', $Resource.Libraries +'/js/LightningApex.js',
+                                     $Resource.Libraries +'/js/LightningUtils.js') }"
+  />
 
   <aura:attribute name="includeCost" type="Boolean" default="false" />
   <aura:attribute name="cpq" type="Object" />
@@ -17,8 +18,8 @@
           <tr class="slds-text-title_caps">
             <th>Qty</th>
             <th>Product</th>
-            <th class='slds-text-align_right'>Sale Price</th>
-            <th class='slds-text-align_right'>Cost</th>
+            <th class="slds-text-align_right">Sale Price</th>
+            <th class="slds-text-align_right">Cost</th>
             <th></th>
           </tr>
         </thead>
@@ -27,23 +28,21 @@
             <tr>
               <td>{!cp.quantity}</td>
               <td>{!cp.description}</td>
-              <td class='slds-text-align_right'>
-                <lightning:formattedNumber value="{!cp.amount}"
-                                           style="currency"
-                                           currencyCode="CAD" />
+              <td class="slds-text-align_right">
+                <lightning:formattedNumber value="{!cp.amount}" style="currency" currencyCode="CAD" />
               </td>
               <aura:if isTrue="{!v.includeCost}">
-                <td class='slds-text-align_right'>
-                  <lightning:formattedNumber value="{!cp.cost}"
-                                             style="currency"
-                                             currencyCode="CAD" />
+                <td class="slds-text-align_right">
+                  <lightning:formattedNumber value="{!cp.cost}" style="currency" currencyCode="CAD" />
                 </td>
               </aura:if>
-              <td class='slds-text-align_right'>
-                <lightning:buttonIcon iconName="utility:close"
-                                      size="small"
-                                      value="{!cp.id}"
-                                      onclick="{!c.removeCustomProduct}" />
+              <td class="slds-text-align_right">
+                <lightning:buttonIcon
+                  iconName="utility:close"
+                  size="small"
+                  value="{!cp.id}"
+                  onclick="{!c.removeCustomProduct}"
+                />
               </td>
             </tr>
           </aura:iteration>
@@ -52,8 +51,7 @@
     </aura:if>
 
     <lightning:layout>
-      <lightning:layoutItem size="12"
-                            class="slds-align_absolute-center slds-m-top_medium">
+      <lightning:layoutItem size="12" class="slds-align_absolute-center slds-m-top_medium">
         <lightning:button label="Add Product" iconName="utility:add" onclick="{!c.openForm}" />
       </lightning:layoutItem>
     </lightning:layout>
@@ -61,63 +59,73 @@
 
   <aura:if isTrue="{!v.showForm}">
     <lightning:layout multipleRows="true">
-      <lightning:layoutItem size="12"
-                            padding="horizontal-small"
-                            smallDeviceSize="12"
-                            mediumDeviceSize="12"
-                            largeDeviceSize="12">
-        <lightning:input type="text"
-                         label="Product Name"
-                         value="{!v.newCustomProduct.description}"
-                         required="true" />
+      <lightning:layoutItem
+        size="12"
+        padding="horizontal-small"
+        smallDeviceSize="12"
+        mediumDeviceSize="12"
+        largeDeviceSize="12"
+      >
+        <lightning:input type="text" label="Product Name" value="{!v.newCustomProduct.description}" required="true" />
       </lightning:layoutItem>
-      <lightning:layoutItem size="12"
-                            padding="horizontal-small"
-                            smallDeviceSize="12"
-                            mediumDeviceSize="3"
-                            largeDeviceSize="3">
-        <lightning:input type="number"
-                         label="Quantity"
-                         value="{!v.newCustomProduct.quantity}"
-                         required="true" />
+      <lightning:layoutItem
+        size="12"
+        padding="horizontal-small"
+        smallDeviceSize="12"
+        mediumDeviceSize="3"
+        largeDeviceSize="3"
+      >
+        <lightning:input type="number" label="Quantity" value="{!v.newCustomProduct.quantity}" required="true" />
       </lightning:layoutItem>
-      <lightning:layoutItem size="12"
-                            padding="horizontal-small"
-                            smallDeviceSize="12"
-                            mediumDeviceSize="4"
-                            largeDeviceSize="4">
-        <lightning:input type="number"
-                         formatter="currency"
-                         label="$ Retail (ea.)"
-                         value="{!v.newCustomProduct.amount}"
-                         step="0.01"
-                         required="true" />
+      <lightning:layoutItem
+        size="12"
+        padding="horizontal-small"
+        smallDeviceSize="12"
+        mediumDeviceSize="4"
+        largeDeviceSize="4"
+      >
+        <lightning:input
+          type="number"
+          formatter="currency"
+          label="$ Retail (ea.)"
+          value="{!v.newCustomProduct.amount}"
+          step="0.01"
+          required="true"
+        />
       </lightning:layoutItem>
       <aura:if isTrue="{!v.includeCost}">
-        <lightning:layoutItem size="12"
-                              padding="horizontal-small"
-                              smallDeviceSize="12"
-                              mediumDeviceSize="4"
-                              largeDeviceSize="4">
-          <lightning:input type="number"
-                           formatter="currency"
-                           label="$ Cost (ea.)"
-                           value="{!v.newCustomProduct.cost}"
-                           step="0.01"
-                           required="true" />
+        <lightning:layoutItem
+          size="12"
+          padding="horizontal-small"
+          smallDeviceSize="12"
+          mediumDeviceSize="4"
+          largeDeviceSize="4"
+        >
+          <lightning:input
+            type="number"
+            formatter="currency"
+            label="$ Cost (ea.)"
+            value="{!v.newCustomProduct.cost}"
+            step="0.01"
+            required="true"
+          />
         </lightning:layoutItem>
       </aura:if>
       <lightning:layoutItem size="12" class="slds-m-top_medium slds-align_absolute-center">
-        <lightning:button label="Cancel"
-                          iconName="utility:close"
-                          onclick="{!c.closeForm}"
-                          class="slds-m-right_medium" />
-        <lightning:button label="Add"
-                          iconName="utility:add"
-                          iconPosition="right"
-                          onclick="{!c.addCustomProduct}"
-                          variant="brand"
-                          class="slds-m-left_medium"/>
+        <lightning:button
+          label="Cancel"
+          iconName="utility:close"
+          onclick="{!c.closeForm}"
+          class="slds-m-right_medium"
+        />
+        <lightning:button
+          label="Add"
+          iconName="utility:add"
+          iconPosition="right"
+          onclick="{!c.addCustomProduct}"
+          variant="brand"
+          class="slds-m-left_medium"
+        />
       </lightning:layoutItem>
     </lightning:layout>
   </aura:if>

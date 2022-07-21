@@ -1,5 +1,4 @@
 <aura:component>
-
   <aura:method name="saleItemFromSelectedOption" action="{!c.saleItemFromSelectedOption}">
     <aura:attribute name="option" type="Object" />
     <aura:attribute name="isIncluded" type="Boolean" default="false" />
@@ -8,5 +7,4 @@
   <aura:method name="calcCpqTotals" action="{! c.doCalculation}">
     <aura:attribute name="cpq" type="Object" />
   </aura:method>
-
 </aura:component>

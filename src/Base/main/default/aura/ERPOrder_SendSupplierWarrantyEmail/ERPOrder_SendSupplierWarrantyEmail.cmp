@@ -1,4 +1,7 @@
-<aura:component controller="ERPOrder_SendSupplierWarrantyEmail" implements="force:LightningQuickActionWithoutHeader,force:hasRecordId">
+<aura:component
+  controller="ERPOrder_SendSupplierWarrantyEmail"
+  implements="force:LightningQuickActionWithoutHeader,force:hasRecordId"
+>
   <style>
     .cuf-content {
       padding: 0 0rem !important;
@@ -25,12 +28,13 @@
 
   <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
 
-  <ltng:require scripts="{!join(',', $Resource.Libraries +'/js/LightningApex.js',
+  <ltng:require
+    scripts="{!join(',', $Resource.Libraries +'/js/LightningApex.js',
                                      $Resource.Libraries +'/js/LightningUtils.js') }"
-                afterScriptsLoaded="{!c.afterScript}" />
+    afterScriptsLoaded="{!c.afterScript}"
+  />
 
   <div class="slds-card">
-
     <aura:if isTrue="{! v.showSpinner}">
       <div class="spinner-container">
         <div role="status" class="slds-spinner slds-spinner_medium">
@@ -51,25 +55,22 @@
       <aura:if isTrue="{!and( v.hasPermission, not(v.erpClosed) )}">
         <h2 class="title slds-text-heading--medium">Select a Contact</h2>
       </aura:if>
-    </header >
+    </header>
 
     <div class="slds-modal__content slds-p-around_medium">
-
       <aura:if isTrue="{! not(v.hasPermission)}">
-        <p class="slds-text-align_center">
-          Sorry you do not have the required permission to perform this function
-        </p>
-        <p class="slds-text-align_center">
-          Ask your administrator for assistance
-        </p>
+        <p class="slds-text-align_center">Sorry you do not have the required permission to perform this function</p>
+        <p class="slds-text-align_center">Ask your administrator for assistance</p>
       </aura:if>
 
       <aura:if isTrue="{! and( not(v.erpClosed), not( empty(v.contacts) ), not(v.showSpinner), v.hasPermission ) }">
-        <lightning:datatable aura:id="contactDataTable"
-                             data="{! v.contacts }"
-                             columns="{! v.columns }"
-                             keyField="Id"
-                             onrowselection="{!c.rowSelected}"/>
+        <lightning:datatable
+          aura:id="contactDataTable"
+          data="{! v.contacts }"
+          columns="{! v.columns }"
+          keyField="Id"
+          onrowselection="{!c.rowSelected}"
+        />
       </aura:if>
 
       <aura:if isTrue="{!and( v.hasPermission, v.erpClosed)}">
@@ -78,20 +79,15 @@
           <p class="slds-text-align_center">Would You like to resubmit the claim?</p>
         </div>
       </aura:if>
-
     </div>
 
     <div class="slds-modal__footer">
       <aura:if isTrue="{!and( v.hasPermission, not(v.erpClosed) )}">
-        <lightning:button label="Send Email"
-                          onclick="{!c.sendEmail}"
-                          disabled="{! not(v.hasSelections)}" />
+        <lightning:button label="Send Email" onclick="{!c.sendEmail}" disabled="{! not(v.hasSelections)}" />
       </aura:if>
       <aura:if isTrue="{!and( v.hasPermission, v.erpClosed )}">
         <lightning:button label="Yes" onclick="{!c.doResubmit}" />
       </aura:if>
     </div>
-
   </div>
-
 </aura:component>

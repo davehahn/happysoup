@@ -3,46 +3,38 @@
  -->
 
 <aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,force:hasRecordId">
-
   <aura:attribute name="recordId" type="Id" />
   <aura:attribute name="accountBalance" type="Decimal" />
 
-  <aura:handler name="change"
-                value="{!v.accountBalance}"
-                action="{!c.handleAccountBalanceChange}" />
+  <aura:handler name="change" value="{!v.accountBalance}" action="{!c.handleAccountBalanceChange}" />
 
   <div>
-
     <aura:if isTrue="{! !equals( v.accountBalance, 0 ) }">
-
       <a href="javascript:void()" onclick="{!c.toggleStatement}" class="balance-container slds-p-around_xx-small">
         <h2>Account Balance</h2>
-          <div class="balance">
-            <lightning:formattedNumber value="{!v.accountBalance}"
-                                       style="currency"
-                                       currencyCode="CAD" />
-          </div>
+        <div class="balance">
+          <lightning:formattedNumber value="{!v.accountBalance}" style="currency" currencyCode="CAD" />
+        </div>
       </a>
-
     </aura:if>
 
     <section role="modal" class="slds-modal slds-modal_large" aura:id="account-balance-modal">
       <div class="slds-modal__container">
         <header class="slds-modal__header">
-          <lightning:buttonIcon iconName="utility:close"
-                                size="large"
-                                class="slds-modal__close slds-button--icon-inverse"
-                                variant="bare-inverse"
-                                onclick="{!c.toggleStatement}" />
+          <lightning:buttonIcon
+            iconName="utility:close"
+            size="large"
+            class="slds-modal__close slds-button--icon-inverse"
+            variant="bare-inverse"
+            onclick="{!c.toggleStatement}"
+          />
           <h2 class="slds-modal__title">Account Balance</h2>
         </header>
         <div class="slds-modal__content slds-p-around_medium">
-          <c:arAccountStatement recordId="{!v.recordId}"
-                                totalBalance="{!v.accountBalance}" />
+          <c:arAccountStatement recordId="{!v.recordId}" totalBalance="{!v.accountBalance}" />
         </div>
       </div>
     </section>
     <div class="slds-backdrop" aura:id="backdrop"></div>
-
   </div>
 </aura:component>

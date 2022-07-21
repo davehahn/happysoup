@@ -1,6 +1,7 @@
-<aura:component controller="DealerOrder_Ext"
-                implements="force:appHostable,flexipage:availableForAllPageTypes,forceCommunity:availableForAllPageTypes,force:hasRecordId">
-
+<aura:component
+  controller="DealerOrder_Ext"
+  implements="force:appHostable,flexipage:availableForAllPageTypes,forceCommunity:availableForAllPageTypes,force:hasRecordId"
+>
   <aura:attribute name="recordIdId" type="String" />
   <aura:attribute name="boats" type="Object" />
   <aura:attribute name="boatTotals" type="Object" />
@@ -17,7 +18,7 @@
   <aura:attribute name="discounts" type="Object" />
   <aura:attribute name="discountTotals" type="Object" />
   <aura:attribute name="mercuryMotors" type="Object" />
-  <aura:attribute name="orderTotal" type="Decimal" default="0.00"/>
+  <aura:attribute name="orderTotal" type="Decimal" default="0.00" />
 
   <aura:handler event="force:refreshView" action="{!c.doInit}" />
 
@@ -25,82 +26,81 @@
   <aura:method name="doInit" access="public" />
 
   <div>
-
     <lightning:tabset variant="scoped">
-
       <lightning:tab label="Order Summary">
-
         <aura:if isTrue="{! !empty(v.boats)}">
           <div aura:id="boats-container" class="collapse">
-          <h2>
-            <lightning:buttonIcon iconName="utility:switch"
-                                  variant="bare"
-                                  alternativeText="Settings"
-                                  name="boats-container"
-                                  iconClass="dark"
-                                  onclick="{!c.handleListCollapse}"/>
+            <h2>
+              <lightning:buttonIcon
+                iconName="utility:switch"
+                variant="bare"
+                alternativeText="Settings"
+                name="boats-container"
+                iconClass="dark"
+                onclick="{!c.handleListCollapse}"
+              />
 
-            Boats ( {!v.boatTotals.count} )
-            <span class="slds-float_right total">
-              <lightning:formattedNumber value="{!v.boatTotals.amount}"
-                                         style="currency"
-                                         currencyCode="CAD" />
+              Boats ( {!v.boatTotals.count} )
+              <span class="slds-float_right total">
+                <lightning:formattedNumber value="{!v.boatTotals.amount}" style="currency" currencyCode="CAD" />
               </span>
-          </h2>
-          <table class="serialized-table slds-table slds-table--bordered slds-table--cell-buffer slds-table_fixed-layout slds-max-medium-table--stacked">
-            <thead>
-              <tr>
-                <th scope="col">Model</th>
-                <th scope="col" class="slds-text-align--center">Invoice #</th>
-                <th scope="col" class="slds-text-align--center">Serial Number</th>
-                <th scope="col" class="slds-text-align--center">Item Order Status</th>
-                <th scope="col" class="slds-text-align--right">Cost</th>
-              </tr>
-            </thead>
-            <tbody>
-              <aura:iteration items="{!v.boats}" var="item">
+            </h2>
+            <table
+              class="serialized-table slds-table slds-table--bordered slds-table--cell-buffer slds-table_fixed-layout slds-max-medium-table--stacked"
+            >
+              <thead>
                 <tr>
-                  <td>
-                    <div class="slds-truncate">{!item.name}</div>
-                  </td>
-                  <td class="slds-text-align--center">
-                    <div class="slds-truncate">{!item.invoiceNumber}</div>
-                  </td>
-                  <td class="slds-text-align--center">
-                    <div class="slds-truncate">{!item.serialNumber}</div>
-                  </td>
-                  <td class="slds-text-align--center">
-                    <div class="slds-truncate">{!item.itemStatus}</div>
-                  </td>
-                  <td class="slds-text-align--right">
-                    <lightning:formattedNumber value="{!item.cost}"
-                                               style="currency"
-                                               currencyCode="CAD" />
-                  </td>
+                  <th scope="col">Model</th>
+                  <th scope="col" class="slds-text-align--center">Invoice #</th>
+                  <th scope="col" class="slds-text-align--center">Serial Number</th>
+                  <th scope="col" class="slds-text-align--center">Item Order Status</th>
+                  <th scope="col" class="slds-text-align--right">Cost</th>
                 </tr>
-              </aura:iteration>
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                <aura:iteration items="{!v.boats}" var="item">
+                  <tr>
+                    <td>
+                      <div class="slds-truncate">{!item.name}</div>
+                    </td>
+                    <td class="slds-text-align--center">
+                      <div class="slds-truncate">{!item.invoiceNumber}</div>
+                    </td>
+                    <td class="slds-text-align--center">
+                      <div class="slds-truncate">{!item.serialNumber}</div>
+                    </td>
+                    <td class="slds-text-align--center">
+                      <div class="slds-truncate">{!item.itemStatus}</div>
+                    </td>
+                    <td class="slds-text-align--right">
+                      <lightning:formattedNumber value="{!item.cost}" style="currency" currencyCode="CAD" />
+                    </td>
+                  </tr>
+                </aura:iteration>
+              </tbody>
+            </table>
           </div>
         </aura:if>
 
         <aura:if isTrue="{! !empty(v.motors) }">
           <div aura:id="motors-container" class="collapse">
             <h2>
-              <lightning:buttonIcon iconName="utility:switch"
-                                      variant="bare"
-                                      alternativeText="Settings"
-                                      name="motors-container"
-                                      iconClass="dark"
-                                      onclick="{!c.handleListCollapse}"/>
+              <lightning:buttonIcon
+                iconName="utility:switch"
+                variant="bare"
+                alternativeText="Settings"
+                name="motors-container"
+                iconClass="dark"
+                onclick="{!c.handleListCollapse}"
+              />
               Motors ( {!v.motorTotals.count} )
               <span class="slds-float_right total">
-                <lightning:formattedNumber value="{!v.motorTotals.amount}"
-                                           style="currency"
-                                           currencyCode="CAD" />
-                </span>
+                <lightning:formattedNumber value="{!v.motorTotals.amount}" style="currency" currencyCode="CAD" />
+              </span>
             </h2>
-            <table class="serialized-table slds-table slds-table--bordered slds-table--cell-buffer slds-table_fixed-layout slds-max-medium-table--stacked">
+            <table
+              class="serialized-table slds-table slds-table--bordered slds-table--cell-buffer slds-table_fixed-layout slds-max-medium-table--stacked"
+            >
               <thead>
                 <tr>
                   <th scope="col">Model</th>
@@ -126,8 +126,7 @@
                       <div class="slds-truncate">{!item.itemStatus}</div>
                     </td>
                     <td class="slds-text-align--right">
-                      <c:lgnd_currencyDisplay value="{!item.cost}"
-                                            zeroLabel="Included" />
+                      <c:lgnd_currencyDisplay value="{!item.cost}" zeroLabel="Included" />
                     </td>
                   </tr>
                 </aura:iteration>
@@ -138,176 +137,176 @@
 
         <aura:if isTrue="{! !empty(v.trailers)}">
           <div aura:id="trailers-container" class="collapse">
-          <h2>
-            <lightning:buttonIcon iconName="utility:switch"
-                                    variant="bare"
-                                    alternativeText="Settings"
-                                    name="trailers-container"
-                                    iconClass="dark"
-                                    onclick="{!c.handleListCollapse}"/>
-            Trailers ( {!v.trailerTotals.count} )
-            <span class="slds-float_right total">
-              <lightning:formattedNumber value="{!v.trailerTotals.amount}"
-                                         style="currency"
-                                         currencyCode="CAD" />
+            <h2>
+              <lightning:buttonIcon
+                iconName="utility:switch"
+                variant="bare"
+                alternativeText="Settings"
+                name="trailers-container"
+                iconClass="dark"
+                onclick="{!c.handleListCollapse}"
+              />
+              Trailers ( {!v.trailerTotals.count} )
+              <span class="slds-float_right total">
+                <lightning:formattedNumber value="{!v.trailerTotals.amount}" style="currency" currencyCode="CAD" />
               </span>
-          </h2>
-          <table class="serialized-table slds-table slds-table--bordered slds-table--cell-buffer slds-table_fixed-layout slds-max-medium-table--stacked">
-            <thead>
-              <tr>
-                <th scope="col">Model</th>
-                <th scope="col" class="slds-text-align--center">Invoice #</th>
-                <th scope="col" class="slds-text-align--center">Serial Number</th>
-                <th scope="col" class="slds-text-align--center">Item Order Status</th>
-                <th scope="col" class="slds-text-align--right">Cost</th>
-              </tr>
-            </thead>
-            <tbody>
-              <aura:iteration items="{!v.trailers}" var="item">
+            </h2>
+            <table
+              class="serialized-table slds-table slds-table--bordered slds-table--cell-buffer slds-table_fixed-layout slds-max-medium-table--stacked"
+            >
+              <thead>
                 <tr>
-                  <td>
-                    <div class="slds-truncate">{!item.name}</div>
-                  </td>
-                  <td class="slds-text-align--center">
-                    <div class="slds-truncate">{!item.invoiceNumber}</div>
-                  </td>
-                  <td class="slds-text-align--center">
-                    <div class="slds-truncate">{!item.serialNumber}</div>
-                  </td>
-                  <td class="slds-text-align--center">
-                    <div class="slds-truncate">{!item.itemStatus}</div>
-                  </td>
-                  <td class="slds-text-align--right">
-                    <c:lgnd_currencyDisplay value="{!item.cost}"
-                                            zeroLabel="Included" />
-                  </td>
+                  <th scope="col">Model</th>
+                  <th scope="col" class="slds-text-align--center">Invoice #</th>
+                  <th scope="col" class="slds-text-align--center">Serial Number</th>
+                  <th scope="col" class="slds-text-align--center">Item Order Status</th>
+                  <th scope="col" class="slds-text-align--right">Cost</th>
                 </tr>
-              </aura:iteration>
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                <aura:iteration items="{!v.trailers}" var="item">
+                  <tr>
+                    <td>
+                      <div class="slds-truncate">{!item.name}</div>
+                    </td>
+                    <td class="slds-text-align--center">
+                      <div class="slds-truncate">{!item.invoiceNumber}</div>
+                    </td>
+                    <td class="slds-text-align--center">
+                      <div class="slds-truncate">{!item.serialNumber}</div>
+                    </td>
+                    <td class="slds-text-align--center">
+                      <div class="slds-truncate">{!item.itemStatus}</div>
+                    </td>
+                    <td class="slds-text-align--right">
+                      <c:lgnd_currencyDisplay value="{!item.cost}" zeroLabel="Included" />
+                    </td>
+                  </tr>
+                </aura:iteration>
+              </tbody>
+            </table>
           </div>
         </aura:if>
 
         <aura:if isTrue="{! !empty(v.trollingMotors)}">
           <div aura:id="trolling-motors-container" class="collapse">
-          <h2>
-            <lightning:buttonIcon iconName="utility:switch"
-                                    variant="bare"
-                                    alternativeText="Settings"
-                                    name="trolling-motors-container"
-                                    iconClass="dark"
-                                    onclick="{!c.handleListCollapse}"/>
-            Trolling Motors ( {!v.trollingMotorTotals.count} )
-            <span class="slds-float_right total">
-              <lightning:formattedNumber value="{!v.trollingMotorTotals.amount}"
-                                         style="currency"
-                                         currencyCode="CAD" />
+            <h2>
+              <lightning:buttonIcon
+                iconName="utility:switch"
+                variant="bare"
+                alternativeText="Settings"
+                name="trolling-motors-container"
+                iconClass="dark"
+                onclick="{!c.handleListCollapse}"
+              />
+              Trolling Motors ( {!v.trollingMotorTotals.count} )
+              <span class="slds-float_right total">
+                <lightning:formattedNumber
+                  value="{!v.trollingMotorTotals.amount}"
+                  style="currency"
+                  currencyCode="CAD"
+                />
               </span>
-          </h2>
-          <table class="serialized-table slds-table slds-table--bordered slds-table--cell-buffer slds-table_fixed-layout slds-max-medium-table--stacked">
-            <thead>
-              <tr>
-                <th scope="col">Model</th>
-                <th scope="col" class="slds-text-align--center">Invoice #</th>
-                <th scope="col" class="slds-text-align--center">Serial Number</th>
-                <th scope="col" class="slds-text-align--center">Item Order Status</th>
-                <th scope="col" class="slds-text-align--right">Cost</th>
-              </tr>
-            </thead>
-            <tbody>
-              <aura:iteration items="{!v.trollingMotors}" var="item">
+            </h2>
+            <table
+              class="serialized-table slds-table slds-table--bordered slds-table--cell-buffer slds-table_fixed-layout slds-max-medium-table--stacked"
+            >
+              <thead>
                 <tr>
-                  <td>
-                    <div class="slds-truncate">{!item.name}</div>
-                  </td>
-                  <td class="slds-text-align--center">
-                    <div class="slds-truncate">{!item.invoiceNumber}</div>
-                  </td>
-                  <td class="slds-text-align--center">
-                    <div class="slds-truncate">{!item.serialNumber}</div>
-                  </td>
-                  <td class="slds-text-align--center">
-                    <div class="slds-truncate">{!item.itemStatus}</div>
-                  </td>
-                  <td class="slds-text-align--right">
-                    <c:lgnd_currencyDisplay value="{!item.cost}"
-                                            zeroLabel="Included" />
-                  </td>
+                  <th scope="col">Model</th>
+                  <th scope="col" class="slds-text-align--center">Invoice #</th>
+                  <th scope="col" class="slds-text-align--center">Serial Number</th>
+                  <th scope="col" class="slds-text-align--center">Item Order Status</th>
+                  <th scope="col" class="slds-text-align--right">Cost</th>
                 </tr>
-              </aura:iteration>
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                <aura:iteration items="{!v.trollingMotors}" var="item">
+                  <tr>
+                    <td>
+                      <div class="slds-truncate">{!item.name}</div>
+                    </td>
+                    <td class="slds-text-align--center">
+                      <div class="slds-truncate">{!item.invoiceNumber}</div>
+                    </td>
+                    <td class="slds-text-align--center">
+                      <div class="slds-truncate">{!item.serialNumber}</div>
+                    </td>
+                    <td class="slds-text-align--center">
+                      <div class="slds-truncate">{!item.itemStatus}</div>
+                    </td>
+                    <td class="slds-text-align--right">
+                      <c:lgnd_currencyDisplay value="{!item.cost}" zeroLabel="Included" />
+                    </td>
+                  </tr>
+                </aura:iteration>
+              </tbody>
+            </table>
           </div>
         </aura:if>
 
         <aura:if isTrue="{! !empty(v.options)}">
           <div aura:id="options-container" class="collapse">
-          <h2>
-            <lightning:buttonIcon iconName="utility:switch"
-                                    variant="bare"
-                                    alternativeText="Settings"
-                                    name="options-container"
-                                    iconClass="dark"
-                                    onclick="{!c.handleListCollapse}"/>
-            Options ( {!v.optionTotals.count} )
-            <span class="slds-float_right total">
-              <lightning:formattedNumber value="{!v.optionTotals.amount}"
-                                         style="currency"
-                                         currencyCode="CAD" />
+            <h2>
+              <lightning:buttonIcon
+                iconName="utility:switch"
+                variant="bare"
+                alternativeText="Settings"
+                name="options-container"
+                iconClass="dark"
+                onclick="{!c.handleListCollapse}"
+              />
+              Options ( {!v.optionTotals.count} )
+              <span class="slds-float_right total">
+                <lightning:formattedNumber value="{!v.optionTotals.amount}" style="currency" currencyCode="CAD" />
               </span>
-          </h2>
-          <table class="slds-table slds-table--bordered slds-table--cell-buffer slds-max-medium-table--stacked">
-            <thead>
-              <tr>
-                <th scope="col">Part Name</th>
-                <th scope="col" class="slds-text-align--right">Cost</th>
-              </tr>
-            </thead>
-            <tbody>
-              <aura:iteration items="{!v.options}" var="item">
-                <tr class="{! if( item.hasChildren, 'has-children', '')}">
-                  <td>{!item.name}</td>
-                  <td class="slds-text-align--right">
-                    <c:lgnd_currencyDisplay value="{!item.cost}"
-                                            zeroLabel="Included" />
-                  </td>
+            </h2>
+            <table class="slds-table slds-table--bordered slds-table--cell-buffer slds-max-medium-table--stacked">
+              <thead>
+                <tr>
+                  <th scope="col">Part Name</th>
+                  <th scope="col" class="slds-text-align--right">Cost</th>
                 </tr>
-                <aura:if isTrue="{! !empty(item.kitParts)}">
-                  <aura:iteration items="{! item.kitParts}" var="kitPart">
-                    <tr class="sub-item">
-                      <td>{!kitPart.name}</td>
-                      <td class="slds-text-align--right">
-                        <c:lgnd_currencyDisplay value="{!kitPart.cost}"
-                                                zeroLabel="Included" />
-                      </td>
-                    </tr>
-                  </aura:iteration>
-                </aura:if>
-                <aura:if isTrue="{! !empty(item.subOptions)}">
-                  <aura:iteration items="{! item.subOptions}" var="subOpt">
-                    <tr class="sub-item">
-                      <td>{!subOpt.name}</td>
-                      <td class="slds-text-align--right">
-                        <c:lgnd_currencyDisplay value="{!subOpt.cost}"
-                                                zeroLabel="Included" />
-                      </td>
-                    </tr>
-                  </aura:iteration>
-                </aura:if>
-              </aura:iteration>
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                <aura:iteration items="{!v.options}" var="item">
+                  <tr class="{! if( item.hasChildren, 'has-children', '')}">
+                    <td>{!item.name}</td>
+                    <td class="slds-text-align--right">
+                      <c:lgnd_currencyDisplay value="{!item.cost}" zeroLabel="Included" />
+                    </td>
+                  </tr>
+                  <aura:if isTrue="{! !empty(item.kitParts)}">
+                    <aura:iteration items="{! item.kitParts}" var="kitPart">
+                      <tr class="sub-item">
+                        <td>{!kitPart.name}</td>
+                        <td class="slds-text-align--right">
+                          <c:lgnd_currencyDisplay value="{!kitPart.cost}" zeroLabel="Included" />
+                        </td>
+                      </tr>
+                    </aura:iteration>
+                  </aura:if>
+                  <aura:if isTrue="{! !empty(item.subOptions)}">
+                    <aura:iteration items="{! item.subOptions}" var="subOpt">
+                      <tr class="sub-item">
+                        <td>{!subOpt.name}</td>
+                        <td class="slds-text-align--right">
+                          <c:lgnd_currencyDisplay value="{!subOpt.cost}" zeroLabel="Included" />
+                        </td>
+                      </tr>
+                    </aura:iteration>
+                  </aura:if>
+                </aura:iteration>
+              </tbody>
+            </table>
           </div>
         </aura:if>
 
         <div class="slds-clearfix">
           <div class="order-total slds-float_right">
-            <lightning:formattedNumber value="{!v.orderTotal}"
-                                               style="currency"
-                                               currencyCode="CAD" />
+            <lightning:formattedNumber value="{!v.orderTotal}" style="currency" currencyCode="CAD" />
           </div>
         </div>
-
       </lightning:tab>
 
       <lightning:tab label="Shipping From Mercury">
@@ -330,10 +329,6 @@
           </tbody>
         </table>
       </lightning:tab>
-
     </lightning:tabset>
-
   </div>
-
-
 </aura:component>

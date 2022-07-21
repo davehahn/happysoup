@@ -1,35 +1,54 @@
-<aura:component controller="SearchProduct_ar"
-								implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome"
-								access="global">
+<aura:component
+  controller="SearchProduct_ar"
+  implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome"
+  access="global"
+>
+  <aura:attribute name="searchQuery" type="String" />
+  <aura:attribute name="productList" type="Object" access="public" />
+  <aura:attribute name="selectionMade" type="Boolean" default="false" />
+  <aura:attribute name="filterId" type="String" />
+  <aura:attribute name="fieldLabel" type="String" default="Name, Family, Product Code or Record Type" />
+  <aura:method name="clearSearch" action="{!c.clearSearch}" />
+  <aura:handler name="change" value="{!v.searchQuery}" action="{!c.lookupProducts}" />
+  <aura:handler name="change" value="{!v.productList}" action="{!c.close}" />
+  <aura:registerEvent name="filterSelectedEvent" type="c:filterSelectedEvent" />
 
-<aura:attribute name="searchQuery" 		type="String" />
-<aura:attribute name="productList" 		type="Object" access="public"/>
-<aura:attribute name="selectionMade" 	type="Boolean" default="false" />
-<aura:attribute name="filterId" 		type="String" />
-<aura:attribute name="fieldLabel"      	type="String"  default="Name, Family, Product Code or Record Type" />
-<aura:method name="clearSearch" action="{!c.clearSearch}"/>
-<aura:handler name="change" value="{!v.searchQuery}" action="{!c.lookupProducts}" />
-<aura:handler name="change" value="{!v.productList}" action="{!c.close}" />
-<aura:registerEvent name="filterSelectedEvent" type="c:filterSelectedEvent" />
-
-<div class="slds-form-element">
-  <div class="slds-combobox_container">
-  	<div class="slds-combobox slds-dropdown-trigger slds-dropdown-trigger--click slds-is-closed" aria-expanded="true" aria-haspopup="listbox" role="combobox" aura:id="name_combobox">
-      <div class="slds-form-element">
-      	<lightning:input type="search" name="Search" label="{!v.fieldLabel}" placeholder="Start typing" value="{!v.searchQuery}" aura:id="search" />
-      </div>
-      <div id="listbox-unique-id" role="listbox">
-        <ul class="slds-listbox slds-listbox_vertical slds-dropdown slds-dropdown_fluid" role="presentation">
+  <div class="slds-form-element">
+    <div class="slds-combobox_container">
+      <div
+        class="slds-combobox slds-dropdown-trigger slds-dropdown-trigger--click slds-is-closed"
+        aria-expanded="true"
+        aria-haspopup="listbox"
+        role="combobox"
+        aura:id="name_combobox"
+      >
+        <div class="slds-form-element">
+          <lightning:input
+            type="search"
+            name="Search"
+            label="{!v.fieldLabel}"
+            placeholder="Start typing"
+            value="{!v.searchQuery}"
+            aura:id="search"
+          />
+        </div>
+        <div id="listbox-unique-id" role="listbox">
+          <ul class="slds-listbox slds-listbox_vertical slds-dropdown slds-dropdown_fluid" role="presentation">
             <aura:iteration items="{!v.productList}" var="item" indexVar="i">
               <li role="option" class="slds-listbox__item" data-address-id="{!i}">
-                <a  href="javascript:void(0);"
+                <a
+                  href="javascript:void(0);"
+                  role="option"
+                  id="{!'listbox-option-unique-id-' + i}"
+                  onclick="{!c.clickDropDown}"
+                  data-name="{!item.productName}"
+                  data-filterid="{!item.idProduct}"
+                  data-type="{!item.RecordType.Name}"
+                >
+                  <span
+                    class="slds-media slds-listbox__option slds-listbox__option_entity slds-listbox__option_has-meta"
                     role="option"
-                    id="{!'listbox-option-unique-id-' + i}"
-                    onclick="{!c.clickDropDown}"
-                    data-name="{!item.productName}"
-                    data-filterid="{!item.idProduct}"
-                    data-type="{!item.RecordType.Name}">
-                  <span class="slds-media slds-listbox__option slds-listbox__option_entity slds-listbox__option_has-meta" role="option">
+                  >
                     <span class="slds-media__figure">
                       <span class="slds-icon_container slds-icon-standard-account" title="Product">
                         <lightning:icon iconName="custom:custom68" />
@@ -37,18 +56,26 @@
                       </span>
                     </span>
                     <span class="slds-media__body">
-                      <span class="slds-listbox__option-text slds-listbox__option-text_entity">{!item.productName}</span>
-                      <span class="slds-listbox__option-meta slds-listbox__option-meta_entity">{!item.productType}</span>
-                      <span class="slds-listbox__option-meta slds-listbox__option-meta_entity">{!item.productFamily}</span>
-                      <span class="slds-listbox__option-meta slds-listbox__option-meta_entity">{!item.productCode}</span>
+                      <span class="slds-listbox__option-text slds-listbox__option-text_entity"
+                        >{!item.productName}</span
+                      >
+                      <span class="slds-listbox__option-meta slds-listbox__option-meta_entity"
+                        >{!item.productType}</span
+                      >
+                      <span class="slds-listbox__option-meta slds-listbox__option-meta_entity"
+                        >{!item.productFamily}</span
+                      >
+                      <span class="slds-listbox__option-meta slds-listbox__option-meta_entity"
+                        >{!item.productCode}</span
+                      >
                     </span>
                   </span>
                 </a>
               </li>
             </aura:iteration>
-        </ul>
+          </ul>
+        </div>
       </div>
     </div>
   </div>
-</div>
 </aura:component>

@@ -15,12 +15,7 @@
   <aura:attribute name="dependentOptions" type="List" />
   <aura:attribute name="currentValue" type="String" />
   <aura:attribute name="selectedStatus" type="String" />
-  <aura:attribute
-    name="pathType"
-    type="String"
-    required="true"
-    default="linear"
-  />
+  <aura:attribute name="pathType" type="String" required="true" default="linear" />
 
   <ltng:require
     scripts="{!join(',', $Resource.Libraries +'/js/LightningApex.js',
@@ -43,12 +38,7 @@
   />
 
   <div class="slds-card">
-    <lightning:spinner
-      alternativeText="Loading"
-      size="small"
-      aura:id="spinner"
-      class="slds-hide"
-    />
+    <lightning:spinner alternativeText="Loading" size="small" aura:id="spinner" class="slds-hide" />
     <aura:if isTrue="{! !empty(v.title)}">
       <h1 class="slds-text-title_caps slds-text-align_center">{!v.title}</h1>
     </aura:if>
@@ -67,27 +57,33 @@
       <div class="slds-card__body slds-card__body_inner">
         <lightning:layout multipleRows="true">
           <lightning:layoutItem size="12" smallDeviceSize="12" mediumDeviceSize="12" largeDeviceSize="10">
-            <lightning:progressIndicator
-              currentStep="{!v.currentValue}"
-              type="path"
-              variant="base"
-            >
+            <lightning:progressIndicator currentStep="{!v.currentValue}" type="path" variant="base">
               <aura:iteration items="{!v.dependentOptions}" var="opt">
-                <lightning:progressStep label="{!opt}" value="{!opt}" onclick="{!c.pathClick}"/>
+                <lightning:progressStep label="{!opt}" value="{!opt}" onclick="{!c.pathClick}" />
               </aura:iteration>
             </lightning:progressIndicator>
           </lightning:layoutItem>
-          <lightning:layoutItem size="12" smallDeviceSize="12" mediumDeviceSize="12" largeDeviceSize="2" class="slds-text-align_center">
+          <lightning:layoutItem
+            size="12"
+            smallDeviceSize="12"
+            mediumDeviceSize="12"
+            largeDeviceSize="2"
+            class="slds-text-align_center"
+          >
             <aura:if isTrue="{! equals( v.currentValue, v.selectedStatus)}">
-              <lightning:button label="Mark Stage as Complete" onclick="{!c.handleButton}" variant="brand" iconName="utility:check" iconPosition="left" />
+              <lightning:button
+                label="Mark Stage as Complete"
+                onclick="{!c.handleButton}"
+                variant="brand"
+                iconName="utility:check"
+                iconPosition="left"
+              />
             </aura:if>
             <aura:if isTrue="{! !equals( v.currentValue, v.selectedStatus)}">
               <lightning:button label="Mark as Current Stage" onclick="{!c.handleButton}" variant="brand" />
             </aura:if>
-
           </lightning:layoutItem>
         </lightning:layout>
-
       </div>
     </aura:if>
   </div>

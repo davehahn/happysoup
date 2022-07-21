@@ -2,9 +2,7 @@
  - Created by dave on 2020-02-10.
  -->
 
-<aura:component controller="CommissionRecord2_Controller"
-                implements="force:hasRecordId">
-
+<aura:component controller="CommissionRecord2_Controller" implements="force:hasRecordId">
   <aura:attribute name="recordId" type="String" />
   <aura:attribute name="commissionRecords" type="List" />
   <aura:attribute name="selectedRecord" type="Map" />
@@ -12,12 +10,8 @@
   <aura:method name="doInit" action="{!c.doInit}" />
 
   <aura:if isTrue="{! !empty(v.commissionRecords)}">
-
-    <c:commissionRecordHeader commissionRecords="{!v.commissionRecords}"
-                              onrecordchange="{!c.handleRecordChange}"/>
+    <c:commissionRecordHeader commissionRecords="{!v.commissionRecords}" onrecordchange="{!c.handleRecordChange}" />
 
     <c:CommissionRecord_Container record="{!v.selectedRecord}" />
-
   </aura:if>
-
 </aura:component>

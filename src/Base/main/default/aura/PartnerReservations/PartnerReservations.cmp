@@ -2,9 +2,11 @@
  - Created by dave on 2020-09-30.
  -->
 
-<aura:component description="PartnerReservations"
-                controller="PartnerReservations_Controller"
-                implements="forceCommunity:availableForAllPageTypes">
+<aura:component
+  description="PartnerReservations"
+  controller="PartnerReservations_Controller"
+  implements="forceCommunity:availableForAllPageTypes"
+>
   <aura:attribute name="isFactoryStore" type="Boolean" default="false" />
   <aura:attribute name="allowDraftBookingOrders" type="Boolean" default="false" />
   <aura:attribute name="availableLists" type="String[]" />
@@ -25,14 +27,14 @@
   <aura:attribute name="promotionCase" type="Object" />
   <aura:attribute name="uploadedFiles" type="List" />
 
-  <ltng:require scripts="{!join(',', $Resource.Libraries +'/js/LightningApex.js',
+  <ltng:require
+    scripts="{!join(',', $Resource.Libraries +'/js/LightningApex.js',
                                      $Resource.Libraries +'/js/LightningUtils.js') }"
-                afterScriptsLoaded="{!c.afterScripts}" />
-
+    afterScriptsLoaded="{!c.afterScripts}"
+  />
 
   <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
-  <aura:handler event="c:lgnd_ListSelector_Event"
-                action="{!c.handleListChange}" />
+  <aura:handler event="c:lgnd_ListSelector_Event" action="{!c.handleListChange}" />
 
   <c:Lgnd_Spinner_dh aura:id="spinner" />
 
@@ -50,22 +52,21 @@
                 {! if( v.isReserving, 'Create Reservation','Reservations' )}
               </p>
               <aura:if isTrue="{! not( v.isReserving)}">
-                <c:lgnd_ListSelector value="{!v.selectedList}"
-                                     listOptions="{!v.availableLists}"
-                                     aura:id="listSelector--Cmp" />
+                <c:lgnd_ListSelector
+                  value="{!v.selectedList}"
+                  listOptions="{!v.availableLists}"
+                  aura:id="listSelector--Cmp"
+                />
               </aura:if>
             </div>
           </div>
         </div>
       </div>
     </div>
-    <div class="slds-page-header__row">
-
-    </div>
+    <div class="slds-page-header__row"></div>
   </div>
 
   <div>
-
     <!-- RECORDS LIST -->
     <aura:if isTrue="{! not( v.isReserving)}">
       <ul class="slds-accordion" aura:id="theAccordion">
@@ -74,30 +75,32 @@
             <section class="slds-accordion__section">
               <div class="slds-accordion__summary">
                 <h2 class="slds-accordion__summary-heading">
-                  <button class="slds-button slds-button_reset slds-accordion__summary-action"
-                          onclick="{!c.toggleAccordion}"
-                          data-value="{!record.name}">
-                    <lightning:icon iconName="utility:switch"
-                                    class="slds-accordion__summary-action-icon
-                                           slds-button__icon
-                                           slds-button__icon_left"
-                                    size="xx-small"/>
+                  <button
+                    class="slds-button slds-button_reset slds-accordion__summary-action"
+                    onclick="{!c.toggleAccordion}"
+                    data-value="{!record.name}"
+                  >
+                    <lightning:icon
+                      iconName="utility:switch"
+                      class="slds-accordion__summary-action-icon slds-button__icon slds-button__icon_left"
+                      size="xx-small"
+                    />
                     {!record.name}
                   </button>
-                  <lightning:badge label="{!record.count}"
-                                   class="slds-float_right" />
+                  <lightning:badge label="{!record.count}" class="slds-float_right" />
                 </h2>
               </div>
               <div class="slds-accordion__content">
-                <table class="slds-table slds-table_bordered slds-table_cell-buffer slds-max-medium-table--stacked " aura:id="listTable">
+                <table
+                  class="slds-table slds-table_bordered slds-table_cell-buffer slds-max-medium-table--stacked"
+                  aura:id="listTable"
+                >
                   <thead>
                     <tr class="slds-text-title_caps slds-line-height_reset">
                       <th scope="col">Order Date</th>
                       <th scope="col">Order #</th>
                       <th scope="col">Invoice #</th>
-                      <th scope="col">
-                        Est. Arrival Date
-                      </th>
+                      <th scope="col">Est. Arrival Date</th>
                       <th scope="col">Order Specific Items</th>
                       <th scope="col" class="slds-text-align_right slds-p-right_xx-small">Reserved For</th>
                     </tr>
@@ -111,9 +114,10 @@
                         <td data-label="Order #">{!item.dealerOrderName}</td>
                         <td data-label="Invoice #">{!item.erpOrderNumber}</td>
                         <td data-label="Est. Arrival Date">
-                          <lightning:formattedDateTime value="{!item.estArrivalDate}" /></td>
+                          <lightning:formattedDateTime value="{!item.estArrivalDate}" />
+                        </td>
                         <td data-label="Order Specific Items">
-                          <ul class='build-items'>
+                          <ul class="build-items">
                             <aura:iteration items="{!item.lineItems}" var="buildItem">
                               <li>{!buildItem}</li>
                             </aura:iteration>
@@ -127,9 +131,7 @@
                             {!item.retailErpName}
                           </aura:if>
                           <aura:if isTrue="{! and( empty(item.reservedForCustomerId), empty(item.retailErpId))}">
-                            <lightning:button label="Reserve Now"
-                                              value="{!item}"
-                                              onclick="{!c.handleReservation}"/>
+                            <lightning:button label="Reserve Now" value="{!item}" onclick="{!c.handleReservation}" />
                           </aura:if>
                         </td>
                       </tr>
@@ -144,22 +146,28 @@
     </aura:if>
 
     <aura:if isTrue="{! v.isReserving}">
-
       <div class="new-reservation-form-container">
-
         <!-- PARTNER Reservation Form -->
         <aura:if isTrue="{! not(v.isFactoryStore)}">
           <aura:if isTrue="{! equals( v.currentStep, v.reservationSteps[0] ) }">
-            <c:Account_FindOrCreate_PersonAccount Customer="{!v.customer}"
-                                                  displayForm="{!v.customerFormDisplayed}"
-                                                  aura:id="customer-form"/>
+            <c:Account_FindOrCreate_PersonAccount
+              Customer="{!v.customer}"
+              displayForm="{!v.customerFormDisplayed}"
+              aura:id="customer-form"
+            />
           </aura:if>
 
           <aura:if isTrue="{! equals( v.currentStep, v.reservationSteps[1] ) }">
             <!-- Promotion Selection -->
             <aura:if isTrue="{! empty(v.promotionCase)}">
-              <h2 class="slds-text-align_center slds-text-heading_medium slds-m-top_medium slds-m-bottom_small slds-m-left_small">Select a Promotion</h2>
-              <table class="promo-table slds-table slds-table_bordered slds-table_cell-buffer slds-max-medium-table--stacked">
+              <h2
+                class="slds-text-align_center slds-text-heading_medium slds-m-top_medium slds-m-bottom_small slds-m-left_small"
+              >
+                Select a Promotion
+              </h2>
+              <table
+                class="promo-table slds-table slds-table_bordered slds-table_cell-buffer slds-max-medium-table--stacked"
+              >
                 <thead>
                   <tr class="slds-text-title_caps slds-line-height_reset">
                     <th scope="col">Promotion Name</th>
@@ -171,24 +179,23 @@
                     <tr>
                       <td data-label="Promotion Name">{!promo.Promotion__r.Name}</td>
                       <td>
-                        <lightning:button label="Select"
-                                          value="{!promo}"
-                                          onclick="{!c.handleSelectPromo}"/>
+                        <lightning:button label="Select" value="{!promo}" onclick="{!c.handleSelectPromo}" />
                       </td>
                     </tr>
                   </aura:iteration>
                 </tbody>
               </table>
               <div class="slds-m-top_small slds-text-align_center">
-                <lightning:button label="No Promotion"
-                                  onclick="{!c.handleNoPromotion}" />
+                <lightning:button label="No Promotion" onclick="{!c.handleNoPromotion}" />
               </div>
             </aura:if>
           </aura:if>
           <aura:if isTrue="{! equals( v.currentStep, v.reservationSteps[2] ) }">
             <!-- Promotion Documentation Upload -->
             <aura:if isTrue="{! and( !empty(v.promotionCase), !empty(v.requiredPromotionDocuments) )}">
-              <h2 class="slds-text-align_center slds-text-heading_medium slds-m-top_medium slds-m-bottom_small slds-m-left_small">
+              <h2
+                class="slds-text-align_center slds-text-heading_medium slds-m-top_medium slds-m-bottom_small slds-m-left_small"
+              >
                 Please upload the following required documentation
               </h2>
               <div class="file-list">
@@ -198,19 +205,25 @@
                   </aura:iteration>
                 </ul>
               </div>
-              <aura:if isTrue="{! !equals( v.requiredPromotionDocuments.length,
-                                           v.uploadedFiles.length )}">
+              <aura:if
+                isTrue="{! !equals( v.requiredPromotionDocuments.length,
+                                           v.uploadedFiles.length )}"
+              >
                 <div class="file-upload-container">
-                  <lightning:fileUpload label="Attach Documentation"
-                                        name="fileUploader"
-                                        multiple="true"
-                                        accept=".pdf, .png, .jpg"
-                                        recordId="{!v.promotionCase.Id}"
-                                        onuploadfinished="{!c.handleUploadFinished}" />
+                  <lightning:fileUpload
+                    label="Attach Documentation"
+                    name="fileUploader"
+                    multiple="true"
+                    accept=".pdf, .png, .jpg"
+                    recordId="{!v.promotionCase.Id}"
+                    onuploadfinished="{!c.handleUploadFinished}"
+                  />
                 </div>
               </aura:if>
               <aura:if isTrue="{! !empty(v.uploadedFiles)}">
-                <h2 class="slds-text-align_center slds-text-heading_medium slds-m-top_medium slds-m-bottom_small slds-m-left_small">
+                <h2
+                  class="slds-text-align_center slds-text-heading_medium slds-m-top_medium slds-m-bottom_small slds-m-left_small"
+                >
                   Uploaded Files
                 </h2>
                 <div class="file-list">
@@ -226,37 +239,42 @@
         </aura:if>
 
         <aura:if isTrue="{! v.isFactoryStore}">
-          <h2 class="slds-text-align_center slds-text-heading_medium slds-m-top_medium slds-m-bottom_small slds-m-left_small">Select a Retail Boat Sale</h2>
-          <table class="slds-table slds-table_bordered slds-table_cell-buffer slds-max-medium-table--stacked " aura:id="listTable">
+          <h2
+            class="slds-text-align_center slds-text-heading_medium slds-m-top_medium slds-m-bottom_small slds-m-left_small"
+          >
+            Select a Retail Boat Sale
+          </h2>
+          <table
+            class="slds-table slds-table_bordered slds-table_cell-buffer slds-max-medium-table--stacked"
+            aura:id="listTable"
+          >
             <thead>
-            <tr class="slds-text-title_caps slds-line-height_reset">
-              <th scope="col">ERP Name</th>
-              <th scope="col">Customer</th>
-              <th scope="col">Sales Person</th>
-              <th scope="col">Included Serialized Items</th>
-              <th scope="col" class="slds-text-align_right slds-p-right_xx-small">Reserved For</th>
-            </tr>
+              <tr class="slds-text-title_caps slds-line-height_reset">
+                <th scope="col">ERP Name</th>
+                <th scope="col">Customer</th>
+                <th scope="col">Sales Person</th>
+                <th scope="col">Included Serialized Items</th>
+                <th scope="col" class="slds-text-align_right slds-p-right_xx-small">Reserved For</th>
+              </tr>
             </thead>
             <tbody>
-            <aura:iteration items="{!v.retailERPs}" var="item">
-              <tr>
-                <td data-label="Erp Name">{!item.name}</td>
-                <td data-label="Customer">{!item.accountName}</td>
-                <td data-label="Sales Person">{!item.salesPerson}</td>
-                <td data-label="Included Serialized Items">
-                  <ul class='build-items'>
-                    <aura:iteration items="{!item.serializedItems}" var="buildItem">
-                      <li>{!buildItem.name}</li>
-                    </aura:iteration>
-                  </ul>
-                </td>
-                <td data-label="Reserved For" class="slds-text-align_right slds-p-right_xx-small">
-                  <lightning:button label="Reserve Now"
-                                    value="{!item}"
-                                    onclick="{!c.handleFactoryReservation}"/>
-                </td>
-              </tr>
-            </aura:iteration>
+              <aura:iteration items="{!v.retailERPs}" var="item">
+                <tr>
+                  <td data-label="Erp Name">{!item.name}</td>
+                  <td data-label="Customer">{!item.accountName}</td>
+                  <td data-label="Sales Person">{!item.salesPerson}</td>
+                  <td data-label="Included Serialized Items">
+                    <ul class="build-items">
+                      <aura:iteration items="{!item.serializedItems}" var="buildItem">
+                        <li>{!buildItem.name}</li>
+                      </aura:iteration>
+                    </ul>
+                  </td>
+                  <td data-label="Reserved For" class="slds-text-align_right slds-p-right_xx-small">
+                    <lightning:button label="Reserve Now" value="{!item}" onclick="{!c.handleFactoryReservation}" />
+                  </td>
+                </tr>
+              </aura:iteration>
             </tbody>
           </table>
         </aura:if>
@@ -264,52 +282,50 @@
         <footer class="slds-modal__footer">
           <lightning:layout>
             <lightning:layoutItem size="2">
-              <lightning:button label="Cancel"
-                                iconName="utility:close"
-                                iconPosition="left"
-                                onclick="{!c.handleCancel}"
-                                class="slds-float_left"/>
+              <lightning:button
+                label="Cancel"
+                iconName="utility:close"
+                iconPosition="left"
+                onclick="{!c.handleCancel}"
+                class="slds-float_left"
+              />
             </lightning:layoutItem>
             <lightning:layoutItem size="8">
-              <lightning:progressIndicator currentStep="{!v.currentStep}"
-                                           type="base"
-                                           hasError="true"
-                                           variant="base">
+              <lightning:progressIndicator currentStep="{!v.currentStep}" type="base" hasError="true" variant="base">
                 <aura:iteration items="{!v.reservationSteps}" var="step">
-                  <lightning:progressStep label="{!step}" value="{!step}"/>
+                  <lightning:progressStep label="{!step}" value="{!step}" />
                 </aura:iteration>
               </lightning:progressIndicator>
             </lightning:layoutItem>
             <lightning:layoutItem size="2">
               <aura:if isTrue="{! empty(v.customerId)}">
-                <lightning:button label="Next"
-                                  variant="brand"
-                                  iconName="utility:chevronright"
-                                  iconPosition="right"
-                                  disabled="{! not(v.customerFormDisplayed)}"
-                                  onclick="{!c.handleNext}" />
+                <lightning:button
+                  label="Next"
+                  variant="brand"
+                  iconName="utility:chevronright"
+                  iconPosition="right"
+                  disabled="{! not(v.customerFormDisplayed)}"
+                  onclick="{!c.handleNext}"
+                />
               </aura:if>
               <aura:if isTrue="{! !empty(v.customerId)}">
-                <lightning:button label="Finish"
-                                  variant="brand"
-                                  iconName="utility:chevronright"
-                                  iconPosition="right"
-                                  disabled="{! !and( !empty(v.promotionCase),
+                <lightning:button
+                  label="Finish"
+                  variant="brand"
+                  iconName="utility:chevronright"
+                  iconPosition="right"
+                  disabled="{! !and( !empty(v.promotionCase),
                                                     equals( v.requiredPromotionDocuments.length,
                                                             v.uploadedFiles.length )
                                                     )
                                              }"
-                                  onclick="{!c.handleFinish}" />
+                  onclick="{!c.handleFinish}"
+                />
               </aura:if>
             </lightning:layoutItem>
           </lightning:layout>
         </footer>
       </div>
-
     </aura:if>
-
-
-
   </div>
-
 </aura:component>

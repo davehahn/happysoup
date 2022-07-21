@@ -1,7 +1,9 @@
-<aura:component controller="CaseLexController" implements="force:appHostable,flexipage:availableForAllPageTypes,force:hasRecordId,flexipage:availableForRecordHome">
-
+<aura:component
+  controller="CaseLexController"
+  implements="force:appHostable,flexipage:availableForAllPageTypes,force:hasRecordId,flexipage:availableForRecordHome"
+>
   <aura:attribute name="recordId" type="String" />
-  <aura:attribute name="caseRecord" type="Object"/>
+  <aura:attribute name="caseRecord" type="Object" />
   <aura:attribute name="caseParts" type="Case_Part__c[]" />
   <aura:attribute name="casePartsCount" type="Integer" default="0" />
   <aura:attribute name="tableCols" type="List" />
@@ -13,32 +15,24 @@
   <aura:attribute name="canCreate" type="Boolean" default="true" />
   <aura:attribute name="canDelete" type="Boolean" default="true" />
   <force:recordData aura:id="recordLoader" recordId="{!v.recordId}" fields="Status" targetFields="{!v.caseRecord}" />
-  <ltng:require scripts="{!$Resource.Libraries +'/js/LightningApex.js'}"
-                afterScriptsLoaded="{!c.afterScripts}" />
-
+  <ltng:require scripts="{!$Resource.Libraries +'/js/LightningApex.js'}" afterScriptsLoaded="{!c.afterScripts}" />
 
   <aura:handler event="force:refreshView" action="{!c.afterScripts}" />
 
-  <c:lgnd_Confirm aura:id="lgnd-confirm"/>
+  <c:lgnd_Confirm aura:id="lgnd-confirm" />
   <lightning:spinner variant="brand" size="large" class="slds-hide" aura:id="spinner" />
 
   <aura:if isTrue="{!v.error != null}">
-    <div class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_error">
-      {!v.error}
-    </div>
+    <div class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_error">{!v.error}</div>
   </aura:if>
 
   <article class="slds-card slds-card_boundary forceRelatedListCardDesktop">
-
     <!-- HEADER -->
     <div class="slds-card__header slds-grid">
       <header class="slds-media slds-media--center slds-has-flexi-truncate">
         <div class="slds-media__figure">
           <aura:if isTrue="{!not(v.loaded)}">
-            <div role="status" class="slds-spinner
-                                      slds-spinner_x-small
-                                      slds-spinner_brand
-                                      slds-is-relative">
+            <div role="status" class="slds-spinner slds-spinner_x-small slds-spinner_brand slds-is-relative">
               <span class="slds-assistive-text">Loading</span>
               <div class="slds-spinner__dot-a"></div>
               <div class="slds-spinner__dot-b"></div>
@@ -50,11 +44,8 @@
         </div>
         <div class="slds-media__body">
           <h2>
-            <a href="javascript:void(0);"
-               class="slds-card__header-link baseCard__header-title-container">
-              <span class="slds-text-heading--small slds-truncate slds-m-right--xx-small">
-                Case Parts
-              </span>
+            <a href="javascript:void(0);" class="slds-card__header-link baseCard__header-title-container">
+              <span class="slds-text-heading--small slds-truncate slds-m-right--xx-small"> Case Parts </span>
               <aura:if isTrue="{!v.loaded}">
                 <span class="slds-text-heading--small slds-shrink-none slds-m-right--xx-small">
                   ({!v.casePartsCount})
@@ -65,13 +56,13 @@
         </div>
       </header>
       <aura:if isTrue="{!v.caseRecord.Status != 'Approved'}">
-      <div class="slds-no-flex">
-        <div class="actionsContainer">
-          <aura:if isTrue="{! and( v.canCreate, not(v.isLocked) )}">
-            <lightning:button label="New" onclick="{!c.openNewForm}"/>
-          </aura:if>
+        <div class="slds-no-flex">
+          <div class="actionsContainer">
+            <aura:if isTrue="{! and( v.canCreate, not(v.isLocked) )}">
+              <lightning:button label="New" onclick="{!c.openNewForm}" />
+            </aura:if>
+          </div>
         </div>
-      </div>
       </aura:if>
     </div>
 
@@ -97,7 +88,7 @@
                 <div class="slds-truncate" title="Product Code">Product Code</div>
               </th>
               <aura:if isTrue="{! not(v.isLocked)}">
-                 <th scope="col" style="width: 3.25rem;">
+                <th scope="col" style="width: 3.25rem">
                   <div class="slds-th__action">
                     <span class="slds-assistive-text">Actions</span>
                   </div>
@@ -121,9 +112,7 @@
                 </td>
                 <td data-label="Product">
                   <div class="slds-truncate" title="{!cp.Product__r.Name}">
-                    <a href="javascript:void(0);"
-                       onclick="{!c.viewProduct}"
-                       data-record-id="{!cp.Product__c}">
+                    <a href="javascript:void(0);" onclick="{!c.viewProduct}" data-record-id="{!cp.Product__c}">
                       {!cp.Product__r.Name}
                     </a>
                   </div>
@@ -133,14 +122,12 @@
                 </td>
                 <aura:if isTrue="{! not(v.isLocked)}">
                   <td>
-                    <lightning:buttonMenu menuAlignment="right"
-                                          iconSize="x-small"
-                                          onselect="{!c.handleTableAction }">
+                    <lightning:buttonMenu menuAlignment="right" iconSize="x-small" onselect="{!c.handleTableAction }">
                       <lightning:menuItem label="Edit" value="{! 'edit:' + cp.Id }" />
                       <aura:if isTrue="{! v.canDelete}">
                         <lightning:menuItem label="Delete" value="{! 'delete:' + cp.Id }" />
                       </aura:if>
-                  </lightning:buttonMenu>
+                    </lightning:buttonMenu>
                   </td>
                 </aura:if>
               </tr>
@@ -151,26 +138,27 @@
     </div>
 
     <!-- FOOTER -->
-   <!--  <aura:if isTrue="{! not( empty(v.caseParts) )}">
+    <!--  <aura:if isTrue="{! not( empty(v.caseParts) )}">
       <a href="javascript:void(0);" onclick="{!c.gotoRelatedList}">
         <div class="slds-card__footer">
           <span class="view-all-label">View All</span>
         </div>
       </a>
     </aura:if> -->
-
   </article>
 
   <aura:if isTrue="{!v.modalOpen}">
     <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
       <div class="slds-modal__container">
         <header class="slds-modal__header">
-          <lightning:buttonIcon iconName="utility:close"
-                                class="slds-modal__close slds-button_icon-inverse"
-                                variant="bare"
-                                size="large"
-                                onclick="{! c.closeNewForm }"
-                                alternativeText="Close window" />
+          <lightning:buttonIcon
+            iconName="utility:close"
+            class="slds-modal__close slds-button_icon-inverse"
+            variant="bare"
+            size="large"
+            onclick="{! c.closeNewForm }"
+            alternativeText="Close window"
+          />
           <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Add Case Parts</h2>
         </header>
         <div class="slds-modal__content slds-p-around_medium">
@@ -184,6 +172,4 @@
     </section>
     <div class="slds-backdrop slds-backdrop_open"></div>
   </aura:if>
-
-
 </aura:component>

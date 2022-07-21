@@ -1,23 +1,23 @@
 <aura:component controller="SalesAndServiceCalendar_Controller">
-
   <aura:attribute name="erpId" type="String" />
   <aura:attribute name="tasks" type="AcctSeed__Project_Task__c[]" />
 
-  <ltng:require scripts="{!join(',', $Resource.Libraries + '/js/LightningApex.js',
+  <ltng:require
+    scripts="{!join(',', $Resource.Libraries + '/js/LightningApex.js',
                                      $Resource.Libraries + '/js/LightningUtils.js') }"
-                afterScriptsLoaded="{!c.afterScripts}" />
+    afterScriptsLoaded="{!c.afterScripts}"
+  />
 
   <div>
-    <lightning:accordion >
+    <lightning:accordion>
       <aura:iteration items="{!v.tasks}" var="task">
-        <lightning:accordionSection name="{!task.Id}"
-                                    label="{!task.Name + if(empty(task.Estimated_Duration__c), '', ' - ( ' + task.Estimated_Duration__c + 'hrs )' )}">
-          <lightning:textarea disabled="true"
-                              label="Complaint"
-                              value="{!task.Complaint_dh__c}" />
+        <lightning:accordionSection
+          name="{!task.Id}"
+          label="{!task.Name + if(empty(task.Estimated_Duration__c), '', ' - ( ' + task.Estimated_Duration__c + 'hrs )' )}"
+        >
+          <lightning:textarea disabled="true" label="Complaint" value="{!task.Complaint_dh__c}" />
         </lightning:accordionSection>
       </aura:iteration>
     </lightning:accordion>
   </div>
-
 </aura:component>
