@@ -19,11 +19,7 @@ private class lgnd_account_search_test {
       people.add( AccountFactory.buildPersonAccount('testCommon-fName'+i, 'lName'+i) );
       partners.add( AccountFactory.buildDealerAccount('testCommon-partnerCo'+i) );
       suppliers.add( AccountFactory.buildSupplierAccount('testCommon-supplier'+i) );
-      leads.add( new Lead(
-          FirstName = 'testCommon-first'+i,
-          LastName = 'last'+i
-        )
-      );
+      leads.add( Factory_Lead.buildLead('testCommon-first'+i,'last'+i) );
     }
     insert people;
     insert partners;

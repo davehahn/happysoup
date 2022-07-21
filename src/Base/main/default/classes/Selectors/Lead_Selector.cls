@@ -30,6 +30,7 @@ public without sharing class Lead_Selector extends Application_Selector
       'Lead_Notification_Pending__c',
       'Marketing_Cloud_Notes__c',
       'MobilePhone',
+      'Name',
       'Phone',
       'PostalCode',
       'Preferred_Language__c',
@@ -44,6 +45,14 @@ public without sharing class Lead_Selector extends Application_Selector
   {
     return new Lead_Selector()
       .addWhereIdIn( ids )
+      .query();
+  }
+
+  public static List<Lead> allUncovertedByIds( Set<Id> ids )
+  {
+    return new Lead_Selector()
+      .addWhereIdIn( ids )
+      .addWhere('isConverted = false')
       .query();
   }
 

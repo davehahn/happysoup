@@ -25,7 +25,7 @@ private class Promotion_Test {
 	static User user;
 	static Registration__c reg;
 
-  static {
+  private static void init() {
 		product = Factory_Product.createSerializedProduct('Boat','Pontoon');
 		dealer = AccountFactory.buildDealerAccountWithEmail(
 							'Promo Test Dealer',
@@ -53,6 +53,7 @@ private class Promotion_Test {
 	}
 
 	@isTest static void getPromoCases() {
+		init();
 		System.runAs(user) {
 			insert Promotion_mp.buildPromoCase(dealer.Id,
 																				 null,
@@ -69,7 +70,7 @@ private class Promotion_Test {
 	}
 
 	@isTest static void buildPromoCase() {
-		//Integer invocations;
+		init();
 		Test.startTest();
 
 		recordTypeId = Schema.SObjectType.Case.getRecordTypeInfosByName().get(
@@ -112,30 +113,36 @@ private class Promotion_Test {
 	}
 
 	@isTest static void claimPromotion() {
+		init();
 		Case c = Promotion_mp.buildPromoCase(dealer.Id,
 																				 null,
 																				 promoItem.Id,
 																				 serialNumber.Id,
 																				 reg.Id);
 		insert c;
-
+		Test.startTest();
 		Case c2 = Promotion_mp.claimPromotion(c.Id, reg.Id, promoItem.Id);
-
+		Test.stopTest();
 		System.assert(c2.Serial_Number__c == reg.SerialNumber__c);
 		System.assert(c2.Promotion_Item__c == promoItem.Id);
 		System.assert(c2.Status == 'Pending review');
 	}
 
 	@isTest static void getDealerAccounts() {
+		init();
+		Test.startTest();
 		Account[] accounts = Promotion_mp.getDealerAccounts();
+		Test.stopTest();
 		System.assert(accounts.size() > 0);
 	}
 
 	@isTest static void createNewPromotion() {
+		init();
 		List<Id> dealers = new List<Id>();
 		dealers.add(dealer.Id);
+		Test.startTest();
 		Promotion_mp.createNewPromotion(promo, dealers);
-
+		Test.stopTest();
 		List<Promotion_Account__c> promoAccounts =
 			[SELECT Id
 				 FROM Promotion_Account__c
@@ -144,32 +151,42 @@ private class Promotion_Test {
 	}
 
 	@isTest static void createNewPromotionWithoutAccountLimits() {
+		init();
+		Test.startTest();
 		Promotion_mp.createNewPromotion(promo, null);
+		Test.stopTest();
 		List<Promotion__c> promos = [SELECT Id FROM Promotion__c];
 		System.assert(promos.size() > 0);
 	}
 
 	@isTest static void getProducts() {
 		Factory_Product.createSerializedProduct('Boat', 'Pontoon');
+		Test.startTest();
 		Product2[] products = Promotion_mp.getProducts();
+		Test.stopTest();
 		System.assert(products.size() > 0);
 	}
 
 	@isTest static void getDetailedProducts() {
+		init();
 		Product2 product =
 			Factory_Product.createSerializedProduct('Boat', 'Pontoon');
 		String[] prodList = new List<String>();
 		prodList.add(product.Id);
+		Test.startTest();
 		Promotion_Item__c[] products = Promotion_mp.getDetailedProducts(
 																			prodList,
 																			promo
 																	 );
+		Test.stopTest();
 		System.assert(products.size() > 0);
 	}
 
 	@isTest static void savePromoAndItems() {
+		init();
 		String[] prodList = new List<String>();
 		prodList.add(product.Id);
+		Test.startTest();
 		Promotion_Item__c[] promoItems = Promotion_mp.getDetailedProducts(
 																			  prodList,
 																			  promo
@@ -178,16 +195,21 @@ private class Promotion_Test {
 			promo,
 			promoItems
 		);
+		Test.stopTest();
 		System.assert(mypromo.Id == promo.Id);
 	}
 
 	@isTest static void getPromotions() {
+		init();
+		Test.startTest();
 		String promosString = Promotion_mp.getPromotions();
+		Test.stopTest();
 		Promotion__c[] mypromos = (List<Promotion__c>)JSON.deserialize(promosString, List<Promotion__c>.class);
 		System.assert(mypromos.size() > 0);
 	}
 
 	@isTest static void claimPromoWithoutSerno() {
+		init();
 		Case promoClaim = Promotion_mp.claimPromoWithoutSerno(
 												promoItem.Id
 											);
@@ -212,29 +234,41 @@ private class Promotion_Test {
 	}
 
 	@isTest static void getPromoItems() {
+		init();
+		Test.startTest();
 		String promoItems = Promotion_mp.getPromoItems(promo.Id);
+		Test.stopTest();
 		System.assert(promoItems.length() > 0);
 	}
 
 	@isTest static void clonePromo() {
+		init();
+		Test.startTest();
 		String cloneString = Promotion_mp.clonePromo(promo.Id);
+		Test.stopTest();
 		Promotion__c clone = (Promotion__c)JSON.deserialize(cloneString, Promotion__c.class);
 		System.assert(clone.Name == (promo.Name + ' (copy)' ));
 	}
 
 	@isTest static void getClaimDetails() {
+		init();
 		Case c = Promotion_mp.buildPromoCase(dealer.Id,
 																				 null,
 																				 promoItem.Id,
 																				 serialNumber.Id,
 																				 reg.Id);
 		insert c;
+		Test.startTest();
 		Case claim = Promotion_mp.getClaimDetails(c.Id);
+		Test.stopTest();
 		System.assert(claim.CaseNumber != null);
 	}
 
 	@isTest static void getAvailablePromotionsByProduct() {
+		init();
+		Test.startTest();
 		String promotionsJSON = Promotion_mp.getAvailablePromotionsByProduct(product.Id);
+		Test.stopTest();
 		Promotion_Item__c[] promotions = (List<Promotion_Item__c>)System.JSON.deserialize(
 					promotionsJSON, List<Promotion_Item__c>.class);
 		System.assert(promotions[0] != null);
@@ -246,14 +280,19 @@ private class Promotion_Test {
 	}
 
 	@isTest static void getPromotionViaItem() {
+		init();
+		Test.startTest();
 		Promotion_Item__c promo = Promotion_mp.getPromotionViaItem(promoItem.Id);
+		Test.stopTest();
 		System.assert(promo.Id != null);
 	}
 
 	@isTest static void getCustomerAccountId_Test() {
-		Lead ld = new Lead(FirstName = 'Jaime', LastName='Lannister');
+		Lead ld = Factory_Lead.buildAcceptedLead('Jaime', 'Lannister');
 		insert ld;
-		Case c = Promotion_mp.claimPromoWithoutSerno(promoItem.Id, ld.Id);
+		Test.startTest();
+		Promotion_mp.getCustomerAccountId(ld.Id);
+		Test.stopTest();
 		Account[] a = [SELECT Id FROM Account WHERE FirstName = 'Jaime' AND LastName = 'Lannister'];
 		System.assert(a.size() > 0);
 	}

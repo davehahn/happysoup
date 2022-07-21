@@ -21,8 +21,8 @@ private class TA_Lead_AcceptedTimeStamp_T {
 
     System.assert(oldList[0].Accepted_On__c == null);
     System.assert(newList[0].Accepted_On__c != null);
-    System.assert(oldList[0].Status == 'New');
-    System.assert(newList[0].Status == 'Accepted');
+    System.assert(oldList[0].Status == Lead_Service.NEW_STATUS);
+    System.assert(newList[0].Status == Lead_Service.ACCEPTED_STATUS);
   }
 
   @IsTest
@@ -32,7 +32,7 @@ private class TA_Lead_AcceptedTimeStamp_T {
     oldLead.Id = TestUtility.getFakeId(Lead.SObjectType);
     oldLead.OwnerId = helper.getUser().Id;
     oldLead.Accepted_On__c = DateTime.now();
-    oldLead.Status = 'Accepted';
+    oldLead.Status = Lead_Service.ACCEPTED_STATUS;
     Lead newLead = oldLead.clone(true, true, true, true);
     newLead.OwnerId = helper.getQueue().Id;
 
@@ -45,7 +45,7 @@ private class TA_Lead_AcceptedTimeStamp_T {
 
     System.assert(oldList[0].Accepted_On__c != null);
     System.assert(newList[0].Accepted_On__c == null);
-    System.assert(oldList[0].Status == 'Accepted');
-    System.assert(newList[0].Status == 'New');
+    System.assert(oldList[0].Status == Lead_Service.ACCEPTED_STATUS);
+    System.assert(newList[0].Status == Lead_Service.NEW_STATUS);
   }
 }
