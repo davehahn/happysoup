@@ -45,7 +45,16 @@ public without sharing class Lead_Selector extends Application_Selector {
     return new Lead_Selector().addWhereIdIn(ids).addWhere('isConverted = false').query();
   }
 
-  public static Lead byIdIncludingCampaignMembers(Id recordId) {
+  public static List<Lead> allUncovertedByIds( Set<Id> ids )
+  {
+    return new Lead_Selector()
+      .addWhereIdIn( ids )
+      .addWhere('isConverted = false')
+      .query();
+  }
+
+  public static Lead byIdIncludingCampaignMembers( Id recordId )
+  {
     Lead_Selector selector = new Lead_Selector();
     selector.addWhereIdIn(new Set<Id>{ recordId })
       .addChildQuery('(SELECT Id, CampaignId, Campaign.Name FROM CampaignMembers)');
