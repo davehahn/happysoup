@@ -11,9 +11,7 @@
       {transferLine.section} / {transferLine.aisle} / {transferLine.binNumber}
     </td>
     <td data-label="On Hand" class="slds-text-align_center">
-      <template if:true={showRequired}>
-        {transferLine.quantityAvailable}
-      </template>
+      <template if:true={showRequired}> {transferLine.quantityAvailable} </template>
       <template if:false={showRequired}>
         <a href="#" onclick={fillTransferQuantity} data-quantity={transferLine.quantityAvailable}>
           {transferLine.quantityAvailable}
@@ -24,28 +22,32 @@
       <a href="#" onclick={fillTransferQuantity} data-quantity={transferLine.quantityRequired}>
         {transferLine.quantityRequired}
       </a>
-<!--      <lightning-button label={transferLine.quantityRequired}-->
-<!--                        variant="base"-->
-<!--                        value={transferLine.quantityRequired}-->
-<!--                        onclick={fillTransferQuantity}></lightning-button>-->
+      <!--      <lightning-button label={transferLine.quantityRequired}-->
+      <!--                        variant="base"-->
+      <!--                        value={transferLine.quantityRequired}-->
+      <!--                        onclick={fillTransferQuantity}></lightning-button>-->
     </td>
     <td data-label="Qty Transferred">
       <lightning-layout>
         <lightning-layout-item size="6">
-          <lightning-input type="number"
-                           value={transferLine.quantityTransferred}
-                           label="Transfer"
-                           data-id={transferLine.productRequiredId}
-                           variant="label-hidden"
-                           onchange={handleTransferQtyChange}
-                           class="slds-float_left slds-text-align_center"></lightning-input>
+          <lightning-input
+            type="number"
+            value={transferLine.quantityTransferred}
+            label="Transfer"
+            data-id={transferLine.productRequiredId}
+            variant="label-hidden"
+            onchange={handleTransferQtyChange}
+            class="slds-float_left slds-text-align_center"
+          ></lightning-input>
         </lightning-layout-item>
         <lightning-layout-item size="6">
-          <lightning-button-icon icon-name="utility:change_record_type"
-                                 variant="brand"
-                                 onclick={handleTransfer}
-                                 disabled={canSubmit}
-                                 class="slds-float_right"></lightning-button-icon>
+          <lightning-button-icon
+            icon-name="utility:change_record_type"
+            variant="brand"
+            onclick={handleTransfer}
+            disabled={canSubmit}
+            class="slds-float_right"
+          ></lightning-button-icon>
         </lightning-layout-item>
       </lightning-layout>
     </td>

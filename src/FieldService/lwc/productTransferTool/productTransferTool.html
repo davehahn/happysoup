@@ -4,25 +4,21 @@
 
 <!-- Fsl Transfer Tool -->
 <template>
-
   <c-legend-spinner variant="contained" visible="true"></c-legend-spinner>
 
   <section class={componentClassName}>
-
     <!-- MENU -->
     <template if:true={displayMenu}>
-      <lightning-layout multiple-rows="true"
-                        vertical-align="stretch"
-                        class="slds-m-top_large">
-
-        <lightning-layout-item size="12"
-                               class="menu-item"
-                               small-device-size="12"
-                               medium-device-size="6"
-                               large-device-size="4"
-                               padding="around-medium">
-          <button onclick={handleAction}
-                  data-transfer-type="pickAndPack">
+      <lightning-layout multiple-rows="true" vertical-align="stretch" class="slds-m-top_large">
+        <lightning-layout-item
+          size="12"
+          class="menu-item"
+          small-device-size="12"
+          medium-device-size="6"
+          large-device-size="4"
+          padding="around-medium"
+        >
+          <button onclick={handleAction} data-transfer-type="pickAndPack">
             <article class="slds-card">
               <div class="slds-card__header slds-grid">
                 <header class="slds-media slds-media_center slds-has-flexi-truncate">
@@ -43,14 +39,15 @@
           </button>
         </lightning-layout-item>
 
-        <lightning-layout-item size="12"
-                               class="menu-item"
-                               small-device-size="12"
-                               medium-device-size="6"
-                               large-device-size="4"
-                               padding="around-medium">
-          <button onclick={handleAction}
-                  data-transfer-type="distribute">
+        <lightning-layout-item
+          size="12"
+          class="menu-item"
+          small-device-size="12"
+          medium-device-size="6"
+          large-device-size="4"
+          padding="around-medium"
+        >
+          <button onclick={handleAction} data-transfer-type="distribute">
             <article class="slds-card">
               <div class="slds-card__header slds-grid">
                 <header class="slds-media slds-media_center slds-has-flexi-truncate">
@@ -71,14 +68,15 @@
           </button>
         </lightning-layout-item>
 
-        <lightning-layout-item size="12"
-                               class="menu-item"
-                               small-device-size="12"
-                               medium-device-size="6"
-                               large-device-size="4"
-                               padding="around-medium">
-          <button onclick={handleAction}
-                  data-transfer-type="return">
+        <lightning-layout-item
+          size="12"
+          class="menu-item"
+          small-device-size="12"
+          medium-device-size="6"
+          large-device-size="4"
+          padding="around-medium"
+        >
+          <button onclick={handleAction} data-transfer-type="return">
             <article class="slds-card">
               <div class="slds-card__header slds-grid">
                 <header class="slds-media slds-media_center slds-has-flexi-truncate">
@@ -99,14 +97,15 @@
           </button>
         </lightning-layout-item>
 
-        <lightning-layout-item size="12"
-                               class="menu-item"
-                               small-device-size="12"
-                               medium-device-size="6"
-                               large-device-size="4"
-                               padding="around-medium">
-          <button onclick={handleAction}
-                  data-transfer-type="newProductRequired">
+        <lightning-layout-item
+          size="12"
+          class="menu-item"
+          small-device-size="12"
+          medium-device-size="6"
+          large-device-size="4"
+          padding="around-medium"
+        >
+          <button onclick={handleAction} data-transfer-type="newProductRequired">
             <article class="slds-card">
               <div class="slds-card__header slds-grid">
                 <header class="slds-media slds-media_center slds-has-flexi-truncate">
@@ -126,119 +125,130 @@
             </article>
           </button>
         </lightning-layout-item>
-
       </lightning-layout>
     </template>
 
     <!-- LOCATION SELECTOR -->
     <template if:true={displayLocationSelector}>
-
-      <h1 if:true={selectLocationTitle}
-          class="slds-text-heading--medium slds-text-align_center slds-m-top_medium slds-m-bottom_medium">
+      <h1
+        if:true={selectLocationTitle}
+        class="slds-text-heading--medium slds-text-align_center slds-m-top_medium slds-m-bottom_medium"
+      >
         {selectLocationTitle}
       </h1>
 
       <tempate if:true={showSourceSelect}>
-        <lightning-combobox label={sourceSelectLabel}
-                            placeholder="Select Source"
-                            options={sourceOptions}
-                            data-location-type="source"
-                            onchange={handleLocationChange}></lightning-combobox>
+        <lightning-combobox
+          label={sourceSelectLabel}
+          placeholder="Select Source"
+          options={sourceOptions}
+          data-location-type="source"
+          onchange={handleLocationChange}
+        ></lightning-combobox>
       </tempate>
 
       <template if:true={showDestinationSelect}>
-        <lightning-combobox label={destinationSelectLabel}
-                            placeholder="Select Destination"
-                            options={destinationOptions}
-                            data-location-type="destination"
-                            onchange={handleLocationChange}></lightning-combobox>
+        <lightning-combobox
+          label={destinationSelectLabel}
+          placeholder="Select Destination"
+          options={destinationOptions}
+          data-location-type="destination"
+          onchange={handleLocationChange}
+        ></lightning-combobox>
       </template>
-
     </template>
 
     <!-- PRODUCT LIST -->
     <template if:true={productsLoaded}>
-
       <div class="transfer-indicator">
         <div class="source">{sourceName}</div>
         <div class="destination">{destinationName}</div>
       </div>
 
       <section class="product-list">
-
         <template if:true={showStandardTable}>
-          <table class="slds-table slds-table_bordered slds-no-row-hover slds-table_cell-buffer slds-max-medium-table--stacked " aura:id="listTable">
+          <table
+            class="slds-table slds-table_bordered slds-no-row-hover slds-table_cell-buffer slds-max-medium-table--stacked"
+            aura:id="listTable"
+          >
             <thead>
-            <tr class="slds-text-title_caps slds-line-height_reset">
-              <th scope="col">Product</th>
-              <th scope="col" class="slds-text-align_center">Product Code</th>
-              <th if:true={showBinLocations} scope="col" class="slds-text-align_center">Sec/Aisle/Bin</th>
-              <th scope="col" class="slds-text-align_center">On Hand</th>
-              <th scope="col" class="slds-text-align_center">Required</th>
-              <th scope="col">Qty Transferred</th>
-            </tr>
+              <tr class="slds-text-title_caps slds-line-height_reset">
+                <th scope="col">Product</th>
+                <th scope="col" class="slds-text-align_center">Product Code</th>
+                <th if:true={showBinLocations} scope="col" class="slds-text-align_center">Sec/Aisle/Bin</th>
+                <th scope="col" class="slds-text-align_center">On Hand</th>
+                <th scope="col" class="slds-text-align_center">Required</th>
+                <th scope="col">Qty Transferred</th>
+              </tr>
             </thead>
             <tbody>
-            <template for:each={products} for:item="prod">
-              <c-product-transfer-tool-line key={prod.id}
-                                            data-id={prod.id}
-                                            product-line={prod}
-                                            show-required="true"
-                                            show-warehouse-locations={showBinLocations}
-                                            ontransfer={handleSingleTransfer}></c-product-transfer-tool-line>
-            </template>
+              <template for:each={products} for:item="prod">
+                <c-product-transfer-tool-line
+                  key={prod.id}
+                  data-id={prod.id}
+                  product-line={prod}
+                  show-required="true"
+                  show-warehouse-locations={showBinLocations}
+                  ontransfer={handleSingleTransfer}
+                ></c-product-transfer-tool-line>
+              </template>
             </tbody>
           </table>
         </template>
 
         <template if:true={showReturnTable}>
-          <table class="slds-table slds-table_bordered slds-no-row-hover slds-table_cell-buffer slds-max-medium-table--stacked " aura:id="listTable">
+          <table
+            class="slds-table slds-table_bordered slds-no-row-hover slds-table_cell-buffer slds-max-medium-table--stacked"
+            aura:id="listTable"
+          >
             <thead>
-            <tr class="slds-text-title_caps slds-line-height_reset">
-              <th scope="col">Product</th>
-              <th scope="col" class="slds-text-align_center">Product Code</th>
-              <th scope="col" class="slds-text-align_center">On Hand</th>
-              <th scope="col">Qty Transferred</th>
-            </tr>
+              <tr class="slds-text-title_caps slds-line-height_reset">
+                <th scope="col">Product</th>
+                <th scope="col" class="slds-text-align_center">Product Code</th>
+                <th scope="col" class="slds-text-align_center">On Hand</th>
+                <th scope="col">Qty Transferred</th>
+              </tr>
             </thead>
             <tbody>
-            <template for:each={products} for:item="prod">
-              <c-product-transfer-tool-line key={prod.id}
-                                            data-id={prod.id}
-                                            product-line={prod}
-                                            ontransfer={handleSingleTransfer}></c-product-transfer-tool-line>
-            </template>
+              <template for:each={products} for:item="prod">
+                <c-product-transfer-tool-line
+                  key={prod.id}
+                  data-id={prod.id}
+                  product-line={prod}
+                  ontransfer={handleSingleTransfer}
+                ></c-product-transfer-tool-line>
+              </template>
             </tbody>
           </table>
         </template>
-
       </section>
 
       <footer>
-        <lightning-button label="Cancel"
-                          onclick={handleCancel}></lightning-button>
-        <lightning-button if:true={allowTransferAll}
-                          label="Transfer All"
-                          variant="brand"
-                          class="slds-float_right"
-                          onclick={handleTransferAll}></lightning-button>
+        <lightning-button label="Cancel" onclick={handleCancel}></lightning-button>
+        <lightning-button
+          if:true={allowTransferAll}
+          label="Transfer All"
+          variant="brand"
+          class="slds-float_right"
+          onclick={handleTransferAll}
+        ></lightning-button>
       </footer>
-
     </template>
 
     <!-- NEW PRODUCT REQUIRED -->
     <template if:true={displayNewProductRequired}>
       <section class="new-product-required">
-
         <template if:true={showWoliSelector}>
           <h1 class="slds-text-heading--medium slds-text-align_center slds-m-top_medium slds-m-bottom_medium">
             Which Work Order Line Items is this Item required for?
           </h1>
 
-          <lightning-combobox label="Select Work Order Line Item"
-                              placeholder="Select Line Item"
-                              options={woliSelectOptions}
-                              onchange={handleWoliChange}></lightning-combobox>
+          <lightning-combobox
+            label="Select Work Order Line Item"
+            placeholder="Select Line Item"
+            options={woliSelectOptions}
+            onchange={handleWoliChange}
+          ></lightning-combobox>
         </template>
 
         <template if:true={showProductSelector}>
@@ -247,11 +257,13 @@
           </h1>
 
           <lightning-layout multiple-rows="true">
-            <lightning-layout-item size="12"
-                                   large-device-size="8"
-                                   medium-device-size="6"
-                                   small-device-size="12"
-                                   padding="around-medium">
+            <lightning-layout-item
+              size="12"
+              large-device-size="8"
+              medium-device-size="6"
+              small-device-size="12"
+              padding="around-medium"
+            >
               <c-live-lookup-input
                 label="Required Product"
                 value={selectedProductValue}
@@ -263,40 +275,41 @@
                 where-clause="IsActive = true"
                 value-field="Name"
                 display-fields={productSearchReturnFields}
-                onselect={handleProductSelect}>
+                onselect={handleProductSelect}
+              >
               </c-live-lookup-input>
             </lightning-layout-item>
 
-            <lightning-layout-item size="12"
-                                   large-device-size="4"
-                                   medium-device-size="6"
-                                   small-device-size="12"
-                                   padding="around-medium">
-              <lightning-input type="number"
-                               step="0.1"
-                               label="Quantity Required"
-                               onchange={handleProductValueChange}
-                               class="product-required-quantity"></lightning-input>
+            <lightning-layout-item
+              size="12"
+              large-device-size="4"
+              medium-device-size="6"
+              small-device-size="12"
+              padding="around-medium"
+            >
+              <lightning-input
+                type="number"
+                step="0.1"
+                label="Quantity Required"
+                onchange={handleProductValueChange}
+                class="product-required-quantity"
+              ></lightning-input>
             </lightning-layout-item>
-
           </lightning-layout>
-
         </template>
       </section>
 
       <footer>
-        <lightning-button label="Cancel"
-                          onclick={handleCancel}></lightning-button>
-        <lightning-button if:true={showProductSelector}
-                          label="Continue"
-                          variant="brand"
-                          class="slds-float_right"
-                          disabled={canCreateProductRequired}
-                          onclick={handleCreateProductRequired}></lightning-button>
+        <lightning-button label="Cancel" onclick={handleCancel}></lightning-button>
+        <lightning-button
+          if:true={showProductSelector}
+          label="Continue"
+          variant="brand"
+          class="slds-float_right"
+          disabled={canCreateProductRequired}
+          onclick={handleCreateProductRequired}
+        ></lightning-button>
       </footer>
-
     </template>
-
   </section>
-
 </template>

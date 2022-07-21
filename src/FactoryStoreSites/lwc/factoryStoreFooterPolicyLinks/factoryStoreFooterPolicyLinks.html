@@ -7,7 +7,13 @@
   <ul class="footerLegal__navList" role="menu" aria-label="Legend Boats Policy Links">
     <template for:each={allPolicyLinks} for:item="policy">
       <li class="footerLegal__navItem" role="none" key={policy.label}>
-        <a class="footerLegal__navLink" href={policy.url} role="menuitem" target="_blank" arial-label={policy.ariaLabel}>
+        <a
+          class="footerLegal__navLink"
+          href={policy.url}
+          role="menuitem"
+          target="_blank"
+          arial-label={policy.ariaLabel}
+        >
           <template if:true={isEN}>{policy.label.EN}</template>
           <template if:true={isFR}>{policy.label.FR}</template>
         </a>

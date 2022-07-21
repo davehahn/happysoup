@@ -6,27 +6,66 @@
 <template>
   <span class="compositeImageWrapper" data-page={page}>
     <template if:true={hasCanvasImage}>
-      <img class="compositeImage canvasImage" data-size={size} data-page={page} src={canvasImage} alt="Canvas image">
+      <img class="compositeImage canvasImage" data-size={size} data-page={page} src={canvasImage} alt="Canvas image" />
     </template>
     <template if:true={hasElectronicsImage}>
-      <img class="compositeImage electronicsImage" data-size={size} data-page={page} src={electronicsImage} alt="electronics image">
+      <img
+        class="compositeImage electronicsImage"
+        data-size={size}
+        data-page={page}
+        src={electronicsImage}
+        alt="electronics image"
+      />
     </template>
     <template if:true={hasSpareTireImage}>
-      <img class="compositeImage spareTireImage" data-size={size} data-page={page} src={spareTireImage} alt="Spare Tire Image image">
+      <img
+        class="compositeImage spareTireImage"
+        data-size={size}
+        data-page={page}
+        src={spareTireImage}
+        alt="Spare Tire Image image"
+      />
     </template>
     <template if:true={hasTransomImage}>
-      <img class="compositeImage transomImage" data-size={size} data-page={page} src={transomImage} alt="Transom image">
+      <img
+        class="compositeImage transomImage"
+        data-size={size}
+        data-page={page}
+        src={transomImage}
+        alt="Transom image"
+      />
     </template>
-    <img class="compositeImage motorImage" data-size={size} data-page={page} src={motorImage} alt="Motor image">
+    <img class="compositeImage motorImage" data-size={size} data-page={page} src={motorImage} alt="Motor image" />
     <template if:true={hasTrailerImage}>
-        <img class="compositeImage trailerImage" data-size={size} data-page={page} src={trailerImage} alt="Trailer image">
+      <img
+        class="compositeImage trailerImage"
+        data-size={size}
+        data-page={page}
+        src={trailerImage}
+        alt="Trailer image"
+      />
     </template>
     <template if:false={hasTrailerImage}>
-      <img class="compositeImage boatImage" onload={setCompositeHeight} data-size={size} data-page={page} src={boatImage} alt="Boat image">
+      <img
+        class="compositeImage boatImage"
+        onload={setCompositeHeight}
+        data-size={size}
+        data-page={page}
+        src={boatImage}
+        alt="Boat image"
+      />
     </template>
     <tempate if:true={optionImages}>
       <template for:each={optionImages} for:item="optionImage">
-        <img key={optionImage} class="compositeImage optionImage" onload={setCompositeHeight} data-size={size} data-page={page} src={optionImage} alt="Option image">
+        <img
+          key={optionImage}
+          class="compositeImage optionImage"
+          onload={setCompositeHeight}
+          data-size={size}
+          data-page={page}
+          src={optionImage}
+          alt="Option image"
+        />
       </template>
     </tempate>
   </span>

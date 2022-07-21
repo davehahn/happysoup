@@ -32,7 +32,11 @@
                 </template>
                 <template if:false={prices.retail.pricebookEntryId}>
                   <div class="slds-align_absolute-center">
-                    <lightning-button label="Add Price" onclick={handleCreateEntry} data-pricebook-id={prices.retail.pricebookId}></lightning-button>
+                    <lightning-button
+                      label="Add Price"
+                      onclick={handleCreateEntry}
+                      data-pricebook-id={prices.retail.pricebookId}
+                    ></lightning-button>
                   </div>
                 </template>
               </div>
@@ -64,7 +68,11 @@
                 </template>
                 <template if:false={prices.partner.pricebookEntryId}>
                   <div class="slds-align_absolute-center">
-                    <lightning-button label="Add Price" onclick={handleCreateEntry} data-pricebook-id={prices.partner.pricebookId}></lightning-button>
+                    <lightning-button
+                      label="Add Price"
+                      onclick={handleCreateEntry}
+                      data-pricebook-id={prices.partner.pricebookId}
+                    ></lightning-button>
                   </div>
                 </template>
               </div>
@@ -96,7 +104,11 @@
                 </template>
                 <template if:false={prices.factory.pricebookEntryId}>
                   <div class="slds-align_absolute-center">
-                    <lightning-button label="Add Price" onclick={handleCreateEntry} data-pricebook-id={prices.factory.pricebookId}></lightning-button>
+                    <lightning-button
+                      label="Add Price"
+                      onclick={handleCreateEntry}
+                      data-pricebook-id={prices.factory.pricebookId}
+                    ></lightning-button>
                   </div>
                 </template>
               </div>
@@ -121,7 +133,13 @@
         <template if:true={isBusy}>
           <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
         </template>
-        <lightning-record-edit-form record-id={editingRecordId} object-api-name={editObjectApiName} onsubmit={handleEditSubmit} onsuccess={handleEditSuccess} onerror={handleEditError}>
+        <lightning-record-edit-form
+          record-id={editingRecordId}
+          object-api-name={editObjectApiName}
+          onsubmit={handleEditSubmit}
+          onsuccess={handleEditSuccess}
+          onerror={handleEditError}
+        >
           <header class="slds-modal__header">
             <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">{formHeader}</h2>
           </header>
@@ -129,15 +147,28 @@
             <lightning-messages></lightning-messages>
             <div class="slds-m-around_medium">
               <template if:true={pricebookId}>
-                <lightning-input-field field-name={pricebookIdField} value={pricebookId} disabled="true"></lightning-input-field>
-                <lightning-input-field field-name={productIdFiled} value={recordId} disabled="true"></lightning-input-field>
+                <lightning-input-field
+                  field-name={pricebookIdField}
+                  value={pricebookId}
+                  disabled="true"
+                ></lightning-input-field>
+                <lightning-input-field
+                  field-name={productIdFiled}
+                  value={recordId}
+                  disabled="true"
+                ></lightning-input-field>
               </template>
               <lightning-input-field field-name={isActiveField}></lightning-input-field>
               <lightning-input-field field-name={unitPriceField}></lightning-input-field>
             </div>
           </div>
           <footer class="slds-modal__footer">
-            <lightning-button label="Cancel" variant="neutral" onclick={handleCancel} class="slds-m-right_small"></lightning-button>
+            <lightning-button
+              label="Cancel"
+              variant="neutral"
+              onclick={handleCancel}
+              class="slds-m-right_small"
+            ></lightning-button>
             <lightning-button variant="brand" type="submit" name="save" label="Save"></lightning-button>
           </footer>
         </lightning-record-edit-form>

@@ -4,111 +4,114 @@
 
 <!-- Erp Create Parts Backorder -->
 <template>
-
   <!-- ***** STEP ONE - Parts Select ***** -->
   <div if:true={isStepOne} class="step-content">
     <table class="step-one-table slds-table slds-table_bordered slds-table_cell-buffer">
       <thead>
-      <tr class="slds-text-title_caps">
-        <th scope="col">
-          <div class="slds-truncate slds-text-align_left" title="Product">Product</div>
-        </th>
-        <th scope="col">
-          <div class="slds-truncate slds-text-align_center" title="Task">Task</div>
-        </th>
-        <th scope="col">
-          <div class="slds-truncate slds-text-align_center" title="Quantity Ordered">Qty Ordered</div>
-        </th>
-        <th scope="col">
-          <div class="slds-truncate slds-text-align_center" title="Quantity WIP'd">Qty WIP'd</div>
-        </th>
-        <th scope="col"  style="width:4rem">
-          <div class="slds-truncate" title="Qty to Transfer">Qty to Back Order</div>
-        </th>
-      </tr>
+        <tr class="slds-text-title_caps">
+          <th scope="col">
+            <div class="slds-truncate slds-text-align_left" title="Product">Product</div>
+          </th>
+          <th scope="col">
+            <div class="slds-truncate slds-text-align_center" title="Task">Task</div>
+          </th>
+          <th scope="col">
+            <div class="slds-truncate slds-text-align_center" title="Quantity Ordered">Qty Ordered</div>
+          </th>
+          <th scope="col">
+            <div class="slds-truncate slds-text-align_center" title="Quantity WIP'd">Qty WIP'd</div>
+          </th>
+          <th scope="col" style="width: 4rem">
+            <div class="slds-truncate" title="Qty to Transfer">Qty to Back Order</div>
+          </th>
+        </tr>
       </thead>
       <tbody>
-      <template for:each={groupedMaterials} for:item="mat">
-        <tr key={mat.Id}>
-          <td scope="row" data-label="Product">
-            <div class="slds-truncate slds-text-align_left">{mat.AcctSeedERP__Product__r.Name}</div>
-          </td>
-          <td scope="row" data-label="Task">
-            <div class="slds-truncate slds-text-align_center">{mat.AcctSeedERP__Project_Task__r.Name}</div>
-          </td>
-          <td scope="row" data-label="Quantity Ordered">
-            <div class="slds-truncate slds-text-align_center">{mat.AcctSeedERP__Quantity_Per_Unit__c}</div>
-          </td>
-          <td scope="row" data-label="Quantity WIP'd">
-            <div class="slds-truncate slds-text-align_center">{mat.AcctSeedERP__Quantity_Allocated__c}</div>
-          </td>
-          <td scope="row" data-label="Quantity to Transfer">
-            <lightning-input type="number"
-                             value={mat.quantityTransferred}
-                             max={mat.AcctSeedERP__Quantity_Per_Unit__c}
-                             min="0"
-                             message-when-range-underflow="Can not Back Order negative quantities"
-                             message-when-range-overflow="Can not Back Order more than ordered"
-                             name="material"
-                             class="slds-text-align_center"
-                             data-material-id={mat.Id}
-                             onchange={updateInput}
-                             variant="label-hidden"></lightning-input>
-          </td>
-        </tr>
-        <template if:true={mat.kitParts}>
-          <template for:each={mat.kitParts} for:item="kitMat">
-            <tr key={kitMat.Id} class="kit-part-row">
-              <td scope="row" data-label="Product">
-                <div class="slds-truncate slds-text-align_left">{kitMat.AcctSeedERP__Product__r.Name}</div>
-              </td>
-              <td scope="row" data-label="Task">
-                <div class="slds-truncate slds-text-align_center">{kitMat.AcctSeedERP__Project_Task__r.Name}</div>
-              </td>
-              <td scope="row" data-label="Quantity Ordered">
-                <div class="slds-truncate slds-text-align_center">{kitMat.AcctSeedERP__Quantity_Per_Unit__c}</div>
-              </td>
-              <td scope="row" data-label="Quantity WIP'd">
-                <div class="slds-truncate slds-text-align_center">{kitMat.AcctSeedERP__Quantity_Allocated__c}</div>
-              </td>
-              <td scope="row" data-label="Quantity to Transfer">
-                <lightning-input type="number"
-                                 value={kitMat.quantityTransferred}
-                                 name="material"
-                                 max={kitMat.AcctSeedERP__Quantity_Per_Unit__c}
-                                 min="0"
-                                 message-when-range-underflow="Can not Back Order negative quantities"
-                                 message-when-range-overflow="Can not Back Order more than ordered"
-                                 class="slds-text-align_center"
-                                 data-material-id={kitMat.Id}
-                                 data-parent-material-id={mat.Id}
-                                 onchange={updateInput}
-                                 disabled=true
-                                 variant="label-hidden"></lightning-input>
-              </td>
-            </tr>
+        <template for:each={groupedMaterials} for:item="mat">
+          <tr key={mat.Id}>
+            <td scope="row" data-label="Product">
+              <div class="slds-truncate slds-text-align_left">{mat.AcctSeedERP__Product__r.Name}</div>
+            </td>
+            <td scope="row" data-label="Task">
+              <div class="slds-truncate slds-text-align_center">{mat.AcctSeedERP__Project_Task__r.Name}</div>
+            </td>
+            <td scope="row" data-label="Quantity Ordered">
+              <div class="slds-truncate slds-text-align_center">{mat.AcctSeedERP__Quantity_Per_Unit__c}</div>
+            </td>
+            <td scope="row" data-label="Quantity WIP'd">
+              <div class="slds-truncate slds-text-align_center">{mat.AcctSeedERP__Quantity_Allocated__c}</div>
+            </td>
+            <td scope="row" data-label="Quantity to Transfer">
+              <lightning-input
+                type="number"
+                value={mat.quantityTransferred}
+                max={mat.AcctSeedERP__Quantity_Per_Unit__c}
+                min="0"
+                message-when-range-underflow="Can not Back Order negative quantities"
+                message-when-range-overflow="Can not Back Order more than ordered"
+                name="material"
+                class="slds-text-align_center"
+                data-material-id={mat.Id}
+                onchange={updateInput}
+                variant="label-hidden"
+              ></lightning-input>
+            </td>
+          </tr>
+          <template if:true={mat.kitParts}>
+            <template for:each={mat.kitParts} for:item="kitMat">
+              <tr key={kitMat.Id} class="kit-part-row">
+                <td scope="row" data-label="Product">
+                  <div class="slds-truncate slds-text-align_left">{kitMat.AcctSeedERP__Product__r.Name}</div>
+                </td>
+                <td scope="row" data-label="Task">
+                  <div class="slds-truncate slds-text-align_center">{kitMat.AcctSeedERP__Project_Task__r.Name}</div>
+                </td>
+                <td scope="row" data-label="Quantity Ordered">
+                  <div class="slds-truncate slds-text-align_center">{kitMat.AcctSeedERP__Quantity_Per_Unit__c}</div>
+                </td>
+                <td scope="row" data-label="Quantity WIP'd">
+                  <div class="slds-truncate slds-text-align_center">{kitMat.AcctSeedERP__Quantity_Allocated__c}</div>
+                </td>
+                <td scope="row" data-label="Quantity to Transfer">
+                  <lightning-input
+                    type="number"
+                    value={kitMat.quantityTransferred}
+                    name="material"
+                    max={kitMat.AcctSeedERP__Quantity_Per_Unit__c}
+                    min="0"
+                    message-when-range-underflow="Can not Back Order negative quantities"
+                    message-when-range-overflow="Can not Back Order more than ordered"
+                    class="slds-text-align_center"
+                    data-material-id={kitMat.Id}
+                    data-parent-material-id={mat.Id}
+                    onchange={updateInput}
+                    disabled="true"
+                    variant="label-hidden"
+                  ></lightning-input>
+                </td>
+              </tr>
+            </template>
           </template>
         </template>
-      </template>
       </tbody>
     </table>
   </div>
 
   <!-- ***** STEP TWO - Task Cause ***** -->
   <div if:true={isStepTwo} class="step-content">
-    <lightning-textarea label="Task Cause"
-                        value={taskCause}
-                        name="taskCause"
-                        onchange={updateInput}
-                        class="slds-m-around_large"></lightning-textarea>
+    <lightning-textarea
+      label="Task Cause"
+      value={taskCause}
+      name="taskCause"
+      onchange={updateInput}
+      class="slds-m-around_large"
+    ></lightning-textarea>
   </div>
 
   <!-- ***** STEP THREE ***** Parts Request Cases -->
   <div if:true={isStepThree} class="step-content">
     <template for:each={partsCases} for:item="pCase">
-      <lightning-layout key={pCase.Id}
-                        vertical-align="center"
-                        class="slds-border_bottom slds-m-top_small">
+      <lightning-layout key={pCase.Id} vertical-align="center" class="slds-border_bottom slds-m-top_small">
         <lightning-layout-item size="10" padding="horizontal-small">
           <div class="slds-page-header">
             <div class="slds-grid">
@@ -136,57 +139,54 @@
               </div>
             </div>
           </div>
-          <p class="slds-text-title_caps slds-truncate slds-m-bottom_xx-small slds-m-top_small"
-             title="Parts Ordered:">
+          <p class="slds-text-title_caps slds-truncate slds-m-bottom_xx-small slds-m-top_small" title="Parts Ordered:">
             Parts Ordered:
           </p>
           <table class="slds-table slds-table_bordered slds-table_cell-buffer slds-m-bottom_small">
             <thead>
-            <tr class="slds-text-title_caps">
-              <th scope="col" style="width: 15%;">
-                <div class="slds-truncate slds-text-align_left" title="Quantity">Quantity</div>
-              </th>
-              <th scope="col" style="width: 65%;">
-                <div class="slds-truncate slds-text-align_left" title="Part">Part</div>
-              </th>
-              <th scope="col" style="width: 20%;">
-                <div class="slds-truncate slds-text-align_center" title="ETA">ETA</div>
-              </th>
-            </tr>
+              <tr class="slds-text-title_caps">
+                <th scope="col" style="width: 15%">
+                  <div class="slds-truncate slds-text-align_left" title="Quantity">Quantity</div>
+                </th>
+                <th scope="col" style="width: 65%">
+                  <div class="slds-truncate slds-text-align_left" title="Part">Part</div>
+                </th>
+                <th scope="col" style="width: 20%">
+                  <div class="slds-truncate slds-text-align_center" title="ETA">ETA</div>
+                </th>
+              </tr>
             </thead>
             <tbody>
-            <template for:each={pCase.Case_Parts__r} for:item="casePart">
-              <tr key={casePart.Id}>
-                <td class="slds-text-align_left">
-                  {casePart.Quantity__c}
-                </td>
-                <td class="slds-text-align_left">
-                  {casePart.Product__r.Name}
-                </td>
-                <td class="slds-text-align_center">
-                  <template if:true={casePart.Purchase_Order_Line__r}>
-                    <lightning-formatted-date-time value={casePart.Purchase_Order_Line__r.deliverDate__c}></lightning-formatted-date-time>
-                  </template>
-                </td>
-              </tr>
-            </template>
+              <template for:each={pCase.Case_Parts__r} for:item="casePart">
+                <tr key={casePart.Id}>
+                  <td class="slds-text-align_left">{casePart.Quantity__c}</td>
+                  <td class="slds-text-align_left">{casePart.Product__r.Name}</td>
+                  <td class="slds-text-align_center">
+                    <template if:true={casePart.Purchase_Order_Line__r}>
+                      <lightning-formatted-date-time
+                        value={casePart.Purchase_Order_Line__r.deliverDate__c}
+                      ></lightning-formatted-date-time>
+                    </template>
+                  </td>
+                </tr>
+              </template>
             </tbody>
           </table>
         </lightning-layout-item>
-        <lightning-layout-item size="2"
-                               class="slds-text-align_center"
-                               padding="horizontal-small">
-          <lightning-button-stateful label-when-off=""
-                                     label-when-on="Move"
-                                     label-when-hover="Unselect"
-                                     icon-name-when-off="utility:add"
-                                     icon-name-when-on="utility:check"
-                                     icon-name-when-hover="utility:close"
-                                     selected={pCase.isSelected}
-                                     data-value={pCase.Id}
-                                     data-selected={pCase.isSelected}
-                                     onclick={handleCaseSelect}
-                                     class="case-select-btn"></lightning-button-stateful>
+        <lightning-layout-item size="2" class="slds-text-align_center" padding="horizontal-small">
+          <lightning-button-stateful
+            label-when-off=""
+            label-when-on="Move"
+            label-when-hover="Unselect"
+            icon-name-when-off="utility:add"
+            icon-name-when-on="utility:check"
+            icon-name-when-hover="utility:close"
+            selected={pCase.isSelected}
+            data-value={pCase.Id}
+            data-selected={pCase.isSelected}
+            onclick={handleCaseSelect}
+            class="case-select-btn"
+          ></lightning-button-stateful>
         </lightning-layout-item>
       </lightning-layout>
     </template>
@@ -195,132 +195,97 @@
   <!-- ***** STEP FOUR ***** Back Order ERP review -->
   <div if:true={isStepFour} class="step-content">
     <div class="slds-p-around_large">
-
       <!-- ERP Order -->
       <lightning-card>
         <h3 slot="title">
-          <lightning-icon icon-name="custom:custom68"
-                          size="small"
-                          class="slds-m-right_small"></lightning-icon>
+          <lightning-icon icon-name="custom:custom68" size="small" class="slds-m-right_small"></lightning-icon>
           ERP Order Details
         </h3>
         <div class="slds-border_top slds-m-bottom_small"></div>
         <div class="slds-p-horizontal_small">
-
           <lightning-layout multiple-rows="true">
-
-            <lightning-layout-item size="6"
-                                   padding="horizontal-small">
+            <lightning-layout-item size="6" padding="horizontal-small">
               <div class="slds-form-element slds-form-element_readonly">
                 <span class="slds-form-element__label">Account</span>
                 <div class="slds-form-element__control">
-                  <div class="slds-form-element__static">
-                    {retailERP.AcctSeed__Account__r.Name}
-                  </div>
+                  <div class="slds-form-element__static">{retailERP.AcctSeed__Account__r.Name}</div>
                 </div>
               </div>
             </lightning-layout-item>
 
-            <lightning-layout-item size="6"
-                                   padding="horizontal-small">
+            <lightning-layout-item size="6" padding="horizontal-small">
               <div class="slds-form-element slds-form-element_readonly">
                 <span class="slds-form-element__label">Warehouse</span>
                 <div class="slds-form-element__control">
-                  <div class="slds-form-element__static">
-                    {retailERP.WarehouseName__c}
-                  </div>
+                  <div class="slds-form-element__static">{retailERP.WarehouseName__c}</div>
                 </div>
               </div>
             </lightning-layout-item>
 
-            <lightning-layout-item size="6"
-                                   padding="horizontal-small">
+            <lightning-layout-item size="6" padding="horizontal-small">
               <div class="slds-form-element slds-form-element_readonly">
                 <span class="slds-form-element__label">Serial Number</span>
                 <div class="slds-form-element__control">
-                  <div class="slds-form-element__static">
-                    {newERP.Serial_Number__r.Name}
-                  </div>
+                  <div class="slds-form-element__static">{newERP.Serial_Number__r.Name}</div>
                 </div>
               </div>
             </lightning-layout-item>
 
-            <lightning-layout-item size="6"
-                                   padding="horizontal-small">
+            <lightning-layout-item size="6" padding="horizontal-small">
               <div class="slds-form-element slds-form-element_readonly">
                 <span class="slds-form-element__label">Stage</span>
                 <div class="slds-form-element__control">
-                  <div class="slds-form-element__static">
-                    {newERP.Stage__c}
-                  </div>
+                  <div class="slds-form-element__static">{newERP.Stage__c}</div>
                 </div>
               </div>
             </lightning-layout-item>
 
-            <lightning-layout-item size="6"
-                                   padding="horizontal-small">
+            <lightning-layout-item size="6" padding="horizontal-small">
               <div class="slds-form-element slds-form-element_readonly">
                 <span class="slds-form-element__label">Business Unit (GLV1)</span>
                 <div class="slds-form-element__control">
-                  <div class="slds-form-element__static">
-                    {retailERP.GL_Account_Variable_1__r.Name}
-                  </div>
+                  <div class="slds-form-element__static">{retailERP.GL_Account_Variable_1__r.Name}</div>
                 </div>
               </div>
             </lightning-layout-item>
 
-            <lightning-layout-item size="6"
-                                   padding="horizontal-small">
+            <lightning-layout-item size="6" padding="horizontal-small">
               <div class="slds-form-element slds-form-element_readonly">
                 <span class="slds-form-element__label">Job Status</span>
                 <div class="slds-form-element__control">
-                  <div class="slds-form-element__static">
-                    {newERP.Job_Status__c}
-                  </div>
+                  <div class="slds-form-element__static">{newERP.Job_Status__c}</div>
                 </div>
               </div>
             </lightning-layout-item>
 
-            <lightning-layout-item size="6"
-                                   padding="horizontal-small">
+            <lightning-layout-item size="6" padding="horizontal-small">
               <div class="slds-form-element slds-form-element_readonly">
                 <span class="slds-form-element__label">Department (GLV2)</span>
                 <div class="slds-form-element__control">
-                  <div class="slds-form-element__static">
-                    {retailERP.GL_Account_Variable_2__r.Name}
-                  </div>
+                  <div class="slds-form-element__static">{retailERP.GL_Account_Variable_2__r.Name}</div>
                 </div>
               </div>
             </lightning-layout-item>
 
-            <lightning-layout-item size="6"
-                                   padding="horizontal-small">
+            <lightning-layout-item size="6" padding="horizontal-small">
               <div class="slds-form-element slds-form-element_readonly">
                 <span class="slds-form-element__label">Original ERP</span>
                 <div class="slds-form-element__control">
-                  <div class="slds-form-element__static">
-                    {retailERP.Name}
-                  </div>
+                  <div class="slds-form-element__static">{retailERP.Name}</div>
                 </div>
               </div>
             </lightning-layout-item>
-
           </lightning-layout>
-
         </div>
       </lightning-card>
 
       <!-- Task | Cases -->
       <lightning-layout multiple-rows="true">
-
         <!-- Task -->
-        <lightning-layout-item size="6"
-                               padding="horizontal-small">
+        <lightning-layout-item size="6" padding="horizontal-small">
           <lightning-card>
             <h3 slot="title">
-              <lightning-icon icon-name="custom:custom68"
-                              size="small"
-                              class="slds-m-right_small"></lightning-icon>
+              <lightning-icon icon-name="custom:custom68" size="small" class="slds-m-right_small"></lightning-icon>
               ERP Order Task Details
             </h3>
             <div class="slds-border_top slds-m-bottom_small"></div>
@@ -328,17 +293,13 @@
               <div class="slds-form-element slds-form-element_readonly">
                 <span class="slds-form-element__label">Name</span>
                 <div class="slds-form-element__control">
-                  <div class="slds-form-element__static">
-                    {newTask.Name}
-                  </div>
+                  <div class="slds-form-element__static">{newTask.Name}</div>
                 </div>
               </div>
               <div class="slds-form-element slds-form-element_readonly">
                 <span class="slds-form-element__label">Cause</span>
                 <div class="slds-form-element__control">
-                  <div class="slds-form-element__static">
-                    {newTask.Cause_dh__c}
-                  </div>
+                  <div class="slds-form-element__static">{newTask.Cause_dh__c}</div>
                 </div>
               </div>
             </div>
@@ -346,79 +307,71 @@
         </lightning-layout-item>
 
         <!-- Cases -->
-        <lightning-layout-item size="6"
-                               padding="horizontal-small">
+        <lightning-layout-item size="6" padding="horizontal-small">
           <lightning-card if:true={selectedCases}>
             <h3 slot="title">
-              <lightning-icon icon-name="standard:case"
-                              size="small"
-                              class="slds-m-right_small"></lightning-icon>
+              <lightning-icon icon-name="standard:case" size="small" class="slds-m-right_small"></lightning-icon>
               Parts Request Cases
             </h3>
             <div class="slds-border_top slds-m-bottom_small"></div>
             <div class="slds-p-horizontal_small">
               <ul class="slds-list_dotted">
                 <template for:each={selectedCases} for:item="partsCase">
-                  <li key={partsCase.Id} class="slds-text-heading_small">
-                    {partsCase.CaseNumber}
-                  </li>
+                  <li key={partsCase.Id} class="slds-text-heading_small">{partsCase.CaseNumber}</li>
                 </template>
               </ul>
             </div>
           </lightning-card>
         </lightning-layout-item>
-
       </lightning-layout>
-
 
       <!-- Materials -->
       <lightning-card>
         <h3 slot="title">
-          <lightning-icon icon-name="standard:custom"
-                          size="small"
-                          class="slds-m-right_small"></lightning-icon>
+          <lightning-icon icon-name="standard:custom" size="small" class="slds-m-right_small"></lightning-icon>
           ERP Order Items
         </h3>
         <div class="slds-border_top slds-m-bottom_small"></div>
         <div class="slds-p-horizontal_small">
-
           <table class="slds-table slds-table_bordered slds-table_cell-buffer">
             <thead>
-            <tr class="slds-text-title_caps">
-              <th scope="col">Qty</th>
-              <th scope="col">Product</th>
-              <th scope="col" class="slds-text-align_center">Price</th>
-              <th scope="col" class="slds-text-align_right">Total</th>
-            </tr>
+              <tr class="slds-text-title_caps">
+                <th scope="col">Qty</th>
+                <th scope="col">Product</th>
+                <th scope="col" class="slds-text-align_center">Price</th>
+                <th scope="col" class="slds-text-align_right">Total</th>
+              </tr>
             </thead>
             <tbody>
-            <template for:each={newMaterials} for:item="mat">
-              <tr key={mat.Id}>
-                <td>{mat.AcctSeedERP__Quantity_Per_Unit__c}</td>
-                <td>
-                  <div>{mat.AcctSeedERP__Product__r.Name}</div>
-                  <div if:true={mat.AcctSeedERP__Comment__c} style="font-size:0.7rem">
-                    {mat.AcctSeedERP__Comment__c}
-                  </div>
-                </td>
-                <td class="slds-text-align_center">
-                  <lightning-formatted-number value={mat.GMBLASERP__Unit_Price__c}
-                                              format-style="currency"
-                                              currency-code="CAD"></lightning-formatted-number>
-                </td>
-                <td class="slds-text-align_right">
-                  <lightning-formatted-number value={mat.lineTotal}
-                                              format-style="currency"
-                                              currency-code="CAD"></lightning-formatted-number>
-                </td>
-              </tr>
-            </template>
+              <template for:each={newMaterials} for:item="mat">
+                <tr key={mat.Id}>
+                  <td>{mat.AcctSeedERP__Quantity_Per_Unit__c}</td>
+                  <td>
+                    <div>{mat.AcctSeedERP__Product__r.Name}</div>
+                    <div if:true={mat.AcctSeedERP__Comment__c} style="font-size: 0.7rem">
+                      {mat.AcctSeedERP__Comment__c}
+                    </div>
+                  </td>
+                  <td class="slds-text-align_center">
+                    <lightning-formatted-number
+                      value={mat.GMBLASERP__Unit_Price__c}
+                      format-style="currency"
+                      currency-code="CAD"
+                    ></lightning-formatted-number>
+                  </td>
+                  <td class="slds-text-align_right">
+                    <lightning-formatted-number
+                      value={mat.lineTotal}
+                      format-style="currency"
+                      currency-code="CAD"
+                    ></lightning-formatted-number>
+                  </td>
+                </tr>
+              </template>
             </tbody>
           </table>
-
         </div>
       </lightning-card>
-
     </div>
   </div>
 
@@ -426,9 +379,7 @@
   <div if:true={isStepFive} class="step-content">
     <lightning-card>
       <h3 slot="title">
-        <lightning-icon icon-name="standard:custom"
-                        size="small"
-                        class="slds-m-right_small"></lightning-icon>
+        <lightning-icon icon-name="standard:custom" size="small" class="slds-m-right_small"></lightning-icon>
         ERP Order Items
       </h3>
       <div class="slds-border_top slds-m-bottom_small"></div>
@@ -437,18 +388,18 @@
           <h4 class="slds-badge slds-theme_error slds-m-left_small slds-m-bottom_xx-small">Removed</h4>
           <table class="slds-table slds-table_bordered slds-table_cell-buffer slds-m-bottom_small">
             <thead>
-            <tr class="slds-text-title_caps">
-              <th scope="col">Qty</th>
-              <th scope="col">Product</th>
-            </tr>
+              <tr class="slds-text-title_caps">
+                <th scope="col">Qty</th>
+                <th scope="col">Product</th>
+              </tr>
             </thead>
             <tbody>
-            <template for:each={originalMaterialToDelete} for:item="mat">
-              <tr key={mat.Id}>
-                <td>{mat.AcctSeedERP__Quantity_Per_Unit__c}</td>
-                <td>{mat.AcctSeedERP__Product__r.Name}</td>
-              </tr>
-            </template>
+              <template for:each={originalMaterialToDelete} for:item="mat">
+                <tr key={mat.Id}>
+                  <td>{mat.AcctSeedERP__Quantity_Per_Unit__c}</td>
+                  <td>{mat.AcctSeedERP__Product__r.Name}</td>
+                </tr>
+              </template>
             </tbody>
           </table>
         </template>
@@ -457,20 +408,20 @@
           <h4 class="slds-badge slds-theme_warning slds-m-left_small slds-m-bottom_xx-small">Modified</h4>
           <table class="slds-table slds-table_bordered slds-table_cell-buffer slds-m-bottom_small">
             <thead>
-            <tr class="slds-text-title_caps">
-              <th scope="col">Product</th>
-              <th scope="col" class="slds-text-align_center">Original Qty</th>
-              <th scope="col" class="slds-text-align_center">New Qty</th>
-            </tr>
+              <tr class="slds-text-title_caps">
+                <th scope="col">Product</th>
+                <th scope="col" class="slds-text-align_center">Original Qty</th>
+                <th scope="col" class="slds-text-align_center">New Qty</th>
+              </tr>
             </thead>
             <tbody>
-            <template for:each={originalMaterialToUpdate} for:item="mat">
-              <tr key={mat.id}>
-                <td>{mat.productName}</td>
-                <td class="slds-text-align_center">{mat.originalQuantity}</td>
-                <td class="slds-text-align_center">{mat.newQuantity}</td>
-              </tr>
-            </template>
+              <template for:each={originalMaterialToUpdate} for:item="mat">
+                <tr key={mat.id}>
+                  <td>{mat.productName}</td>
+                  <td class="slds-text-align_center">{mat.originalQuantity}</td>
+                  <td class="slds-text-align_center">{mat.newQuantity}</td>
+                </tr>
+              </template>
             </tbody>
           </table>
         </template>
@@ -478,77 +429,81 @@
         <h4 class="slds-badge slds-theme_success slds-m-left_small slds-m-bottom_xx-small">Added</h4>
         <table class="slds-table slds-table_bordered slds-table_cell-buffer slds-m-bottom_small">
           <thead>
-          <tr class="slds-text-title_caps">
-            <th scope="col">Qty</th>
-            <th scope="col">Product</th>
-            <th scope="col">Task</th>
-            <th scope="col">Price</th>
-          </tr>
+            <tr class="slds-text-title_caps">
+              <th scope="col">Qty</th>
+              <th scope="col">Product</th>
+              <th scope="col">Task</th>
+              <th scope="col">Price</th>
+            </tr>
           </thead>
           <tbody>
-          <template for:each={newMaterialsForOriginal} for:item="ppMat">
-            <tr key={ppMat.Id}>
-              <td>{ppMat.AcctSeedERP__Quantity_Per_Unit__c}</td>
-              <td>{ppMat.AcctSeedERP__Product__r.Name}</td>
-              <td>{ppMat.AcctSeedERP__Project_Task__r.Name}</td>
-              <td>
-                <lightning-formatted-number value={ppMat.GMBLASERP__Unit_Price__c}
-                                            format-style="currency"
-                                            currency-code="CAD"></lightning-formatted-number>
-              </td>
-            </tr>
-          </template>
+            <template for:each={newMaterialsForOriginal} for:item="ppMat">
+              <tr key={ppMat.Id}>
+                <td>{ppMat.AcctSeedERP__Quantity_Per_Unit__c}</td>
+                <td>{ppMat.AcctSeedERP__Product__r.Name}</td>
+                <td>{ppMat.AcctSeedERP__Project_Task__r.Name}</td>
+                <td>
+                  <lightning-formatted-number
+                    value={ppMat.GMBLASERP__Unit_Price__c}
+                    format-style="currency"
+                    currency-code="CAD"
+                  ></lightning-formatted-number>
+                </td>
+              </tr>
+            </template>
           </tbody>
         </table>
-
       </div>
     </lightning-card>
 
     <lightning-card>
       <h3 slot="title">
-        <lightning-icon icon-name="custom:custom17"
-                        size="small"
-                        class="slds-m-right_small"></lightning-icon>
+        <lightning-icon icon-name="custom:custom17" size="small" class="slds-m-right_small"></lightning-icon>
         Commission Lines
       </h3>
       <div class="slds-border_top slds-m-bottom_small"></div>
       <div class="slds-p-horizontal_small">
         <table class="slds-table slds-table_bordered slds-table_cell-buffer slds-m-bottom_small">
           <thead>
-          <tr class="slds-text-title_caps">
-            <th scope="col">Project Task</th>
-            <th scope="col">Comment</th>
-            <th scope="col" class="slds-text-align_center">Sale</th>
-            <th scope="col" class="slds-text-align_center">Price</th>
-            <th scope="col" class="slds-text-align_center">Labour Cost</th>
-          </tr>
+            <tr class="slds-text-title_caps">
+              <th scope="col">Project Task</th>
+              <th scope="col">Comment</th>
+              <th scope="col" class="slds-text-align_center">Sale</th>
+              <th scope="col" class="slds-text-align_center">Price</th>
+              <th scope="col" class="slds-text-align_center">Labour Cost</th>
+            </tr>
           </thead>
           <tbody>
-          <template for:each={newCommissionLines} for:item="line">
-            <tr key={line.CommissionRecord2__c}>
-              <td>{line.CommissionRecord2__r.Project_Task__r.Name}</td>
-              <td>{line.Comment__c}</td>
-              <td class="slds-text-align_center">
-                <lightning-formatted-number value={line.Sale_Price__c}
-                                            format-style="currency"
-                                            currency-code="CAD"></lightning-formatted-number>
-              </td>
-              <td class="slds-text-align_center">
-                <lightning-formatted-number value={line.Cost__c}
-                                            format-style="currency"
-                                            currency-code="CAD"></lightning-formatted-number>
-              </td>
-              <td class="slds-text-align_center">
-                <lightning-formatted-number value={line.Labour_Cost__c}
-                                            format-style="currency"
-                                            currency-code="CAD"></lightning-formatted-number>
-              </td>
-            </tr>
-          </template>
+            <template for:each={newCommissionLines} for:item="line">
+              <tr key={line.CommissionRecord2__c}>
+                <td>{line.CommissionRecord2__r.Project_Task__r.Name}</td>
+                <td>{line.Comment__c}</td>
+                <td class="slds-text-align_center">
+                  <lightning-formatted-number
+                    value={line.Sale_Price__c}
+                    format-style="currency"
+                    currency-code="CAD"
+                  ></lightning-formatted-number>
+                </td>
+                <td class="slds-text-align_center">
+                  <lightning-formatted-number
+                    value={line.Cost__c}
+                    format-style="currency"
+                    currency-code="CAD"
+                  ></lightning-formatted-number>
+                </td>
+                <td class="slds-text-align_center">
+                  <lightning-formatted-number
+                    value={line.Labour_Cost__c}
+                    format-style="currency"
+                    currency-code="CAD"
+                  ></lightning-formatted-number>
+                </td>
+              </tr>
+            </template>
           </tbody>
         </table>
       </div>
     </lightning-card>
   </div>
-
 </template>

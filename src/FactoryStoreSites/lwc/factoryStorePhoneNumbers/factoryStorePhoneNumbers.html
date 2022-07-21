@@ -10,7 +10,12 @@
         <li class="storePhoneNumbers__item storePhoneNumbers--sales">
           <template if:true={isEN}><span class="label">Sales:</span></template>
           <template if:true={isFR}><span class="label">Ventes:</span></template>
-          <lightning-icon icon-name="utility:call" alternative-text="Call Us!" size="small" title="Call Us"></lightning-icon>
+          <lightning-icon
+            icon-name="utility:call"
+            alternative-text="Call Us!"
+            size="small"
+            title="Call Us"
+          ></lightning-icon>
           <a href={phoneSalesLink}>{phoneSales}</a>
         </li>
       </template>
@@ -34,10 +39,14 @@
     <ul class="storePhoneNumbers">
       <li class="storePhoneNumbers__item storePhoneNumbers--sales">
         <span class="label">{showOneNumberLabel}</span>
-        <lightning-icon icon-name="utility:call" alternative-text="Call Us!" size="small" title="Call Us"></lightning-icon>
+        <lightning-icon
+          icon-name="utility:call"
+          alternative-text="Call Us!"
+          size="small"
+          title="Call Us"
+        ></lightning-icon>
         <a href={phoneSingle}>{showOneNumberDigits}</a>
       </li>
     </ul>
   </template>
-
 </template>

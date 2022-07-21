@@ -10,7 +10,12 @@
       <p class="allModels__seriesBlurb copy copy--standard">{seriesBlurb}</p>
       <ul class="allModels__modelListing" onselectboat={handleOpenBoat}>
         <template for:each={boats} for:item="boat">
-          <c-factory-store-boat-listing-item boat={boat} series-class={seriesClass} key={boat.Id} location-name={locationName}></c-factory-store-boat-listing-item>
+          <c-factory-store-boat-listing-item
+            boat={boat}
+            series-class={seriesClass}
+            key={boat.Id}
+            location-name={locationName}
+          ></c-factory-store-boat-listing-item>
         </template>
       </ul>
     </section>
@@ -18,5 +23,4 @@
   <template if:false={showListing}>
     <c-community-shared-loading></c-community-shared-loading>
   </template>
-
 </template>

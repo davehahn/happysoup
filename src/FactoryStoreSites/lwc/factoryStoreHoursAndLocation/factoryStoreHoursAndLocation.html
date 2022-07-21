@@ -13,31 +13,19 @@
           <span class="currentDate">{currentDate}</span>
         </div>
         <div class="location">
-          <span class="addressLineOne">
-            {street_number} {route}
-          </span>
-          <span class="addressLineTwo">
-            {locality}, {administrative_area_level_1} {postal_code}
-          </span>
+          <span class="addressLineOne"> {street_number} {route} </span>
+          <span class="addressLineTwo"> {locality}, {administrative_area_level_1} {postal_code} </span>
         </div>
       </section>
     </template>
     <template if:true={showExpanded}>
       <figure class="hoursAndLocation hoursAndLocation--expanded">
-        <lightning-map
-            map-markers={mapMarkers}
-            options={mapOptions}
-            zoom-level={zoomLevel}>
-        </lightning-map>
+        <lightning-map map-markers={mapMarkers} options={mapOptions} zoom-level={zoomLevel}> </lightning-map>
         <figcaption class="mapLegend">
           <h4 class="mapLegend__heading heading heading--xs">{name}</h4>
           <div class="mapLegend__location">
-            <span class="mapLegend__addressLineOne">
-              {street_number} {route}
-            </span>
-            <span class="mapLegend__addressLineTwo">
-              {locality}, {administrative_area_level_1} {postal_code}
-            </span>
+            <span class="mapLegend__addressLineOne"> {street_number} {route} </span>
+            <span class="mapLegend__addressLineTwo"> {locality}, {administrative_area_level_1} {postal_code} </span>
           </div>
           <span class={statusClass}>{currentStatus}</span>
           <ol class="mapLegend__storeHours">
@@ -51,5 +39,4 @@
       </figure>
     </template>
   </div>
-
 </template>

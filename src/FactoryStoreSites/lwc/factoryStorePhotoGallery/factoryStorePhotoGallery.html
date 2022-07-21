@@ -10,12 +10,14 @@
         <template for:each={content} for:item="item">
           <template if:false={isDefaultContentType}>
             <li key={item.managedContentId} class="photoGallery__item">
-              <a href={item.contentNodes.source.url} onclick={triggerOverlay}><img src={item.contentNodes.source.url}></a>
+              <a href={item.contentNodes.source.url} onclick={triggerOverlay}
+                ><img src={item.contentNodes.source.url}
+              /></a>
             </li>
           </template>
           <template if:true={isDefaultContentType}>
             <li key={item.Name} class="photoGallery__item photoGallery__item--default">
-              <a href={item.AWS_Url_fullsize} onclick={triggerOverlay}><img src={item.AWS_Url_700_wide}></a>
+              <a href={item.AWS_Url_fullsize} onclick={triggerOverlay}><img src={item.AWS_Url_700_wide} /></a>
             </li>
           </template>
         </template>
@@ -24,7 +26,7 @@
       <div class={overlayClass} onclick={closeOverlay} data-id="overlay">
         <div class="holder" data-id="holder">
           <button class="close" data-id="close" onclick={closeOverlay}><span>+</span></button>
-          <img src={imageToShow} alt="" data-id="image"/>
+          <img src={imageToShow} alt="" data-id="image" />
         </div>
       </div>
     </template>

@@ -13,11 +13,10 @@
       <c-legend-spinner></c-legend-spinner>
 
       <header class="config-header">
-
         <div class="branding">
           <h1 class="main-logo">
             <span class="vh">Legend Boats - Boat Builder</span>
-            <button onclick={handleHomeNav} data-click-focus="unset"><img src={logo}></button>
+            <button onclick={handleHomeNav} data-click-focus="unset"><img src={logo} /></button>
           </h1>
         </div>
 
@@ -45,16 +44,18 @@
             <button onclick={handleLanguage} data-lang="EN">English</button>
           </template>
         </div>
-
       </header>
 
       <div class="config-content" data-current={currentPage} data-thanks="hide">
-
         <!-- PERFORMANCE -->
         <section class="config-page config-page_selected" data-page="performance">
           <div class="config-page_left">
             <h2 class="vh">Performance</h2>
-            <c-cust-comm-order-boat-image size="large" page='performance' marketing-content={boat.marketingContent}></c-cust-comm-order-boat-image>
+            <c-cust-comm-order-boat-image
+              size="large"
+              page="performance"
+              marketing-content={boat.marketingContent}
+            ></c-cust-comm-order-boat-image>
             <c-cust-comm-order-motor-stats motor-details={motorDetails}></c-cust-comm-order-motor-stats>
           </div>
           <div class="config-page_right slds-p-around_xx-large">
@@ -62,27 +63,31 @@
               <template if:true={isEN}>Select Your Performance</template>
               <template if:true={isFR}>Choisissez votre performance</template>
             </h3>
-            <c-cust-comm-order-options options-title-en="Standard Performance"
-                                       options-title-fr="Performance standard"
-                                       selections="one"
-                                       selection-scope="global"
-                                       options={boat.standardMotor}
-                                       parent-product-sku={boat.id}
-                                       boat-retail-price={boat.retailPrice}
-                                       is-init="true"
-                                       trigger-ui-change="true"
-                                       page='performance'
-                                       grouping-name="motor_options"></c-cust-comm-order-options>
-            <c-cust-comm-order-options options-title-en="Enhanced Performance"
-                                       options-title-fr="Performance améliorée"
-                                       selections="one"
-                                       selection-scope="global"
-                                       options={boat.motorUpgrades}
-                                       parent-product-sku={boat.id}
-                                       boat-retail-price={boat.retailPrice}
-                                       trigger-ui-change="true"
-                                       page='performance'
-                                       grouping-name="motor_options"></c-cust-comm-order-options>
+            <c-cust-comm-order-options
+              options-title-en="Standard Performance"
+              options-title-fr="Performance standard"
+              selections="one"
+              selection-scope="global"
+              options={boat.standardMotor}
+              parent-product-sku={boat.id}
+              boat-retail-price={boat.retailPrice}
+              is-init="true"
+              trigger-ui-change="true"
+              page="performance"
+              grouping-name="motor_options"
+            ></c-cust-comm-order-options>
+            <c-cust-comm-order-options
+              options-title-en="Enhanced Performance"
+              options-title-fr="Performance améliorée"
+              selections="one"
+              selection-scope="global"
+              options={boat.motorUpgrades}
+              parent-product-sku={boat.id}
+              boat-retail-price={boat.retailPrice}
+              trigger-ui-change="true"
+              page="performance"
+              grouping-name="motor_options"
+            ></c-cust-comm-order-options>
           </div>
         </section>
 
@@ -91,7 +96,11 @@
           <div class="config-page_left">
             <h2 class="vh">Trailering</h2>
             <template if:false={isMobile}>
-              <c-cust-comm-order-boat-image size="large" page='trailering' marketing-content= {boat.marketingContent}></c-cust-comm-order-boat-image>
+              <c-cust-comm-order-boat-image
+                size="large"
+                page="trailering"
+                marketing-content={boat.marketingContent}
+              ></c-cust-comm-order-boat-image>
             </template>
           </div>
           <div class="config-page_right slds-p-around_xx-large">
@@ -99,12 +108,65 @@
               <template if:true={isEN}>Trailering Package</template>
               <template if:true={isFR}>Ensemble de remorquage</template>
             </h3>
-            <c-cust-comm-order-options options-title-en="Select Your Trailer" options-title-fr="Choisissez votre remorque" selections="one" selection-scope="local" is-init="true" options={traileringOptions} parent-product-sku={boat.id} show-option-price="true" boat-retail-price={boat.retailPrice} layout-type="alt-swatch" grouping-name="trailer_options" page='trailering'></c-cust-comm-order-options>
+            <c-cust-comm-order-options
+              options-title-en="Select Your Trailer"
+              options-title-fr="Choisissez votre remorque"
+              selections="one"
+              selection-scope="local"
+              is-init="true"
+              options={traileringOptions}
+              parent-product-sku={boat.id}
+              show-option-price="true"
+              boat-retail-price={boat.retailPrice}
+              layout-type="alt-swatch"
+              grouping-name="trailer_options"
+              page="trailering"
+            ></c-cust-comm-order-options>
             <!--<c-cust-comm-order-options selections="one" selection-scope="global" options={boat.trailerUpgrades} show-option-price="true" boat-retail-price={boat.retailPrice} page='trailering'></c-cust-comm-order-options>-->
-            <c-cust-comm-order-options options-title-en="More Trailering Options" options-title-fr="Plus d’option pour remorques" selections="multiple" selection-scope="local" options={boat.optionalProducts.canvas} parent-product-sku={boat.id} show-option-price="true" boat-retail-price={boat.retailPrice} page='trailering'></c-cust-comm-order-options>
-            <c-cust-comm-order-options selections="multiple" selection-scope="local" options={traileringOptions} sub-section="optionalProducts.trailerAccessories" addons="true" show-option-price="true" boat-retail-price={boat.retailPrice} page='trailering' parent-page="trailer_options"></c-cust-comm-order-options>
-            <c-cust-comm-order-options selections="multiple" selection-scope="local" options={boat.standardMotor} sub-section="optionalProducts.trailerAccessories" addons="true" show-option-price="true" boat-retail-price={boat.retailPrice} page='trailering' parent-page='performance'></c-cust-comm-order-options>
-            <c-cust-comm-order-options selections="multiple" selection-scope="local" options={boat.motorUpgrades} sub-section="optionalProducts.trailerAccessories" addons="true" show-option-price="true" boat-retail-price={boat.retailPrice} page='trailering' parent-page='performance'></c-cust-comm-order-options>
+            <c-cust-comm-order-options
+              options-title-en="More Trailering Options"
+              options-title-fr="Plus d’option pour remorques"
+              selections="multiple"
+              selection-scope="local"
+              options={boat.optionalProducts.canvas}
+              parent-product-sku={boat.id}
+              show-option-price="true"
+              boat-retail-price={boat.retailPrice}
+              page="trailering"
+            ></c-cust-comm-order-options>
+            <c-cust-comm-order-options
+              selections="multiple"
+              selection-scope="local"
+              options={traileringOptions}
+              sub-section="optionalProducts.trailerAccessories"
+              addons="true"
+              show-option-price="true"
+              boat-retail-price={boat.retailPrice}
+              page="trailering"
+              parent-page="trailer_options"
+            ></c-cust-comm-order-options>
+            <c-cust-comm-order-options
+              selections="multiple"
+              selection-scope="local"
+              options={boat.standardMotor}
+              sub-section="optionalProducts.trailerAccessories"
+              addons="true"
+              show-option-price="true"
+              boat-retail-price={boat.retailPrice}
+              page="trailering"
+              parent-page="performance"
+            ></c-cust-comm-order-options>
+            <c-cust-comm-order-options
+              selections="multiple"
+              selection-scope="local"
+              options={boat.motorUpgrades}
+              sub-section="optionalProducts.trailerAccessories"
+              addons="true"
+              show-option-price="true"
+              boat-retail-price={boat.retailPrice}
+              page="trailering"
+              parent-page="performance"
+            ></c-cust-comm-order-options>
           </div>
         </section>
 
@@ -113,7 +175,11 @@
           <div class="config-page_left">
             <h2 class="vh">Electronics</h2>
             <template if:false={isMobile}>
-              <c-cust-comm-order-boat-image size="large" page='electronics' marketing-content= {boat.marketingContent}></c-cust-comm-order-boat-image>
+              <c-cust-comm-order-boat-image
+                size="large"
+                page="electronics"
+                marketing-content={boat.marketingContent}
+              ></c-cust-comm-order-boat-image>
             </template>
           </div>
           <div class="config-page_right slds-p-around_xx-large">
@@ -121,16 +187,17 @@
               <template if:true={isEN}><span class="vh">Choose Your</span> Electronics</template>
               <template if:true={isFR}><span class="vh">Choisir Votre</span> Électroniques</template>
             </h3>
-            <c-cust-comm-order-options options-title-en="Terrova 55 Tech Package"
-                                       options-title-fr="Ensemble Terrova 55"
-                                       options={boat.optionalProducts.trollingMotor}
-                                       parent-product-sku={boat.id}
-                                       show-option-price="true"
-                                       boat-retail-price={boat.retailPrice}
-                                       page='electronics'></c-cust-comm-order-options>
+            <c-cust-comm-order-options
+              options-title-en="Terrova 55 Tech Package"
+              options-title-fr="Ensemble Terrova 55"
+              options={boat.optionalProducts.trollingMotor}
+              parent-product-sku={boat.id}
+              show-option-price="true"
+              boat-retail-price={boat.retailPrice}
+              page="electronics"
+            ></c-cust-comm-order-options>
           </div>
         </section>
-
 
         <!-- PAYMENT -->
         <section class="config-page" data-page="payment">
@@ -149,112 +216,136 @@
                 <template if:true={isFR}>Entrer les détails du compte</template>
               </h3>
               <lightning-layout multiple-rows="true">
-
-                <lightning-layout-item padding="horizontal-small"
-                                       data-name="firstName"
-                                       size="12"
-                                       small-device-size="12"
-                                       medium-device-size="6"
-                                       large-device-size="6">
+                <lightning-layout-item
+                  padding="horizontal-small"
+                  data-name="firstName"
+                  size="12"
+                  small-device-size="12"
+                  medium-device-size="6"
+                  large-device-size="6"
+                >
                   <div class="form-input">
                     <label>
                       <template if:true={isEN}>First Name</template>
                       <template if:true={isFR}>Prénom</template>
                     </label>
-                    <input label="First Name"
-                           data-attr="firstName"
-                           type="text"
-                           onkeyup={handleCustomerData}
-                           onfocusout={triggerValidation}
-                           required aria-required="true"
-                           aria-describedby="FirstName_feedback"
-                           class="assertive valName">
+                    <input
+                      label="First Name"
+                      data-attr="firstName"
+                      type="text"
+                      onkeyup={handleCustomerData}
+                      onfocusout={triggerValidation}
+                      required
+                      aria-required="true"
+                      aria-describedby="FirstName_feedback"
+                      class="assertive valName"
+                    />
                     <span class="feedback" id="FirstName_feedback" aria-live="assertive"></span>
                   </div>
                 </lightning-layout-item>
 
-                <lightning-layout-item padding="horizontal-small"
-                                       size="12"
-                                       small-device-size="12"
-                                       medium-device-size="6"
-                                       large-device-size="6">
+                <lightning-layout-item
+                  padding="horizontal-small"
+                  size="12"
+                  small-device-size="12"
+                  medium-device-size="6"
+                  large-device-size="6"
+                >
                   <div class="form-input">
                     <label>
                       <template if:true={isEN}>Last Name</template>
                       <template if:true={isFR}>Nom de famille</template>
                     </label>
-                    <input label="Last Name"
-                           data-attr="lastName"
-                           type="text"
-                           onkeyup={handleCustomerData}
-                           onfocusout={triggerValidation}
-                           required aria-required="true"
-                           aria-describedby="LastName_feedback"
-                           class="assertive valName">
+                    <input
+                      label="Last Name"
+                      data-attr="lastName"
+                      type="text"
+                      onkeyup={handleCustomerData}
+                      onfocusout={triggerValidation}
+                      required
+                      aria-required="true"
+                      aria-describedby="LastName_feedback"
+                      class="assertive valName"
+                    />
                     <span class="feedback" id="LastName_feedback" aria-live="polite"></span>
                   </div>
                 </lightning-layout-item>
 
-                <lightning-layout-item padding="horizontal-small"
-                                       size="12"
-                                       small-device-size="12"
-                                       medium-device-size="6"
-                                       large-device-size="6">
+                <lightning-layout-item
+                  padding="horizontal-small"
+                  size="12"
+                  small-device-size="12"
+                  medium-device-size="6"
+                  large-device-size="6"
+                >
                   <div class="form-input">
                     <label>
                       <template if:true={isEN}>Email Address</template>
                       <template if:true={isFR}>Courriel</template>
                     </label>
-                    <input label="Email Address"
-                           data-attr="email"
-                           type="email"
-                           onkeyup={handleCustomerData}
-                           onfocusout={triggerValidation}
-                           required aria-required="true"
-                           aria-describedby="email_feedback"
-                           class="assertive valEmail">
+                    <input
+                      label="Email Address"
+                      data-attr="email"
+                      type="email"
+                      onkeyup={handleCustomerData}
+                      onfocusout={triggerValidation}
+                      required
+                      aria-required="true"
+                      aria-describedby="email_feedback"
+                      class="assertive valEmail"
+                    />
                     <span class="feedback" id="email_feedback" aria-live="assertive"></span>
                   </div>
                 </lightning-layout-item>
 
-                <lightning-layout-item padding="horizontal-small"
-                                       size="12"
-                                       small-device-size="12"
-                                       medium-device-size="6"
-                                       large-device-size="6">
+                <lightning-layout-item
+                  padding="horizontal-small"
+                  size="12"
+                  small-device-size="12"
+                  medium-device-size="6"
+                  large-device-size="6"
+                >
                   <div class="form-input">
                     <label>
                       <template if:true={isEN}>Phone Number</template>
                       <template if:true={isFR}>Téléphone</template>
                     </label>
-                    <input label="Phone Number"
-                           data-attr="phone"
-                           type="tel"
-                           onkeyup={handleCustomerData}
-                           onfocusout={triggerValidation}
-                           pattern="(?:\(?)(\d{3})(?:\)?)(\s|\.|-)?(\d{3})(\s|\.|-)?(\d{4})"
-                           required aria-require="true"
-                           aria-describedby="PhoneNumber_feedback"
-                           class="polite valPhone">
+                    <input
+                      label="Phone Number"
+                      data-attr="phone"
+                      type="tel"
+                      onkeyup={handleCustomerData}
+                      onfocusout={triggerValidation}
+                      pattern="(?:\(?)(\d{3})(?:\)?)(\s|\.|-)?(\d{3})(\s|\.|-)?(\d{4})"
+                      required
+                      aria-require="true"
+                      aria-describedby="PhoneNumber_feedback"
+                      class="polite valPhone"
+                    />
                     <span class="feedback" id="PhoneNumber_feedback" aria-live="polite"></span>
                   </div>
                 </lightning-layout-item>
 
-                <lightning-layout-item padding="horizontal-small"
-                                       size="12"
-                                       small-device-size="12"
-                                       medium-device-size="6"
-                                       large-device-size="6">
+                <lightning-layout-item
+                  padding="horizontal-small"
+                  size="12"
+                  small-device-size="12"
+                  medium-device-size="6"
+                  large-device-size="6"
+                >
                   <div class="form-input form-input--select">
                     <label>Province</label>
                     <span></span>
-                    <select label="Province or Territory"
-                            data-attr="state"
-                            onchange={handleCustomerData}
-                            onfocusout={triggerValidation}
-                            required aria-require="true"
-                            aria-describedby="Province_feedback"
-                            class="polite">
+                    <select
+                      label="Province or Territory"
+                      data-attr="state"
+                      onchange={handleCustomerData}
+                      onfocusout={triggerValidation}
+                      required
+                      aria-require="true"
+                      aria-describedby="Province_feedback"
+                      class="polite"
+                    >
                       <option value="">
                         <template if:true={isEN}> -- Select One -- </template>
                         <template if:true={isFR}> -- Sélectionnez un -- </template>
@@ -292,16 +383,15 @@
                   </div>
                 </lightning-layout-item>
 
-                <lightning-layout-item padding="horizontal-small"
-                                       size="12"
-                                       small-device-size="12"
-                                       medium-device-size="6"
-                                       large-device-size="6">
-                  <div class="form-input form-input--valueOnly freightCharge">
-                    {freightCharge}
-                  </div>
+                <lightning-layout-item
+                  padding="horizontal-small"
+                  size="12"
+                  small-device-size="12"
+                  medium-device-size="6"
+                  large-device-size="6"
+                >
+                  <div class="form-input form-input--valueOnly freightCharge">{freightCharge}</div>
                 </lightning-layout-item>
-
               </lightning-layout>
             </div>
 
@@ -313,10 +403,12 @@
               <div class="payment-disclaimer">
                 <template if:true={isEN}>Due today is a fully refundable down payment of: </template>
                 <template if:true={isFR}>Un dépôt entièrement remboursable de </template>
-                <lightning-formatted-number value={paymentAmount}
-                                            format-style="currency"
-                                            currency-code="CAD"
-                                            maximum-fraction-digits="2"></lightning-formatted-number>
+                <lightning-formatted-number
+                  value={paymentAmount}
+                  format-style="currency"
+                  currency-code="CAD"
+                  maximum-fraction-digits="2"
+                ></lightning-formatted-number>
                 .
               </div>
             </div>
@@ -330,23 +422,36 @@
                 <div class="payment-form-errors">{paymentFormErrors}</div>
               </template>
               <template if:true={onPaymentPage}>
-                <c-square-payment-form apex-page-name="/apex/Square_PaymentForm_CustomerCommunity"
-                                       is-responsive="true"
-                                       width-break-point="1401"
-                                       small-height="184"
-                                       large-height="368"
-                                       current-language={currentLanguage}></c-square-payment-form>
+                <c-square-payment-form
+                  apex-page-name="/apex/Square_PaymentForm_CustomerCommunity"
+                  is-responsive="true"
+                  width-break-point="1401"
+                  small-height="184"
+                  large-height="368"
+                  current-language={currentLanguage}
+                ></c-square-payment-form>
               </template>
               <div class="payment-disclaimer">
-                <template if:true={isEN}>By submitting this order form, I allow Legend Boats to save my payment instrument information for future transactions pursuant to the <a href="#" target="_blank">Payment Terms for Services</a></template>
-                <template if:true={isFR}>En soumettant cette formulair de commande, je permet à Bateaux Legend de sauvegarder les informations de paiement pour transactions futures conformément aux <a href="#" target="_blank">termes des paiements de service</a></template>
+                <template if:true={isEN}
+                  >By submitting this order form, I allow Legend Boats to save my payment instrument information for
+                  future transactions pursuant to the
+                  <a href="#" target="_blank">Payment Terms for Services</a></template
+                >
+                <template if:true={isFR}
+                  >En soumettant cette formulair de commande, je permet à Bateaux Legend de sauvegarder les informations
+                  de paiement pour transactions futures conformément aux
+                  <a href="#" target="_blank">termes des paiements de service</a></template
+                >
               </div>
             </div>
-
           </div>
 
           <aside class="config-page_right slds-p-around_xx-large">
-            <c-cust-comm-order-boat-image size="small" page='summary' marketing-content= {boat.marketingContent}></c-cust-comm-order-boat-image>
+            <c-cust-comm-order-boat-image
+              size="small"
+              page="summary"
+              marketing-content={boat.marketingContent}
+            ></c-cust-comm-order-boat-image>
             <h2 class="right_heading slds-text-heading_medium">
               <template if:true={isEN}>Your {boat.name}</template>
               <template if:true={isFR}>Votre {boat.name}</template>
@@ -357,26 +462,30 @@
             </p>
             <c-cust-comm-order-summary usage="standard"></c-cust-comm-order-summary>
             <template if:true={purchasePrice}>
-              <c-boat-res-finance-details payment-type={paymentType}
-                                          amount={purchasePrice}
-                                          deposit={paymentAmount}
-                                          interest-rate={interestRate}
-                                          amort={term}
-                                          premium-pack-value={boat.premiumPackage.value}
-                                          premium-pack-items={premiumPackItems}
-                                          hide-inputs="true"></c-boat-res-finance-details>
+              <c-boat-res-finance-details
+                payment-type={paymentType}
+                amount={purchasePrice}
+                deposit={paymentAmount}
+                interest-rate={interestRate}
+                amort={term}
+                premium-pack-value={boat.premiumPackage.value}
+                premium-pack-items={premiumPackItems}
+                hide-inputs="true"
+              ></c-boat-res-finance-details>
             </template>
           </aside>
-
         </section>
-
       </div>
 
       <!-- THANKS -->
       <section class="config-thanks" data-thanks="show">
         <header>
           <div class="thanks_model">
-            <c-cust-comm-order-boat-image size="small" page='thankyou' marketing-content={boat.marketingContent}></c-cust-comm-order-boat-image>
+            <c-cust-comm-order-boat-image
+              size="small"
+              page="thankyou"
+              marketing-content={boat.marketingContent}
+            ></c-cust-comm-order-boat-image>
           </div>
           <h2>
             <template if:true={isEN}>Thank you!</template>
@@ -388,12 +497,14 @@
           </p>
         </header>
         <div class="pickup-selection">
-          <c-account-find-closest-partner partner-count="3"
-                                          is-selectable="true"
-                                          hide-result-icon="true"
-                                          hide-search="true"
-                                          input-label="Your Postal Code or City"
-                                          onaccountselected={handleAccountSelected}></c-account-find-closest-partner>
+          <c-account-find-closest-partner
+            partner-count="3"
+            is-selectable="true"
+            hide-result-icon="true"
+            hide-search="true"
+            input-label="Your Postal Code or City"
+            onaccountselected={handleAccountSelected}
+          ></c-account-find-closest-partner>
         </div>
         <div class="thanks_body">
           <section class="thanks_overview">
@@ -404,7 +515,8 @@
                   <strong>
                     <template if:true={isEN}>Order Number:</template>
                     <template if:true={isFR}>Numéro de commande:</template>
-                  </strong> <span>{orderNumber}</span>
+                  </strong>
+                  <span>{orderNumber}</span>
                 </li>
                 <li class="thanks_detail thanks_detail--horizontal">
                   <strong>
@@ -412,11 +524,13 @@
                     <template if:true={isFR}>Paiement :</template>
                   </strong>
                   <span>
-                  <lightning-formatted-number value={paymentAmount}
-                                              format-style="currency"
-                                              currency-code="CAD"
-                                              maximum-fraction-digits="2"></lightning-formatted-number>
-                </span>
+                    <lightning-formatted-number
+                      value={paymentAmount}
+                      format-style="currency"
+                      currency-code="CAD"
+                      maximum-fraction-digits="2"
+                    ></lightning-formatted-number>
+                  </span>
                 </li>
                 <li class="thanks_detail thanks_detail--horizontal">
                   <template if:true={isEN}>Estimated Deliver: <span>{shippingTiming}</span></template>
@@ -438,52 +552,58 @@
                 <strong>
                   <template if:true={isEN}>Order Number:</template>
                   <template if:true={isFR}>Numéro de commande:</template>
-                </strong> <span>{orderNumber}</span>
+                </strong>
+                <span>{orderNumber}</span>
               </li>
               <li class="thanks_footerDetail">
                 <strong>
                   <template if:true={isEN}>Billed To:</template>
                   <template if:true={isFR}>Facturé à :</template>
-                </strong> <span>{customerFirstName} {customerLastName}</span>
+                </strong>
+                <span>{customerFirstName} {customerLastName}</span>
               </li>
             </ul>
           </footer>
         </div>
       </section>
 
-
       <!-- FOOTER -->
       <div class="config-footer">
         <div class="config-footer_content" data-thanks="hide">
-
           <div class="config-footer_item finance-type">
             <div class="financetype-selector_container">
-              <div class="financetype-selector_button"
-                   role="button"
-                   tabindex="0"
-                   data-click-focus="unset"
-                   onclick={openFinanceSelect}>
+              <div
+                class="financetype-selector_button"
+                role="button"
+                tabindex="0"
+                data-click-focus="unset"
+                onclick={openFinanceSelect}
+              >
                 {paymentTypeLabel}
                 <i class="slds-icon-chevrondown"></i>
               </div>
               <ul class="financetype-selector_options" role="tablist">
-                <li role="tab"
-                    tabindex="-1"
-                    class="financetype-selector_option selected"
-                    data-value="cash"
-                    data-label="Cash"
-                    data-label-fr="Comptant"
-                    onclick={handlePaymentTypeSelect}>
+                <li
+                  role="tab"
+                  tabindex="-1"
+                  class="financetype-selector_option selected"
+                  data-value="cash"
+                  data-label="Cash"
+                  data-label-fr="Comptant"
+                  onclick={handlePaymentTypeSelect}
+                >
                   <template if:true={isEN}>Cash</template>
                   <template if:true={isFR}>Comptant</template>
                 </li>
-                <li role="tab"
-                    tabindex="-1"
-                    class="financetype-selector_option"
-                    data-value="loan"
-                    data-label="Loan"
-                    data-label-fr="Emprunt"
-                    onclick={handlePaymentTypeSelect}>
+                <li
+                  role="tab"
+                  tabindex="-1"
+                  class="financetype-selector_option"
+                  data-value="loan"
+                  data-label="Loan"
+                  data-label-fr="Emprunt"
+                  onclick={handlePaymentTypeSelect}
+                >
                   <template if:true={isEN}>Loan</template>
                   <template if:true={isFR}>Emprunt</template>
                 </li>
@@ -492,9 +612,11 @@
           </div>
 
           <div class="config-footer_item finance-prices">
-            <c-cust-comm-order-purchase-price payment-type={paymentType}
-                                              boat-sku={boat.id}
-                                              boat-retail-price={boat.retailPrice}></c-cust-comm-order-purchase-price>
+            <c-cust-comm-order-purchase-price
+              payment-type={paymentType}
+              boat-sku={boat.id}
+              boat-retail-price={boat.retailPrice}
+            ></c-cust-comm-order-purchase-price>
             <div class="config-footer_savings">
               <div class="amount">{premiumPackValue}</div>
               <div class="label">
@@ -521,23 +643,14 @@
 
           <template if:false={isMobile}>
             <div class="config-footer_item">
-              <button disabled={buttonDisabled}
-                      data-click-focus="unset"
-                      onclick={handleNext}>
-                {buttonText}
-              </button>
+              <button disabled={buttonDisabled} data-click-focus="unset" onclick={handleNext}>{buttonText}</button>
             </div>
           </template>
           <template if:true={isMobile}>
             <div class="config-footer_item">
-              <button disabled={buttonDisabled}
-                      data-click-focus="unset"
-                      onclick={jumpToPayment}>
-                {buttonText}
-              </button>
+              <button disabled={buttonDisabled} data-click-focus="unset" onclick={jumpToPayment}>{buttonText}</button>
             </div>
           </template>
-
         </div>
       </div>
 
@@ -548,7 +661,7 @@
             <nav class="modal-content_sidebar">
               <h3 class="vh">Overlay Navigation</h3>
               <div class="sidebar_logo">
-                <img src={vertLogo}>
+                <img src={vertLogo} />
               </div>
               <ul class="sidebar_nav">
                 <template for:each={modalPages} for:item="modalPage">
@@ -566,13 +679,15 @@
             <article class="modal-content_main">
               <section class="modal-page modal-page_selected" data-modal-page="payment-calculator">
                 <template if:true={purchasePrice}>
-                  <c-boat-res-finance-details payment-type={paymentType}
-                                              amount={purchasePrice}
-                                              deposit={paymentAmount}
-                                              interest-rate={interestRate}
-                                              amort={term}
-                                              premium-pack-value={boat.premiumPackage.value}
-                                              premium-pack-items={premiumPackItems}></c-boat-res-finance-details>
+                  <c-boat-res-finance-details
+                    payment-type={paymentType}
+                    amount={purchasePrice}
+                    deposit={paymentAmount}
+                    interest-rate={interestRate}
+                    amort={term}
+                    premium-pack-value={boat.premiumPackage.value}
+                    premium-pack-items={premiumPackItems}
+                  ></c-boat-res-finance-details>
                 </template>
               </section>
               <section class="modal-page" data-modal-page="premium-package">
@@ -581,12 +696,22 @@
                   <template if:true={isFR}>Ensemble Équipement Préférentiel</template>
                 </h3>
                 <p class="modal-subheading premiumPackage_subheading">
-                  <template if:true={isEN}>Total Value <span>{premiumPackValue}</span> <strong> FREE!</strong></template>
-                  <template if:true={isFR}>Valeur totale <span>{premiumPackValue}</span> <strong> GRATUIT!</strong></template>
+                  <template if:true={isEN}
+                    >Total Value <span>{premiumPackValue}</span> <strong> FREE!</strong></template
+                  >
+                  <template if:true={isFR}
+                    >Valeur totale <span>{premiumPackValue}</span> <strong> GRATUIT!</strong></template
+                  >
                 </p>
                 <p class="premiumPackage_deck">
-                  <template if:true={isEN}>These features are typically optional on most comparable models, but come <strong>standard*</strong> on the {boat.name}.</template>
-                  <template if:true={isFR}>Ces fonctionnalités sont habituellement en option sur des modèles comparables mais sont <strong>standard*</strong> sur le modèle {boat.name}.</template>
+                  <template if:true={isEN}
+                    >These features are typically optional on most comparable models, but come
+                    <strong>standard*</strong> on the {boat.name}.</template
+                  >
+                  <template if:true={isFR}
+                    >Ces fonctionnalités sont habituellement en option sur des modèles comparables mais sont
+                    <strong>standard*</strong> sur le modèle {boat.name}.</template
+                  >
                 </p>
                 <small class="premiumPackage_clause">
                   <template if:true={isEN}>*No substitutions or exclusions.</template>
@@ -615,13 +740,28 @@
                 </h3>
                 <template if:true={isEN}>
                   <p>You can expect to get your <strong>{boat.name}</strong> in <strong>{shippingTiming}</strong>.</p>
-                  <p>By leveraging our dealer network all across Canada, we ensure you get your Legend Boat as soon as possible.</p>
-                  <p>We will provide you more details around the exact timing and status of your delivery as we process your order.</p>
+                  <p>
+                    By leveraging our dealer network all across Canada, we ensure you get your Legend Boat as soon as
+                    possible.
+                  </p>
+                  <p>
+                    We will provide you more details around the exact timing and status of your delivery as we process
+                    your order.
+                  </p>
                 </template>
                 <template if:true={isFR}>
-                  <p>Le délais d’attente pour recevoir votre <strong>{boat.name}</strong> est de <strong>{shippingTiming}</strong>.</p>
-                  <p>En profitant de notre réseau de concessionnaires à travers le Canada, nous nous assurons d’avoir votre Bateau Legend dès que possible.</p>
-                  <p>Nous vous donnerons plus de détails sur la date exacte et l’état de votre livraison au fur à mesure que nous traiterons votre commande.</p>
+                  <p>
+                    Le délais d’attente pour recevoir votre <strong>{boat.name}</strong> est de
+                    <strong>{shippingTiming}</strong>.
+                  </p>
+                  <p>
+                    En profitant de notre réseau de concessionnaires à travers le Canada, nous nous assurons d’avoir
+                    votre Bateau Legend dès que possible.
+                  </p>
+                  <p>
+                    Nous vous donnerons plus de détails sur la date exacte et l’état de votre livraison au fur à mesure
+                    que nous traiterons votre commande.
+                  </p>
                 </template>
 
                 <h3 class="modal-heading">
@@ -679,7 +819,7 @@
               </section>
               <span class="modal-content_close">
                 <button onclick={handleCloseModal}>
-                  <i class="slds-icon-close" ></i>
+                  <i class="slds-icon-close"></i>
                 </button>
               </span>
             </article>
@@ -687,6 +827,5 @@
         </div>
       </aside>
     </div>
-
   </main>
 </template>

@@ -22,17 +22,15 @@
         </figure>
 
         <div class="serialFullDescription">
-          <lightning-formatted-rich-text
-                  value={fullDescription}
-          ></lightning-formatted-rich-text>
+          <lightning-formatted-rich-text value={fullDescription}></lightning-formatted-rich-text>
         </div>
 
-<!--        <template if:true={hasPhotoGallery}>-->
-<!--          <section class="intro__gallery">-->
-<!--            <h3 class="ro">Photo Gallery</h3>-->
-<!--            <c-factory-store-photo-gallery content-type="default" content={photoGallery} section-width="Average"></c-factory-store-photo-gallery>-->
-<!--          </section>-->
-<!--        </template>-->
+        <!--        <template if:true={hasPhotoGallery}>-->
+        <!--          <section class="intro__gallery">-->
+        <!--            <h3 class="ro">Photo Gallery</h3>-->
+        <!--            <c-factory-store-photo-gallery content-type="default" content={photoGallery} section-width="Average"></c-factory-store-photo-gallery>-->
+        <!--          </section>-->
+        <!--        </template>-->
       </template>
 
       <template if:true={serialDataLookupRunning}>
