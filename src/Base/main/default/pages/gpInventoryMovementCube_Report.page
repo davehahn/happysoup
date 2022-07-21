@@ -1,74 +1,72 @@
 <apex:page controller="gcInventoryMovementCube_Report" showHeader="true" sidebar="true" cache="false" readOnly="true">
+  <head>
+    <style>
+      tr.pq-row-select td {
+        background-color: yellow;
+      }
+      tr.total td {
+        font-weight: bold;
+      }
+      div.pq-grid-footer {
+        display: none;
+      }
+      .colHighlight {
+        background-color: yellow;
+      }
+    </style>
 
-<head>
-<style>
-tr.pq-row-select td{
-    background-color:yellow;
-}
-tr.total td{
-    font-weight: bold;
-}
-div.pq-grid-footer{
-    display:none;
-}
-.colHighlight{
-    background-color: yellow;
-}
-</style>
-
-<apex:stylesheet value="{!URLFOR($Resource.GMBLJS__jQueryUI,'/jquery-ui/jquery-ui.min.css')}"/>
-<apex:stylesheet value="{!URLFOR($Resource.GMBLJS__pqGridPro241,'/pqgrid.min.css')}"/>
-
-</head>
-<body>
-    <div style="width:98%; margin:0 auto">
-        <table width="100%">
-            <tr style="text-align:center;" id="datepickerContainer">
-                <td colspan="2">
-                    Inventory as of:&nbsp;&nbsp;<input type="text" id="datepicker" readonly="true"/>
-                </td>
-            </tr>
-            <apex:outputText rendered="{!$User.UITheme == 'Theme4d'}">
-            <tr style="text-align:center;">
-                <td colspan="2">
-                    <a target="_blank" href="/apex/gpInventoryMovementCube_Report">Basic Visualforce Page</a>
-                </td>
-            </tr>
-            </apex:outputText>
-            <tr>
-                <td width="25%">
-                    <div><div id="warehouse"></div></div>
-                </td>
-                <td width="75%">
-                    <div><div id="product"></div></div>
-                </td>
-            </tr>
-            <tr>
-                <td colspan="2">
-                    <div><div id="detail"></div></div>
-                </td>
-            </tr>
-            <tr>
-                <td colspan="2">
-                    <div id="maps"></div>
-                </td>
-            </tr>
-        </table>
+    <apex:stylesheet value="{!URLFOR($Resource.GMBLJS__jQueryUI,'/jquery-ui/jquery-ui.min.css')}" />
+    <apex:stylesheet value="{!URLFOR($Resource.GMBLJS__pqGridPro241,'/pqgrid.min.css')}" />
+  </head>
+  <body>
+    <div style="width: 98%; margin: 0 auto">
+      <table width="100%">
+        <tr style="text-align: center" id="datepickerContainer">
+          <td colspan="2">Inventory as of:&nbsp;&nbsp;<input type="text" id="datepicker" readonly="true" /></td>
+        </tr>
+        <apex:outputText rendered="{!$User.UITheme == 'Theme4d'}">
+          <tr style="text-align: center">
+            <td colspan="2">
+              <a target="_blank" href="/apex/gpInventoryMovementCube_Report">Basic Visualforce Page</a>
+            </td>
+          </tr>
+        </apex:outputText>
+        <tr>
+          <td width="25%">
+            <div><div id="warehouse"></div></div>
+          </td>
+          <td width="75%">
+            <div><div id="product"></div></div>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2">
+            <div><div id="detail"></div></div>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2">
+            <div id="maps"></div>
+          </td>
+        </tr>
+      </table>
     </div>
-</body>
+  </body>
 
-<apex:includeScript value="{!$Resource.GMBLJS__jQuery}"/>
-<apex:includeScript value="{!URLFOR($Resource.GMBLJS__jQueryUI,'/jquery-ui/jquery-ui.min.js')}"/>
-<apex:includeScript value="{!$Resource.GMBLJS__accountingJS}"/>
-<apex:includeScript value="{!$Resource.GMBLJS__ExcellentExport}"/>
+  <apex:includeScript value="{!$Resource.GMBLJS__jQuery}" />
+  <apex:includeScript value="{!URLFOR($Resource.GMBLJS__jQueryUI,'/jquery-ui/jquery-ui.min.js')}" />
+  <apex:includeScript value="{!$Resource.GMBLJS__accountingJS}" />
+  <apex:includeScript value="{!$Resource.GMBLJS__ExcellentExport}" />
 
-<apex:includeScript value="{!URLFOR($Resource.GMBLJS__pqGridPro241,'/pqgrid.min.js')}"/>
+  <apex:includeScript value="{!URLFOR($Resource.GMBLJS__pqGridPro241,'/pqgrid.min.js')}" />
 
-<apex:includeScript value="{!$Resource.GMBLJS__gsrSpinner}"/>
-<apex:includeScript value="{!$Resource.GMBLJS__gsrGrid2}"/>
+  <apex:includeScript value="{!$Resource.GMBLJS__gsrSpinner}" />
+  <apex:includeScript value="{!$Resource.GMBLJS__gsrGrid2}" />
 
-<script>function setFocusOnLoad() {}</script>
-<script type="text/javascript">
+  <script>
+    function setFocusOnLoad() {}
+  </script>
+  <script type="text/javascript">
 
     $j = jQuery.noConflict();
     var currentTheme = "{!$User.UITheme}";
@@ -539,7 +537,7 @@ div.pq-grid-footer{
             /// Header table
             var title = $gridDiv.pqGrid('option','title');
             $topTable = jQuery('<table></table>');
-            var $topTableRow = jQuery('<tr></tr>'); 
+            var $topTableRow = jQuery('<tr></tr>');
             $topTable.attr('id','exportTable');
 
             jQuery('<tr></tr>')
@@ -564,7 +562,7 @@ div.pq-grid-footer{
             jQuery.each($gridDiv.find('table.pq-grid-header-table:last tr.pq-grid-title-row:first'), function(i, headerRow){
                 if(!jQuery(headerRow).hasClass('pq-row-hidden') && jQuery(headerRow).is(':visible'))
                 {
-                    var $newRow = jQuery('<tr></tr>'); 
+                    var $newRow = jQuery('<tr></tr>');
                     jQuery(headerRow).children().each(function(i, v) {
                         if(!jQuery(v).hasClass('pq-grid-number-col'))
                         {
@@ -586,7 +584,7 @@ div.pq-grid-footer{
                 var $curentRow = jQuery(detailRow);
                 if(!$curentRow.hasClass('pq-row-hidden') && $curentRow.is(':visible'))
                 {
-                    var $newRow = jQuery('<tr></tr>'); 
+                    var $newRow = jQuery('<tr></tr>');
                     if($curentRow.hasClass('pq-summary-row') || $curentRow.hasClass('pq-group-row'))
                         $newRow.css('font-weight','bold');
 
@@ -607,7 +605,7 @@ div.pq-grid-footer{
 
                             if($cTd.children('strong').length) txt = '<strong>' + txt + '</strong>';
                             var $newTd = jQuery('<td style="mso-style-name:Normal;mso-number-format:\\\@"></td>');
-                            
+
                             if(numberField){
                                 // $newTd = jQuery('<td style="mso-number-format:'+amountFormat+'"></td>');
                                 if($cTd.hasClass('actualNumber'))
@@ -628,7 +626,7 @@ div.pq-grid-footer{
                 if(!jQuery(totalRow).hasClass('pq-row-hidden') && jQuery(totalRow).is(':visible'))
                 {
                     var $newRow = jQuery('<tr></tr>').css('font-weight','bold');
-                    jQuery(totalRow).children().each(function(i, v) { 
+                    jQuery(totalRow).children().each(function(i, v) {
                         var $cTd = jQuery(v);
                         if(!jQuery(v).hasClass('pq-grid-number-cell'))
                         {
@@ -669,6 +667,5 @@ div.pq-grid-footer{
             gSpinner.hide();
         }
     }
-</script>
-
+  </script>
 </apex:page>

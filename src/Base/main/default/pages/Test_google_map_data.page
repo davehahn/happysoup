@@ -1,144 +1,128 @@
 <apex:page sidebar="true" showHeader="true">
+  <c:LegendFormResources />
+  <apex:stylesheet value="{!URLFOR( $Resource.GlobalResources, 'css/line-indicator.min.css' )}" />
 
-    <c:LegendFormResources />
-    <apex:stylesheet value="{!URLFOR( $Resource.GlobalResources, 'css/line-indicator.min.css' )}" />
-
-    <div class="row" style="margin-top: 40px;">
-      <div class="column large-12">
-
-        <div class="row">
-          <div class="column large-3">
-            <label class='right' style='line-height: 40px;'>Report Id</label>
-          </div>
-          <div class="column large-6">
-            <input type="text" id='report-id' />
-          </div>
-          <div class="column large-3">
-            <div style="line-height: 40px;">
-            <a href="#" id='load-report' class="lgnd_btn radius">Load Report</a>
-            </div>
+  <div class="row" style="margin-top: 40px">
+    <div class="column large-12">
+      <div class="row">
+        <div class="column large-3">
+          <label class="right" style="line-height: 40px">Report Id</label>
+        </div>
+        <div class="column large-6">
+          <input type="text" id="report-id" />
+        </div>
+        <div class="column large-3">
+          <div style="line-height: 40px">
+            <a href="#" id="load-report" class="lgnd_btn radius">Load Report</a>
           </div>
         </div>
-
       </div>
     </div>
+  </div>
 
-<!--     <div class="row" style="margin-top: 30px;">
+  <!--     <div class="row" style="margin-top: 30px;">
       <div class="column large-10 large-offset -1 end" style="text-align: center">
       <div id="map"></div>
       </div>
     </div> -->
 
-    <div class="row" style="margin-top: 30px;">
-      <div class="column large-12" style="text-align: center">
-      <div class='line-indicator'>
+  <div class="row" style="margin-top: 30px">
+    <div class="column large-12" style="text-align: center">
+      <div class="line-indicator">
         <div class="load-bar">
           <div class="bar"></div>
           <div class="bar"></div>
           <div class="bar"></div>
         </div>
       </div>
-      <div id="chart-container" style="height:800px; overflow: scroll">
+      <div id="chart-container" style="height: 800px; overflow: scroll">
         <div id="chart"></div>
       </div>
-      </div>
     </div>
+  </div>
 
-    <script type='text/javascript' src='https://www.gstatic.com/charts/loader.js'></script>
-    <apex:includeScript value="https://www.google.com/jsapi" />
-    <script>
-
-    (function($) {
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  <apex:includeScript value="https://www.google.com/jsapi" />
+  <script>
+    (function ($) {
       var //reportId = '00Of0000000QwPw',
-          reportId = '00Oi0000006XfZQ',
-          $reportBtn = $('#load-report'),
-          cOptions = {
-            'region': 'CA',
-            'displayMode': 'markers',
-            'resolution': 'provinces',
-            height: 2911,
-            width: 4666,
-            magnifyingGlass: { enable: true, zoomFactor: 5 },
-            colorAxis: {colors: ['green', 'blue']}
-          },
-          labels = [
-            ['City', 'Sales']
-          ],
-          chart;
+        reportId = "00Oi0000006XfZQ",
+        $reportBtn = $("#load-report"),
+        cOptions = {
+          region: "CA",
+          displayMode: "markers",
+          resolution: "provinces",
+          height: 2911,
+          width: 4666,
+          magnifyingGlass: { enable: true, zoomFactor: 5 },
+          colorAxis: { colors: ["green", "blue"] }
+        },
+        labels = [["City", "Sales"]],
+        chart;
 
-      google.charts.load('current', {'packages': ['geochart']});
+      google.charts.load("current", { packages: ["geochart"] });
       google.charts.setOnLoadCallback(drawMarkersMap);
-
 
       // $('#chart-container').scroll( function(e) {
       //   console.log('Top = ' + e.target.scrollTop );
       //   console.log(' Left = ' + e.target.scrollLeft );
       // })
 
-
-      $reportBtn.on('click', function(e) {
+      $reportBtn.on("click", function (e) {
         e.preventDefault();
         //drawMap();
-        reportId = $('#report-id').val();
+        reportId = $("#report-id").val();
         drawMarkersMap();
-      })
-
-      $(document).ready(function () {
-        $('#report-id').val( reportId );
-
       });
 
-      function chartLoadedHandler()
-      {
-        console.log('chart has finished loading');
-        $('.line-indicator').hide();
+      $(document).ready(function () {
+        $("#report-id").val(reportId);
+      });
+
+      function chartLoadedHandler() {
+        console.log("chart has finished loading");
+        $(".line-indicator").hide();
       }
 
-      function drawMarkersMap()
-      {
+      function drawMarkersMap() {
         var data, chart;
-         $('.line-indicator').show();
-        fetchReportData().then( function(chartPoints) {
+        $(".line-indicator").show();
+        fetchReportData().then(function (chartPoints) {
           data = google.visualization.arrayToDataTable(labels.concat(chartPoints));
-          chart = new google.visualization.GeoChart(document.getElementById('chart'));
-          google.visualization.events.addListener(chart, 'ready', chartLoadedHandler);
+          chart = new google.visualization.GeoChart(document.getElementById("chart"));
+          google.visualization.events.addListener(chart, "ready", chartLoadedHandler);
           chart.draw(data, cOptions);
-          $('#chart-container').scrollTop(1872)
-          .scrollLeft(2350);
+          $("#chart-container").scrollTop(1872).scrollLeft(2350);
         });
-
       }
 
-      function fetchReportData()
-      {
+      function fetchReportData() {
         var dfd = new $.Deferred(),
-            chartPoints = [];
+          chartPoints = [];
 
-        console.log('fetching report data');
-        $.ajax('/services/data/v35.0/analytics/reports/' + reportId + '?includeDetails=true', {
+        console.log("fetching report data");
+        $.ajax("/services/data/v35.0/analytics/reports/" + reportId + "?includeDetails=true", {
           beforeSend: function (xhr) {
-            xhr.setRequestHeader('Authorization', 'Bearer {!$Api.Session_ID}');
+            xhr.setRequestHeader("Authorization", "Bearer {!$Api.Session_ID}");
           },
-          success: function(reportResult) {
+          success: function (reportResult) {
             console.log(reportResult);
             $.each(reportResult.groupingsDown.groupings, function (index, value) {
               var prov = value.label;
 
-              $.each( value.groupings, function(i, v) {
-                var city = v.label +', ' + prov,
-                    sales = reportResult.factMap[ v.key + '!T' ].aggregates[0].value;
+              $.each(value.groupings, function (i, v) {
+                var city = v.label + ", " + prov,
+                  sales = reportResult.factMap[v.key + "!T"].aggregates[0].value;
                 console.log(city);
                 console.log(sales);
                 chartPoints.push([city, sales]);
-              })
-
+              });
             });
-            dfd.resolve( chartPoints );
+            dfd.resolve(chartPoints);
           }
         });
         return dfd.promise();
       }
-
-    })(jQuery.noConflict())
-    </script>
+    })(jQuery.noConflict());
+  </script>
 </apex:page>

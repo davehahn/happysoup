@@ -1,9 +1,8 @@
 <apex:page showHeader="true" sidebar="true">
   <apex:stylesheet value="{!URLFOR($Resource.FontAwesome420, 'font-awesome-4.2.0/css/font-awesome.min.css')}" />
-  <link href='https://fonts.googleapis.com/css?family=Lato:300,400' rel='stylesheet' type='text/css' />
+  <link href="https://fonts.googleapis.com/css?family=Lato:300,400" rel="stylesheet" type="text/css" />
   <style type="text/css">
-
-/*  .flexcontainer {
+    /*  .flexcontainer {
     display: -webkit-flex;
     display: flex;
     -webkit-align-items: left;
@@ -20,12 +19,12 @@
     align-content: flex-end;
   }*/
 
-  .flexcontainer {
-    width:100%;
-    height:100%;
-  }
+    .flexcontainer {
+      width: 100%;
+      height: 100%;
+    }
 
-/*  .flexcontainer .box {
+    /*  .flexcontainer .box {
     display:inline-block;
     height: 150px;
     width: 160px;
@@ -37,118 +36,118 @@
     transition:all 0.75s ease-in-out;
   }*/
 
-  .flexcontainer .fbox {
-    display:inline-block;
-    height: 150px;
-    width: 160px;
-    margin:20px;
-    position:relative;
-    -webkit-perspective: 800px;
-    -moz-perspective: 800px;
-    -o-perspective: 800px;
-    perspective: 800px;
-  }
+    .flexcontainer .fbox {
+      display: inline-block;
+      height: 150px;
+      width: 160px;
+      margin: 20px;
+      position: relative;
+      -webkit-perspective: 800px;
+      -moz-perspective: 800px;
+      -o-perspective: 800px;
+      perspective: 800px;
+    }
 
-  .flexcontainer .fbox .cardContainer {
-    width: 100%;
-    height: 100%;
-    position: absolute;
-     -webkit-perspective: 800px;
-    -moz-perspective: 800px;
-    -o-perspective: 800px;
-    perspective: 800px;
-    -webkit-transform-style: preserve-3d;
-    -moz-transform-style: preserve-3d;
-    -o-transform-style: preserve-3d;
-    transform-style: preserve-3d;
-    -webkit-transition: -webkit-transform 0.5s;
-    -moz-transition: -moz-transform 0.5s;
-    -o-transition: -o-transform 0.5s;
-    transition: transform 0.5s;
-  }
+    .flexcontainer .fbox .cardContainer {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      -webkit-perspective: 800px;
+      -moz-perspective: 800px;
+      -o-perspective: 800px;
+      perspective: 800px;
+      -webkit-transform-style: preserve-3d;
+      -moz-transform-style: preserve-3d;
+      -o-transform-style: preserve-3d;
+      transform-style: preserve-3d;
+      -webkit-transition: -webkit-transform 0.5s;
+      -moz-transition: -moz-transform 0.5s;
+      -o-transition: -o-transform 0.5s;
+      transition: transform 0.5s;
+    }
 
-  .flexcontainer .fbox:hover .cardContainer {
-    -webkit-transform: rotateY( 180deg );
-    -moz-transform: rotateY( 180deg );
-    -o-transform: rotateY( 180deg );
-    transform: rotateY( 180deg );
-  }
+    .flexcontainer .fbox:hover .cardContainer {
+      -webkit-transform: rotateY(180deg);
+      -moz-transform: rotateY(180deg);
+      -o-transform: rotateY(180deg);
+      transform: rotateY(180deg);
+    }
 
-  .flexcontainer .fbox .cardContainer .card {
-    display: block;
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    -webkit-backface-visibility: hidden;
-    -moz-backface-visibility: hidden;
-    -o-backface-visibility: hidden;
-    backface-visibility: hidden;
-  }
+    .flexcontainer .fbox .cardContainer .card {
+      display: block;
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      -webkit-backface-visibility: hidden;
+      -moz-backface-visibility: hidden;
+      -o-backface-visibility: hidden;
+      backface-visibility: hidden;
+    }
 
-  .flexcontainer .fbox .cardContainer .card.front {
-    background:#2687B4;
-    text-align:center;
-    z-index:10;
-    font-family: "Lato", sans-serif;
-  }
+    .flexcontainer .fbox .cardContainer .card.front {
+      background: #2687b4;
+      text-align: center;
+      z-index: 10;
+      font-family: "Lato", sans-serif;
+    }
 
-  .flexcontainer .fbox .cardContainer .card.front h4 {
-    display: block;
-    width: 100%;
-    font-size: 24px;
-    color: #FFF;
-    text-align: center;
-    padding: 15px 0;
-    font-family: "Lato", sans-serif !important;
-    font-weight:300;
-  }
+    .flexcontainer .fbox .cardContainer .card.front h4 {
+      display: block;
+      width: 100%;
+      font-size: 24px;
+      color: #fff;
+      text-align: center;
+      padding: 15px 0;
+      font-family: "Lato", sans-serif !important;
+      font-weight: 300;
+    }
 
-  .flexcontainer .fbox .cardContainer .card.front i {
-    font-size:65px;
-    color:#FFF;
-  }
+    .flexcontainer .fbox .cardContainer .card.front i {
+      font-size: 65px;
+      color: #fff;
+    }
 
-  .flexcontainer .fbox .cardContainer .card.back {
-    background:rgba(38, 135, 180, 0.57);
-    -webkit-transform: rotateY( 180deg );
-    -moz-transform: rotateY( 180deg );
-    -o-transform: rotateY( 180deg );
-    transform: rotateY( 180deg );
-  }
+    .flexcontainer .fbox .cardContainer .card.back {
+      background: rgba(38, 135, 180, 0.57);
+      -webkit-transform: rotateY(180deg);
+      -moz-transform: rotateY(180deg);
+      -o-transform: rotateY(180deg);
+      transform: rotateY(180deg);
+    }
 
-  .flexcontainer .fbox .cardContainer .card.back ul{
-    list-style: none;
-    margin: 5px;
-    padding: 0;
-  }
+    .flexcontainer .fbox .cardContainer .card.back ul {
+      list-style: none;
+      margin: 5px;
+      padding: 0;
+    }
 
-  .flexcontainer .fbox .cardContainer .card.back ul li {
-    line-height:30px;
-    margin:0;
-    padding:0;
-  }
+    .flexcontainer .fbox .cardContainer .card.back ul li {
+      line-height: 30px;
+      margin: 0;
+      padding: 0;
+    }
 
-  .flexcontainer .fbox .cardContainer .card.back ul li a{
-    font-family:"Lato" sans-serif;
-    display: block;
-    line-height: 30px;
-    padding-left: 5px;
-    border-bottom: 1px solid #DBDBDB;
-    color: #DBDBDB;
-    text-decoration: none;
-    font-weight: 300;
-    font-size: 15px;
-  }
+    .flexcontainer .fbox .cardContainer .card.back ul li a {
+      font-family: "Lato" sans-serif;
+      display: block;
+      line-height: 30px;
+      padding-left: 5px;
+      border-bottom: 1px solid #dbdbdb;
+      color: #dbdbdb;
+      text-decoration: none;
+      font-weight: 300;
+      font-size: 15px;
+    }
 
-  .flexcontainer .fbox .cardContainer .card.back ul li a:hover {
-    color:#FFF;
-  }
+    .flexcontainer .fbox .cardContainer .card.back ul li a:hover {
+      color: #fff;
+    }
 
-  .flexcontainer .fbox .cardContainer .card.back ul li a i{
-    margin-right:7px;
-  }
+    .flexcontainer .fbox .cardContainer .card.back ul li a i {
+      margin-right: 7px;
+    }
 
-  /*.flexcontainer .box.menu-right:hover {
+    /*.flexcontainer .box.menu-right:hover {
     margin-right:180px;
   }
 
@@ -233,14 +232,10 @@
   .flexcontainer .box .menuContainer ul li a:hover {
     color:#FFF;
   }*/
-
   </style>
-
-
 
   <!-- <a href="{!$Page.RetailCounterSalesTool}" target="_parent">Retail Counter Sale</a> -->
   <div class="flexcontainer">
-
     <!-- <div class="box menu-right">
 
       <div class="contentContainer">
@@ -271,15 +266,15 @@
         </div>
         <div class="card back">
           <ul>
-          <li>
-            <a href="{!$Page.RetailSalesTool}" target="_parent">
-              <i class="fa fa-life-ring"></i>Boat Sale</a>
-          </li>
-          <li>
-            <a href="{!$Page.RetailCounterSalesTool}" target="_parent">
-              <i class="fa fa-calculator"></i>Counter Sale</a>
-          </li>
-        </ul>
+            <li>
+              <a href="{!$Page.RetailSalesTool}" target="_parent"> <i class="fa fa-life-ring"></i>Boat Sale</a>
+            </li>
+            <li>
+              <a href="{!$Page.RetailCounterSalesTool}" target="_parent">
+                <i class="fa fa-calculator"></i>Counter Sale</a
+              >
+            </li>
+          </ul>
         </div>
       </div>
     </div>
@@ -292,23 +287,19 @@
         </div>
         <div class="card back">
           <ul>
-          <li>
-            <a href="#">
-              <i class="fa fa-puzzle-piece"></i>Coming Soon</a>
-          </li>
-          <li>
-            <a href="#">
-              <i class="fa fa-rocket"></i>Coming Soon</a>
-          </li>
-          <li>
-            <a href="#">
-              <i class="fa fa-tachometer"></i>Coming Soon</a>
-          </li>
-          <li>
-            <a href="#">
-              <i class="fa fa-beer"></i>Coming Soon</a>
-          </li>
-        </ul>
+            <li>
+              <a href="#"> <i class="fa fa-puzzle-piece"></i>Coming Soon</a>
+            </li>
+            <li>
+              <a href="#"> <i class="fa fa-rocket"></i>Coming Soon</a>
+            </li>
+            <li>
+              <a href="#"> <i class="fa fa-tachometer"></i>Coming Soon</a>
+            </li>
+            <li>
+              <a href="#"> <i class="fa fa-beer"></i>Coming Soon</a>
+            </li>
+          </ul>
         </div>
       </div>
     </div>
@@ -338,9 +329,5 @@
       </div>
 
     </div> -->
-
-
-
   </div>
-
 </apex:page>

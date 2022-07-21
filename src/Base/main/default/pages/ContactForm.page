@@ -1,45 +1,29 @@
-<apex:page showHeader="true"
-           sidebar="true"
-           docType="html-5.0"
-           standardController="Contact"
-           extensions="ContactExt">
-
-
+<apex:page showHeader="true" sidebar="true" docType="html-5.0" standardController="Contact" extensions="ContactExt">
   <sffd:Resources />
-  <link href='https://fonts.googleapis.com/css?family=Lato:300,400' rel='stylesheet' type='text/css' />
+  <link href="https://fonts.googleapis.com/css?family=Lato:300,400" rel="stylesheet" type="text/css" />
   <apex:stylesheet value="{!URLFOR($Resource.LegendStyles)}" />
   <apex:stylesheet value="{!URLFOR($Resource.LegendFormStyles)}" />
   <apex:stylesheet value="{!URLFOR($Resource.FontAwesome, 'font-awesome-4.0.3/css/font-awesome.min.css')}" />
 
   <h1 class="lgnd">{!title}</h1>
 
-  <sffd:row >
+  <sffd:row>
     <sffd:column cols="large-8 large-offset-2">
-      <apex:messages styleClass="alert-box alert"/>
+      <apex:messages styleClass="alert-box alert" />
     </sffd:column>
   </sffd:row>
 
-    <apex:form id="contactForm" styleClass="legendForm">
+  <apex:form id="contactForm" styleClass="legendForm">
+    <!-- the form fields -->
+    <c:ContactFormFields contact="{!Contact}" isOpportunityCoBuyer="false" />
 
-      <!-- the form fields -->
-      <c:ContactFormFields contact="{!Contact}" isOpportunityCoBuyer="false" />
-
-      <!-- the buttons -->
-      <sffd:row styleClass="formBtnRow">
-
-        <sffd:column cols="large-4 large-offset-8">
-          <apex:commandButton action="{!save}"
-                              styleClass="fd_button small invert success right"
-                              value="Save" />
-           <apex:commandLink action="{!cancel}"
-                       styleClass="fd_button small invert cancelLink right"
-                       value="Cancel">
-            </apex:commandLink>
-          </sffd:column>
-
-      </sffd:row>
-
-    </apex:form>
-
-
+    <!-- the buttons -->
+    <sffd:row styleClass="formBtnRow">
+      <sffd:column cols="large-4 large-offset-8">
+        <apex:commandButton action="{!save}" styleClass="fd_button small invert success right" value="Save" />
+        <apex:commandLink action="{!cancel}" styleClass="fd_button small invert cancelLink right" value="Cancel">
+        </apex:commandLink>
+      </sffd:column>
+    </sffd:row>
+  </apex:form>
 </apex:page>

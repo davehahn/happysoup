@@ -26,46 +26,31 @@
       </apex:pageBlockButtons>
 
       <apex:pageBlockSection columns="2" title="Product Information">
-        <apex:repeat
-          value="{!$ObjectType.Product2.FieldSets['Product_Standard_Fields']}"
-          var="f"
-        >
+        <apex:repeat value="{!$ObjectType.Product2.FieldSets['Product_Standard_Fields']}" var="f">
           <apex:inputField label="{!f.Label}" value="{!Product2[f]}" />
         </apex:repeat>
       </apex:pageBlockSection>
 
       <apex:pageBlockSection columns="2" title="Inventory Information">
-        <apex:repeat
-          value="{!$ObjectType.Product2.FieldSets['Inventory_Fields']}"
-          var="f"
-        >
+        <apex:repeat value="{!$ObjectType.Product2.FieldSets['Inventory_Fields']}" var="f">
           <apex:inputField label="{!f.Label}" value="{!Product2[f]}" />
         </apex:repeat>
       </apex:pageBlockSection>
 
       <apex:pageBlockSection columns="2" title="Quantity Information">
-        <apex:repeat
-          value="{!$ObjectType.Product2.FieldSets['Quantity_Fields']}"
-          var="f"
-        >
+        <apex:repeat value="{!$ObjectType.Product2.FieldSets['Quantity_Fields']}" var="f">
           <apex:inputField label="{!f.Label}" value="{!Product2[f]}" />
         </apex:repeat>
       </apex:pageBlockSection>
 
       <apex:pageBlockSection columns="2" title="Accounting Information">
-        <apex:repeat
-          value="{!$ObjectType.Product2.FieldSets['Accounting_Fields']}"
-          var="f"
-        >
+        <apex:repeat value="{!$ObjectType.Product2.FieldSets['Accounting_Fields']}" var="f">
           <apex:inputField label="{!f.Label}" value="{!Product2[f]}" />
         </apex:repeat>
       </apex:pageBlockSection>
 
       <apex:pageBlockSection columns="2" title="Rigging Information">
-        <apex:repeat
-          value="{!$ObjectType.Product2.FieldSets['Rigging_Fields']}"
-          var="f"
-        >
+        <apex:repeat value="{!$ObjectType.Product2.FieldSets['Rigging_Fields']}" var="f">
           <apex:inputField label="{!f.Label}" value="{!Product2[f]}" />
         </apex:repeat>
       </apex:pageBlockSection>

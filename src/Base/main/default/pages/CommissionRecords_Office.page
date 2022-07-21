@@ -1,64 +1,63 @@
-<apex:page docType="html-5.0"
-           showHeader="true"
-           sidebar="false"
-           controller="CommissionRecordController"
-           tabStyle="Commissions__tab">
-
+<apex:page
+  docType="html-5.0"
+  showHeader="true"
+  sidebar="false"
+  controller="CommissionRecordController"
+  tabStyle="Commissions__tab"
+>
   <!-- CSS -->
-   <apex:stylesheet value="{!URLFOR($Resource.LegendStyles)}" />
-   <apex:stylesheet value="{!URLFOR($Resource.ngCommissions, 'css/commission.min.css')}" />
+  <apex:stylesheet value="{!URLFOR($Resource.LegendStyles)}" />
+  <apex:stylesheet value="{!URLFOR($Resource.ngCommissions, 'css/commission.min.css')}" />
 
   <!-- ngForce -->
-  <c:ngForceResources includeBootStrap="true" includeInfiniteScroll="true"/>
+  <c:ngForceResources includeBootStrap="true" includeInfiniteScroll="true" />
 
   <c:ngForce />
 
   <!-- ngForceConfig -->
   <script type="text/javascript">
-   (function(angular){
-      var sitePrefix = '{!$Site.Prefix}';
-      if(sitePrefix === '') sitePrefix = '/apex';
+    (function (angular) {
+      var sitePrefix = "{!$Site.Prefix}";
+      if (sitePrefix === "") sitePrefix = "/apex";
 
-      angular.module('ngForce.config', []).constant('ngForceConfig', {
-        sessionId: '{!$Api.Session_ID}',
+      angular.module("ngForce.config", []).constant("ngForceConfig", {
+        sessionId: "{!$Api.Session_ID}",
         sitePrefix: sitePrefix,
-        resourceUrl: '{!URLFOR($Resource.ngCommissions)}'
+        resourceUrl: "{!URLFOR($Resource.ngCommissions)}"
       });
     })(angular);
   </script>
 
   <!-- Angular Modules -->
 
-
   <!-- This includes the module that defines our application -->
   <apex:includeScript value="{!URLFOR($Resource.ngCommissions, 'js/commissionsOfficeApp.js')}" />
 
   <!-- Angular Filters -->
-  <apex:includeScript value="{!URLFOR($Resource.ngCommissions, 'js/filters/customFilters.js')}"/>
+  <apex:includeScript value="{!URLFOR($Resource.ngCommissions, 'js/filters/customFilters.js')}" />
 
   <!-- Angular Factory/Services -->
-  <apex:includeScript value="{!URLFOR($Resource.ngCommissions, 'js/factories/commission_record.js')}"/>
+  <apex:includeScript value="{!URLFOR($Resource.ngCommissions, 'js/factories/commission_record.js')}" />
 
   <!-- Angular Controllers -->
   <!-- <apex:includeScript value="{!URLFOR($Resource.ngCommissions, 'js/controllers/mainController.js')}"/> -->
-  <apex:includeScript value="{!URLFOR($Resource.ngCommissions, 'js/controllers/commissionRecordsController.js')}"/>
-  <apex:includeScript value="{!URLFOR($Resource.ngCommissions, 'js/controllers/testController.js')}"/>
+  <apex:includeScript value="{!URLFOR($Resource.ngCommissions, 'js/controllers/commissionRecordsController.js')}" />
+  <apex:includeScript value="{!URLFOR($Resource.ngCommissions, 'js/controllers/testController.js')}" />
 
   <!-- Angular Directives -->
-  <apex:includeScript value="{!URLFOR($Resource.ngCommissions, 'js/directives/popoverHtmlUnsafe.js')}"/>
-  <apex:includeScript value="{!URLFOR($Resource.ngCommissions, 'js/directives/commission_directives.js')}"/>
+  <apex:includeScript value="{!URLFOR($Resource.ngCommissions, 'js/directives/popoverHtmlUnsafe.js')}" />
+  <apex:includeScript value="{!URLFOR($Resource.ngCommissions, 'js/directives/commission_directives.js')}" />
 
   <body ng-app="commissionsOfficeApp">
     <div class="commissionApp" id="commissionApp">
-
-<!--       <h1>Commission Records</h1> -->
+      <!--       <h1>Commission Records</h1> -->
 
       <div class="container-fluid">
         <!-- <testdir></testdir> -->
         <div ng-view="true"></div>
-      </div><!-- /container-fuild -->
-
-    </div><!-- /commissionApp -->
+      </div>
+      <!-- /container-fuild -->
+    </div>
+    <!-- /commissionApp -->
   </body>
-
 </apex:page>

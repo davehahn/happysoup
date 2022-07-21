@@ -1,8 +1,4 @@
-<apex:page standardController="Product2"
-           extensions="ProductBoatExt,BoatRemoter"
-           showHeader="false"
-           sidebar="false">
-
+<apex:page standardController="Product2" extensions="ProductBoatExt,BoatRemoter" showHeader="false" sidebar="false">
   <sffd:Resources />
   <apex:stylesheet value="{!URLFOR($Resource.FontAwesome420, 'font-awesome-4.2.0/css/font-awesome.min.css')}" />
   <apex:stylesheet value="{!URLFOR($Resource.LegendStyles)}" />
@@ -139,186 +135,314 @@
       margin-top: 1rem;
       color: #00AAF9;
     }
-
   </style>
 
- <!--  <apex:includeScript value="{!URLFOR($Resource.jQuery)}"  /> -->
+  <!--  <apex:includeScript value="{!URLFOR($Resource.jQuery)}"  /> -->
 
+  <apex:pageBlock rendered="{!productOptions.size == 0}" mode="mainDetail">
+    <div style="width: 40%; margin: 0px auto; padding: 25px; text-align: center">
+      <p style="padding: 10px 0px; font-size: 1.5em; color: #00aaf9">This Product currently has no options.</p>
 
-  <apex:pageBlock rendered="{!productOptions.size == 0}"
-                  mode="mainDetail">
-    <div style="width:40%;
-                margin:0px auto;
-                padding:25px;
-                text-align:center;">
-
-      <p style="padding:10px 0px;font-size:1.5em;color:#00AAF9;">
-        This Product currently has no options.
-      </p>
-
-      <apex:outputLink value="/apex/ProductOptionsForm?productId={!Product2.Id}"
-                       target="_parent"
-                       styleClass="lgnd_btn radius"
-                       style="position:relative;top:10px;">
+      <apex:outputLink
+        value="/apex/ProductOptionsForm?productId={!Product2.Id}"
+        target="_parent"
+        styleClass="lgnd_btn radius"
+        style="position: relative; top: 10px"
+      >
         Add Options
       </apex:outputLink>
-
     </div>
-
   </apex:pageBlock>
 
   <apex:outputPanel layout="none" rendered="{!productOptions.size > 0}">
-  <apex:form >
-  <div style="position:relative;">
+    <apex:form>
+      <div style="position: relative">
+        <apex:actionFunction
+          name="pbChanged"
+          action="{!pricebookChanged}"
+          rerender="motorOptions, trailerOptions, trollingMotorOptions"
+          onComplete="pbChangeComplete()"
+        >
+          <apex:param name="pricebookId" value="" />
+        </apex:actionFunction>
 
-    <apex:actionFunction name="pbChanged"
-                         action="{!pricebookChanged}"
-                         rerender="motorOptions, trailerOptions, trollingMotorOptions"
-                         onComplete="pbChangeComplete()" >
-      <apex:param name="pricebookId" value="" />
-    </apex:actionFunction>
+        <apex:outputLink
+          value="/apex/ProductOptionsForm?productId={!Product2.Id}"
+          target="_parent"
+          styleClass="lgnd_btn radius"
+          style="position: absolute; top: -8px; right: 0; margin-right: 35px"
+        >
+          Add/Remove
+        </apex:outputLink>
 
-    <apex:outputLink value="/apex/ProductOptionsForm?productId={!Product2.Id}"
-                     target="_parent"
-                     styleClass="lgnd_btn radius"
-                     style="position:absolute; top:-8px; right:0; margin-right: 35px;">
-      Add/Remove
-    </apex:outputLink>
+        <div class="tabContainer blue" style="padding-top: 15px">
+          <dl class="tabs small options" data-tab="true" style="margin-top: 30px">
+            <apex:repeat value="{!upgradeRecordTypes}" var="rt">
+              <apex:outputPanel layout="none" rendered="{!upgradeTabRenderer[rt]}">
+                <dd>
+                  <a href="#{!upgradeRecordTypes[rt]}s"> {!rt}s </a>
+                </dd>
+              </apex:outputPanel>
+            </apex:repeat>
 
+            <apex:repeat value="{!productOptionsMap}" var="key">
+              <dd>
+                <a href="#{!familyNames[key] }"> {!key} </a>
+              </dd>
+            </apex:repeat>
+          </dl>
 
-    <div class="tabContainer blue" style="padding-top:15px;">
-
-      <dl class="tabs small options" data-tab='true' style="margin-top:30px;">
-
-        <apex:repeat value="{!upgradeRecordTypes}" var="rt">
-          <apex:outputPanel layout="none" rendered="{!upgradeTabRenderer[rt]}">
-            <dd>
-              <a href="#{!upgradeRecordTypes[rt]}s">
-                {!rt}s
-              </a>
-            </dd>
-          </apex:outputPanel>
-        </apex:repeat>
-
-        <apex:repeat value="{!productOptionsMap}" var="key">
-          <dd>
-            <a href="#{!familyNames[key] }">
-              {!key}
-            </a>
-          </dd>
-        </apex:repeat>
-
-      </dl>
-
-      <div class="tabs-content" style="border-top:1px solid #CCC">
-        <!-- +++++++++++++++++++++++ UPGRADE PRODUCTS +++++++++++++++ -->
-        <div class="content upgrade-content" id="motors">
-          <apex:outputPanel id="motorOptions">
-          <div class="optionTableContainer">
-            <div class="pb-select-container">
-              <label style="margin:10px 0 0 5px;">Pricebook</label>
-              <apex:selectlist value="{!selectedPb}" size="1" onchange="pbSelectChanged(this, 'motorUprades')">
-                <apex:selectOptions value="{!pricebookOptions}" />
-              </apex:selectlist>
+          <div class="tabs-content" style="border-top: 1px solid #ccc">
+            <!-- +++++++++++++++++++++++ UPGRADE PRODUCTS +++++++++++++++ -->
+            <div class="content upgrade-content" id="motors">
+              <apex:outputPanel id="motorOptions">
+                <div class="optionTableContainer">
+                  <div class="pb-select-container">
+                    <label style="margin: 10px 0 0 5px">Pricebook</label>
+                    <apex:selectlist value="{!selectedPb}" size="1" onchange="pbSelectChanged(this, 'motorUprades')">
+                      <apex:selectOptions value="{!pricebookOptions}" />
+                    </apex:selectlist>
+                  </div>
+                  <div>
+                    <table class="fixed-header-scrollable upgrades motors" id="motorUprades">
+                      <thead>
+                        <tr>
+                          <td>Name</td>
+                          <td>Upgrade Cost</td>
+                          <td>Web Visable</td>
+                          <td>Maximum</td>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <apex:repeat value="{!productUpgradeMap['Motor']}" var="option">
+                          <tr>
+                            <td>{!option.productName}</td>
+                            <td>
+                              <!-- no upgrade and no upgrade cost PRICEBOOK PRICE -->
+                              <apex:outputText
+                                value="{!'$ ' + option.cost}"
+                                rendered="{!option.productUpgradeId == null && option.upgradeCostId == null }"
+                              />
+                              <!-- has upgrade but upgrade cost not set -->
+                              <apex:outputLink
+                                value="#"
+                                rendered="{!option.productUpgradeId != null && option.upgradeCostId == null }"
+                                styleClass="upgradeCreateLink"
+                                html-data-product-upgrade-id="{!option.productUpgradeId}"
+                                html-data-price-book-id="{!selectedPb}"
+                              >
+                                {!option.cost}
+                              </apex:outputLink>
+                              <!-- everything is set here we will be editing the upgrade price -->
+                              <apex:outputlink
+                                value="#"
+                                rendered="{!option.productUpgradeId != null && option.upgradeCostId != null }"
+                                styleClass="upgradeEditLink"
+                                html-data-edit-id="{!option.upgradeCostId}"
+                              >
+                                $ {!option.cost}
+                              </apex:outputlink>
+                            </td>
+                            <td>
+                              <a
+                                href="#"
+                                class="displayOnWebLink"
+                                data-value="{!option.displayOnWeb}"
+                                data-option-id="{!option.optionId}"
+                              >
+                                <i class="fa fa-check"></i>
+                              </a>
+                            </td>
+                            <td>
+                              <a
+                                href="#"
+                                class="maximumLink"
+                                data-value="{!option.isBiggestMotor}"
+                                data-option-id="{!option.optionId}"
+                              >
+                                <i class="fa fa-check"></i>
+                              </a>
+                            </td>
+                          </tr>
+                        </apex:repeat>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </apex:outputPanel>
             </div>
-            <div>
-              <table class="fixed-header-scrollable upgrades motors" id="motorUprades">
-                <thead>
-                  <tr>
-                    <td>Name</td>
-                    <td>Upgrade Cost</td>
-                    <td>Web Visable</td>
-                    <td>Maximum</td>
-                  </tr>
-                </thead>
-                <tbody>
-                  <apex:repeat value="{!productUpgradeMap['Motor']}" var="option">
-                    <tr>
-                      <td>{!option.productName}</td>
-                      <td>
-                        <!-- no upgrade and no upgrade cost PRICEBOOK PRICE -->
-                        <apex:outputText value="{!'$ ' + option.cost}"
-                                         rendered="{!option.productUpgradeId == null && option.upgradeCostId == null }"
-                                         />
-                        <!-- has upgrade but upgrade cost not set -->
-                        <apex:outputLink value="#"
-                                         rendered="{!option.productUpgradeId != null && option.upgradeCostId == null }"
-                                         styleClass="upgradeCreateLink"
-                                         html-data-product-upgrade-id="{!option.productUpgradeId}"
-                                         html-data-price-book-id="{!selectedPb}">
-                           {!option.cost}
-                        </apex:outputLink>
-                        <!-- everything is set here we will be editing the upgrade price -->
-                        <apex:outputlink value="#"
-                                         rendered="{!option.productUpgradeId != null && option.upgradeCostId != null }"
-                                         styleClass="upgradeEditLink"
-                                         html-data-edit-id="{!option.upgradeCostId}">
-                          $ {!option.cost}
-                        </apex:outputLink>
-                      </td>
-                      <td>
-                        <a href="#" class="displayOnWebLink" data-value="{!option.displayOnWeb}" data-option-id="{!option.optionId}">
-                          <i class="fa fa-check"></i>
-                        </a>
-                      </td>
-                      <td>
-                        <a href="#" class="maximumLink" data-value="{!option.isBiggestMotor}" data-option-id="{!option.optionId}">
-                          <i class="fa fa-check"></i>
-                        </a>
-                      </td>
-                    </tr>
-                  </apex:repeat>
-                </tbody>
-              </table>
-            </div>
-           </div>
-          </apex:outputPanel>
-        </div>
 
-        <div class="content upgrade-content" id="trailers">
-          <apex:outputPanel id="trailerOptions">
-            <div class="optionTableContainer">
-              <div class="pb-select-container">
-                <label style="margin:10px 0 0 5px;">Pricebook</label>
-                  <apex:selectlist value="{!selectedPb}" size="1"  onchange="pbSelectChanged(this, 'trailerUpgrades')">
-                    <apex:selectOptions value="{!pricebookOptions}" />
-                  </apex:selectlist>
-              </div>
-              <div>
-                <table class="fixed-header-scrollable upgrades" id="trailerUpgrades">
+            <div class="content upgrade-content" id="trailers">
+              <apex:outputPanel id="trailerOptions">
+                <div class="optionTableContainer">
+                  <div class="pb-select-container">
+                    <label style="margin: 10px 0 0 5px">Pricebook</label>
+                    <apex:selectlist value="{!selectedPb}" size="1" onchange="pbSelectChanged(this, 'trailerUpgrades')">
+                      <apex:selectOptions value="{!pricebookOptions}" />
+                    </apex:selectlist>
+                  </div>
+                  <div>
+                    <table class="fixed-header-scrollable upgrades" id="trailerUpgrades">
+                      <thead>
+                        <tr>
+                          <td>Name</td>
+                          <td>Upgrade Cost</td>
+                          <td>Web Visable</td>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <apex:repeat value="{!productUpgradeMap['Trailer']}" var="option">
+                          <tr>
+                            <td>{!option.productName}</td>
+                            <td>
+                              <!-- no upgrade and no upgrade cost PRICEBOOK PRICE -->
+                              <apex:outputText
+                                value="{!'$ ' + option.cost}"
+                                rendered="{!option.productUpgradeId == null && option.upgradeCostId == null }"
+                              />
+                              <!-- has upgrade but upgrade cost not set -->
+                              <apex:outputLink
+                                value="#"
+                                rendered="{!option.productUpgradeId != null && option.upgradeCostId == null }"
+                                styleClass="upgradeCreateLink"
+                                html-data-product-upgrade-id="{!option.productUpgradeId}"
+                                html-data-price-book-id="{!selectedPb}"
+                              >
+                                $ {!option.cost}
+                              </apex:outputLink>
+                              <!-- everything is set here we will be editing the upgrade price -->
+                              <apex:outputlink
+                                value="#"
+                                rendered="{!option.productUpgradeId != null && option.upgradeCostId != null }"
+                                styleClass="upgradeEditLink"
+                                html-data-edit-id="{!option.upgradeCostId}"
+                              >
+                                $ {!option.cost}
+                              </apex:outputlink>
+                            </td>
+                            <td>
+                              <a
+                                href="#"
+                                class="displayOnWebLink"
+                                data-value="{!option.displayOnWeb}"
+                                data-option-id="{!option.optionId}"
+                              >
+                                <i class="fa fa-check"></i>
+                              </a>
+                            </td>
+                          </tr>
+                        </apex:repeat>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </apex:outputPanel>
+            </div>
+
+            <div class="content upgrade-content" id="trolling_motors">
+              <apex:outputPanel id="trollingMotorOptions">
+                <div class="optionTableContainer">
+                  <div class="pb-select-container">
+                    <label style="margin: 10px 0 0 5px">Pricebook</label>
+                    <apex:selectlist
+                      value="{!selectedPb}"
+                      size="1"
+                      onchange="pbSelectChanged(this, 'trollingMotorUpgrades')"
+                    >
+                      <apex:selectOptions value="{!pricebookOptions}" />
+                    </apex:selectlist>
+                  </div>
+                  <div>
+                    <table class="fixed-header-scrollable upgrades" id="trollingMotorUpgrades">
+                      <thead>
+                        <tr>
+                          <td>Name</td>
+                          <td>Upgrade Cost</td>
+                          <td>Web Visable</td>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <apex:repeat value="{!productUpgradeMap['Trolling Motor']}" var="option">
+                          <tr>
+                            <td>{!option.productName}</td>
+                            <td>
+                              <!-- no upgrade and no upgrade cost PRICEBOOK PRICE -->
+                              <apex:outputText
+                                value="{!'$ ' + option.cost}"
+                                rendered="{!option.productUpgradeId == null && option.upgradeCostId == null }"
+                              />
+                              <!-- has upgrade but upgrade cost not set -->
+                              <apex:outputLink
+                                value="#"
+                                rendered="{!option.productUpgradeId != null && option.upgradeCostId == null }"
+                                styleClass="upgradeCreateLink"
+                                html-data-product-upgrade-id="{!option.productUpgradeId}"
+                                html-data-price-book-id="{!selectedPb}"
+                              >
+                                $ {!option.cost}
+                              </apex:outputLink>
+                              <!-- everything is set here we will be editing the upgrade price -->
+                              <apex:outputlink
+                                value="#"
+                                rendered="{!option.productUpgradeId != null && option.upgradeCostId != null }"
+                                styleClass="upgradeEditLink"
+                                html-data-edit-id="{!option.upgradeCostId}"
+                              >
+                                $ {!option.cost}
+                              </apex:outputlink>
+                            </td>
+                            <td>
+                              <a
+                                href="#"
+                                class="displayOnWebLink"
+                                data-value="{!option.displayOnWeb}"
+                                data-option-id="{!option.optionId}"
+                              >
+                                <i class="fa fa-check"></i>
+                              </a>
+                            </td>
+                          </tr>
+                        </apex:repeat>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </apex:outputPanel>
+            </div>
+            <!-- ======================= /UPGRADE PRODUCTS =============== -->
+
+            <!-- +++++++++++++++++++++++ OPTION PRODUCTS +++++++++++++++ -->
+            <apex:repeat value="{!productOptionsMap}" var="key">
+              <div class="content" id="{!familyNames[key]}">
+                <div class="optionTableContainer">
+                  <table class="fixed-header-scrollable options">
                     <thead>
                       <tr>
+                        <td>Code</td>
                         <td>Name</td>
-                        <td>Upgrade Cost</td>
-                        <td>Web Visable</td>
+                        <td>Standard</td>
+                        <td>Maximum</td>
+                        <td>Display on Web</td>
                       </tr>
                     </thead>
                     <tbody>
-                      <apex:repeat value="{!productUpgradeMap['Trailer']}" var="option">
+                      <apex:repeat value="{!productOptionsMap[key]}" var="option">
                         <tr>
-                          <td>{!option.productName}</td>
+                          <td><p>{!option.productNumber}</p></td>
                           <td>
-                            <!-- no upgrade and no upgrade cost PRICEBOOK PRICE -->
-                            <apex:outputText value="{!'$ ' + option.cost}"
-                                             rendered="{!option.productUpgradeId == null && option.upgradeCostId == null }" />
-                            <!-- has upgrade but upgrade cost not set -->
-                                <apex:outputLink value="#"
-                                             rendered="{!option.productUpgradeId != null && option.upgradeCostId == null }"
-                                             styleClass="upgradeCreateLink"
-                                             html-data-product-upgrade-id="{!option.productUpgradeId}"
-                                             html-data-price-book-id="{!selectedPb}">
-                              $ {!option.cost}
-                            </apex:outputLink>
-                            <!-- everything is set here we will be editing the upgrade price -->
-                            <apex:outputlink value="#"
-                                             rendered="{!option.productUpgradeId != null && option.upgradeCostId != null }"
-                                             styleClass="upgradeEditLink"
-                                             html-data-edit-id="{!option.upgradeCostId}">
-                              $ {!option.cost}
+                            <apex:outputLink value="#" styleClass="optionLink" html-data-EditId="{!option.Id}">
+                              {!option.productName}
                             </apex:outputLink>
                           </td>
+                          <td class="Standard__c">{!option.standard}</td>
+                          <td class="Maximum__c">{!option.max}</td>
                           <td>
-                            <a href="#" class="displayOnWebLink" data-value="{!option.displayOnWeb}" data-option-id="{!option.optionId}">
+                            <a
+                              href="#"
+                              class="displayOnWebLink"
+                              data-value="{!option.displayOnWeb}"
+                              data-option-id="{!option.Id}"
+                            >
                               <i class="fa fa-check"></i>
                             </a>
                           </td>
@@ -326,252 +450,123 @@
                       </apex:repeat>
                     </tbody>
                   </table>
+                </div>
               </div>
-
-            </div>
-          </apex:outputPanel>
-        </div>
-
-        <div class="content upgrade-content" id="trolling_motors">
-          <apex:outputPanel id="trollingMotorOptions">
-            <div class="optionTableContainer">
-              <div class="pb-select-container">
-                <label style="margin:10px 0 0 5px;">Pricebook</label>
-                <apex:selectlist value="{!selectedPb}" size="1" onchange="pbSelectChanged(this, 'trollingMotorUpgrades')">
-                  <apex:selectOptions value="{!pricebookOptions}" />
-                </apex:selectlist>
-              </div>
-              <div>
-                <table class="fixed-header-scrollable upgrades" id="trollingMotorUpgrades">
-                  <thead>
-                    <tr>
-                      <td>Name</td>
-                      <td>Upgrade Cost</td>
-                      <td>Web Visable</td>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <apex:repeat value="{!productUpgradeMap['Trolling Motor']}" var="option">
-                      <tr>
-                        <td>{!option.productName}</td>
-                        <td>
-                          <!-- no upgrade and no upgrade cost PRICEBOOK PRICE -->
-                          <apex:outputText value="{!'$ ' + option.cost}"
-                                           rendered="{!option.productUpgradeId == null && option.upgradeCostId == null }" />
-                          <!-- has upgrade but upgrade cost not set -->
-                          <apex:outputLink value="#"
-                                           rendered="{!option.productUpgradeId != null && option.upgradeCostId == null }"
-                                           styleClass="upgradeCreateLink"
-                                           html-data-product-upgrade-id="{!option.productUpgradeId}"
-                                           html-data-price-book-id="{!selectedPb}">
-                            $ {!option.cost}
-                          </apex:outputLink>
-                          <!-- everything is set here we will be editing the upgrade price -->
-                          <apex:outputlink value="#"
-                                           rendered="{!option.productUpgradeId != null && option.upgradeCostId != null }"
-                                           styleClass="upgradeEditLink"
-                                           html-data-edit-id="{!option.upgradeCostId}">
-                            $ {!option.cost}
-                          </apex:outputLink>
-                        </td>
-                        <td>
-                          <a href="#" class="displayOnWebLink" data-value="{!option.displayOnWeb}" data-option-id="{!option.optionId}">
-                            <i class="fa fa-check"></i>
-                          </a>
-                        </td>
-                      </tr>
-                    </apex:repeat>
-                  </tbody>
-                </table>
-              </div>
-
-            </div>
-          </apex:outputPanel>
-        </div>
-        <!-- ======================= /UPGRADE PRODUCTS =============== -->
-
-        <!-- +++++++++++++++++++++++ OPTION PRODUCTS +++++++++++++++ -->
-        <apex:repeat value="{!productOptionsMap}" var="key">
-          <div class="content" id="{!familyNames[key]}">
-
-            <div class="optionTableContainer">
-
-              <table class="fixed-header-scrollable options">
-                <thead>
-                  <tr>
-                    <td>Code</td>
-                    <td>Name</td>
-                    <td>Standard</td>
-                    <td>Maximum</td>
-                    <td>Display on Web</td>
-                  </tr>
-                </thead>
-                <tbody>
-                  <apex:repeat value="{!productOptionsMap[key]}"
-                               var="option">
-                    <tr>
-                      <td><p>{!option.productNumber}</p></td>
-                      <td>
-                        <apex:outputLink value="#"
-                                   styleClass="optionLink"
-                                   html-data-EditId="{!option.Id}">
-                          {!option.productName}
-                        </apex:outputLink>
-                      </td>
-                      <td class="Standard__c">{!option.standard}</td>
-                      <td class="Maximum__c">{!option.max}</td>
-                      <td>
-                        <a href="#" class="displayOnWebLink" data-value="{!option.displayOnWeb}" data-option-id="{!option.Id}">
-                          <i class="fa fa-check"></i>
-                        </a>
-                      </td>
-                    </tr>
-                  </apex:repeat>
-                </tbody>
-              </table>
-
-            </div>
+            </apex:repeat>
+            <!-- ======================= /OPTION PRODUCTS ================= -->
           </div>
-        </apex:repeat>
-        <!-- ======================= /OPTION PRODUCTS ================= -->
+        </div>
       </div>
-
-    </div>
-  </div>
-  </apex:form>
+    </apex:form>
   </apex:outputPanel>
   <script src="{!URLFOR($Resource.qEditBox, 'qEditBox/qEditBox.js')}" />
   <script src="{!URLFOR($Resource.boatQuickEditor)}" />
   <script language="javascript">
-
-    (function($) {
-
-      var $firstTab = $('.tabs.options dd:first a');
-      $firstTab.parent().addClass('active');
-      $( $firstTab.attr('href') ).addClass('active');
-
-
+    (function ($) {
+      var $firstTab = $(".tabs.options dd:first a");
+      $firstTab.parent().addClass("active");
+      $($firstTab.attr("href")).addClass("active");
     })(jQuery.noConflict());
 
-    if( $j === undefined )
-    {
+    if ($j === undefined) {
       var $j = jQuery.noConflict();
     }
 
-    $j('#motors').on('click', 'a.maximumLink', function(e) {
+    $j("#motors").on("click", "a.maximumLink", function (e) {
       e.preventDefault();
       var $this = $j(this);
 
-      if( $this.attr('data-value') === 'true' ) return false;
+      if ($this.attr("data-value") === "true") return false;
 
-      $this.children('i').removeClass('fa-check').addClass('fa-spinner fa-spin');
-      setMaximum( $this.data('option-id') )
-      .then(function(result) {
-        console.log(result)
-        $this.attr('data-value', 'true');
-        $this.children('i').removeClass('fa-spinner fa-spin').addClass('fa-check');
-      })
-      .fail( function(message) {
-        alert(message);
-      })
+      $this.children("i").removeClass("fa-check").addClass("fa-spinner fa-spin");
+      setMaximum($this.data("option-id"))
+        .then(function (result) {
+          console.log(result);
+          $this.attr("data-value", "true");
+          $this.children("i").removeClass("fa-spinner fa-spin").addClass("fa-check");
+        })
+        .fail(function (message) {
+          alert(message);
+        });
 
-      $j('.maximumLink').attr('data-value', 'false');
-
+      $j(".maximumLink").attr("data-value", "false");
     });
 
-    $j('.content').on('click', 'a.displayOnWebLink', function(e) {
+    $j(".content").on("click", "a.displayOnWebLink", function (e) {
       e.preventDefault();
       var $this = $j(this);
 
-      $this.children('i').removeClass('fa-check').addClass('fa-spinner fa-spin');
-      toggleDisplayOnWeb( $this.data('option-id') )
-      .then(function(result) {
-        console.log(result)
-        $this.attr('data-value', result);
-        $this.children('i').removeClass('fa-spinner fa-spin').addClass('fa-check');
-      })
-      .fail( function(message) {
-        alert(message);
-        $this.children('i').removeClass('fa-spinner fa-spin').addClass('fa-check');
-      })
+      $this.children("i").removeClass("fa-check").addClass("fa-spinner fa-spin");
+      toggleDisplayOnWeb($this.data("option-id"))
+        .then(function (result) {
+          console.log(result);
+          $this.attr("data-value", result);
+          $this.children("i").removeClass("fa-spinner fa-spin").addClass("fa-check");
+        })
+        .fail(function (message) {
+          alert(message);
+          $this.children("i").removeClass("fa-spinner fa-spin").addClass("fa-check");
+        });
     });
 
-    function setMaximum(optionId)
-    {
+    function setMaximum(optionId) {
       var dfd = $j.Deferred();
-      BoatRemoter.setMaximumMotor( optionId, function(result, event) {
-        if( event.status )
-        {
+      BoatRemoter.setMaximumMotor(optionId, function (result, event) {
+        if (event.status) {
           dfd.resolve(result);
-        }
-        else
-        {
-          message = event.message.indexOf('Logged in?') !== -1 ?
-            ' Your session has expired.  Please refresh your browser and log in.' :
-            event.message;
+        } else {
+          message =
+            event.message.indexOf("Logged in?") !== -1
+              ? " Your session has expired.  Please refresh your browser and log in."
+              : event.message;
           dfd.reject(message);
         }
       });
       return dfd.promise();
     }
 
-    function toggleDisplayOnWeb(optionId)
-    {
+    function toggleDisplayOnWeb(optionId) {
       var dfd = new $j.Deferred();
-      BoatRemoter.toggleDisplayOnWeb( optionId, function( result, event ) {
-        if( event.status )
-        {
+      BoatRemoter.toggleDisplayOnWeb(optionId, function (result, event) {
+        if (event.status) {
           dfd.resolve(result);
-        }
-        else
-        {
-          message = event.message.indexOf('Logged in?') !== -1 ?
-            ' Your session has expired.  Please refresh your browser and log in.' :
-            event.message;
+        } else {
+          message =
+            event.message.indexOf("Logged in?") !== -1
+              ? " Your session has expired.  Please refresh your browser and log in."
+              : event.message;
           dfd.reject(message);
         }
       });
       return dfd.promise();
     }
 
-    function pbSelectChanged(select, tableId)
-    {
-      console.log('show an indicator');
+    function pbSelectChanged(select, tableId) {
+      console.log("show an indicator");
       showIndicator(tableId); //Found on Product_Detail.Page
-      pbChanged( select.value );
+      pbChanged(select.value);
     }
 
-
-    function showIndicator(tableId)
-    {
-      var $container = $j('#'+tableId);
-      $container.addClass('table_busy')
-      .before( buildIndicator( 'Fetching records ...') );
+    function showIndicator(tableId) {
+      var $container = $j("#" + tableId);
+      $container.addClass("table_busy").before(buildIndicator("Fetching records ..."));
     }
 
-    function buildIndicator(message)
-    {
-      var $message = $j('<div></div>').addClass('indicator_message')
-                                      .html(message),
-          $spinner = $j('<div></div>').addClass('sk-spinner');
+    function buildIndicator(message) {
+      var $message = $j("<div></div>").addClass("indicator_message").html(message),
+        $spinner = $j("<div></div>").addClass("sk-spinner");
 
-      $spinner.append( $j('<div></div>').addClass('sk-bounce1') );
-      $spinner.append( $j('<div></div>').addClass('sk-bounce2') );
-      $spinner.append( $j('<div></div>').addClass('sk-bounce3') );
+      $spinner.append($j("<div></div>").addClass("sk-bounce1"));
+      $spinner.append($j("<div></div>").addClass("sk-bounce2"));
+      $spinner.append($j("<div></div>").addClass("sk-bounce3"));
 
-      return $j('<div></div>').addClass('table_indicator').append( $spinner ).append( $message );
+      return $j("<div></div>").addClass("table_indicator").append($spinner).append($message);
     }
 
-
-    function pbChangeComplete()
-    {
+    function pbChangeComplete() {
       BoatQuickEdit.init();
     }
 
     BoatQuickEdit.init();
-
-
   </script>
-
-
 </apex:page>

@@ -1,19 +1,24 @@
-<apex:page standardController="Product_Upgrade__c" extensions="ProductUpgrades" showHeader="true" sidebar="false" tabStyle="Upgrade_Chart__tab">
-
-  <apex:includeScript value="{!URLFOR($Resource.jQuery)}"  />
+<apex:page
+  standardController="Product_Upgrade__c"
+  extensions="ProductUpgrades"
+  showHeader="true"
+  sidebar="false"
+  tabStyle="Upgrade_Chart__tab"
+>
+  <apex:includeScript value="{!URLFOR($Resource.jQuery)}" />
   <c:LegendFormResources includeFontAwesome="true" />
 
   <style type="text/css">
     h3 {
-      margin:0 0 -40px 0px !important;
-      padding:0px;
-      padding-left:25px;
-      padding-bottom:4px;
-      color: #0070C9;
+      margin: 0 0 -40px 0px !important;
+      padding: 0px;
+      padding-left: 25px;
+      padding-bottom: 4px;
+      color: #0070c9;
       font-family: "Open Sans", "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
       width: 100%;
-      max-width:100%;
-      text-align:center;
+      max-width: 100%;
+      text-align: center;
       display: block;
       font-size: 2.6em !important;
       font-weight: 300;
@@ -25,8 +30,8 @@
     }
 
     label {
-      color: #0070C9;
-      padding-left:10px;
+      color: #0070c9;
+      padding-left: 10px;
     }
 
     .tabs-content select,
@@ -37,7 +42,7 @@
     }
 
     .results_table {
-      width:100%;
+      width: 100%;
       border-spacing: 0;
     }
 
@@ -55,60 +60,61 @@
       width: 97%;
       /* minus scroll bar width */
       width: -webkit-calc(100% - 16px);
-      width:    -moz-calc(100% - 16px);
-      width:         calc(100% - 16px);
+      width: -moz-calc(100% - 16px);
+      width: calc(100% - 16px);
     }
 
-    .results_table tr:after {  /* clearing float */
-      content: ' ';
+    .results_table tr:after {
+      /* clearing float */
+      content: " ";
       display: block;
       visibility: hidden;
       clear: both;
     }
 
     .results_table tbody {
-      max-height:300px;
+      max-height: 300px;
       overflow-y: auto;
       overflow-x: hidden;
     }
 
     .results_table tbody tr td {
       line-height: 40px !important;
-      -webkit-transition:background-color 1s ease-in-out;
-      -moz-transition:background-color 1s ease-in-out;
-      -o-transition:background-color 1s ease-in-out;
-      transition:background-color 1s ease-in-out;
+      -webkit-transition: background-color 1s ease-in-out;
+      -moz-transition: background-color 1s ease-in-out;
+      -o-transition: background-color 1s ease-in-out;
+      transition: background-color 1s ease-in-out;
     }
 
     .results_table thead td:first-child,
     .results_table tbody td:first-child {
-      width:70%;
-      float:left;
+      width: 70%;
+      float: left;
     }
 
     .results_table thead td:first-child + td,
     .results_table tbody td:first-child + td {
-      width:14%;
-      float:left;
+      width: 14%;
+      float: left;
     }
 
-    .results_table thead td:last-child, .results_table tbody td:last-child {
-      width:15%;
-      float:left;
-      padding-right:0;
+    .results_table thead td:last-child,
+    .results_table tbody td:last-child {
+      width: 15%;
+      float: left;
+      padding-right: 0;
     }
 
     .results_table tbody tr td a.cancel_btn,
     .results_table tbody tr td a.save_btn,
     .results_table tbody tr td input {
-      display:none;
-      margin-bottom:0;
+      display: none;
+      margin-bottom: 0;
     }
 
     .results_table tbody tr.editing td a.edit_btn,
-    .results_table tbody tr.editing td span
-    {
-      display:none;
+    .results_table tbody tr.editing td span {
+      display: none;
     }
 
     .results_table tbody tr.editing td a.cancel_btn,
@@ -118,48 +124,46 @@
     }
 
     .results_table tbody tr.editing td a.save_btn i.fa-spin {
-      display:none;
+      display: none;
     }
 
     .results_table tbody tr.editing.busy td a.save_btn i,
     .results_table tbody tr.editing.busy td a.cancel_btn {
-      display:none;
+      display: none;
     }
 
     .results_table tbody tr.editing.busy td a.save_btn i.fa-spin {
-      display:inline-block;
+      display: inline-block;
     }
 
     .results_table tbody td.no_results {
-      color:#CCC;
-      text-align:center;
-      line-height:30px;
-      font-size:22px;
-      width:100%;
+      color: #ccc;
+      text-align: center;
+      line-height: 30px;
+      font-size: 22px;
+      width: 100%;
     }
 
     .results_table tbody tr.rowAdded td {
-      background: #00AAF9;
+      background: #00aaf9;
     }
 
     .action_btn {
       padding: 0 14px !important;
       line-height: 2.5rem;
       height: 2.5rem;
-      margin:0 3px 0 0;
-      display:inline-block;
-      float:right;
+      margin: 0 3px 0 0;
+      display: inline-block;
+      float: right;
     }
 
     .action_btn i {
       margin-top: 0.75rem;
     }
-
   </style>
 
-    <h3>Product Upgrades</h3>
-    <apex:form >
-
+  <h3>Product Upgrades</h3>
+  <apex:form>
     <dl id="controlTabs" class="tabs" data-role="tablist" data-tab="true">
       <apex:outputPanel layout="none" rendered="{!renderMap['Motor']}">
         <dd class="tab-title" role="presentation">
@@ -173,7 +177,9 @@
       </apex:outputPanel>
       <apex:outputPanel layout="none" rendered="{!renderMap['Trolling Motor']}">
         <dd class="tab-title" role="presentation">
-          <a href="#trolling_motors" role="tab" tabindex="0" aria-selected="true" aria-controls="trolling_motors">Trolling Motors</a>
+          <a href="#trolling_motors" role="tab" tabindex="0" aria-selected="true" aria-controls="trolling_motors"
+            >Trolling Motors</a
+          >
         </dd>
       </apex:outputPanel>
     </dl>
@@ -181,656 +187,622 @@
     <div class="tabs-content">
       <!-- +++++++++++++++++++++++ Motor Upgrades Tab Content +++++++++++++++++++++++ -->
       <apex:outputPanel layout="none" rendered="{!renderMap['Motor']}">
-      <section role="tabpanel" aria-hidden="false" class="content" id="motors">
-        <div class="row">
-          <div class="column large-12">
-            <div class="row" style="margin:20px 0;">
-
-              <div class="column large-4">
-                <div class="row">
-                  <div class="column large-12">
-                    <label>Price Book</label>
-                    <apex:selectlist value="{!selectedPbIdMap['Motor']}" size="1">
-                      <apex:selectOptions value="{!pricebookSelectOptions}" />
-                      <apex:actionSupport event="onchange"
-                                           rerender="motorContainer"
-                                           action="{!motorPbChanged}"
-                                           />
-                    </apex:selectlist>
-                  </div>
-                </div>
-              </div>
-
-              <apex:outputPanel layout="block" styleClass="column large-8" id="motorContainer">
-                <apex:outputPanel layout="block" styleClass="row" rendered="{!!hasMotorProducts}">
-                  <div class="column large-4 offset-large-4">
-                  No Motors found in that Pricebook
-                  </div>
-                </apex:outputPanel>
-
-
-                <apex:outputPanel layout="block" styleClass="none" rendered="{!hasMotorProducts}">
+        <section role="tabpanel" aria-hidden="false" class="content" id="motors">
+          <div class="row">
+            <div class="column large-12">
+              <div class="row" style="margin: 20px 0">
+                <div class="column large-4">
                   <div class="row">
                     <div class="column large-12">
-                      <label>Upgrading From Motor</label>
-                      <apex:selectlist value="{!selectedIdMap['Motor']}" size="1" id="motorSelector">
-                        <apex:selectOptions value="{!motorSelectOptions}" />
-                        <apex:actionSupport event="onchange"
-                                             rerender="motorUpgrades"
-                                             action="{!motorSelectChanged}"
-                                             />
+                      <label>Price Book</label>
+                      <apex:selectlist value="{!selectedPbIdMap['Motor']}" size="1">
+                        <apex:selectOptions value="{!pricebookSelectOptions}" />
+                        <apex:actionSupport event="onchange" rerender="motorContainer" action="{!motorPbChanged}" />
                       </apex:selectlist>
                     </div>
                   </div>
+                </div>
 
-                  <apex:outputPanel id="motorUpgrades" layout="block">
-                    <label>Upgrade Options</label>
-                    <table class="fd_table fd_table-striped results_table">
-                      <thead>
-                        <tr>
-                          <td>Motor</td>
-                          <td>Upgrade Cost</td>
-                          <td></td>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <apex:outputPanel layout="none" rendered="{!motorUpgrades.size > 0 }">
-                          <apex:repeat value="{!motorUpgrades}" var="mUpgrade">
-                            <apex:outputPanel layout="none" rendered="{!mUpgrade.Product_Upgrade_Costs__r.size == 0}">
-                              <tr data-upgrade-id="{!mUpgrade.Id}" data-pricebook-id="{!selectedPbIdMap['Motor']}">
-                                <td>{!mUpgrade.To_Product__r.Name}</td>
-                                <td>
-                                  <span>Set Cost</span>
-                                  <input type="text" value="" />
-                                </td>
-                                <td>
-                                  <a href="#"
-                                     class="fd_button radius small invert action_btn edit_btn">
-                                    <i class=" fa fa-edit"></i>
-                                  </a>
-                                  <a href="#"
-                                     class="fd_button radius small success invert action_btn save_btn">
-                                    <i class=" fa fa-save"></i>
-                                    <i class=" fa fa-spin fa-spinner"></i>
-                                  </a>
-                                  <a href="#"
-                                     class="fd_button radius small alert invert action_btn cancel_btn">
-                                    <i class=" fa fa-close"></i>
-                                  </a>
-                                </td>
-                              </tr>
-                            </apex:outputPanel>
-                             <apex:outputPanel layout="none" rendered="{!mUpgrade.Product_Upgrade_Costs__r.size > 0}">
-                              <tr data-upgrade-cost-id="{!mUpgrade.Product_Upgrade_Costs__r[0].Id}"
-                                  data-upgrade-id="{!mUpgrade.Id}"
-                                  data-pricebook-id="{!selectedPbIdMap['Motor']}">
-                                <td>{!mUpgrade.To_Product__r.Name}</td>
-                                <td>
-                                  <span>$ {!mUpgrade.Product_Upgrade_Costs__r[0].Cost__c}</span>
-                                  <input type="text" value="{!mUpgrade.Product_Upgrade_Costs__r[0].Cost__c}" />
-                                </td>
-                                <td>
-                                  <a href="#"
-                                     class="fd_button radius small invert action_btn edit_btn">
-                                    <i class=" fa fa-edit"></i>
-                                  </a>
-                                  <a href="#"
-                                     class="fd_button radius small success invert action_btn save_btn">
-                                    <i class=" fa fa-save"></i>
-                                    <i class=" fa fa-spin fa-spinner"></i>
-                                  </a>
-                                  <a href="#"
-                                     class="fd_button radius small alert invert action_btn cancel_btn">
-                                    <i class=" fa fa-close"></i>
-                                  </a>
-                                </td>
-                              </tr>
-                            </apex:outputPanel>
-                          </apex:repeat>
-                        </apex:outputPanel>
-                        <apex:outputPanel layout="none" rendered="{!motorUpgrades.size = 0}">
-                          <tr>
-                            <td class="no_results">
-                              No Upgrades Found
-                            </td>
-                          </tr>
-                        </apex:outputPanel>
-                      </tbody>
-                    </table>
+                <apex:outputPanel layout="block" styleClass="column large-8" id="motorContainer">
+                  <apex:outputPanel layout="block" styleClass="row" rendered="{!!hasMotorProducts}">
+                    <div class="column large-4 offset-large-4">No Motors found in that Pricebook</div>
+                  </apex:outputPanel>
 
+                  <apex:outputPanel layout="block" styleClass="none" rendered="{!hasMotorProducts}">
                     <div class="row">
-                      <div class="column large-9">
-                         <apex:selectlist size="1" id="newMotorSelector" html-data-field-name="To_Product_Id" styleClass="newFormField">
-                          <apex:selectOptions value="{!newMotorSelectOptions}" />
+                      <div class="column large-12">
+                        <label>Upgrading From Motor</label>
+                        <apex:selectlist value="{!selectedIdMap['Motor']}" size="1" id="motorSelector">
+                          <apex:selectOptions value="{!motorSelectOptions}" />
+                          <apex:actionSupport
+                            event="onchange"
+                            rerender="motorUpgrades"
+                            action="{!motorSelectChanged}"
+                          />
                         </apex:selectlist>
                       </div>
-                      <div class='column large-2'>
-                        <input type="text" data-field-name="Cost" class="newFormField"></input>
-                      </div>
-                      <input type="hidden" data-field-name="From_Product_Id" value="{!selectedIdMap['Motor']}" class="newFormField" ></input>
-                      <input type="hidden" data-field-name="Pricebook_Id" value="{!selectedPbIdMap['Motor']}" class="newFormField" ></input>
-                      <div class="column large-1">
-                        <a href="#" class="fd_button radius small success invert action_btn create_btn">
-                          <i class=" fa fa-plus"></i>
-                        </a>
-                      </div>
                     </div>
-                  </apex:outputPanel>
-                </apex:outputPanel>
 
-              </apex:outputPanel><!-- /motorContiner -->
+                    <apex:outputPanel id="motorUpgrades" layout="block">
+                      <label>Upgrade Options</label>
+                      <table class="fd_table fd_table-striped results_table">
+                        <thead>
+                          <tr>
+                            <td>Motor</td>
+                            <td>Upgrade Cost</td>
+                            <td></td>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <apex:outputPanel layout="none" rendered="{!motorUpgrades.size > 0 }">
+                            <apex:repeat value="{!motorUpgrades}" var="mUpgrade">
+                              <apex:outputPanel layout="none" rendered="{!mUpgrade.Product_Upgrade_Costs__r.size == 0}">
+                                <tr data-upgrade-id="{!mUpgrade.Id}" data-pricebook-id="{!selectedPbIdMap['Motor']}">
+                                  <td>{!mUpgrade.To_Product__r.Name}</td>
+                                  <td>
+                                    <span>Set Cost</span>
+                                    <input type="text" value="" />
+                                  </td>
+                                  <td>
+                                    <a href="#" class="fd_button radius small invert action_btn edit_btn">
+                                      <i class="fa fa-edit"></i>
+                                    </a>
+                                    <a href="#" class="fd_button radius small success invert action_btn save_btn">
+                                      <i class="fa fa-save"></i>
+                                      <i class="fa fa-spin fa-spinner"></i>
+                                    </a>
+                                    <a href="#" class="fd_button radius small alert invert action_btn cancel_btn">
+                                      <i class="fa fa-close"></i>
+                                    </a>
+                                  </td>
+                                </tr>
+                              </apex:outputPanel>
+                              <apex:outputPanel layout="none" rendered="{!mUpgrade.Product_Upgrade_Costs__r.size > 0}">
+                                <tr
+                                  data-upgrade-cost-id="{!mUpgrade.Product_Upgrade_Costs__r[0].Id}"
+                                  data-upgrade-id="{!mUpgrade.Id}"
+                                  data-pricebook-id="{!selectedPbIdMap['Motor']}"
+                                >
+                                  <td>{!mUpgrade.To_Product__r.Name}</td>
+                                  <td>
+                                    <span>$ {!mUpgrade.Product_Upgrade_Costs__r[0].Cost__c}</span>
+                                    <input type="text" value="{!mUpgrade.Product_Upgrade_Costs__r[0].Cost__c}" />
+                                  </td>
+                                  <td>
+                                    <a href="#" class="fd_button radius small invert action_btn edit_btn">
+                                      <i class="fa fa-edit"></i>
+                                    </a>
+                                    <a href="#" class="fd_button radius small success invert action_btn save_btn">
+                                      <i class="fa fa-save"></i>
+                                      <i class="fa fa-spin fa-spinner"></i>
+                                    </a>
+                                    <a href="#" class="fd_button radius small alert invert action_btn cancel_btn">
+                                      <i class="fa fa-close"></i>
+                                    </a>
+                                  </td>
+                                </tr>
+                              </apex:outputPanel>
+                            </apex:repeat>
+                          </apex:outputPanel>
+                          <apex:outputPanel layout="none" rendered="{!motorUpgrades.size = 0}">
+                            <tr>
+                              <td class="no_results">No Upgrades Found</td>
+                            </tr>
+                          </apex:outputPanel>
+                        </tbody>
+                      </table>
 
+                      <div class="row">
+                        <div class="column large-9">
+                          <apex:selectlist
+                            size="1"
+                            id="newMotorSelector"
+                            html-data-field-name="To_Product_Id"
+                            styleClass="newFormField"
+                          >
+                            <apex:selectOptions value="{!newMotorSelectOptions}" />
+                          </apex:selectlist>
+                        </div>
+                        <div class="column large-2">
+                          <input type="text" data-field-name="Cost" class="newFormField" />
+                        </div>
+                        <input
+                          type="hidden"
+                          data-field-name="From_Product_Id"
+                          value="{!selectedIdMap['Motor']}"
+                          class="newFormField"
+                        />
+                        <input
+                          type="hidden"
+                          data-field-name="Pricebook_Id"
+                          value="{!selectedPbIdMap['Motor']}"
+                          class="newFormField"
+                        />
+                        <div class="column large-1">
+                          <a href="#" class="fd_button radius small success invert action_btn create_btn">
+                            <i class="fa fa-plus"></i>
+                          </a>
+                        </div>
+                      </div>
+                    </apex:outputPanel>
+                  </apex:outputPanel> </apex:outputPanel
+                ><!-- /motorContiner -->
+              </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
       </apex:outputPanel>
       <!-- ======================== Motor Upgrades Tab Content ===================== -->
 
       <!-- +++++++++++++++++++++++ Trailer Upgrades Tab Content +++++++++++++++++++++++ -->
       <apex:outputPanel layout="none" rendered="{!renderMap['Trailer']}">
-      <section role="tabpanel" aria-hidden="false" class="content" id="trailers">
-        <div class="row">
-          <div class="column large-12">
-            <div class="row" style="margin:20px 0;">
-
-              <div class="column large-4">
-                <div class="row">
-                  <div class="column large-12">
-                    <label>Price Book</label>
-                    <apex:selectlist value="{!selectedPbIdMap['Trailer']}" size="1">
-                      <apex:selectOptions value="{!pricebookSelectOptions}" />
-                      <apex:actionSupport event="onchange"
-                                           rerender="trailerContainer"
-                                           action="{!trailerPbChanged}"
-                                           />
-                    </apex:selectlist>
-                  </div>
-                </div>
-              </div>
-
-              <apex:outputPanel layout="block" styleClass="column large-8" id="trailerContainer">
-
-                <apex:outputPanel layout="block" styleClass="row" rendered="{!!hasTrailerProducts}">
-                  <div class="column large-4 offset-large-4">
-                  No Trailer found in that Pricebook
-                  </div>
-                </apex:outputPanel>
-
-                <apex:outputPanel layout="none" rendered="{!hasTrailerProducts}">
+        <section role="tabpanel" aria-hidden="false" class="content" id="trailers">
+          <div class="row">
+            <div class="column large-12">
+              <div class="row" style="margin: 20px 0">
+                <div class="column large-4">
                   <div class="row">
                     <div class="column large-12">
-                      <label>Upgrading From Trailer</label>
-                      <apex:selectlist value="{!selectedIdMap['Trailer']}" size="1" id="trailerSelector">
-                        <apex:selectOptions value="{!trailerSelectOptions}" />
-                        <apex:actionSupport event="onchange"
-                                             rerender="trailerUpgrades"
-                                             action="{!trailerSelectChanged}"
-                                             />
+                      <label>Price Book</label>
+                      <apex:selectlist value="{!selectedPbIdMap['Trailer']}" size="1">
+                        <apex:selectOptions value="{!pricebookSelectOptions}" />
+                        <apex:actionSupport event="onchange" rerender="trailerContainer" action="{!trailerPbChanged}" />
                       </apex:selectlist>
                     </div>
                   </div>
+                </div>
 
-                  <apex:outputPanel id="trailerUpgrades">
-                    <label>Upgrade Options</label>
-                    <table class="fd_table fd_table-striped results_table">
-                      <thead>
-                        <tr>
-                          <td>Trailer</td>
-                          <td>Upgrade Cost</td>
-                          <td></td>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <apex:outputPanel layout="none" rendered="{!trailerUpgrades.size > 0}">
-                          <apex:repeat value="{!trailerUpgrades}" var="tUpgrade">
-                            <apex:outputPanel layout="none" rendered="{!tUpgrade.Product_Upgrade_Costs__r.size == 0}">
-                              <tr data-upgrade-id="{!tUpgrade.Id}" data-pricebook-id="{!selectedPbIdMap['Trailer']}">
-                                <td>{!tUpgrade.To_Product__r.Name}</td>
-                                <td>
-                                  <span>Set Cost</span>
-                                  <input type="text" value="" />
-                                </td>
-                                <td>
-                                  <a href="#"
-                                     class="fd_button radius small invert action_btn edit_btn">
-                                    <i class=" fa fa-edit"></i>
-                                  </a>
-                                  <a href="#"
-                                     class="fd_button radius small success invert action_btn save_btn">
-                                    <i class=" fa fa-save"></i>
-                                    <i class=" fa fa-spin fa-spinner"></i>
-                                  </a>
-                                  <a href="#"
-                                     class="fd_button radius small alert invert action_btn cancel_btn">
-                                    <i class=" fa fa-close"></i>
-                                  </a>
-                                </td>
-                              </tr>
-                            </apex:outputPanel>
-                            <apex:outputPanel layout="none" rendered="{!tUpgrade.Product_Upgrade_Costs__r.size > 0}">
-                              <tr data-upgrade-id="{!tUpgrade.Id}"
-                                  data-pricebook-id="{!selectedPbIdMap['Trailer']}"
-                                  data-upgrade-cost-id="{!tUpgrade.Product_Upgrade_Costs__r[0].Id}">
-                                <td>{!tUpgrade.To_Product__r.Name}</td>
-                                <td>
-                                  <span>$ {!tUpgrade.Product_Upgrade_Costs__r[0].Cost__c}</span>
-                                  <input type="text" value="{!tUpgrade.Product_Upgrade_Costs__r[0].Cost__c}" />
-                                </td>
-                                <td>
-                                  <a href="#"
-                                     class="fd_button radius small invert action_btn edit_btn">
-                                    <i class=" fa fa-edit"></i>
-                                  </a>
-                                  <a href="#"
-                                     class="fd_button radius small success invert action_btn save_btn">
-                                    <i class=" fa fa-save"></i>
-                                    <i class=" fa fa-spin fa-spinner"></i>
-                                  </a>
-                                  <a href="#"
-                                     class="fd_button radius small alert invert action_btn cancel_btn">
-                                    <i class=" fa fa-close"></i>
-                                  </a>
-                                </td>
-                              </tr>
-                            </apex:outputPanel>
-                          </apex:repeat>
-                        </apex:outputPanel>
-                        <apex:outputPanel layout="none" rendered="{!trailerUpgrades.size = 0}">
-                          <tr>
-                            <td class="no_results">
-                              No Upgrades Found
-                            </td>
-                          </tr>
-                        </apex:outputPanel>
-                      </tbody>
-                    </table>
+                <apex:outputPanel layout="block" styleClass="column large-8" id="trailerContainer">
+                  <apex:outputPanel layout="block" styleClass="row" rendered="{!!hasTrailerProducts}">
+                    <div class="column large-4 offset-large-4">No Trailer found in that Pricebook</div>
+                  </apex:outputPanel>
 
+                  <apex:outputPanel layout="none" rendered="{!hasTrailerProducts}">
                     <div class="row">
-                      <div class="column large-9">
-                         <apex:selectlist size="1"
-                                          id="newTrailerSelector"
-                                          html-data-field-name="To_Product_Id"
-                                          styleClass="newFormField">
-                          <apex:selectOptions value="{!newTrailerSelectOptions}" />
+                      <div class="column large-12">
+                        <label>Upgrading From Trailer</label>
+                        <apex:selectlist value="{!selectedIdMap['Trailer']}" size="1" id="trailerSelector">
+                          <apex:selectOptions value="{!trailerSelectOptions}" />
+                          <apex:actionSupport
+                            event="onchange"
+                            rerender="trailerUpgrades"
+                            action="{!trailerSelectChanged}"
+                          />
                         </apex:selectlist>
-                      </div>
-                      <div class='column large-2'>
-                        <input type="text"
-                               data-field-name="Cost"
-                               class="newFormField"></input>
-                      </div>
-                      <input type="hidden"
-                             data-field-name="From_Product_Id"
-                             value="{!selectedIdMap['Trailer']}"
-                             class="newFormField" >
-                      </input>
-                      <input type="hidden"
-                             data-field-name="Pricebook_Id"
-                             value="{!selectedPbIdMap['Trailer']}"
-                             class="newFormField" >
-                      </input>
-                      <div class="column large-1">
-                        <a href="#" class="fd_button radius small success invert action_btn create_btn">
-                          <i class=" fa fa-plus"></i>
-                        </a>
                       </div>
                     </div>
 
+                    <apex:outputPanel id="trailerUpgrades">
+                      <label>Upgrade Options</label>
+                      <table class="fd_table fd_table-striped results_table">
+                        <thead>
+                          <tr>
+                            <td>Trailer</td>
+                            <td>Upgrade Cost</td>
+                            <td></td>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <apex:outputPanel layout="none" rendered="{!trailerUpgrades.size > 0}">
+                            <apex:repeat value="{!trailerUpgrades}" var="tUpgrade">
+                              <apex:outputPanel layout="none" rendered="{!tUpgrade.Product_Upgrade_Costs__r.size == 0}">
+                                <tr data-upgrade-id="{!tUpgrade.Id}" data-pricebook-id="{!selectedPbIdMap['Trailer']}">
+                                  <td>{!tUpgrade.To_Product__r.Name}</td>
+                                  <td>
+                                    <span>Set Cost</span>
+                                    <input type="text" value="" />
+                                  </td>
+                                  <td>
+                                    <a href="#" class="fd_button radius small invert action_btn edit_btn">
+                                      <i class="fa fa-edit"></i>
+                                    </a>
+                                    <a href="#" class="fd_button radius small success invert action_btn save_btn">
+                                      <i class="fa fa-save"></i>
+                                      <i class="fa fa-spin fa-spinner"></i>
+                                    </a>
+                                    <a href="#" class="fd_button radius small alert invert action_btn cancel_btn">
+                                      <i class="fa fa-close"></i>
+                                    </a>
+                                  </td>
+                                </tr>
+                              </apex:outputPanel>
+                              <apex:outputPanel layout="none" rendered="{!tUpgrade.Product_Upgrade_Costs__r.size > 0}">
+                                <tr
+                                  data-upgrade-id="{!tUpgrade.Id}"
+                                  data-pricebook-id="{!selectedPbIdMap['Trailer']}"
+                                  data-upgrade-cost-id="{!tUpgrade.Product_Upgrade_Costs__r[0].Id}"
+                                >
+                                  <td>{!tUpgrade.To_Product__r.Name}</td>
+                                  <td>
+                                    <span>$ {!tUpgrade.Product_Upgrade_Costs__r[0].Cost__c}</span>
+                                    <input type="text" value="{!tUpgrade.Product_Upgrade_Costs__r[0].Cost__c}" />
+                                  </td>
+                                  <td>
+                                    <a href="#" class="fd_button radius small invert action_btn edit_btn">
+                                      <i class="fa fa-edit"></i>
+                                    </a>
+                                    <a href="#" class="fd_button radius small success invert action_btn save_btn">
+                                      <i class="fa fa-save"></i>
+                                      <i class="fa fa-spin fa-spinner"></i>
+                                    </a>
+                                    <a href="#" class="fd_button radius small alert invert action_btn cancel_btn">
+                                      <i class="fa fa-close"></i>
+                                    </a>
+                                  </td>
+                                </tr>
+                              </apex:outputPanel>
+                            </apex:repeat>
+                          </apex:outputPanel>
+                          <apex:outputPanel layout="none" rendered="{!trailerUpgrades.size = 0}">
+                            <tr>
+                              <td class="no_results">No Upgrades Found</td>
+                            </tr>
+                          </apex:outputPanel>
+                        </tbody>
+                      </table>
+
+                      <div class="row">
+                        <div class="column large-9">
+                          <apex:selectlist
+                            size="1"
+                            id="newTrailerSelector"
+                            html-data-field-name="To_Product_Id"
+                            styleClass="newFormField"
+                          >
+                            <apex:selectOptions value="{!newTrailerSelectOptions}" />
+                          </apex:selectlist>
+                        </div>
+                        <div class="column large-2">
+                          <input type="text" data-field-name="Cost" class="newFormField" />
+                        </div>
+                        <input
+                          type="hidden"
+                          data-field-name="From_Product_Id"
+                          value="{!selectedIdMap['Trailer']}"
+                          class="newFormField"
+                        />
+                        <input
+                          type="hidden"
+                          data-field-name="Pricebook_Id"
+                          value="{!selectedPbIdMap['Trailer']}"
+                          class="newFormField"
+                        />
+                        <div class="column large-1">
+                          <a href="#" class="fd_button radius small success invert action_btn create_btn">
+                            <i class="fa fa-plus"></i>
+                          </a>
+                        </div>
+                      </div>
+                    </apex:outputPanel>
                   </apex:outputPanel>
-
                 </apex:outputPanel>
-              </apex:outputPanel>
-
+              </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
       </apex:outputPanel>
       <!-- ======================== Trailer Upgrades Tab Content ===================== -->
 
       <!-- +++++++++++++++++++++++ Trolling Motor Upgrades Tab Content +++++++++++++++++++++++ -->
       <apex:outputPanel layout="none" rendered="{!renderMap['Trolling Motor']}">
-      <section role="tabpanel" aria-hidden="false" class="content" id="trolling_motors">
-        <div class="row">
-          <div class="column large-12">
-            <div class="row" style="margin:20px 0;">
-              <div class="column large-4">
-                <div class="row">
-                  <div class="column large-12">
-                    <label>Price Book</label>
-                    <apex:selectlist value="{!selectedPbIdMap['Trolling Motor']}" size="1">
-                      <apex:selectOptions value="{!pricebookSelectOptions}" />
-                      <apex:actionSupport event="onchange"
-                                           rerender="trollingMotorContainer"
-                                           action="{!trollingMotorPbChanged}"
-                                           />
-                    </apex:selectlist>
+        <section role="tabpanel" aria-hidden="false" class="content" id="trolling_motors">
+          <div class="row">
+            <div class="column large-12">
+              <div class="row" style="margin: 20px 0">
+                <div class="column large-4">
+                  <div class="row">
+                    <div class="column large-12">
+                      <label>Price Book</label>
+                      <apex:selectlist value="{!selectedPbIdMap['Trolling Motor']}" size="1">
+                        <apex:selectOptions value="{!pricebookSelectOptions}" />
+                        <apex:actionSupport
+                          event="onchange"
+                          rerender="trollingMotorContainer"
+                          action="{!trollingMotorPbChanged}"
+                        />
+                      </apex:selectlist>
+                    </div>
                   </div>
                 </div>
 
+                <apex:outputPanel layout="block" styleClass="column large-8" id="trollingMotorContainer">
+                  <apex:outputPanel layout="block" styleClass="row" rendered="{!!hasTrollingMotorProducts}">
+                    <div class="column large-4 offset-large-4">No Trolling Motors found in that Pricebook</div>
+                  </apex:outputPanel>
 
-              </div>
-
-              <apex:outputPanel layout="block" styleClass="column large-8" id="trollingMotorContainer">
-
-                <apex:outputPanel layout="block"
-                                  styleClass="row"
-                                  rendered="{!!hasTrollingMotorProducts}">
-                  <div class="column large-4 offset-large-4">
-                    No Trolling Motors found in that Pricebook
-                  </div>
-                </apex:outputPanel>
-
-                <apex:outputPanel layout="none" rendered="{!hasTrollingMotorProducts}">
-                  <div class="row">
-                    <div class="column large-12">
-                      <label>Upgrading From Trolling Motor</label>
+                  <apex:outputPanel layout="none" rendered="{!hasTrollingMotorProducts}">
+                    <div class="row">
+                      <div class="column large-12">
+                        <label>Upgrading From Trolling Motor</label>
                         <apex:selectlist value="{!selectedIdMap['Trolling Motor']}" size="1" id="trollingMotorSelector">
                           <apex:selectOptions value="{!trollingMotorSelectOptions}" />
-                          <apex:actionSupport event="onchange"
-                                               rerender="trollingMotorUpgrades"
-                                               action="{!trollingMotorSelectChanged}"
-                                               />
+                          <apex:actionSupport
+                            event="onchange"
+                            rerender="trollingMotorUpgrades"
+                            action="{!trollingMotorSelectChanged}"
+                          />
                         </apex:selectlist>
+                      </div>
                     </div>
-                  </div>
 
-                  <apex:outputPanel id="trollingMotorUpgrades">
-                    <label>Upgrade Options</label>
-                    <table class="fd_table fd_table-striped results_table" >
-                      <thead>
-                        <tr>
-                          <td>Trolling Motor</td>
-                          <td>Upgrade Cost</td>
-                          <td></td>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <apex:outputPanel layout="none" rendered="{!trollingMotorUpgrades.size > 0}">
-                          <apex:repeat value="{!trollingMotorUpgrades}" var="tmUpgrade">
-                            <apex:outputPanel layout="none" rendered="{!tmUpgrade.Product_Upgrade_Costs__r.size == 0}">
-                              <tr data-upgrade-id="{!tmUpgrade.Id}" data-pricebook-id="{!selectedPbIdMap['Trolling Motor']}">
-                                <td>{!tmUpgrade.To_Product__r.Name}</td>
-                                <td>
-                                  <span>Set Cost</span>
-                                  <input type="text" value="" />
-                                </td>
-                                <td>
-                                  <a href="#"
-                                     class="fd_button radius small invert action_btn edit_btn">
-                                    <i class=" fa fa-edit"></i>
-                                  </a>
-                                  <a href="#"
-                                     class="fd_button radius small success invert action_btn save_btn">
-                                    <i class=" fa fa-save"></i>
-                                    <i class=" fa fa-spin fa-spinner"></i>
-                                  </a>
-                                  <a href="#"
-                                     class="fd_button radius small alert invert action_btn cancel_btn">
-                                    <i class=" fa fa-close"></i>
-                                  </a>
-                                </td>
-                              </tr>
-                            </apex:outputPanel>
-                            <apex:outputPanel layout="none" rendered="{!tmUpgrade.Product_Upgrade_Costs__r.size > 0}">
-                              <tr data-upgrade-cost-id="{!tmUpgrade.Product_Upgrade_Costs__r[0].Id}">
-                                <td>{!tmUpgrade.To_Product__r.Name}</td>
-                                <td>
-                                  <span>$ {!tmUpgrade.Product_Upgrade_Costs__r[0].Cost__c}</span>
-                                  <input type="text" value="{!tmUpgrade.Product_Upgrade_Costs__r[0].Cost__c}" />
-                                </td>
-                                <td>
-                                  <a href="#"
-                                     class="fd_button radius small invert action_btn edit_btn">
-                                    <i class=" fa fa-edit"></i>
-                                  </a>
-                                  <a href="#"
-                                     class="fd_button radius small success invert action_btn save_btn">
-                                    <i class=" fa fa-save"></i>
-                                    <i class=" fa fa-spin fa-spinner"></i>
-                                  </a>
-                                  <a href="#"
-                                     class="fd_button radius small alert invert action_btn cancel_btn">
-                                    <i class=" fa fa-close"></i>
-                                  </a>
-                                </td>
-                              </tr>
-                            </apex:outputPanel>
-                          </apex:repeat>
-                        </apex:outputPanel>
-                        <apex:outputPanel layout="none" rendered="{!trollingMotorUpgrades.size = 0}">
+                    <apex:outputPanel id="trollingMotorUpgrades">
+                      <label>Upgrade Options</label>
+                      <table class="fd_table fd_table-striped results_table">
+                        <thead>
                           <tr>
-                            <td class="no_results">
-                              No Upgrades Found
-                            </td>
+                            <td>Trolling Motor</td>
+                            <td>Upgrade Cost</td>
+                            <td></td>
                           </tr>
-                        </apex:outputPanel>
-                      </tbody>
-                    </table>
+                        </thead>
+                        <tbody>
+                          <apex:outputPanel layout="none" rendered="{!trollingMotorUpgrades.size > 0}">
+                            <apex:repeat value="{!trollingMotorUpgrades}" var="tmUpgrade">
+                              <apex:outputPanel
+                                layout="none"
+                                rendered="{!tmUpgrade.Product_Upgrade_Costs__r.size == 0}"
+                              >
+                                <tr
+                                  data-upgrade-id="{!tmUpgrade.Id}"
+                                  data-pricebook-id="{!selectedPbIdMap['Trolling Motor']}"
+                                >
+                                  <td>{!tmUpgrade.To_Product__r.Name}</td>
+                                  <td>
+                                    <span>Set Cost</span>
+                                    <input type="text" value="" />
+                                  </td>
+                                  <td>
+                                    <a href="#" class="fd_button radius small invert action_btn edit_btn">
+                                      <i class="fa fa-edit"></i>
+                                    </a>
+                                    <a href="#" class="fd_button radius small success invert action_btn save_btn">
+                                      <i class="fa fa-save"></i>
+                                      <i class="fa fa-spin fa-spinner"></i>
+                                    </a>
+                                    <a href="#" class="fd_button radius small alert invert action_btn cancel_btn">
+                                      <i class="fa fa-close"></i>
+                                    </a>
+                                  </td>
+                                </tr>
+                              </apex:outputPanel>
+                              <apex:outputPanel layout="none" rendered="{!tmUpgrade.Product_Upgrade_Costs__r.size > 0}">
+                                <tr data-upgrade-cost-id="{!tmUpgrade.Product_Upgrade_Costs__r[0].Id}">
+                                  <td>{!tmUpgrade.To_Product__r.Name}</td>
+                                  <td>
+                                    <span>$ {!tmUpgrade.Product_Upgrade_Costs__r[0].Cost__c}</span>
+                                    <input type="text" value="{!tmUpgrade.Product_Upgrade_Costs__r[0].Cost__c}" />
+                                  </td>
+                                  <td>
+                                    <a href="#" class="fd_button radius small invert action_btn edit_btn">
+                                      <i class="fa fa-edit"></i>
+                                    </a>
+                                    <a href="#" class="fd_button radius small success invert action_btn save_btn">
+                                      <i class="fa fa-save"></i>
+                                      <i class="fa fa-spin fa-spinner"></i>
+                                    </a>
+                                    <a href="#" class="fd_button radius small alert invert action_btn cancel_btn">
+                                      <i class="fa fa-close"></i>
+                                    </a>
+                                  </td>
+                                </tr>
+                              </apex:outputPanel>
+                            </apex:repeat>
+                          </apex:outputPanel>
+                          <apex:outputPanel layout="none" rendered="{!trollingMotorUpgrades.size = 0}">
+                            <tr>
+                              <td class="no_results">No Upgrades Found</td>
+                            </tr>
+                          </apex:outputPanel>
+                        </tbody>
+                      </table>
 
-                    <div class="row">
-                      <div class="column large-9">
-                        <apex:selectlist size="1"
-                                         id="newTrollingMotorSelector"
-                                         html-data-field-name="To_Product_Id"
-                                         styleClass="newFormField">
-                          <apex:selectOptions value="{!newTrollingMotorSelectOptions}">
-                          </apex:selectOptions>
-                        </apex:selectlist>
+                      <div class="row">
+                        <div class="column large-9">
+                          <apex:selectlist
+                            size="1"
+                            id="newTrollingMotorSelector"
+                            html-data-field-name="To_Product_Id"
+                            styleClass="newFormField"
+                          >
+                            <apex:selectOptions value="{!newTrollingMotorSelectOptions}"> </apex:selectOptions>
+                          </apex:selectlist>
+                        </div>
+                        <div class="column large-2">
+                          <input type="text" data-field-name="Cost" class="newFormField" />
+                        </div>
+                        <input
+                          type="hidden"
+                          data-field-name="From_Product_Id"
+                          value="{!selectedIdMap['Trolling Motor']}"
+                          class="newFormField"
+                        />
+                        <input
+                          type="hidden"
+                          data-field-name="Pricebook_Id"
+                          value="{!selectedPbIdMap['Trolling Motor']}"
+                          class="newFormField"
+                        />
+                        <div class="column large-1">
+                          <a href="#" class="fd_button radius small success invert action_btn create_btn">
+                            <i class="fa fa-plus"></i>
+                          </a>
+                        </div>
                       </div>
-                      <div class='column large-2'>
-                        <input type="text" data-field-name="Cost" class="newFormField"></input>
-                      </div>
-                      <input type="hidden"
-                             data-field-name="From_Product_Id"
-                             value="{!selectedIdMap['Trolling Motor']}"
-                             class="newFormField" ></input>
-                      <input type="hidden"
-                             data-field-name="Pricebook_Id"
-                             value="{!selectedPbIdMap['Trolling Motor']}"
-                             class="newFormField" ></input>
-                      <div class="column large-1">
-                        <a href="#" class="fd_button radius small success invert action_btn create_btn">
-                          <i class=" fa fa-plus"></i>
-                        </a>
-                      </div>
-                    </div>
-                  </apex:outputPanel>
-                </apex:outputPanel><!-- /hasTrollingMotorProducts -->
-
-              </apex:outputPanel><!-- /trollingMotorContainer -->
-
+                    </apex:outputPanel> </apex:outputPanel
+                  ><!-- /hasTrollingMotorProducts --> </apex:outputPanel
+                ><!-- /trollingMotorContainer -->
+              </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
       </apex:outputPanel>
       <!-- ======================== Trolling Motor Upgrades Tab Content ===================== -->
     </div>
+  </apex:form>
 
-    </apex:form>
+  <script type="text/javascript">
+    (function ($) {
+      activateTabs();
+      $(document)
+        .foundation()
 
- <script type="text/javascript">
+        .on("click", ".edit_btn", function (e) {
+          e.preventDefault();
+          var $this = $(this),
+            $row = $this.closest("tr"),
+            $input = $row.find("input:first");
 
-  (function($) {
+          $row.addClass("editing").data("orig-value", $input.val());
+        })
 
-    activateTabs();
-    $(document).foundation()
+        .on("click", ".cancel_btn", function (e) {
+          e.preventDefault();
+          var $this = $(this),
+            $row = $this.closest("tr"),
+            origVal = $row.data("orig-value") ? $row.data("orig-value") : "Set Cost";
 
-    .on('click', '.edit_btn', function(e) {
-      e.preventDefault();
-      var $this = $(this),
-        $row = $this.closest('tr'),
-        $input = $row.find('input:first');
+          $row.removeClass("editing").find("input:first").val($row.data("orig-value"));
+        })
 
-      $row.addClass('editing')
-      .data('orig-value', $input.val() );
-    })
+        .on("click", ".save_btn", function (e) {
+          e.preventDefault();
+          var $this = $(this),
+            $row = null,
+            $row = $(this).closest("tr"),
+            $input = $row.find("input:first"),
+            data = {};
+          console.log($row.data());
+          console.log($row.data("upgrade-cost-id"));
+          $row.addClass("busy");
 
-    .on('click', '.cancel_btn', function(e) {
-      e.preventDefault();
-      var $this = $(this),
-        $row = $this.closest('tr'),
-        origVal = $row.data('orig-value') ? $row.data('orig-value') : 'Set Cost' ;
+          $input.attr("disabled", "true");
+          data.Id = $row.data("upgrade-cost-id");
+          if ($row.data("upgrade-id") != undefined || $row.data("upgrade-id") === "") {
+            data.Product_Upgrade__c = $row.data("upgrade-id");
+          }
+          if ($row.data("pricebook-id") != undefined || $row.data("pricebook-id") === "") {
+            data.Price_Book__c = $row.data("pricebook-id");
+          }
+          data.Cost__c = $input.val().length === 0 ? null : $input.val();
+          console.log(data);
+          saveCost(data)
+            .then(function (result) {
+              if (result === null) {
+                console.log("deleting");
+                $row.find("span").html("Set Cost");
+                $row.removeAttr("data-upgrade-cost-id");
+                $row.removeData("upgradeCostId");
+                console.log($row.data());
+                $row.removeClass();
+                $input.val("").removeAttr("disabled");
+              } else {
+                $row.find("span").html("$ " + result.Cost__c.toFixed(2));
+                $row.attr("data-upgrade-cost-id", result.Id);
+                $row.data("data-upgrade-cost-id", result.Id);
+                $row.removeClass();
+                $input.val(result.Cost__c.toFixed(2)).removeAttr("disabled");
+              }
+            })
+            .fail(function (message) {
+              $row.removeClass("busy");
+              $input.removeAttr("disabled");
+              LGND.alert("There was a problem", message);
+            });
+        })
 
-      $row.removeClass('editing')
-      .find('input:first')
-      .val( $row.data('orig-value') );
-    })
+        .on("click", ".create_btn", function (e) {
+          e.preventDefault();
+          var $this = $(this),
+            $row = $this.closest(".row"),
+            $select,
+            $table = $row.siblings("table"),
+            formFields = $row.find(".newFormField"),
+            data = {};
 
-    .on('click', '.save_btn', function(e) {
-      e.preventDefault();
-      var $this = $(this),
-        $row = null,
-        $row = $(this).closest('tr'),
-        $input = $row.find('input:first'),
-        data = {};
-console.log( $row.data() );
-console.log( $row.data('upgrade-cost-id') );
-      $row.addClass('busy');
+          $.each(formFields, function (idx, ele) {
+            if (ele.tagName === "SELECT") $select = $(ele);
+            data[$(ele).data("field-name")] = $(ele).val();
+          });
+          console.log(data);
+          createCost(data)
+            .then(function (result) {
+              var $newRow = buildTableRow(result);
 
-      $input.attr('disabled', 'true');
-      data.Id = $row.data('upgrade-cost-id');
-      if( $row.data('upgrade-id') != undefined || $row.data('upgrade-id') === '' )
-      {
-        data.Product_Upgrade__c = $row.data('upgrade-id');
-      }
-      if( $row.data('pricebook-id') != undefined || $row.data('pricebook-id') === '' )
-      {
-        data.Price_Book__c = $row.data('pricebook-id');
-      }
-      data.Cost__c = $input.val().length === 0 ? null : $input.val();
-      console.log(data)
-      saveCost(data)
-      .then( function(result) {
-        if( result === null )
-        {
-          console.log('deleting');
-          $row.find('span').html('Set Cost');
-          $row.removeAttr('data-upgrade-cost-id');
-          $row.removeData('upgradeCostId');
-          console.log( $row.data() );
-          $row.removeClass();
-          $input.val( '' )
-          .removeAttr('disabled');
-        }
-        else
-        {
-          $row.find('span').html('$ ' + result.Cost__c.toFixed(2) );
-          $row.attr('data-upgrade-cost-id', result.Id);
-          $row.data('data-upgrade-cost-id', result.Id);
-          $row.removeClass();
-          $input.val( result.Cost__c.toFixed(2) )
-          .removeAttr('disabled');
-        }
-      })
-      .fail( function(message) {
-        $row.removeClass('busy');
-        $input.removeAttr('disabled');
-        LGND.alert('There was a problem', message);
-      })
-    })
-
-    .on('click', '.create_btn', function(e) {
-      e.preventDefault();
-      var $this = $(this),
-        $row = $this.closest('.row'),
-        $select,
-        $table = $row.siblings('table'),
-        formFields = $row.find('.newFormField'),
-        data = {};
-
-      $.each( formFields, function(idx, ele) {
-        if(ele.tagName === 'SELECT') $select = $(ele);
-        data[$(ele).data('field-name')] = $(ele).val();
-      });
-      console.log( data)
-      createCost(data)
-      .then( function(result) {
-        var $newRow = buildTableRow(result);
-
-        $select.val('')
-        .find('option[value="' + data.To_Product_Id + '"]').remove();
-        $('input[data-field-name="Cost"]').val('');
-        $table.prepend($newRow)
-        .find('tbody')
-        .animate({'scrollTop': 0}, 300, function() {
-           $('.rowAdded').removeClass('rowAdded');
+              $select
+                .val("")
+                .find('option[value="' + data.To_Product_Id + '"]')
+                .remove();
+              $('input[data-field-name="Cost"]').val("");
+              $table
+                .prepend($newRow)
+                .find("tbody")
+                .animate({ scrollTop: 0 }, 300, function () {
+                  $(".rowAdded").removeClass("rowAdded");
+                });
+            })
+            .fail(function (message) {
+              LGND.alert("Something Went Wrong", message);
+            });
         });
-      })
-      .fail( function(message) {
-        LGND.alert('Something Went Wrong', message);
-      })
-    })
 
-    function activateTabs()
-    {
-      var active = $('#controlTabs dd:first').addClass('active')
-      .find('a:first').attr('href');
-      $(active).addClass('active');
-    }
+      function activateTabs() {
+        var active = $("#controlTabs dd:first").addClass("active").find("a:first").attr("href");
+        $(active).addClass("active");
+      }
 
+      function saveCost(data) {
+        var dfd = new $.Deferred();
+        ProductUpgrades.updateCost(JSON.stringify(data), function (result, event) {
+          if (event.status) {
+            dfd.resolve(result);
+          } else {
+            message =
+              event.message.indexOf("Logged in?") !== -1
+                ? " Your session has expired.  Please refresh your browser and log in."
+                : event.message;
+            dfd.reject(event.message);
+          }
+        });
+        return dfd.promise();
+      }
 
-    function saveCost(data)
-    {
-      var dfd = new $.Deferred();
-      ProductUpgrades.updateCost(JSON.stringify( data ), function(result, event) {
-        if(event.status)
-        {
-          dfd.resolve(result);
-        }
-        else
-        {
-          message = event.message.indexOf('Logged in?') !== -1 ?
-            ' Your session has expired.  Please refresh your browser and log in.' :
-            event.message;
-          dfd.reject(event.message);
-        }
-      });
-      return dfd.promise();
-    }
+      function createCost(data) {
+        var dfd = new $.Deferred();
 
-    function createCost(data)
-    {
-      var dfd = new $.Deferred();
+        ProductUpgrades.createCost(JSON.stringify(data), function (result, event) {
+          if (event.status) {
+            dfd.resolve(result);
+          } else {
+            message =
+              event.message.indexOf("Logged in?") !== -1
+                ? " Your session has expired.  Please refresh your browser and log in."
+                : event.message;
+            dfd.reject(event.message);
+          }
+        });
+        return dfd.promise();
+      }
 
-      ProductUpgrades.createCost( JSON.stringify(data), function(result, event) {
-        if(event.status)
-        {
-          dfd.resolve(result);
-        }
-        else
-        {
-          message = event.message.indexOf('Logged in?') !== -1 ?
-            ' Your session has expired.  Please refresh your browser and log in.' :
-            event.message;
-          dfd.reject(event.message);
-        }
-      });
-      return dfd.promise();
-    }
-
-     function buildTableRow( upgradeCost )
-     {
-      var string = '';
-      string += '<tr class="rowAdded" data-upgrade-id="' + upgradeCost.Id
-      + '"><td>'
-      + upgradeCost.Product_Upgrade__r.To_Product__r.Name
-      + '</td><td><span>$ '
-      + upgradeCost.Cost__c
-      + '</span><input type="text" value="'
-      + upgradeCost.Cost__c + '" />'
-      + '</td><td><a href="#" class="fd_button radius small invert action_btn edit_btn">'
-      + '<i class=" fa fa-edit"></i></a>'
-      + '<a href="#" class="fd_button radius small success invert action_btn save_btn"><i class=" fa fa-save"></i>'
-      + '<i class=" fa fa-spin fa-spinner"></i></a>'
-      + '<a href="#" class="fd_button radius small alert invert action_btn cancel_btn"><i class=" fa fa-close"></i>'
-      + '</a></td></tr>';
-      return $(string);
-    }
-
-  })(jQuery.noConflict());
-
- </script>
+      function buildTableRow(upgradeCost) {
+        var string = "";
+        string +=
+          '<tr class="rowAdded" data-upgrade-id="' +
+          upgradeCost.Id +
+          '"><td>' +
+          upgradeCost.Product_Upgrade__r.To_Product__r.Name +
+          "</td><td><span>$ " +
+          upgradeCost.Cost__c +
+          '</span><input type="text" value="' +
+          upgradeCost.Cost__c +
+          '" />' +
+          '</td><td><a href="#" class="fd_button radius small invert action_btn edit_btn">' +
+          '<i class=" fa fa-edit"></i></a>' +
+          '<a href="#" class="fd_button radius small success invert action_btn save_btn"><i class=" fa fa-save"></i>' +
+          '<i class=" fa fa-spin fa-spinner"></i></a>' +
+          '<a href="#" class="fd_button radius small alert invert action_btn cancel_btn"><i class=" fa fa-close"></i>' +
+          "</a></td></tr>";
+        return $(string);
+      }
+    })(jQuery.noConflict());
+  </script>
 </apex:page>

@@ -1,5 +1,4 @@
 <apex:page showHeader="false" sidebar="false" controller="ERPInvoicePDF" renderAs="pdf">
-
   <apex:stylesheet value="{!URLFOR($Resource.LegendPDF,'css/invoicePDF.min.css')}" />
   <apex:stylesheet value="{!URLFOR($Resource.LegendPDF,'css/service_order_page.min.css')}" />
 
@@ -13,9 +12,7 @@
   </div>
 
   <div id="footerCenter">
-    <p class="address">
-      {!storeAddress}
-    </p>
+    <p class="address">{!storeAddress}</p>
     <p class="tax_numbers">
       <apex:repeat value="{!taxNumbers}" var="tn">
         <span><b>{!tn.DeveloperName}#</b> {!tn.Tax_Number__c}</span>
@@ -26,13 +23,11 @@
   <div class="dealer-order-erp">
     <!-- +++++++++++++++++++++++++++++++++++++++ HEADER 1 ++++++++++++++++++++++++ -->
     <div class="row header1">
-
-      <div class="left" >
+      <div class="left">
         <img src="{!URLFOR($Resource.LegendPDF,'image/logo_250x30.png')}" />
       </div>
 
       <div class="right">
-
         <div>
           <img src="{!URLFOR($Resource.LegendPDF,'Icons/Email.png')}" />
           <p>dealercare@legendboats.com</p>
@@ -42,32 +37,27 @@
           <img src="{!URLFOR($Resource.LegendPDF,'Icons/Phone.png')}" />
           <p>
             toll free
-            <span style="float:right;padding-right:25px;">
-              1 888-345-4756
-            </span>
+            <span style="float: right; padding-right: 25px"> 1 888-345-4756 </span>
           </p>
           <p>
             fax
-            <span style="float:right;padding-right:25px;">
-              {!warehouse.Fax__c}
-            </span>
+            <span style="float: right; padding-right: 25px"> {!warehouse.Fax__c} </span>
           </p>
         </div>
 
-        <div style="position:relative">
+        <div style="position: relative">
           <img src="{!URLFOR($Resource.LegendPDF,'image/web.png')}" />
           <p>www.legendboats.com</p>
-         <!--  <img src="https://www.barcodesinc.com/generator/image.php?code=INV-10812&amp;style=68&amp;type=C128B&amp;width=150&amp;height=40&amp;xres=1&amp;font=3" alt="Barcode" border="0"/> -->
+          <!--  <img src="https://www.barcodesinc.com/generator/image.php?code=INV-10812&amp;style=68&amp;type=C128B&amp;width=150&amp;height=40&amp;xres=1&amp;font=3" alt="Barcode" border="0"/> -->
           <p class="invoice_number">Invoice #<br />{!invoiceName}</p>
         </div>
-
-      </div><!--header right close -->
+      </div>
+      <!--header right close -->
     </div>
     <!-- ==================================== /HEADER 1 ============================  -->
 
     <!-- +++++++++++++++++++++++++++++++++++ HEADER 2 ++++++++++++++++++++++++++++++ -->
     <div class="row header2">
-
       <div>
         <p>
           <img src="{!URLFOR($Resource.LegendPDF,'Icons/Invoice.png')}" />
@@ -90,61 +80,51 @@
                   <img src="{!URLFOR($Resource.LegendPDF,'image/invoice2_trans.png')}" width="25" height="25" />
                 </td>
               </tr>
-
             </table>
 
             <div style="">
               <table>
                 <tr>
-                    <td style="">
-                        <p>Total Due:</p>
-                        <apex:outputText value="${0, number, ###,###,###,##0.00}">
-                              <apex:param value="{!erpOrder.Grand_Total__c - IF(ISNULL(erpOrder.Deposit__c), 0, erpOrder.Deposit__c)}"/>
-                        </apex:outputText>
-                    </td>
-                    <td style="">
-                        <p>Delivery Date:</p>
-                        <p>{!invoiceDate}</p>
-                    </td>
-                    <td style="">
-                        <p>Invoice #:</p>
-                        <p>{!invoiceName}</p>
-                    </td>
+                  <td style="">
+                    <p>Total Due:</p>
+                    <apex:outputText value="${0, number, ###,###,###,##0.00}">
+                      <apex:param
+                        value="{!erpOrder.Grand_Total__c - IF(ISNULL(erpOrder.Deposit__c), 0, erpOrder.Deposit__c)}"
+                      />
+                    </apex:outputText>
+                  </td>
+                  <td style="">
+                    <p>Delivery Date:</p>
+                    <p>{!invoiceDate}</p>
+                  </td>
+                  <td style="">
+                    <p>Invoice #:</p>
+                    <p>{!invoiceName}</p>
+                  </td>
                 </tr>
               </table>
             </div>
-
           </div>
-
         </div>
-
       </div>
-
     </div>
     <!-- ================================= /HEADER 2 =================================== -->
 
     <!-- +++++++++++++++++++++++++++++++++ CUSTOMER INFO +++++++++++++++++++++++++++++++++ -->
     <div class="row customer_info">
-
       <!-- +++++++++++++++++ BUYER INFO +++++++++++++++++++++ -->
       <div class="col col40">
-        <p class="buyer_name">
-          {!projectAccount.name}
-        </p>
-        <p class="buyer_address">
-          {!address}
-        </p>
+        <p class="buyer_name">{!projectAccount.name}</p>
+        <p class="buyer_address">{!address}</p>
       </div>
       <div class="col col40">
         <div class="buyer_details">
-          <table style="width: 90%; margin:auto">
+          <table style="width: 90%; margin: auto">
             <tr>
               <td class="icon" style="width: 20%">
                 <img src="{!URLFOR($Resource.LegendPDF,'Icons/Email.png')}" />
               </td>
-              <td>
-                {!projectAccount.AccountEmail__c}
-              </td>
+              <td>{!projectAccount.AccountEmail__c}</td>
               <td class="icon">
                 <!-- <img src="{!URLFOR($Resource.LegendPDF,'Icons/Birthday.png')}" /> -->
               </td>
@@ -156,9 +136,7 @@
               <td class="icon" style="width: 20%">
                 <img src="{!URLFOR($Resource.LegendPDF,'Icons/Cell.png')}" />
               </td>
-              <td>
-               {!projectAccount.phone}
-              </td>
+              <td>{!projectAccount.phone}</td>
               <td class="icon">
                 <!-- <img src="{!URLFOR($Resource.LegendPDF,'Icons/DriverLicense.png')}" /> -->
               </td>
@@ -172,23 +150,20 @@
       <!-- ================== /BUYER INFO ================== -->
 
       <!-- ++++++++++++++++ MEMORY MAKER ++++++++++++++++++++ -->
-      <div class="col memory_maker" style="border-left:1px solid #CCC; width:19.8%;">
-        <p>
-          District Sales Manager
-        </p>
-        <p>
-          {!erpOrder.Salesperson__r.name}
-        </p>
+      <div class="col memory_maker" style="border-left: 1px solid #ccc; width: 19.8%">
+        <p>District Sales Manager</p>
+        <p>{!erpOrder.Salesperson__r.name}</p>
       </div>
       <!-- ================ /MEMORY MAKER =================== -->
-
     </div>
     <!-- ================================== /CUSTOMER INFO =============================== -->
 
-     <!-- +++++++++++++++++++++++++++++++++++ MAJOR ITEMS TABLE +++++++++++++++++++++++++++++++ -->
+    <!-- +++++++++++++++++++++++++++++++++++ MAJOR ITEMS TABLE +++++++++++++++++++++++++++++++ -->
     <div class="major_items">
-
-      <table class="itemsTable service-order" style="display:{!IF((boat.Product_Name__c) != null,'','none')}; margin-bottom:15px;">
+      <table
+        class="itemsTable service-order"
+        style="display:{!IF((boat.Product_Name__c) != null,'','none')}; margin-bottom:15px;"
+      >
         <thead>
           <tr>
             <td colspan="5">Boat</td>
@@ -198,7 +173,9 @@
           <apex:outputPanel layout="none">
             <tr>
               <td class="w5">
-                <span display="{!IF( LEN(boat.GMBLASERP__Serial_Number__r.GMBLASERP__Lot__r.Name) = 4, '', 'dispaly:none')}">
+                <span
+                  display="{!IF( LEN(boat.GMBLASERP__Serial_Number__r.GMBLASERP__Lot__r.Name) = 4, '', 'dispaly:none')}"
+                >
                   {!boat.GMBLASERP__Serial_Number__r.GMBLASERP__Lot__r.Name}
                 </span>
               </td>
@@ -206,13 +183,14 @@
               <td class="w15">{!boat.GMBLASERP__Serial_Number__r.name}</td>
               <td class="w5">&nbsp;</td>
               <td class="w15 right">
-                <apex:outputText value="{!IF(boat.GMBLASERP__Total_Price__c != 0,' ${0, number, ###,###,###,##0.00}','$Included')} ">
-                  <apex:param value="{!boat.GMBLASERP__Total_Price__c}"/>
+                <apex:outputText
+                  value="{!IF(boat.GMBLASERP__Total_Price__c != 0,' ${0, number, ###,###,###,##0.00}','$Included')} "
+                >
+                  <apex:param value="{!boat.GMBLASERP__Total_Price__c}" />
                 </apex:outputText>
               </td>
             </tr>
           </apex:outputPanel>
-
         </tbody>
       </table>
 
@@ -227,7 +205,9 @@
             <apex:repeat value="{!motors}" var="motor">
               <tr>
                 <td class="w5">
-                  <span display="{!IF( LEN(motor.GMBLASERP__Serial_Number__r.GMBLASERP__Lot__r.Name) = 4, '', 'dispaly:none')}">
+                  <span
+                    display="{!IF( LEN(motor.GMBLASERP__Serial_Number__r.GMBLASERP__Lot__r.Name) = 4, '', 'dispaly:none')}"
+                  >
                     {!motor.GMBLASERP__Serial_Number__r.GMBLASERP__Lot__r.Name}
                   </span>
                 </td>
@@ -235,8 +215,10 @@
                 <td class="w25">{!motor.GMBLASERP__Serial_Number__r.name}</td>
                 <td class="w25">&nbsp;</td>
                 <td class="w15 right">
-                  <apex:outputText value="{!IF(motor.GMBLASERP__Total_Price__c != 0,' ${0, number, ###,###,###,##0.00}','$Included')} ">
-                    <apex:param value="{!motor.GMBLASERP__Total_Price__c}"/>
+                  <apex:outputText
+                    value="{!IF(motor.GMBLASERP__Total_Price__c != 0,' ${0, number, ###,###,###,##0.00}','$Included')} "
+                  >
+                    <apex:param value="{!motor.GMBLASERP__Total_Price__c}" />
                   </apex:outputText>
                 </td>
               </tr>
@@ -245,7 +227,10 @@
         </tbody>
       </table>
 
-      <table class="itemsTable service-order" style="display:{!IF((trailer.Product_Name__c) != null,'','none')}; margin-bottom:15px;">
+      <table
+        class="itemsTable service-order"
+        style="display:{!IF((trailer.Product_Name__c) != null,'','none')}; margin-bottom:15px;"
+      >
         <thead>
           <tr>
             <td colspan="5">Trailer</td>
@@ -255,7 +240,9 @@
           <apex:outputPanel layout="none">
             <tr>
               <td class="w5">
-                <span display="{!IF( LEN(trailer.GMBLASERP__Serial_Number__r.GMBLASERP__Lot__r.Name) = 4, '', 'dispaly:none')}">
+                <span
+                  display="{!IF( LEN(trailer.GMBLASERP__Serial_Number__r.GMBLASERP__Lot__r.Name) = 4, '', 'dispaly:none')}"
+                >
                   {!trailer.GMBLASERP__Serial_Number__r.GMBLASERP__Lot__r.Name}
                 </span>
               </td>
@@ -263,8 +250,10 @@
               <td class="w15">{!trailer.GMBLASERP__Serial_Number__r.name}</td>
               <td class="w5">&nbsp;</td>
               <td class="w15 right">
-                <apex:outputText value="{!IF(trailer.GMBLASERP__Total_Price__c != 0,' ${0, number, ###,###,###,##0.00}','$Included')} ">
-                  <apex:param value="{!trailer.GMBLASERP__Total_Price__c}"/>
+                <apex:outputText
+                  value="{!IF(trailer.GMBLASERP__Total_Price__c != 0,' ${0, number, ###,###,###,##0.00}','$Included')} "
+                >
+                  <apex:param value="{!trailer.GMBLASERP__Total_Price__c}" />
                 </apex:outputText>
               </td>
             </tr>
@@ -272,18 +261,23 @@
         </tbody>
       </table>
 
-      <table class="itemsTable service-order" style="display:{!IF(trollingMotors.size > 0,'','none')}; margin-bottom:15px;">
+      <table
+        class="itemsTable service-order"
+        style="display:{!IF(trollingMotors.size > 0,'','none')}; margin-bottom:15px;"
+      >
         <thead>
           <tr>
-            <td colspan="5" >Trolling Motor</td >
+            <td colspan="5">Trolling Motor</td>
           </tr>
         </thead>
         <tbody>
-           <apex:outputPanel layout="none">
+          <apex:outputPanel layout="none">
             <apex:repeat value="{!trollingMotors}" var="trollingMotor">
               <tr>
                 <td class="w5">
-                  <span display="{!IF( LEN(trollingMotor.GMBLASERP__Serial_Number__r.GMBLASERP__Lot__r.Name) = 4, '', 'dispaly:none')}">
+                  <span
+                    display="{!IF( LEN(trollingMotor.GMBLASERP__Serial_Number__r.GMBLASERP__Lot__r.Name) = 4, '', 'dispaly:none')}"
+                  >
                     {!trollingMotor.GMBLASERP__Serial_Number__r.GMBLASERP__Lot__r.Name}
                   </span>
                 </td>
@@ -291,8 +285,10 @@
                 <td class="w15">{!trollingMotor.GMBLASERP__Serial_Number__r.name}</td>
                 <td class="w5">&nbsp;</td>
                 <td class="w15 right">
-                  <apex:outputText value="{!IF(trollingMotor.GMBLASERP__Total_Price__c != 0,' ${0, number, ###,###,###,##0.00}','$Included')} ">
-                    <apex:param value="{!trollingMotor.GMBLASERP__Total_Price__c}"/>
+                  <apex:outputText
+                    value="{!IF(trollingMotor.GMBLASERP__Total_Price__c != 0,' ${0, number, ###,###,###,##0.00}','$Included')} "
+                  >
+                    <apex:param value="{!trollingMotor.GMBLASERP__Total_Price__c}" />
                   </apex:outputText>
                 </td>
               </tr>
@@ -301,37 +297,36 @@
         </tbody>
       </table>
 
-      <table class="itemsTable service-order" style="display:{!IF((oppAccList.size) > 0,'','none')}; margin-bottom:15px;">
+      <table
+        class="itemsTable service-order"
+        style="display:{!IF((oppAccList.size) > 0,'','none')}; margin-bottom:15px;"
+      >
         <thead>
           <tr>
-            <td colspan="3" >Addition Items</td >
+            <td colspan="3">Addition Items</td>
           </tr>
         </thead>
         <tbody>
-          <apex:repeat value="{!oppAccList}" var="part" >
+          <apex:repeat value="{!oppAccList}" var="part">
             <tr>
               <td class="w5">{!part.quantity}</td>
               <td colspan="w75">{!part.description}</td>
               <td class="w15 right">
                 <apex:outputText value="${0, number, ###,###,###,##0.00}">
-                  <apex:param value="{!part.price}"/>
+                  <apex:param value="{!part.price}" />
                 </apex:outputText>
               </td>
             </tr>
             <apex:repeat value="{!part.includedFeatures}" var="feature">
               <tr>
-                <td class="w5">
-
-                </td>
+                <td class="w5"></td>
                 <td class="w60">
-                  <div style="display:inline-block; padding: 0 5px 0 10px;">
-                    -
-                  </div>
-                  <apex:outputText value="{!feature.description}"/>
+                  <div style="display: inline-block; padding: 0 5px 0 10px">-</div>
+                  <apex:outputText value="{!feature.description}" />
                 </td>
                 <td class="w35 right">
                   <apex:outputText value="{!IF(feature.price != 0,' ${0, number, ###,###,###,##0.00}','Included')} ">
-                    <apex:param value="{!feature.price}"/>
+                    <apex:param value="{!feature.price}" />
                   </apex:outputText>
                 </td>
               </tr>
@@ -343,18 +338,20 @@
       <table class="itemsTable service-order" style="display:{!IF((feesList.size) > 0,'','none')}; margin-bottom:15px;">
         <thead>
           <tr>
-            <td colspan="3" >Additional Fees</td >
+            <td colspan="3">Additional Fees</td>
           </tr>
         </thead>
         <tbody>
-          <apex:repeat value="{!feesList}" var="fees" >
+          <apex:repeat value="{!feesList}" var="fees">
             <apex:outputPanel layout="none">
               <tr>
                 <td class="w5"></td>
                 <td class="w75">{!fees.Product_Name__c}</td>
                 <td class="w15 right">
-                  <apex:outputText value="{!IF(fees.GMBLASERP__Total_Price__c != 0,' ${0, number, ###,###,###,##0.00}','$Included')} ">
-                    <apex:param value="{!fees.GMBLASERP__Total_Price__c}"/>
+                  <apex:outputText
+                    value="{!IF(fees.GMBLASERP__Total_Price__c != 0,' ${0, number, ###,###,###,##0.00}','$Included')} "
+                  >
+                    <apex:param value="{!fees.GMBLASERP__Total_Price__c}" />
                   </apex:outputText>
                 </td>
               </tr>
@@ -363,21 +360,24 @@
         </tbody>
       </table>
 
-      <table class="itemsTable service-order" style="display:{!IF((discountList.size) > 0,'','none')}; margin-bottom:15px;">
+      <table
+        class="itemsTable service-order"
+        style="display:{!IF((discountList.size) > 0,'','none')}; margin-bottom:15px;"
+      >
         <thead>
           <tr>
-            <td colspan="3" >Special Savings</td >
+            <td colspan="3">Special Savings</td>
           </tr>
         </thead>
         <tbody>
-          <apex:repeat value="{!discountList}" var="part" >
+          <apex:repeat value="{!discountList}" var="part">
             <apex:outputPanel layout="none">
               <tr>
                 <td class="w5"></td>
-                <td colspan="w75">{!part.Product_Name__c} - {!part.AcctSeedERP__Comment__c } </td>
+                <td colspan="w75">{!part.Product_Name__c} - {!part.AcctSeedERP__Comment__c }</td>
                 <td class="w15 right">
                   <apex:outputText value="${0, number, ###,###,###,##0.00}">
-                    <apex:param value="{!part.GMBLASERP__Total_Price__c}"/>
+                    <apex:param value="{!part.GMBLASERP__Total_Price__c}" />
                   </apex:outputText>
                 </td>
               </tr>
@@ -385,7 +385,6 @@
           </apex:repeat>
         </tbody>
       </table>
-
     </div>
 
     <div class="row signatures_and_summary">
@@ -403,60 +402,59 @@
             <td>SUB TOTAL:</td>
             <td>
               <apex:outputText value="${0, number, ###,###,###,##0.00}">
-                    <apex:param value="{!subTotal}"/>
-               </apex:outputText>
+                <apex:param value="{!subTotal}" />
+              </apex:outputText>
             </td>
           </tr>
           <apex:outputPanel layout="none">
-          <tr>
-            <td class="decrease">SAVINGS:</td>
-            <td class="decrease">
-              - &nbsp;<apex:outputText value="${0, number, ###,###,###,##0.00}"
-                                   rendered="{!totalSaving != null}">
-                    <apex:param value="{!totalSaving}"/>
-                  </apex:outputText>
-            </td>
-          </tr>
+            <tr>
+              <td class="decrease">SAVINGS:</td>
+              <td class="decrease">
+                - &nbsp;<apex:outputText value="${0, number, ###,###,###,##0.00}" rendered="{!totalSaving != null}">
+                  <apex:param value="{!totalSaving}" />
+                </apex:outputText>
+              </td>
+            </tr>
           </apex:outputPanel>
           <tr>
             <td>TOTAL BEFORE TAX:</td>
             <td>
               <apex:outputText value="${0, number, ###,###,###,##0.00}">
-                        <apex:param value="{!erpOrder.Order_Item_Total__c}"/>
-                  </apex:outputText>
+                <apex:param value="{!erpOrder.Order_Item_Total__c}" />
+              </apex:outputText>
             </td>
           </tr>
-         <!-- OverRide Custom Taxes -->
+          <!-- OverRide Custom Taxes -->
           <apex:outputPanel layout="none" rendered="{!erpOrder.Tax_is_Harmonized__c == true}">
             <tr>
-              <td> TAX (HST) {! erpOrder.Tax_Rate_Provincial__c + erpOrder.Tax_Rate_Federal__c}%: </td>
+              <td>TAX (HST) {! erpOrder.Tax_Rate_Provincial__c + erpOrder.Tax_Rate_Federal__c}%:</td>
               <td>
-                  <apex:outputText value="${0, number, ###,###,###,##0.00}">
-                        <apex:param value="{!erpOrder.Tax_Amount_Provincial__c + erpOrder.Tax_Amount_Federal__c}"/>
-                  </apex:outputText>
-               </td>
+                <apex:outputText value="${0, number, ###,###,###,##0.00}">
+                  <apex:param value="{!erpOrder.Tax_Amount_Provincial__c + erpOrder.Tax_Amount_Federal__c}" />
+                </apex:outputText>
+              </td>
             </tr>
           </apex:outputPanel>
 
           <apex:outputPanel layout="none" rendered="{!erpOrder.Tax_is_Harmonized__c != true}">
             <tr>
-              <td> TAX ({!provTAxInfo.taxName}): {!erpOrder.Tax_Rate_Provincial__c}% </td>
+              <td>TAX ({!provTAxInfo.taxName}): {!erpOrder.Tax_Rate_Provincial__c}%</td>
               <td>
-                  <apex:outputText value="${0, number, ###,###,###,##0.00}">
-                        <apex:param value="{!erpOrder.Tax_Amount_Provincial__c}"/>
-                  </apex:outputText>
-               </td>
+                <apex:outputText value="${0, number, ###,###,###,##0.00}">
+                  <apex:param value="{!erpOrder.Tax_Amount_Provincial__c}" />
+                </apex:outputText>
+              </td>
             </tr>
           </apex:outputPanel>
 
           <apex:outputPanel layout="none" rendered="{!erpOrder.Tax_is_Harmonized__c != true}">
             <tr>
-              <td> TAX (GST): {!erpOrder.Tax_Rate_Federal__c}% </td>
+              <td>TAX (GST): {!erpOrder.Tax_Rate_Federal__c}%</td>
               <td>
-                  <apex:outputText value="${0, number, ###,###,###,##0.00}">
-                        <apex:param value="{!erpOrder.Tax_Amount_Federal__c}"/>
-                  </apex:outputText>
-               </td>
+                <apex:outputText value="${0, number, ###,###,###,##0.00}">
+                  <apex:param value="{!erpOrder.Tax_Amount_Federal__c}" />
+                </apex:outputText>
+              </td>
             </tr>
           </apex:outputPanel>
           <!-- Seperate taxes -->
@@ -465,8 +463,8 @@
           <tr>
             <td>DEPOSIT <span class="deposit_method">by {!erpOrder.Deposit_Method__c}</span>:</td>
             <td class="">
-               <apex:outputText value="- ${0, number, ###,###,###,##0.00}">
-                <apex:param value="{!NULLVALUE( erpOrder.Deposit__c  , 0 ) }"/>
+              <apex:outputText value="- ${0, number, ###,###,###,##0.00}">
+                <apex:param value="{!NULLVALUE( erpOrder.Deposit__c  , 0 ) }" />
               </apex:outputText>
             </td>
           </tr>
@@ -483,17 +481,15 @@
                 <table>
                   <apex:repeat value="{!payments}" var="payment">
                     <tr>
-                      <td style="text-align:left;">
+                      <td style="text-align: left">
                         <apex:outputText value="{0, date, MMM dd'/'yy}">
                           <apex:param value="{!payment.AcctSeed__Receipt_Date__c}" />
                         </apex:outputText>
                       </td>
-                      <td style="text-align:left;">
-                        {!payment.Payment_Method__c}
-                      </td>
-                      <td style="text-align:right !important;">
+                      <td style="text-align: left">{!payment.Payment_Method__c}</td>
+                      <td style="text-align: right !important">
                         <apex:outputText value="${0, number, ###,###,###,##0.00}">
-                          <apex:param value="{!payment.AcctSeed__Amount__c}"/>
+                          <apex:param value="{!payment.AcctSeed__Amount__c}" />
                         </apex:outputText>
                       </td>
                     </tr>
@@ -508,16 +504,14 @@
             <td>Total Due:</td>
             <td>
               <apex:outputText value="${0, number, ###,###,###,##0.00}">
-                <apex:param value="{!erpOrder.Grand_Total__c - paymentTotal - IF(ISNULL(erpOrder.Deposit__c), 0, erpOrder.Deposit__c)}"/>
+                <apex:param
+                  value="{!erpOrder.Grand_Total__c - paymentTotal - IF(ISNULL(erpOrder.Deposit__c), 0, erpOrder.Deposit__c)}"
+                />
               </apex:outputText>
             </td>
           </tr>
-
         </table>
       </div>
     </div>
   </div>
-
-
-
 </apex:page>

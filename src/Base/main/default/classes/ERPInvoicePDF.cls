@@ -799,9 +799,8 @@ public with sharing class ERPInvoicePDF {
     /*   Counter Sale    */
     if (
       this.erpOrder.RecordTypeId == counterSaleRtId ||
-      this.erpOrder.RecordTypeId == partnerPartOrder //      || ( this.erpOrder.RecordTypeId == warrantyRtId &&
-    ) //          this.erpOrder.Internal_Warranty__c  ))
-    {
+      this.erpOrder.RecordTypeId == partnerPartOrder //      || ( this.erpOrder.RecordTypeId == warrantyRtId && //          this.erpOrder.Internal_Warranty__c  ))
+    ) {
       System.debug('setting up for counterSale');
       setupForCounterSale();
     }

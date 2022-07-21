@@ -1,9 +1,8 @@
 <apex:page showHeader="false" sidebar="false" controller="ERPInvoicePDF" renderAs="pdf">
-
   <apex:stylesheet value="{!URLFOR($Resource.LegendPDF,'css/invoicePDF.min.css')}" />
   <apex:stylesheet value="{!URLFOR($Resource.LegendPDF,'css/service_order_page.min.css')}" />
 
- <div id="footerRight">
+  <div id="footerRight">
     <span>Page</span>
     <span>Facture #{!invoiceName}</span>
   </div>
@@ -13,9 +12,7 @@
   </div>
 
   <div id="footerCenter">
-    <p class="address">
-      {!storeAddress}
-    </p>
+    <p class="address">{!storeAddress}</p>
     <p class="tax_numbers">
       <apex:repeat value="{!taxNumbers}" var="tn">
         <span><b>{!tn.DeveloperName}#</b> {!tn.Tax_Number__c}</span>
@@ -23,17 +20,14 @@
     </p>
   </div>
 
-
   <div class="service-order-erp">
     <!-- +++++++++++++++++++++++++++++++++++++++ HEADER 1 ++++++++++++++++++++++++ -->
     <div class="row header1">
-
-      <div class="left" >
+      <div class="left">
         <img src="{!URLFOR($Resource.LegendPDF,'image/LegendLogoFR-250x30.png')}" />
       </div>
 
       <div class="right">
-
         <div>
           <img src="{!URLFOR($Resource.LegendPDF,'Icons/Email.png')}" />
           <p>info@legendboats.com</p>
@@ -41,63 +35,48 @@
 
         <div>
           <img src="{!URLFOR($Resource.LegendPDF,'Icons/Phone.png')}" />
-           <p>
+          <p>
             Tél
-            <span style="float:right;padding-right:25px;">
-              {!warehouse.Phone__c}
-            </span>
+            <span style="float: right; padding-right: 25px"> {!warehouse.Phone__c} </span>
           </p>
-           <p>
+          <p>
             Sans Frais
-            <span style="float:right;padding-right:25px;">
-              {!warehouse.Toll_Free__c}
-            </span>
+            <span style="float: right; padding-right: 25px"> {!warehouse.Toll_Free__c} </span>
           </p>
           <p>
             Fax
-            <span style="float:right;padding-right:25px;">
-              {!warehouse.Fax__c}
-            </span>
+            <span style="float: right; padding-right: 25px"> {!warehouse.Fax__c} </span>
           </p>
         </div>
 
-        <div style="position:relative">
+        <div style="position: relative">
           <img src="{!URLFOR($Resource.LegendPDF,'image/web.png')}" />
           <p>www.legendboats.com</p>
-          <p style="width: 100%; padding-top: 5px; font-size: 12px; text-align: center">
-            Constructeur de mémoire
-          </p>
+          <p style="width: 100%; padding-top: 5px; font-size: 12px; text-align: center">Constructeur de mémoire</p>
           <p style="width: 100%; font-size: 14px; font-weight: bold; text-align: center">
             {!erpOrder.Salesperson__r.name}
           </p>
         </div>
-
-      </div><!--header right close -->
+      </div>
+      <!--header right close -->
     </div>
     <!-- ==================================== /HEADER 1 ============================  -->
 
     <!-- +++++++++++++++++++++++++++++++++++ HEADER 2 ++++++++++++++++++++++++++++++ -->
     <div class="row header2" style="overflow: visible">
-
       <div class="customer-info">
         <apex:outputPanel layout="none" rendered="{!NOT(ISNULL(projectAccount))}">
           <p>
             <img src="{!URLFOR($Resource.LegendPDF,'Icons/Invoice.png')}" />
             FACTURE Á:
           </p>
-          <p class="buyer_name">
-           {!projectAccount.name}
-          </p>
+          <p class="buyer_name">{!projectAccount.name}</p>
           <p class="buyer_address">
             {!projectAccount.BillingStreet}, {!projectAccount.BillingCity} <br />
             {!projectAccount.BillingState}, {!projectAccount.BillingPostalCode}, {!projectAccount.BillingCountry}
           </p>
-          <p class="buyer_phone">
-            {!projectAccount.phone}
-          </p>
-          <p class="buyer_email">
-            {!projectAccount.PersonEmail}
-          </p>
+          <p class="buyer_phone">{!projectAccount.phone}</p>
+          <p class="buyer_email">{!projectAccount.PersonEmail}</p>
         </apex:outputPanel>
       </div>
 
@@ -113,45 +92,37 @@
                   <img src="{!URLFOR($Resource.LegendPDF,'image/invoice2_trans.png')}" width="25" height="25" />
                 </td>
               </tr>
-
             </table>
 
             <div style="">
               <table>
                 <tr>
-                    <td style="">
-                        <p>Invoice Date:</p>
-                        <p>{!invoiceDate}</p>
-                    </td>
-                    <td style="">
-                        <p>Invoice #:</p>
-                        <p>{!invoiceName}</p>
-                    </td>
+                  <td style="">
+                    <p>Invoice Date:</p>
+                    <p>{!invoiceDate}</p>
+                  </td>
+                  <td style="">
+                    <p>Invoice #:</p>
+                    <p>{!invoiceName}</p>
+                  </td>
                 </tr>
               </table>
             </div>
-
           </div>
-
         </div>
-
       </div>
-
     </div>
     <!-- ================================= /HEADER 2 =================================== -->
 
-
     <!-- +++++++++++++++++++++++++++++++++ SERIAL INFO +++++++++++++++++++++++++++++++++ -->
     <div class="row serial-info">
-
       <table class="itemsTable">
-
         <thead>
           <tr>
-           <td class="w15">Type</td>
-           <td class="w15">Year</td>
-           <td class="w40">Make/Model</td>
-           <td class="w30">Serial Number</td>
+            <td class="w15">Type</td>
+            <td class="w15">Year</td>
+            <td class="w40">Make/Model</td>
+            <td class="w30">Serial Number</td>
           </tr>
         </thead>
 
@@ -165,15 +136,13 @@
             </tr>
           </apex:repeat>
         </tbody>
-
       </table>
-
     </div>
     <!-- ================================== /SERIAL INFO =============================== -->
 
     <!-- +++++++++++++++++++++++++++++++++++ ITEMS ++++++++++++++++++++++++++++++ -->
 
-    <table class="itemsTable hasKits service-order" style="margin-bottom:25px;margin-top: 20px;">
+    <table class="itemsTable hasKits service-order" style="margin-bottom: 25px; margin-top: 20px">
       <tbody>
         <apex:repeat value="{!taskLineItems}" var="task">
           <tr class="task-title">
@@ -206,26 +175,31 @@
           </apex:outputPanel>
           <apex:repeat value="{!task.taskParts}" var="part">
             <tr>
-              <td class="w90" style="vertical-align: top; padding-left:0;">
-                <table style="width: 100%; margin:0; padding: 0; border-collapse: collapse;">
-                  <tr style="line-height: 20px;">
-                    <td style="width: 20%; text-align:left; padding-left:0;">{!part.productCode}</td>
-                    <td style="vertical-align: top;">{!part.descriptionFR}</td>
+              <td class="w90" style="vertical-align: top; padding-left: 0">
+                <table style="width: 100%; margin: 0; padding: 0; border-collapse: collapse">
+                  <tr style="line-height: 20px">
+                    <td style="width: 20%; text-align: left; padding-left: 0">{!part.productCode}</td>
+                    <td style="vertical-align: top">{!part.descriptionFR}</td>
                   </tr>
                 </table>
-                <apex:outputPanel layout="block" styleClass="kit-contents" rendered="{!part.hasKitParts}" style=":padding-bottom: 5px;">
+                <apex:outputPanel
+                  layout="block"
+                  styleClass="kit-contents"
+                  rendered="{!part.hasKitParts}"
+                  style=":padding-bottom: 5px"
+                >
                   <table class="kitParts">
                     <apex:repeat value="{!part.kitParts}" var="kitPart">
                       <tr>
                         <td>{!kitPart.productCode}</td>
                         <td><apex:outputText value="{!kitPart.descriptionFR}" escape="false"></apex:outputText></td>
-                        <td style="text-align:right;padding-right: 7px">{!kitPart.Quantity}</td>
+                        <td style="text-align: right; padding-right: 7px">{!kitPart.Quantity}</td>
                       </tr>
                     </apex:repeat>
                   </table>
                 </apex:outputPanel>
               </td>
-              <td class="w10" style="text-align: right; vertical-align: top; padding-right: 10px;">{!part.quantity}</td>
+              <td class="w10" style="text-align: right; vertical-align: top; padding-right: 10px">{!part.quantity}</td>
             </tr>
           </apex:repeat>
         </apex:repeat>
@@ -236,21 +210,13 @@
 
     <!-- +++++++++++++++++++++++ KEY NUMBER INFO +++++++++++++++++++++++++++++++++++++ -->
     <div class="row key-info">
-      <div class="col col20 label">
-        Ignition Key #
-      </div>
+      <div class="col col20 label">Ignition Key #</div>
       <div class="col col30">
-        <div class="fake-input">
-          {!ignitionKeyNumber}
-        </div>
+        <div class="fake-input">{!ignitionKeyNumber}</div>
       </div>
-      <div class="col col20 label">
-        Compartment Key #
-      </div>
+      <div class="col col20 label">Compartment Key #</div>
       <div class="col col30">
-        <div class="fake-input" style="">
-         {!compartmentKeyNumber}
-        </div>
+        <div class="fake-input" style="">{!compartmentKeyNumber}</div>
       </div>
     </div>
     <!-- ======================= KEY NUMBER INFO ===================================== -->
@@ -269,21 +235,19 @@
             <p></p>
             <p>Final Check Completed By:</p>
           </div>
-
         </div>
       </div>
 
       <div class="col col50">
-        <h2 stye="width: 100%;">All Items on Work Order Fixed?
-          <span style="display:inline-block; float:right; padding-right: 5%;">YES / NO</span>
+        <h2 stye="width: 100%;">
+          All Items on Work Order Fixed?
+          <span style="display: inline-block; float: right; padding-right: 5%">YES / NO</span>
         </h2>
-        <div class="notes_container" style="min-height: 120px;">
+        <div class="notes_container" style="min-height: 120px">
           <p></p>
         </div>
       </div>
     </div>
     <!-- ============================= /NOTES AND TOTALS ======================== -->
-
   </div>
-
 </apex:page>

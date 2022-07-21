@@ -1,31 +1,30 @@
-<apex:page showHeader="true"
-           sidebar="false"
-           docType="html-5.0"
-           controller="LegendImageGalleryController">
-
+<apex:page showHeader="true" sidebar="false" docType="html-5.0" controller="LegendImageGalleryController">
   <c:LegendGalleryResources />
 
   <div class="headerNav">
     <span class="title"> {!lgndGallery.currentObject.Name} Image Gallery</span>
-    <apex:outputLink value="/{!lgndGallery.currentObject.Id}"
-                     styleClass="fd_button small invert cancelLink">
+    <apex:outputLink value="/{!lgndGallery.currentObject.Id}" styleClass="fd_button small invert cancelLink">
       Cancel
     </apex:outputLink>
-    <apex:outputLink value="/apex/LegendImageGallery_Add?id={!lgndGallery.currentObject.Id}"
-                     styleClass="fd_button small invert success selectLink">
+    <apex:outputLink
+      value="/apex/LegendImageGallery_Add?id={!lgndGallery.currentObject.Id}"
+      styleClass="fd_button small invert success selectLink"
+    >
       Upload New Image(s)
     </apex:outputLink>
-    <apex:outputLink value="/apex/LegendImageGallery_Select?id={!lgndGallery.currentObject.Id}"
-                     styleClass="fd_button small invert yellow selectLink">
+    <apex:outputLink
+      value="/apex/LegendImageGallery_Select?id={!lgndGallery.currentObject.Id}"
+      styleClass="fd_button small invert yellow selectLink"
+    >
       Select Images
     </apex:outputLink>
   </div>
 
   <c:LegendMainAjaxIndicator id="ajaxInd" />
 
-  <sffd:row >
+  <sffd:row>
     <sffd:column cols="large-8 large-offset-2">
-      <apex:messages styleClass="alert-box alert"/>
+      <apex:messages styleClass="alert-box alert" />
     </sffd:column>
   </sffd:row>
 
@@ -36,69 +35,67 @@
   <div id="viewer"></div>
   <apex:includeScript value="{!URLFOR($Resource.UtilJS)}" />
   <script type="text/javascript">
-
-   var $j = jQuery.noConflict(),
-       isMobile = function() {
+    var $j = jQuery.noConflict(),
+      isMobile = function () {
         //using regex here so developers can add more keywords if needed
-        return navigator.userAgent.match('(Mobi)') ? true : false;
+        return navigator.userAgent.match("(Mobi)") ? true : false;
       },
-      containerHeight = ( $j(window).height() - 110 );
+      containerHeight = $j(window).height() - 110;
 
-      if( determineUI("{!$User.UITheme}") === 'classic' )
-      {
-        containerHeight -= 160;
-      }
+    if (determineUI("{!$User.UITheme}") === "classic") {
+      containerHeight -= 160;
+    }
 
-    console.log( $j(window).height());
-    console.log( isMobile() );
+    console.log($j(window).height());
+    console.log(isMobile());
 
     LegendGallery.init({
       awsSettings: {
-        aws_FileKey: '{!lgndGallery.s3Policy.FileKey}',
+        aws_FileKey: "{!lgndGallery.s3Policy.FileKey}",
         aws_Bucket: "{!lgndGallery.s3Policy.Bucket}",
-        aws_Acl: '{!lgndGallery.s3Policy.Acl}',
-        aws_AccessKey: '{!lgndGallery.s3Policy.AuthKey}',
-        aws_Policy: '{!lgndGallery.s3Policy.Policy}',
-        aws_Signature: '{!lgndGallery.s3Policy.Signature}',
-        fileTypeOnly: 'image',
-        uploadUrl: 'https://{!lgndGallery.s3Policy.Bucket}.s3.amazonaws.com/'
+        aws_Acl: "{!lgndGallery.s3Policy.Acl}",
+        aws_AccessKey: "{!lgndGallery.s3Policy.AuthKey}",
+        aws_Policy: "{!lgndGallery.s3Policy.Policy}",
+        aws_Signature: "{!lgndGallery.s3Policy.Signature}",
+        fileTypeOnly: "image",
+        uploadUrl: "https://{!lgndGallery.s3Policy.Bucket}.s3.amazonaws.com/"
       },
       zoomable: true,
-      SF_parentId: '{!lgndGallery.currentObject.Id}',
-      defaultImageId: '{!lgndGallery.currentObject.Default_Image}',
+      SF_parentId: "{!lgndGallery.currentObject.Id}",
+      defaultImageId: "{!lgndGallery.currentObject.Default_Image}",
       images_per_page: parseInt("{!imageLimit}"),
-      indicator: '#ajaxInd',
-      header: '.headerNav:first',
-      container: '.photo_container:first',
+      indicator: "#ajaxInd",
+      header: ".headerNav:first",
+      container: ".photo_container:first",
       containerHeight: containerHeight,
-      viewer: '#viewer',
-      overlay: '#overlay',
+      viewer: "#viewer",
+      overlay: "#overlay",
       row_grid_options: {
         minMargin: 10,
         maxMargin: 25,
         itemSelector: ".gallery_image",
         resize: true
       },
-      retrieveImages: function(){
+      retrieveImages: function () {
         var dfd = new $j.Deferred(),
-        data = {};
-        LegendGalleryRemoter.fetchAssociatedImages(this.pagination_offset, parseInt('{!imageLimit}'), this.SF_parentId, function( events, result ) {
-          if( result.statusCode == 200 )
-          {
-            // $j.each(result.result, function(k,v) {
-            //   data[k] = v.AWS_S3_Object__r;
-            // });
-            dfd.resolve(result.result);
-          } else {
-            dfd.resolve();
+          data = {};
+        LegendGalleryRemoter.fetchAssociatedImages(
+          this.pagination_offset,
+          parseInt("{!imageLimit}"),
+          this.SF_parentId,
+          function (events, result) {
+            if (result.statusCode == 200) {
+              // $j.each(result.result, function(k,v) {
+              //   data[k] = v.AWS_S3_Object__r;
+              // });
+              dfd.resolve(result.result);
+            } else {
+              dfd.resolve();
+            }
           }
-        });
+        );
         return dfd.promise();
       }
     });
-
   </script>
-
-
-
 </apex:page>

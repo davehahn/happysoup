@@ -1,63 +1,65 @@
-<apex:page controller="BoatBuilder"
-           docType="html-5.0"
-           showHeader="true"
-           tabStyle="opportunity"
-           sidebar="false"
-           title="Boat Builder"
-           id="boatBuilder">
-
+<apex:page
+  controller="BoatBuilder"
+  docType="html-5.0"
+  showHeader="true"
+  tabStyle="opportunity"
+  sidebar="false"
+  title="Boat Builder"
+  id="boatBuilder"
+>
   <apex:stylesheet value="{!URLFOR($Resource.LegendStyles)}" />
   <apex:stylesheet value="{!URLFOR($Resource.BoatBuilderStyles)}" />
   <apex:stylesheet value="{!URLFOR($Resource.fancySelect, 'fancySelect/fancySelect.css')}" />
-  <apex:includeScript value="{!URLFOR($Resource.jQuery)}"  />
-  <apex:includeScript value="{!URLFOR($Resource.fancySelect, 'fancySelect/fancySelect.js')}"  />
+  <apex:includeScript value="{!URLFOR($Resource.jQuery)}" />
+  <apex:includeScript value="{!URLFOR($Resource.fancySelect, 'fancySelect/fancySelect.js')}" />
 
   <script type="text/javascript">
-
     $j = jQuery.noConflict();
 
-    $j(function() {
-      initOptionSelectors( $j('#mainBoatBuilderContainer') );
-    })
+    $j(function () {
+      initOptionSelectors($j("#mainBoatBuilderContainer"));
+    });
 
-    function initOptionSelectors( $container ){
-      $container.find('.optionSelect option[data-selected="true"]').each(function() {
-        $j(this).attr('selected', 'selected');
+    function initOptionSelectors($container) {
+      $container.find('.optionSelect option[data-selected="true"]').each(function () {
+        $j(this).attr("selected", "selected");
       });
 
-      $container.find('input[type="checkbox"].optionSelect').each(function() {
+      $container.find('input[type="checkbox"].optionSelect').each(function () {
         var $this = $j(this);
-        if($this.data('disabled') === 'disabled'){
-          $this.attr('disabled', 'disabled');
+        if ($this.data("disabled") === "disabled") {
+          $this.attr("disabled", "disabled");
         }
-        if($this.data('checked') === 'checked'){
-          $this.attr('checked', 'checked');
+        if ($this.data("checked") === "checked") {
+          $this.attr("checked", "checked");
         }
       });
     }
 
     function summaryUpdateStart() {
-      $j('.summary_table').addClass('busy');
-      $j('input, select').not(':input[type=submit], :input[type=button]').attr('disabled', 'disabled');
-      $j('#ajaxInd').show();
+      $j(".summary_table").addClass("busy");
+      $j("input, select").not(":input[type=submit], :input[type=button]").attr("disabled", "disabled");
+      $j("#ajaxInd").show();
     }
 
-    function boatSelectionComplete(){
-      $j('.summary_table').removeClass('busy');
-      $j('input, select').not(':input[type=submit], :input[type=button]').removeAttr('disabled');
-      $j('#ajaxInd').hide();
-      initOptionSelectors( $j('#mainBoatBuilderContainer') );
+    function boatSelectionComplete() {
+      $j(".summary_table").removeClass("busy");
+      $j("input, select").not(":input[type=submit], :input[type=button]").removeAttr("disabled");
+      $j("#ajaxInd").hide();
+      initOptionSelectors($j("#mainBoatBuilderContainer"));
     }
 
-    function summaryUpdateComplete(){
-      var $hideContainer = $j('.hide_when_update_complete'),
-        $showContainer =$j('.show_when_update_complete');
-      $j('.summary_table').removeClass('busy');
-      $j('input, select').not(':input[type="submit"], :input[type="button"], :input[data-disabled="disabled"]').removeAttr('disabled');
-      $j('#ajaxInd').hide();
-      if($hideContainer.length > 0){
-        $hideContainer.each(function() {
-          $j(this).hide().removeClass('hide_when_update_complete');
+    function summaryUpdateComplete() {
+      var $hideContainer = $j(".hide_when_update_complete"),
+        $showContainer = $j(".show_when_update_complete");
+      $j(".summary_table").removeClass("busy");
+      $j("input, select")
+        .not(':input[type="submit"], :input[type="button"], :input[data-disabled="disabled"]')
+        .removeAttr("disabled");
+      $j("#ajaxInd").hide();
+      if ($hideContainer.length > 0) {
+        $hideContainer.each(function () {
+          $j(this).hide().removeClass("hide_when_update_complete");
           // $j(this).find('input[type="checkbox"]').prop('checked', false);
           // $j(this).find('select')
           // .removeProp('selected')
@@ -66,840 +68,927 @@
         });
       }
 
-      if($showContainer.length > 0){
-        $showContainer.each(function() {
-          $j(this).show()
-          .removeClass('show_when_update_complete');
-          initOptionSelectors( $j(this) );
-        })
+      if ($showContainer.length > 0) {
+        $showContainer.each(function () {
+          $j(this).show().removeClass("show_when_update_complete");
+          initOptionSelectors($j(this));
+        });
       }
-
     }
 
     function optionChanged(select) {
       summaryUpdateStart();
       var $this = $j(select),
-          tagName = $this.get(0).tagName,
-          productId = $this.attr('id'),
-          parentProductId = $this.data('parent-id'),
-          productType = $this.data('product-type'),
-          $subOptionsContainer = $j('#' + productId + '_subOptions'),
-          quantity;
+        tagName = $this.get(0).tagName,
+        productId = $this.attr("id"),
+        parentProductId = $this.data("parent-id"),
+        productType = $this.data("product-type"),
+        $subOptionsContainer = $j("#" + productId + "_subOptions"),
+        quantity;
 
-      if(tagName === 'INPUT'){
+      if (tagName === "INPUT") {
         quantity = select.checked ? 1 : 0;
       }
-      if(tagName === 'SELECT'){
+      if (tagName === "SELECT") {
         quantity = $this.val();
       }
-      if(quantity != null){
-        if($subOptionsContainer.length > 0){
-          quantity == 0 ?
-            //hide the row and zero checks and selects
-            $subOptionsContainer.addClass('hide_when_update_complete') :
-            //show the row
-            $subOptionsContainer.addClass('show_when_update_complete');
+      if (quantity != null) {
+        if ($subOptionsContainer.length > 0) {
+          quantity == 0
+            ? //hide the row and zero checks and selects
+              $subOptionsContainer.addClass("hide_when_update_complete")
+            : //show the row
+              $subOptionsContainer.addClass("show_when_update_complete");
         }
         //this is defined by apex:actionFunction
         updateOption(productId, quantity, parentProductId, productType);
       }
     }
-
   </script>
 
   <c:LegendMainAjaxIndicator id="ajaxInd" />
 
   <apex:sectionHeader title="Boat Builder" subtitle="{!opportunity.Name}" />
-  <apex:form >
-
+  <apex:form>
     <!-- This the javascript function that gets called when ever an option quantity
          select is changed. The select calls an actual javascript function then the
          javascript function calls this on our Apex Class -->
-   <apex:actionFunction name="updateOption"
-                         action="{!productOptionsChanged}"
-                         rerender="summary_list"
-                         oncomplete="summaryUpdateComplete()" >
-      <apex:param name="productId" value=""  />
+    <apex:actionFunction
+      name="updateOption"
+      action="{!productOptionsChanged}"
+      rerender="summary_list"
+      oncomplete="summaryUpdateComplete()"
+    >
+      <apex:param name="productId" value="" />
       <apex:param name="quantity" value="" />
       <apex:param name="parentProductId" value="" />
       <apex:param name="productType" value="" />
     </apex:actionFunction>
 
-  <apex:messages />
-  <apex:pageBlock mode="mainDetail" rendered="{!!renderBuilder}">
-    <div class='noBoats'>
-      <h3>There are no Boats in the selected Price Book</h3>
-      <p>Return to the Opportunity Record and select a different Price Book</p><br />
-      <apex:commandButton action="{!cancel}" value="Return" />
-    </div>
-  </apex:pageBlock>
-  <apex:pageBlock id="boatBuilder" mode="mainDetail" rendered="{!renderBuilder}">
-    <apex:pageBlockButtons title="Boat Builder" location="bottom">
-      <apex:commandButton action="{!cancel}" value="Cancel" />
-      <apex:commandButton action="{!SaveToOpportunity}" value="Save To Opportunity" rendered="{!selectedBoat != null}" />
-    </apex:pageBlockButtons>
-  <div class="container">
+    <apex:messages />
+    <apex:pageBlock mode="mainDetail" rendered="{!!renderBuilder}">
+      <div class="noBoats">
+        <h3>There are no Boats in the selected Price Book</h3>
+        <p>Return to the Opportunity Record and select a different Price Book</p>
+        <br />
+        <apex:commandButton action="{!cancel}" value="Return" />
+      </div>
+    </apex:pageBlock>
+    <apex:pageBlock id="boatBuilder" mode="mainDetail" rendered="{!renderBuilder}">
+      <apex:pageBlockButtons title="Boat Builder" location="bottom">
+        <apex:commandButton action="{!cancel}" value="Cancel" />
+        <apex:commandButton
+          action="{!SaveToOpportunity}"
+          value="Save To Opportunity"
+          rendered="{!selectedBoat != null}"
+        />
+      </apex:pageBlockButtons>
+      <div class="container">
+        <div class="cell cell50">
+          <apex:pageBlock mode="mainDetail">
+            <div id="mainBoatBuilderContainer" class="boat_builder_table">
+              <!-- =========== BOAT SELECTOR ============== -->
+              <h2>
+                <span>Boat Model:</span>
+                <apex:selectList value="{!selectedBoatId}" size="1">
+                  <apex:selectOptions value="{!boatSelectItems}" />
+                  <apex:actionSupport
+                    event="onchange"
+                    reRender="boatBuilder, summary"
+                    action="{!selectBoatFromSelector}"
+                    onsubmit="summaryUpdateStart()"
+                    oncomplete="boatSelectionComplete()"
+                  /> </apex:selectList
+                >&nbsp;&nbsp;&nbsp;
 
-    <div class="cell cell50">
-
-      <apex:pageBlock mode="mainDetail">
-          <div id="mainBoatBuilderContainer" class="boat_builder_table">
-<!-- =========== BOAT SELECTOR ============== -->
-          <h2>
-            <span>Boat Model:</span>
-            <apex:selectList value="{!selectedBoatId}" size="1" >
-
-              <apex:selectOptions value="{!boatSelectItems}" />
-               <apex:actionSupport event="onchange"
-                                   reRender="boatBuilder, summary"
-                                   action="{!selectBoatFromSelector}"
-                                   onsubmit="summaryUpdateStart()"
-                                   oncomplete="boatSelectionComplete()"/>
-            </apex:selectList>&nbsp;&nbsp;&nbsp;
-
-            <!-- <apex:actionStatus id="boatStatus">
+                <!-- <apex:actionStatus id="boatStatus">
               <apex:facet name="start">
                 <apex:image value="{! $Resource.smallSpinner}" style="position:relative;top:3px;" />
               </apex:facet>
             </apex:actionStatus> -->
-          </h2>
-<!-- =========== END BOAT SELECTOR =========== -->
+              </h2>
+              <!-- =========== END BOAT SELECTOR =========== -->
 
-<!-- =========== MOTOR SELECTOR ============== -->
-          <apex:panelGroup rendered="{!renderMotorSelector}" layout="none" id="motorSelector">
-            <h3>
-              <span>Motor Options:</span>
+              <!-- =========== MOTOR SELECTOR ============== -->
+              <apex:panelGroup rendered="{!renderMotorSelector}" layout="none" id="motorSelector">
+                <h3>
+                  <span>Motor Options:</span>
 
-              <apex:selectList value="{!selectedMotorId}" multiselect="false" size="1" rendered="{!motorSelectItems.size > 0}" >
-                <apex:selectOptions value="{!motorSelectItems}" />
-                <apex:actionSupport event="onchange"
-                                    reRender="summary_list, motorSelector, motorOptions"
-                                    onsubmit="summaryUpdateStart()"
-                                    onComplete="summaryUpdateComplete()"
-                                    action="{!selectMotor}" />
-              </apex:selectList>&nbsp;&nbsp;&nbsp;
+                  <apex:selectList
+                    value="{!selectedMotorId}"
+                    multiselect="false"
+                    size="1"
+                    rendered="{!motorSelectItems.size > 0}"
+                  >
+                    <apex:selectOptions value="{!motorSelectItems}" />
+                    <apex:actionSupport
+                      event="onchange"
+                      reRender="summary_list, motorSelector, motorOptions"
+                      onsubmit="summaryUpdateStart()"
+                      onComplete="summaryUpdateComplete()"
+                      action="{!selectMotor}"
+                    /> </apex:selectList
+                  >&nbsp;&nbsp;&nbsp;
 
-             <!--  <apex:actionStatus id="motorStatus">
+                  <!--  <apex:actionStatus id="motorStatus">
                 <apex:facet name="start">
                   <apex:image value="{! $Resource.smallSpinner}" style="position:relative;top:3px;" />
                 </apex:facet>
               </apex:actionStatus> -->
-            </h3>
-            <apex:outputPanel id="motorOptions">
-              <apex:outputPanel rendered="{!availableMotorOptions != null}">
+                </h3>
+                <apex:outputPanel id="motorOptions">
+                  <apex:outputPanel rendered="{!availableMotorOptions != null}">
+                    <table class="optionSelectTable smaller">
+                      <apex:repeat value="{!availableMotorOptions}" var="key">
+                        <tr>
+                          <td class="desc">{!availableMotorOptions[key].Name}:</td>
+                          <td>
+                            <apex:outputPanel
+                              rendered="{!availableMotorOptions[key].PricebookEntries.size != 0}"
+                              layout="none"
+                            >
+                              $ {!availableMotorOptions[key].PricebookEntries[0].UnitPrice}
+                            </apex:outputPanel>
+                          </td>
+                          <td>
+                            <c:BoatBuilderOptionSelect
+                              begin_at="{!availableMotorOptions[key].From_Product_Options__r[0].Standard__c}"
+                              end_at="{!availableMotorOptions[key].From_Product_Options__r[0].Maximum__c}"
+                              selectId="{!key}"
+                              productType="motor"
+                              selectValue="{!IF(CONTAINS(selectedPartsIdList['motor'], ':'+key+':'), selectedItemsMap['motor'][key].Quantity, availableMotorOptions[key].From_Product_Options__r[0].Standard__c)}"
+                              onOptionChange="optionChanged(this)"
+                            />
+                          </td>
+                        </tr>
+                      </apex:repeat>
+                    </table>
+                  </apex:outputPanel>
+                </apex:outputPanel>
+              </apex:panelGroup>
+              <!-- =========== END MOTOR SELECTOR ============== -->
 
-                <table class="optionSelectTable smaller">
-                  <apex:repeat value="{!availableMotorOptions}" var="key">
-                  <tr>
-                    <td class="desc">{!availableMotorOptions[key].Name}: </td>
-                    <td>
-                      <apex:outputPanel rendered="{!availableMotorOptions[key].PricebookEntries.size != 0}"
-                                        layout="none" >
-                        $ {!availableMotorOptions[key].PricebookEntries[0].UnitPrice}
-                      </apex:outputPanel>
-                    </td>
-                    <td><c:BoatBuilderOptionSelect begin_at="{!availableMotorOptions[key].From_Product_Options__r[0].Standard__c}"
-                        end_at="{!availableMotorOptions[key].From_Product_Options__r[0].Maximum__c}"
-                        selectId="{!key}"
-                        productType="motor"
-                        selectValue="{!IF(CONTAINS(selectedPartsIdList['motor'], ':'+key+':'), selectedItemsMap['motor'][key].Quantity, availableMotorOptions[key].From_Product_Options__r[0].Standard__c)}"
-                        onOptionChange="optionChanged(this)" />
-                    </td>
-                  </tr>
-                  </apex:repeat>
-                </table>
-              </apex:outputPanel>
-            </apex:outputPanel>
-          </apex:panelGroup>
-<!-- =========== END MOTOR SELECTOR ============== -->
+              <!-- =========== TRAILOR SELECTOR ============== -->
+              <apex:panelGroup rendered="{!renderTrailerSelector}" layout="none">
+                <h3>
+                  <span>Trailer Options:</span>
+                  <apex:selectList
+                    value="{!selectedTrailerId}"
+                    id="trailerSelector"
+                    multiselect="false"
+                    size="1"
+                    rendered="{!trailerSelectItems.size > 0}"
+                  >
+                    <apex:selectOptions value="{!trailerSelectItems}" />
+                    <apex:actionSupport
+                      event="onchange"
+                      onsubmit="summaryUpdateStart()"
+                      onComplete="summaryUpdateComplete()"
+                      reRender="summary_list, trailerSelector, trailerOptions"
+                      action="{!selectTrailer}"
+                    /> </apex:selectList
+                  >&nbsp;&nbsp;&nbsp;
+                </h3>
+                <apex:outputPanel id="trailerOptions">
+                  <apex:outputPanel rendered="{!availableTrailerOptions != null}">
+                    <table class="optionSelectTable smaller">
+                      <apex:repeat value="{!availableTrailerOptions}" var="key">
+                        <tr>
+                          <td class="desc">{!availableTrailerOptions[key].Name}:</td>
+                          <td>
+                            <apex:outputPanel
+                              rendered="{!availableTrailerOptions[key].PricebookEntries.size != 0}"
+                              layout="none"
+                            >
+                              $ {!availableTrailerOptions[key].PricebookEntries[0].UnitPrice}
+                            </apex:outputPanel>
+                          </td>
+                          <td>
+                            <c:BoatBuilderOptionSelect
+                              begin_at="{!availableTrailerOptions[key].From_Product_Options__r[0].Standard__c}"
+                              end_at="{!availableTrailerOptions[key].From_Product_Options__r[0].Maximum__c}"
+                              selectId="{!key}"
+                              productType="trailer"
+                              selectValue="{!IF(CONTAINS(selectedPartsIdList['trailer'], ':'+key+':'), selectedItemsMap['trailer'][key].Quantity, availableTrailerOptions[key].From_Product_Options__r[0].Standard__c)}"
+                              onOptionChange="optionChanged(this)"
+                            />
+                          </td>
+                        </tr>
+                      </apex:repeat>
+                    </table>
+                  </apex:outputPanel>
+                </apex:outputPanel>
+              </apex:panelGroup>
+              <!-- =========== END TRAILOR SELECTOR ============== -->
 
-<!-- =========== TRAILOR SELECTOR ============== -->
-          <apex:panelGroup rendered="{!renderTrailerSelector}" layout="none">
-            <h3>
-              <span>Trailer Options:</span>
-              <apex:selectList value="{!selectedTrailerId}" id="trailerSelector" multiselect="false" size="1" rendered="{!trailerSelectItems.size > 0}">
+              <!-- =========== TROLLING MOTOR SELECTOR ============== -->
+              <apex:panelGroup rendered="{!renderTrollingMotorSelector}" layout="none">
+                <h3>
+                  <span>Trolling Motor Options:</span>
+                  <apex:selectList
+                    value="{!selectedTrollingMotorId}"
+                    id="trollingMotorSelector"
+                    multiselect="false"
+                    size="1"
+                    rendered="{!trollingMotorSelectItems.size > 0}"
+                  >
+                    <apex:selectOptions value="{!trollingMotorSelectItems}" />
+                    <apex:actionSupport
+                      event="onchange"
+                      reRender="summary_list, trollingMotorSelector, trollingMotorOptions"
+                      onsubmit="summaryUpdateStart()"
+                      onComplete="summaryUpdateComplete()"
+                      action="{!selectTrollingMotor}"
+                    /> </apex:selectList
+                  >&nbsp;&nbsp;&nbsp;
 
-                <apex:selectOptions value="{!trailerSelectItems}" />
-                <apex:actionSupport event="onchange"
-                                    onsubmit="summaryUpdateStart()"
-                                    onComplete="summaryUpdateComplete()"
-                                    reRender="summary_list, trailerSelector, trailerOptions"
-                                    action="{!selectTrailer}"/>
-
-              </apex:selectList>&nbsp;&nbsp;&nbsp;
-
-            </h3>
-            <apex:outputPanel id="trailerOptions">
-              <apex:outputPanel rendered="{!availableTrailerOptions != null}">
-                <table class="optionSelectTable smaller">
-                  <apex:repeat value="{!availableTrailerOptions}" var="key">
-                  <tr>
-                    <td class="desc">{!availableTrailerOptions[key].Name}: </td>
-                    <td>
-                      <apex:outputPanel rendered="{!availableTrailerOptions[key].PricebookEntries.size != 0}"
-                                        layout="none" >
-                        $ {!availableTrailerOptions[key].PricebookEntries[0].UnitPrice}
-                      </apex:outputPanel>
-                    </td>
-                    <td><c:BoatBuilderOptionSelect begin_at="{!availableTrailerOptions[key].From_Product_Options__r[0].Standard__c}"
-                        end_at="{!availableTrailerOptions[key].From_Product_Options__r[0].Maximum__c}"
-                        selectId="{!key}"
-                        productType="trailer"
-                        selectValue="{!IF(CONTAINS(selectedPartsIdList['trailer'], ':'+key+':'), selectedItemsMap['trailer'][key].Quantity, availableTrailerOptions[key].From_Product_Options__r[0].Standard__c)}"
-                        onOptionChange="optionChanged(this)" />
-                    </td>
-                  </tr>
-                  </apex:repeat>
-                </table>
-              </apex:outputPanel>
-            </apex:outputPanel>
-          </apex:panelGroup>
-<!-- =========== END TRAILOR SELECTOR ============== -->
-
-<!-- =========== TROLLING MOTOR SELECTOR ============== -->
-          <apex:panelGroup rendered="{!renderTrollingMotorSelector}" layout="none">
-            <h3>
-              <span>Trolling Motor Options:</span>
-              <apex:selectList value="{!selectedTrollingMotorId}" id="trollingMotorSelector" multiselect="false" size="1" rendered="{!trollingMotorSelectItems.size > 0}">
-                <apex:selectOptions value="{!trollingMotorSelectItems}" />
-                <apex:actionSupport event="onchange"
-                                    reRender="summary_list, trollingMotorSelector, trollingMotorOptions"
-                                    onsubmit="summaryUpdateStart()"
-                                    onComplete="summaryUpdateComplete()"
-                                    action="{!selectTrollingMotor}"/>
-              </apex:selectList>&nbsp;&nbsp;&nbsp;
-
-              <!-- <apex:actionStatus id="trollingMotorStatus">
+                  <!-- <apex:actionStatus id="trollingMotorStatus">
                 <apex:facet name="start">
                   <apex:image value="{! $Resource.smallSpinner}" style="position:relative;top:3px;" />
                 </apex:facet>
               </apex:actionStatus> -->
-            </h3>
-            <apex:outputPanel id="trollingMotorOptions">
-            <apex:outputPanel rendered="{!availableTrollingMotorOptions != null}">
-
-              <table class="optionSelectTable smaller">
-                <apex:repeat value="{!availableTrollingMotorOptions}" var="key">
-                <tr>
-                  <td class="desc">{!availableTrollingMotorOptions[key].Name}: </td>
-                  <td>
-                    <apex:outputPanel rendered="{!availableTrollingMotorOptions[key].PricebookEntries.size != 0}"
-                                      layout="none" >
-                      $ {!availableTrollingMotorOptions[key].PricebookEntries[0].UnitPrice}
-                    </apex:outputPanel>
-                  </td>
-                  <td><c:BoatBuilderOptionSelect begin_at="{!availableTrollingMotorOptions[key].From_Product_Options__r[0].Standard__c}"
-                      end_at="{!availableTrollingMotorOptions[key].From_Product_Options__r[0].Maximum__c}"
-                      selectId="{!availableTrollingMotorOptions[key].Id}"
-                      productType="trolling motor"
-                      selectValue="{!IF(CONTAINS(selectedPartsIdList['trolling motor'], ':'+key+':'), selectedItemsMap['trolling motor'][key].Quantity, availableTrollingMotorOptions[key].From_Product_Options__r[0].Standard__c)}"
-                      onOptionChange="optionChanged(this)" />
-                  </td>
-                </tr>
-                </apex:repeat>
-              </table>
-            </apex:outputPanel>
-            </apex:outputPanel>
-          </apex:panelGroup>
-<!-- =========== TROLLING END MOTOR SELECTOR ============== -->
-
-
-<!-- =========== OPTION SELECTION ================== -->
-        <apex:outputPanel id="options"
-                      rendered="{!selectedBoat != null && renderOptionSelect == true}"
-                      layout="none">
-
-        <apex:outputPanel id="options_selector">
-
-      <h3>Options &amp; Accessories</h3>
-
-        <div class="tabContainer yellow">
-         <apex:tabPanel selectedTab="Electronics"
-                         switchType="client"
-                         contentClass="whiteContent__c"
-                         tabClass="tab__c small"
-                         inactiveTabClass="inActiveTab__c"
-                         style="margin-top:15px;">
-
-<!--++++++++++++++++++++++++++++++++ Electronics Tab +++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
-
-          <apex:tab name="Electronics"
-                    label="Electronics"
-                    id="electronicsTab"
-                    rendered="{!availableElectronics != null}">
-
-            <table class="optionSelectTable">
-              <apex:repeat value="{!availableElectronics}" var="key">
-              <tr>
-                <td class="desc">{!availableElectronics[key].Name}: </td>
-                <td>
-                  <apex:outputPanel rendered="{!availableElectronics[key].PricebookEntries.size != 0}"
-                                    layout="none" >
-                    $ {!availableElectronics[key].PricebookEntries[0].UnitPrice}
-                  </apex:outputPanel>
-                </td>
-                <td><c:BoatBuilderOptionSelect begin_at="{!availableElectronics[key].From_Product_Options__r[0].Standard__c}"
-                    end_at="{!availableElectronics[key].From_Product_Options__r[0].Maximum__c}"
-                    selectId="{!key}"
-                    productType="boat"
-                    selectValue="{!IF(CONTAINS(selectedPartsIdList['boat'], ':'+key+':'), selectedItemsMap['boat'][key].Quantity, availableElectronics[key].From_Product_Options__r[0].Standard__c)}"
-                    onOptionChange="optionChanged(this)" />
-                </td>
-              </tr>
-
-              <apex:outputPanel layout="none"
-                                rendered="{!availableElectronics[key].To_Product_Options__r.size > 0 }">
-
-                <tr class="subOptionsContainer" id="{!key}_subOptions" style="display:{!IF(CONTAINS(selectedPartsIdList['boat'], ':'+key+':'), 'table-row', 'none')}">
-                  <td  colspan="3">
-                    <table class="optionSelectTable subOptions">
-                      <apex:repeat value="{!subOptions[key]}" var="subOption">
-                      <tr>
-                        <td class="desc">{!subOption.name}: </td>
-                        <td>
-                          <!-- <apex:outputPanel rendered="{!subOption.PricebookEntries.size != 0}"
-                                            layout="none" > -->
-                            $ {!subOption.price}
-                          <!-- </apex:outputPanel> -->
-
-                        </td>
-                        <td><c:BoatBuilderOptionSelect begin_at="{!subOption.standard}"
-                            end_at="{!subOption.maximum}"
-                            selectId="{!subOption.id}"
-                            productType="boat"
-                            selectValue="{!IF(CONTAINS(selectedPartsIdList['boat'], key + subOption.id), selectedItemsMap['boat'][key].subItems[subOption.Id].Quantity, subOption.standard)}"
-                            parent_product_id="{!key}"
-                            onOptionChange="optionChanged(this)" />
-                        </td>
-                      </tr>
-                    </apex:repeat>
-                  </table>
-
-
-                  </td>
-                </tr>
-              </apex:outputPanel> <!-- subOptions row -->
-
-              </apex:repeat>
-            </table>
-
-          </apex:tab>
-
-<!--+++++++++++++++++++++++++ Fun and Entertainment Tab +++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
-
-          <apex:tab name="Fun & Entertainment"
-                    label="Fun & Entertainment"
-                    id="fandETab"
-                    rendered="{!availableFandE != null }">
-
-            <table class="optionSelectTable">
-              <apex:repeat value="{!availableFandE}" var="key">
-              <tr>
-                <td class="desc">{!availableFandE[key].Name}: </td>
-                <td>
-                  <apex:outputPanel rendered="{!availableFandE[key].PricebookEntries.size != 0}"
-                                    layout="none" >
-                    $ {!availableFandE[key].PricebookEntries[0].UnitPrice}
-                  </apex:outputPanel>
-                </td>
-                <td><c:BoatBuilderOptionSelect begin_at="{!availableFandE[key].From_Product_Options__r[0].Standard__c}"
-                      end_at="{!availableFandE[key].From_Product_Options__r[0].Maximum__c}"
-                      selectId="{!key}"
-                      productType="boat"
-                      selectValue="{!IF(CONTAINS(selectedPartsIdList['boat'], ':'+key+':'), selectedItemsMap['boat'][key].Quantity, availableFandE[key].From_Product_Options__r[0].Standard__c)}"
-                      onOptionChange="optionChanged(this)" />
-                </td>
-              </tr>
-
-              <apex:outputPanel layout="none"
-                  rendered="{!availableFandE[key].To_Product_Options__r.size > 0 }">
-                <tr class="subOptionsContainer" id="{!key}_subOptions" style="display:{!IF(CONTAINS(selectedPartsIdList['boat'], ':'+key+':'), 'table-row', 'none')}">
-                  <td  colspan="3">
-                    <table class="optionSelectTable subOptions">
-                      <apex:repeat value="{!subOptions[key]}" var="subOption">
-                      <tr>
-                        <td class="desc">{!subOption.name}: </td>
-                        <td>
-                          <!-- <apex:outputPanel rendered="{!subOption.PricebookEntries.size != 0}"
-                                            layout="none" > -->
-                            $ {!subOption.price}
-                          <!-- </apex:outputPanel> -->
-
-                        </td>
-                        <td><c:BoatBuilderOptionSelect begin_at="{!subOption.standard}"
-                            end_at="{!subOption.maximum}"
-                            selectId="{!subOption.id}"
-                            productType="boat"
-                            selectValue="{!IF(CONTAINS(selectedPartsIdList['boat'], key + subOption.id), selectedItemsMap['boat'][key].subItems[subOption.Id].Quantity, subOption.standard)}"
-                            parent_product_id="{!key}"
-                            onOptionChange="optionChanged(this)" />
-                        </td>
-                      </tr>
-                    </apex:repeat>
-                  </table>
-
-
-                  </td>
-                </tr>
-              </apex:outputPanel> <!-- subOptions row -->
-              </apex:repeat>
-            </table>
-
-          </apex:tab>
-
-<!--++++++++++++++++++++++++++++++++ Graphics Tab ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
-
-          <apex:tab name="Graphics"
-                    label="Graphics"
-                    id="graphicsTab"
-                    rendered="{!availableGraphics != null}">
-
-            <table class="optionSelectTable">
-              <apex:repeat value="{!availableGraphics}" var="key">
-              <tr>
-                <td class="desc">{!availableGraphics[key].Name}: </td>
-                <td>
-                  <apex:outputPanel rendered="{!availableGraphics[key].PricebookEntries.size != 0}"
-                                    layout="none" >
-                    $ {!availableGraphics[key].PricebookEntries[0].UnitPrice}
-                  </apex:outputPanel>
-                </td>
-                <td><c:BoatBuilderOptionSelect begin_at="{!availableGraphics[key].From_Product_Options__r[0].Standard__c}"
-                      end_at="{!availableGraphics[key].From_Product_Options__r[0].Maximum__c}"
-                      selectId="{!key}"
-                      productType="boat"
-                      selectValue="{!IF(CONTAINS(selectedPartsIdList['boat'], ':'+key+':'), selectedItemsMap['boat'][key].Quantity, availableGraphics[key].From_Product_Options__r[0].Standard__c)}"
-                      onOptionChange="optionChanged(this)" />
-                </td>
-              </tr>
-
-              <apex:outputPanel layout="none"
-                  rendered="{!availableGraphics[key].To_Product_Options__r.size > 0 }">
-                <tr class="subOptionsContainer" id="{!key}_subOptions" style="display:{!IF(CONTAINS(selectedPartsIdList['boat'], ':'+key+':'), 'table-row', 'none')}">
-                  <td  colspan="3">
-                    <table class="optionSelectTable subOptions">
-                      <apex:repeat value="{!subOptions[key]}" var="subOption">
-                      <tr>
-                        <td class="desc">{!subOption.name}: </td>
-                        <td>
-                          <!-- <apex:outputPanel rendered="{!subOption.PricebookEntries.size != 0}"
-                                            layout="none" > -->
-                            $ {!subOption.price}
-                          <!-- </apex:outputPanel> -->
-
-                        </td>
-                        <td><c:BoatBuilderOptionSelect begin_at="{!subOption.standard}"
-                            end_at="{!subOption.maximum}"
-                            selectId="{!subOption.id}"
-                            productType="boat"
-                            selectValue="{!IF(CONTAINS(selectedPartsIdList['boat'], key + subOption.id), selectedItemsMap['boat'][key].subItems[subOption.Id].Quantity, subOption.standard)}"
-                            parent_product_id="{!key}"
-                            onOptionChange="optionChanged(this)" />
-                        </td>
-                      </tr>
+                </h3>
+                <apex:outputPanel id="trollingMotorOptions">
+                  <apex:outputPanel rendered="{!availableTrollingMotorOptions != null}">
+                    <table class="optionSelectTable smaller">
+                      <apex:repeat value="{!availableTrollingMotorOptions}" var="key">
+                        <tr>
+                          <td class="desc">{!availableTrollingMotorOptions[key].Name}:</td>
+                          <td>
+                            <apex:outputPanel
+                              rendered="{!availableTrollingMotorOptions[key].PricebookEntries.size != 0}"
+                              layout="none"
+                            >
+                              $ {!availableTrollingMotorOptions[key].PricebookEntries[0].UnitPrice}
+                            </apex:outputPanel>
+                          </td>
+                          <td>
+                            <c:BoatBuilderOptionSelect
+                              begin_at="{!availableTrollingMotorOptions[key].From_Product_Options__r[0].Standard__c}"
+                              end_at="{!availableTrollingMotorOptions[key].From_Product_Options__r[0].Maximum__c}"
+                              selectId="{!availableTrollingMotorOptions[key].Id}"
+                              productType="trolling motor"
+                              selectValue="{!IF(CONTAINS(selectedPartsIdList['trolling motor'], ':'+key+':'), selectedItemsMap['trolling motor'][key].Quantity, availableTrollingMotorOptions[key].From_Product_Options__r[0].Standard__c)}"
+                              onOptionChange="optionChanged(this)"
+                            />
+                          </td>
+                        </tr>
                       </apex:repeat>
                     </table>
-                  </td>
-                </tr>
-              </apex:outputPanel> <!-- subOptions row -->
-
-              </apex:repeat>
-            </table>
-
-          </apex:tab>
-
-
-<!--++++++++++++++++++++++++++++ Pontoon Covers Tab ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
-
-          <apex:tab name="Pontoon Covers"
-                    label="Pontoon Covers"
-                    id="pontoonCoverTab"
-                    rendered="{!availablePontoonCovers != null}">
-
-            <table class="optionSelectTable">
-              <apex:repeat value="{!availablePontoonCovers}" var="key">
-              <tr>
-                <td class="desc">{!availablePontoonCovers[key].Name}: </td>
-                <td>
-                  <apex:outputPanel rendered="{!availablePontoonCovers[key].PricebookEntries.size != 0}"
-                                    layout="none" >
-                    $ {!availablePontoonCovers[key].PricebookEntries[0].UnitPrice}
                   </apex:outputPanel>
-                </td>
-                <td><c:BoatBuilderOptionSelect begin_at="{!availablePontoonCovers[key].From_Product_Options__r[0].Standard__c}"
-                      end_at="{!availablePontoonCovers[key].From_Product_Options__r[0].Maximum__c}"
-                      selectId="{!key}"
-                      productType="boat"
-                      selectValue="{!IF(CONTAINS(selectedPartsIdList['boat'], ':'+key+':'), selectedItemsMap['boat'][key].Quantity, availablePontoonCovers[key].From_Product_Options__r[0].Standard__c)}"
-                      onOptionChange="optionChanged(this)" />
-                </td>
-              </tr>
+                </apex:outputPanel>
+              </apex:panelGroup>
+              <!-- =========== TROLLING END MOTOR SELECTOR ============== -->
 
-              <apex:outputPanel layout="none"
-                                rendered="{!availablePontoonCovers[key].To_Product_Options__r.size > 0 }">
-                <tr class="subOptionsContainer" id="{!key}_subOptions" style="display:{!IF(CONTAINS(selectedPartsIdList['boat'], ':'+key+':'), 'table-row', 'none')}">
-                  <td  colspan="3">
-                    <table class="optionSelectTable subOptions">
-                      <apex:repeat value="{!subOptions[key]}" var="subOption">
-                      <tr>
-                        <td class="desc">{!subOption.name}: </td>
-                        <td>
-                          <!-- <apex:outputPanel rendered="{!subOption.PricebookEntries.size != 0}"
+              <!-- =========== OPTION SELECTION ================== -->
+              <apex:outputPanel
+                id="options"
+                rendered="{!selectedBoat != null && renderOptionSelect == true}"
+                layout="none"
+              >
+                <apex:outputPanel id="options_selector">
+                  <h3>Options &amp; Accessories</h3>
+
+                  <div class="tabContainer yellow">
+                    <apex:tabPanel
+                      selectedTab="Electronics"
+                      switchType="client"
+                      contentClass="whiteContent__c"
+                      tabClass="tab__c small"
+                      inactiveTabClass="inActiveTab__c"
+                      style="margin-top: 15px"
+                    >
+                      <!--++++++++++++++++++++++++++++++++ Electronics Tab +++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+                      <apex:tab
+                        name="Electronics"
+                        label="Electronics"
+                        id="electronicsTab"
+                        rendered="{!availableElectronics != null}"
+                      >
+                        <table class="optionSelectTable">
+                          <apex:repeat value="{!availableElectronics}" var="key">
+                            <tr>
+                              <td class="desc">{!availableElectronics[key].Name}:</td>
+                              <td>
+                                <apex:outputPanel
+                                  rendered="{!availableElectronics[key].PricebookEntries.size != 0}"
+                                  layout="none"
+                                >
+                                  $ {!availableElectronics[key].PricebookEntries[0].UnitPrice}
+                                </apex:outputPanel>
+                              </td>
+                              <td>
+                                <c:BoatBuilderOptionSelect
+                                  begin_at="{!availableElectronics[key].From_Product_Options__r[0].Standard__c}"
+                                  end_at="{!availableElectronics[key].From_Product_Options__r[0].Maximum__c}"
+                                  selectId="{!key}"
+                                  productType="boat"
+                                  selectValue="{!IF(CONTAINS(selectedPartsIdList['boat'], ':'+key+':'), selectedItemsMap['boat'][key].Quantity, availableElectronics[key].From_Product_Options__r[0].Standard__c)}"
+                                  onOptionChange="optionChanged(this)"
+                                />
+                              </td>
+                            </tr>
+
+                            <apex:outputPanel
+                              layout="none"
+                              rendered="{!availableElectronics[key].To_Product_Options__r.size > 0 }"
+                            >
+                              <tr
+                                class="subOptionsContainer"
+                                id="{!key}_subOptions"
+                                style="display:{!IF(CONTAINS(selectedPartsIdList['boat'], ':'+key+':'), 'table-row', 'none')}"
+                              >
+                                <td colspan="3">
+                                  <table class="optionSelectTable subOptions">
+                                    <apex:repeat value="{!subOptions[key]}" var="subOption">
+                                      <tr>
+                                        <td class="desc">{!subOption.name}:</td>
+                                        <td>
+                                          <!-- <apex:outputPanel rendered="{!subOption.PricebookEntries.size != 0}"
                                             layout="none" > -->
-                            $ {!subOption.price}
-                          <!-- </apex:outputPanel> -->
+                                          $ {!subOption.price}
+                                          <!-- </apex:outputPanel> -->
+                                        </td>
+                                        <td>
+                                          <c:BoatBuilderOptionSelect
+                                            begin_at="{!subOption.standard}"
+                                            end_at="{!subOption.maximum}"
+                                            selectId="{!subOption.id}"
+                                            productType="boat"
+                                            selectValue="{!IF(CONTAINS(selectedPartsIdList['boat'], key + subOption.id), selectedItemsMap['boat'][key].subItems[subOption.Id].Quantity, subOption.standard)}"
+                                            parent_product_id="{!key}"
+                                            onOptionChange="optionChanged(this)"
+                                          />
+                                        </td>
+                                      </tr>
+                                    </apex:repeat>
+                                  </table>
+                                </td>
+                              </tr>
+                            </apex:outputPanel>
+                            <!-- subOptions row -->
+                          </apex:repeat>
+                        </table>
+                      </apex:tab>
 
-                        </td>
-                        <td><c:BoatBuilderOptionSelect begin_at="{!subOption.standard}"
-                            end_at="{!subOption.maximum}"
-                            selectId="{!subOption.id}"
-                            productType="boat"
-                            selectValue="{!IF(CONTAINS(selectedPartsIdList['boat'], key + subOption.id), selectedItemsMap['boat'][key].subItems[subOption.Id].Quantity, subOption.standard)}"
-                            parent_product_id="{!key}"
-                            onOptionChange="optionChanged(this)" />
-                        </td>
-                      </tr>
-                      </apex:repeat>
-                    </table>
-                  </td>
-                </tr>
-              </apex:outputPanel> <!-- subOptions row -->
+                      <!--+++++++++++++++++++++++++ Fun and Entertainment Tab +++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
 
-              </apex:repeat>
-            </table>
+                      <apex:tab
+                        name="Fun & Entertainment"
+                        label="Fun & Entertainment"
+                        id="fandETab"
+                        rendered="{!availableFandE != null }"
+                      >
+                        <table class="optionSelectTable">
+                          <apex:repeat value="{!availableFandE}" var="key">
+                            <tr>
+                              <td class="desc">{!availableFandE[key].Name}:</td>
+                              <td>
+                                <apex:outputPanel
+                                  rendered="{!availableFandE[key].PricebookEntries.size != 0}"
+                                  layout="none"
+                                >
+                                  $ {!availableFandE[key].PricebookEntries[0].UnitPrice}
+                                </apex:outputPanel>
+                              </td>
+                              <td>
+                                <c:BoatBuilderOptionSelect
+                                  begin_at="{!availableFandE[key].From_Product_Options__r[0].Standard__c}"
+                                  end_at="{!availableFandE[key].From_Product_Options__r[0].Maximum__c}"
+                                  selectId="{!key}"
+                                  productType="boat"
+                                  selectValue="{!IF(CONTAINS(selectedPartsIdList['boat'], ':'+key+':'), selectedItemsMap['boat'][key].Quantity, availableFandE[key].From_Product_Options__r[0].Standard__c)}"
+                                  onOptionChange="optionChanged(this)"
+                                />
+                              </td>
+                            </tr>
 
-          </apex:tab>
-
-<!--++++++++++++++++++++++++++++++++ Safety Tab ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
-
-          <apex:tab name="Safety"
-                    label="Safety"
-                    id="safetyTab"
-                    rendered="{!availableSafety != null}">
-
-            <table class="optionSelectTable">
-              <apex:repeat value="{!availableSafety}" var="key">
-              <tr>
-                <td class="desc">{!availableSafety[key].Name}: </td>
-                <td>
-                  <apex:outputPanel rendered="{!availableSafety[key].PricebookEntries.size != 0}"
-                                    layout="none" >
-                    $ {!availableSafety[key].PricebookEntries[0].UnitPrice}
-                  </apex:outputPanel>
-                </td>
-                <td><c:BoatBuilderOptionSelect begin_at="{!availableSafety[key].From_Product_Options__r[0].Standard__c}"
-                      end_at="{!availableSafety[key].From_Product_Options__r[0].Maximum__c}"
-                      selectId="{!key}"
-                      productType="boat"
-                      selectValue="{!IF(CONTAINS(selectedPartsIdList['boat'], ':'+key+':'), selectedItemsMap['boat'][key].Quantity, availableSafety[key].From_Product_Options__r[0].Standard__c)}"
-                      onOptionChange="optionChanged(this)" />
-                </td>
-              </tr>
-
-              <apex:outputPanel layout="none"
-                rendered="{!availableSafety[key].To_Product_Options__r.size > 0 }">
-                <tr class="subOptionsContainer" id="{!key}_subOptions" style="display:{!IF(CONTAINS(selectedPartsIdList['boat'], ':'+key+':'), 'table-row', 'none')}">
-                  <td  colspan="3">
-                    <table class="optionSelectTable subOptions">
-                      <apex:repeat value="{!subOptions[key]}" var="subOption">
-                      <tr>
-                        <td class="desc">{!subOption.name}: </td>
-                        <td>
-                          <!-- <apex:outputPanel rendered="{!subOption.PricebookEntries.size != 0}"
+                            <apex:outputPanel
+                              layout="none"
+                              rendered="{!availableFandE[key].To_Product_Options__r.size > 0 }"
+                            >
+                              <tr
+                                class="subOptionsContainer"
+                                id="{!key}_subOptions"
+                                style="display:{!IF(CONTAINS(selectedPartsIdList['boat'], ':'+key+':'), 'table-row', 'none')}"
+                              >
+                                <td colspan="3">
+                                  <table class="optionSelectTable subOptions">
+                                    <apex:repeat value="{!subOptions[key]}" var="subOption">
+                                      <tr>
+                                        <td class="desc">{!subOption.name}:</td>
+                                        <td>
+                                          <!-- <apex:outputPanel rendered="{!subOption.PricebookEntries.size != 0}"
                                             layout="none" > -->
-                            $ {!subOption.price}
-                          <!-- </apex:outputPanel> -->
+                                          $ {!subOption.price}
+                                          <!-- </apex:outputPanel> -->
+                                        </td>
+                                        <td>
+                                          <c:BoatBuilderOptionSelect
+                                            begin_at="{!subOption.standard}"
+                                            end_at="{!subOption.maximum}"
+                                            selectId="{!subOption.id}"
+                                            productType="boat"
+                                            selectValue="{!IF(CONTAINS(selectedPartsIdList['boat'], key + subOption.id), selectedItemsMap['boat'][key].subItems[subOption.Id].Quantity, subOption.standard)}"
+                                            parent_product_id="{!key}"
+                                            onOptionChange="optionChanged(this)"
+                                          />
+                                        </td>
+                                      </tr>
+                                    </apex:repeat>
+                                  </table>
+                                </td>
+                              </tr>
+                            </apex:outputPanel>
+                            <!-- subOptions row -->
+                          </apex:repeat>
+                        </table>
+                      </apex:tab>
 
-                        </td>
-                        <td><c:BoatBuilderOptionSelect begin_at="{!subOption.standard}"
-                            end_at="{!subOption.maximum}"
-                            selectId="{!subOption.id}"
-                            productType="boat"
-                            selectValue="{!IF(CONTAINS(selectedPartsIdList['boat'], key + subOption.id), selectedItemsMap['boat'][key].subItems[subOption.Id].Quantity, subOption.standard)}"
-                            parent_product_id="{!key}"
-                            onOptionChange="optionChanged(this)" />
-                        </td>
-                      </tr>
-                      </apex:repeat>
-                    </table>
-                  </td>
-                </tr>
-              </apex:outputPanel> <!-- subOptions row -->
+                      <!--++++++++++++++++++++++++++++++++ Graphics Tab ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
 
-              </apex:repeat>
-            </table>
+                      <apex:tab
+                        name="Graphics"
+                        label="Graphics"
+                        id="graphicsTab"
+                        rendered="{!availableGraphics != null}"
+                      >
+                        <table class="optionSelectTable">
+                          <apex:repeat value="{!availableGraphics}" var="key">
+                            <tr>
+                              <td class="desc">{!availableGraphics[key].Name}:</td>
+                              <td>
+                                <apex:outputPanel
+                                  rendered="{!availableGraphics[key].PricebookEntries.size != 0}"
+                                  layout="none"
+                                >
+                                  $ {!availableGraphics[key].PricebookEntries[0].UnitPrice}
+                                </apex:outputPanel>
+                              </td>
+                              <td>
+                                <c:BoatBuilderOptionSelect
+                                  begin_at="{!availableGraphics[key].From_Product_Options__r[0].Standard__c}"
+                                  end_at="{!availableGraphics[key].From_Product_Options__r[0].Maximum__c}"
+                                  selectId="{!key}"
+                                  productType="boat"
+                                  selectValue="{!IF(CONTAINS(selectedPartsIdList['boat'], ':'+key+':'), selectedItemsMap['boat'][key].Quantity, availableGraphics[key].From_Product_Options__r[0].Standard__c)}"
+                                  onOptionChange="optionChanged(this)"
+                                />
+                              </td>
+                            </tr>
 
-          </apex:tab>
-
-<!--++++++++++++++++++++++++++++++++ Seating Tab ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
-
-          <apex:tab name="Seating"
-                    label="Seating"
-                    id="seatingTab"
-                    rendered="{!availableSeating != null}">
-
-            <table class="optionSelectTable">
-              <apex:repeat value="{!availableSeating}" var="key">
-              <tr>
-                <td class="desc">{!availableSeating[key].Name}: </td>
-                <td>
-                  <apex:outputPanel rendered="{!availableSeating[key].PricebookEntries.size != 0}"
-                                    layout="none" >
-                    $ {!availableSeating[key].PricebookEntries[0].UnitPrice}
-                  </apex:outputPanel>
-                </td>
-                <td><c:BoatBuilderOptionSelect begin_at="{!availableSeating[key].From_Product_Options__r[0].Standard__c}"
-                      end_at="{!availableSeating[key].From_Product_Options__r[0].Maximum__c}"
-                      selectId="{!key}"
-                      productType="boat"
-                      selectValue="{!IF(CONTAINS(selectedPartsIdList['boat'], ':'+key+':'), selectedItemsMap['boat'][key].Quantity, availableSeating[key].From_Product_Options__r[0].Standard__c)}"
-                      onOptionChange="optionChanged(this)" />
-                </td>
-              </tr>
-
-              <apex:outputPanel layout="none"
-                  rendered="{!availableSeating[key].To_Product_Options__r.size > 0 }">
-                <tr class="subOptionsContainer" id="{!key}_subOptions" style="display:{!IF(CONTAINS(selectedPartsIdList['boat'], ':'+key+':'), 'table-row', 'none')}">
-                  <td  colspan="3">
-                    <table class="optionSelectTable subOptions">
-                      <apex:repeat value="{!subOptions[key]}" var="subOption">
-                      <tr>
-                        <td class="desc">{!subOption.name}: </td>
-                        <td>
-                          <!-- <apex:outputPanel rendered="{!subOption.PricebookEntries.size != 0}"
+                            <apex:outputPanel
+                              layout="none"
+                              rendered="{!availableGraphics[key].To_Product_Options__r.size > 0 }"
+                            >
+                              <tr
+                                class="subOptionsContainer"
+                                id="{!key}_subOptions"
+                                style="display:{!IF(CONTAINS(selectedPartsIdList['boat'], ':'+key+':'), 'table-row', 'none')}"
+                              >
+                                <td colspan="3">
+                                  <table class="optionSelectTable subOptions">
+                                    <apex:repeat value="{!subOptions[key]}" var="subOption">
+                                      <tr>
+                                        <td class="desc">{!subOption.name}:</td>
+                                        <td>
+                                          <!-- <apex:outputPanel rendered="{!subOption.PricebookEntries.size != 0}"
                                             layout="none" > -->
-                            $ {!subOption.price}
-                          <!-- </apex:outputPanel> -->
+                                          $ {!subOption.price}
+                                          <!-- </apex:outputPanel> -->
+                                        </td>
+                                        <td>
+                                          <c:BoatBuilderOptionSelect
+                                            begin_at="{!subOption.standard}"
+                                            end_at="{!subOption.maximum}"
+                                            selectId="{!subOption.id}"
+                                            productType="boat"
+                                            selectValue="{!IF(CONTAINS(selectedPartsIdList['boat'], key + subOption.id), selectedItemsMap['boat'][key].subItems[subOption.Id].Quantity, subOption.standard)}"
+                                            parent_product_id="{!key}"
+                                            onOptionChange="optionChanged(this)"
+                                          />
+                                        </td>
+                                      </tr>
+                                    </apex:repeat>
+                                  </table>
+                                </td>
+                              </tr>
+                            </apex:outputPanel>
+                            <!-- subOptions row -->
+                          </apex:repeat>
+                        </table>
+                      </apex:tab>
 
-                        </td>
-                        <td><c:BoatBuilderOptionSelect begin_at="{!subOption.standard}"
-                            end_at="{!subOption.maximum}"
-                            selectId="{!subOption.id}"
-                            productType="boat"
-                            selectValue="{!IF(CONTAINS(selectedPartsIdList['boat'], key + subOption.id), selectedItemsMap['boat'][key].subItems[subOption.Id].Quantity, subOption.standard)}"
-                            parent_product_id="{!key}"
-                            onOptionChange="optionChanged(this)" />
-                        </td>
-                      </tr>
-                      </apex:repeat>
-                    </table>
-                  </td>
-                </tr>
-              </apex:outputPanel> <!-- subOptions row -->
+                      <!--++++++++++++++++++++++++++++ Pontoon Covers Tab ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
 
-              </apex:repeat>
-            </table>
+                      <apex:tab
+                        name="Pontoon Covers"
+                        label="Pontoon Covers"
+                        id="pontoonCoverTab"
+                        rendered="{!availablePontoonCovers != null}"
+                      >
+                        <table class="optionSelectTable">
+                          <apex:repeat value="{!availablePontoonCovers}" var="key">
+                            <tr>
+                              <td class="desc">{!availablePontoonCovers[key].Name}:</td>
+                              <td>
+                                <apex:outputPanel
+                                  rendered="{!availablePontoonCovers[key].PricebookEntries.size != 0}"
+                                  layout="none"
+                                >
+                                  $ {!availablePontoonCovers[key].PricebookEntries[0].UnitPrice}
+                                </apex:outputPanel>
+                              </td>
+                              <td>
+                                <c:BoatBuilderOptionSelect
+                                  begin_at="{!availablePontoonCovers[key].From_Product_Options__r[0].Standard__c}"
+                                  end_at="{!availablePontoonCovers[key].From_Product_Options__r[0].Maximum__c}"
+                                  selectId="{!key}"
+                                  productType="boat"
+                                  selectValue="{!IF(CONTAINS(selectedPartsIdList['boat'], ':'+key+':'), selectedItemsMap['boat'][key].Quantity, availablePontoonCovers[key].From_Product_Options__r[0].Standard__c)}"
+                                  onOptionChange="optionChanged(this)"
+                                />
+                              </td>
+                            </tr>
 
-          </apex:tab>
-
-<!--+++++++++++++++++++++++++++ Trailering and Covers Tab ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
-
-          <apex:tab name="Trailering & Covers"
-                    label="Trailering & Covers"
-                    id="traileringTab"
-                    rendered="{!availableTrailering != null}">
-
-            <table class="optionSelectTable">
-              <apex:repeat value="{!availableTrailering}" var="key">
-              <tr>
-                <td class="desc">{!availableTrailering[key].Name}: </td>
-                <td>
-                  <apex:outputPanel rendered="{!availableTrailering[key].PricebookEntries.size != 0}"
-                                    layout="none" >
-                    $ {!availableTrailering[key].PricebookEntries[0].UnitPrice}
-                  </apex:outputPanel>
-                </td>
-                <td><c:BoatBuilderOptionSelect begin_at="{!availableTrailering[key].From_Product_Options__r[0].Standard__c}"
-                      end_at="{!availableTrailering[key].From_Product_Options__r[0].Maximum__c}"
-                      selectId="{!key}"
-                      productType="boat"
-                      selectValue="{!IF(CONTAINS(selectedPartsIdList['boat'], ':'+key+':'), selectedItemsMap['boat'][key].Quantity, availableTrailering[key].From_Product_Options__r[0].Standard__c)}"
-                      onOptionChange="optionChanged(this)" />
-                </td>
-              </tr>
-
-              <apex:outputPanel layout="none"
-                  rendered="{!availableTrailering[key].To_Product_Options__r.size > 0 }">
-                <tr class="subOptionsContainer" id="{!key}_subOptions" style="display:{!IF(CONTAINS(selectedPartsIdList['boat'], ':'+key+':'), 'table-row', 'none')}">
-                  <td  colspan="3">
-                    <table class="optionSelectTable subOptions">
-                      <apex:repeat value="{!subOptions[key]}" var="subOption">
-                      <tr>
-                        <td class="desc">{!subOption.name}: </td>
-                        <td>
-                          <!-- <apex:outputPanel rendered="{!subOption.PricebookEntries.size != 0}"
+                            <apex:outputPanel
+                              layout="none"
+                              rendered="{!availablePontoonCovers[key].To_Product_Options__r.size > 0 }"
+                            >
+                              <tr
+                                class="subOptionsContainer"
+                                id="{!key}_subOptions"
+                                style="display:{!IF(CONTAINS(selectedPartsIdList['boat'], ':'+key+':'), 'table-row', 'none')}"
+                              >
+                                <td colspan="3">
+                                  <table class="optionSelectTable subOptions">
+                                    <apex:repeat value="{!subOptions[key]}" var="subOption">
+                                      <tr>
+                                        <td class="desc">{!subOption.name}:</td>
+                                        <td>
+                                          <!-- <apex:outputPanel rendered="{!subOption.PricebookEntries.size != 0}"
                                             layout="none" > -->
-                            $ {!subOption.price}
-                          <!-- </apex:outputPanel> -->
+                                          $ {!subOption.price}
+                                          <!-- </apex:outputPanel> -->
+                                        </td>
+                                        <td>
+                                          <c:BoatBuilderOptionSelect
+                                            begin_at="{!subOption.standard}"
+                                            end_at="{!subOption.maximum}"
+                                            selectId="{!subOption.id}"
+                                            productType="boat"
+                                            selectValue="{!IF(CONTAINS(selectedPartsIdList['boat'], key + subOption.id), selectedItemsMap['boat'][key].subItems[subOption.Id].Quantity, subOption.standard)}"
+                                            parent_product_id="{!key}"
+                                            onOptionChange="optionChanged(this)"
+                                          />
+                                        </td>
+                                      </tr>
+                                    </apex:repeat>
+                                  </table>
+                                </td>
+                              </tr>
+                            </apex:outputPanel>
+                            <!-- subOptions row -->
+                          </apex:repeat>
+                        </table>
+                      </apex:tab>
 
-                        </td>
-                        <td><c:BoatBuilderOptionSelect begin_at="{!subOption.standard}"
-                            end_at="{!subOption.maximum}"
-                            selectId="{!subOption.id}"
-                            productType="boat"
-                            selectValue="{!IF(CONTAINS(selectedPartsIdList['boat'], key + subOption.id), selectedItemsMap['boat'][key].subItems[subOption.Id].Quantity, subOption.standard)}"
-                            parent_product_id="{!key}"
-                            onOptionChange="optionChanged(this)" />
-                        </td>
-                      </tr>
-                      </apex:repeat>
-                    </table>
-                  </td>
-                </tr>
-              </apex:outputPanel> <!-- subOptions row -->
+                      <!--++++++++++++++++++++++++++++++++ Safety Tab ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
 
-              </apex:repeat>
-            </table>
+                      <apex:tab name="Safety" label="Safety" id="safetyTab" rendered="{!availableSafety != null}">
+                        <table class="optionSelectTable">
+                          <apex:repeat value="{!availableSafety}" var="key">
+                            <tr>
+                              <td class="desc">{!availableSafety[key].Name}:</td>
+                              <td>
+                                <apex:outputPanel
+                                  rendered="{!availableSafety[key].PricebookEntries.size != 0}"
+                                  layout="none"
+                                >
+                                  $ {!availableSafety[key].PricebookEntries[0].UnitPrice}
+                                </apex:outputPanel>
+                              </td>
+                              <td>
+                                <c:BoatBuilderOptionSelect
+                                  begin_at="{!availableSafety[key].From_Product_Options__r[0].Standard__c}"
+                                  end_at="{!availableSafety[key].From_Product_Options__r[0].Maximum__c}"
+                                  selectId="{!key}"
+                                  productType="boat"
+                                  selectValue="{!IF(CONTAINS(selectedPartsIdList['boat'], ':'+key+':'), selectedItemsMap['boat'][key].Quantity, availableSafety[key].From_Product_Options__r[0].Standard__c)}"
+                                  onOptionChange="optionChanged(this)"
+                                />
+                              </td>
+                            </tr>
 
-          </apex:tab>
+                            <apex:outputPanel
+                              layout="none"
+                              rendered="{!availableSafety[key].To_Product_Options__r.size > 0 }"
+                            >
+                              <tr
+                                class="subOptionsContainer"
+                                id="{!key}_subOptions"
+                                style="display:{!IF(CONTAINS(selectedPartsIdList['boat'], ':'+key+':'), 'table-row', 'none')}"
+                              >
+                                <td colspan="3">
+                                  <table class="optionSelectTable subOptions">
+                                    <apex:repeat value="{!subOptions[key]}" var="subOption">
+                                      <tr>
+                                        <td class="desc">{!subOption.name}:</td>
+                                        <td>
+                                          <!-- <apex:outputPanel rendered="{!subOption.PricebookEntries.size != 0}"
+                                            layout="none" > -->
+                                          $ {!subOption.price}
+                                          <!-- </apex:outputPanel> -->
+                                        </td>
+                                        <td>
+                                          <c:BoatBuilderOptionSelect
+                                            begin_at="{!subOption.standard}"
+                                            end_at="{!subOption.maximum}"
+                                            selectId="{!subOption.id}"
+                                            productType="boat"
+                                            selectValue="{!IF(CONTAINS(selectedPartsIdList['boat'], key + subOption.id), selectedItemsMap['boat'][key].subItems[subOption.Id].Quantity, subOption.standard)}"
+                                            parent_product_id="{!key}"
+                                            onOptionChange="optionChanged(this)"
+                                          />
+                                        </td>
+                                      </tr>
+                                    </apex:repeat>
+                                  </table>
+                                </td>
+                              </tr>
+                            </apex:outputPanel>
+                            <!-- subOptions row -->
+                          </apex:repeat>
+                        </table>
+                      </apex:tab>
 
-        </apex:tabPanel>
+                      <!--++++++++++++++++++++++++++++++++ Seating Tab ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+                      <apex:tab name="Seating" label="Seating" id="seatingTab" rendered="{!availableSeating != null}">
+                        <table class="optionSelectTable">
+                          <apex:repeat value="{!availableSeating}" var="key">
+                            <tr>
+                              <td class="desc">{!availableSeating[key].Name}:</td>
+                              <td>
+                                <apex:outputPanel
+                                  rendered="{!availableSeating[key].PricebookEntries.size != 0}"
+                                  layout="none"
+                                >
+                                  $ {!availableSeating[key].PricebookEntries[0].UnitPrice}
+                                </apex:outputPanel>
+                              </td>
+                              <td>
+                                <c:BoatBuilderOptionSelect
+                                  begin_at="{!availableSeating[key].From_Product_Options__r[0].Standard__c}"
+                                  end_at="{!availableSeating[key].From_Product_Options__r[0].Maximum__c}"
+                                  selectId="{!key}"
+                                  productType="boat"
+                                  selectValue="{!IF(CONTAINS(selectedPartsIdList['boat'], ':'+key+':'), selectedItemsMap['boat'][key].Quantity, availableSeating[key].From_Product_Options__r[0].Standard__c)}"
+                                  onOptionChange="optionChanged(this)"
+                                />
+                              </td>
+                            </tr>
+
+                            <apex:outputPanel
+                              layout="none"
+                              rendered="{!availableSeating[key].To_Product_Options__r.size > 0 }"
+                            >
+                              <tr
+                                class="subOptionsContainer"
+                                id="{!key}_subOptions"
+                                style="display:{!IF(CONTAINS(selectedPartsIdList['boat'], ':'+key+':'), 'table-row', 'none')}"
+                              >
+                                <td colspan="3">
+                                  <table class="optionSelectTable subOptions">
+                                    <apex:repeat value="{!subOptions[key]}" var="subOption">
+                                      <tr>
+                                        <td class="desc">{!subOption.name}:</td>
+                                        <td>
+                                          <!-- <apex:outputPanel rendered="{!subOption.PricebookEntries.size != 0}"
+                                            layout="none" > -->
+                                          $ {!subOption.price}
+                                          <!-- </apex:outputPanel> -->
+                                        </td>
+                                        <td>
+                                          <c:BoatBuilderOptionSelect
+                                            begin_at="{!subOption.standard}"
+                                            end_at="{!subOption.maximum}"
+                                            selectId="{!subOption.id}"
+                                            productType="boat"
+                                            selectValue="{!IF(CONTAINS(selectedPartsIdList['boat'], key + subOption.id), selectedItemsMap['boat'][key].subItems[subOption.Id].Quantity, subOption.standard)}"
+                                            parent_product_id="{!key}"
+                                            onOptionChange="optionChanged(this)"
+                                          />
+                                        </td>
+                                      </tr>
+                                    </apex:repeat>
+                                  </table>
+                                </td>
+                              </tr>
+                            </apex:outputPanel>
+                            <!-- subOptions row -->
+                          </apex:repeat>
+                        </table>
+                      </apex:tab>
+
+                      <!--+++++++++++++++++++++++++++ Trailering and Covers Tab ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+                      <apex:tab
+                        name="Trailering & Covers"
+                        label="Trailering & Covers"
+                        id="traileringTab"
+                        rendered="{!availableTrailering != null}"
+                      >
+                        <table class="optionSelectTable">
+                          <apex:repeat value="{!availableTrailering}" var="key">
+                            <tr>
+                              <td class="desc">{!availableTrailering[key].Name}:</td>
+                              <td>
+                                <apex:outputPanel
+                                  rendered="{!availableTrailering[key].PricebookEntries.size != 0}"
+                                  layout="none"
+                                >
+                                  $ {!availableTrailering[key].PricebookEntries[0].UnitPrice}
+                                </apex:outputPanel>
+                              </td>
+                              <td>
+                                <c:BoatBuilderOptionSelect
+                                  begin_at="{!availableTrailering[key].From_Product_Options__r[0].Standard__c}"
+                                  end_at="{!availableTrailering[key].From_Product_Options__r[0].Maximum__c}"
+                                  selectId="{!key}"
+                                  productType="boat"
+                                  selectValue="{!IF(CONTAINS(selectedPartsIdList['boat'], ':'+key+':'), selectedItemsMap['boat'][key].Quantity, availableTrailering[key].From_Product_Options__r[0].Standard__c)}"
+                                  onOptionChange="optionChanged(this)"
+                                />
+                              </td>
+                            </tr>
+
+                            <apex:outputPanel
+                              layout="none"
+                              rendered="{!availableTrailering[key].To_Product_Options__r.size > 0 }"
+                            >
+                              <tr
+                                class="subOptionsContainer"
+                                id="{!key}_subOptions"
+                                style="display:{!IF(CONTAINS(selectedPartsIdList['boat'], ':'+key+':'), 'table-row', 'none')}"
+                              >
+                                <td colspan="3">
+                                  <table class="optionSelectTable subOptions">
+                                    <apex:repeat value="{!subOptions[key]}" var="subOption">
+                                      <tr>
+                                        <td class="desc">{!subOption.name}:</td>
+                                        <td>
+                                          <!-- <apex:outputPanel rendered="{!subOption.PricebookEntries.size != 0}"
+                                            layout="none" > -->
+                                          $ {!subOption.price}
+                                          <!-- </apex:outputPanel> -->
+                                        </td>
+                                        <td>
+                                          <c:BoatBuilderOptionSelect
+                                            begin_at="{!subOption.standard}"
+                                            end_at="{!subOption.maximum}"
+                                            selectId="{!subOption.id}"
+                                            productType="boat"
+                                            selectValue="{!IF(CONTAINS(selectedPartsIdList['boat'], key + subOption.id), selectedItemsMap['boat'][key].subItems[subOption.Id].Quantity, subOption.standard)}"
+                                            parent_product_id="{!key}"
+                                            onOptionChange="optionChanged(this)"
+                                          />
+                                        </td>
+                                      </tr>
+                                    </apex:repeat>
+                                  </table>
+                                </td>
+                              </tr>
+                            </apex:outputPanel>
+                            <!-- subOptions row -->
+                          </apex:repeat>
+                        </table>
+                      </apex:tab>
+                    </apex:tabPanel>
+                  </div>
+                </apex:outputPanel>
+              </apex:outputPanel>
+              <!-- ============ END OPTION SELECTION =============== -->
+            </div>
+          </apex:pageBlock>
         </div>
-        </apex:outputPanel>
-      </apex:outputPanel>
-<!-- ============ END OPTION SELECTION =============== -->
-        </div>
+        <!-- BoatBuilder Container  .cell .cell50 -->
 
-      </apex:pageBlock>
-
-    </div><!-- BoatBuilder Container  .cell .cell50 -->
-
-<!-- ============== SUMMARY ======================= -->
-    <div class="cell cell50">
-      <apex:outputPanel id="summary">
-      <apex:pageBlock title="Summary" rendered="{!selectedBoat != null}">
-
-
-
-        <apex:outputPanel id="summary_list">
-
-         <p class="total">
-            <span>
-               <apex:outputText value="   ${!runningPrice}" rendered="{!runningPrice != null}" />
-            </span>
-          </p>
-
-        <div class="summary_table">
-
-          <h3>Boat</h3>
-          <p>
-            <apex:outputText value="{!selectedBoat.Name}" />
-            <span>
-              <apex:outputText value=" ${!basePrice}" rendered="{!basePrice != null}" />
-            </span>
-          </p>
-
-          <apex:outputPanel layout="none" rendered="{!selectedMotor != null}">
-          <h3>Motor</h3>
-          <p>
-            <apex:outputText value=" {!selectedMotor.Name}"
-                         rendered="{!selectedMotor != null}" />
-            <span>
-              <apex:outputText value="$ {!motorUpgradePrice}"
-                         rendered="{!motorUpgradePrice != null}" />
-            </span>
-          </p>
-          <apex:variable value="{!selectedItemsMap['motor']}" var="items" />
-          <apex:repeat value="{!items}" var="key">
-
-            <p class="subItem">
-              <span class="quantity">
-                {!items[key].quantity}
-              </span>
-              <apex:outputText value="{!items[key].description}" />
-              <span>
-                <apex:outputText value="$ {!items[key].upgrade_cost}" />
-              </span>
-            </p>
-          </apex:repeat>
-          </apex:outputPanel>
-
-          <apex:outputPanel layout="none" rendered="{!selectedTrailer != null}">
-          <h3>Trailer</h3>
-          <p>
-            <apex:outputText value=" {!selectedTrailer.Name}"
-                         rendered="{!selectedTrailer != null}" />
-            <span>
-              <apex:outputText value="$ {!trailerUpgradePrice}"
-                         rendered="{!trailerUpgradePrice != null}" />
-            </span>
-          </p>
-          <apex:variable value="{!selectedItemsMap['trailer']}" var="items" />
-          <apex:repeat value="{!items}" var="key">
-
-            <p class="subItem">
-              <span class="quantity">
-                {!items[key].quantity}
-              </span>
-              <apex:outputText value="{!items[key].description}" />
-              <span>
-                <apex:outputText value="$ {!items[key].upgrade_cost}" />
-              </span>
-            </p>
-          </apex:repeat>
-          </apex:outputPanel>
-
-          <apex:outputPanel layout="none" rendered="{!selectedTrollingMotor != null}">
-          <h3>Trolling Motor</h3>
-          <p>
-            <apex:outputText value=" {!selectedTrollingMotor.Name}"
-                         rendered="{!selectedTrollingMotor != null}" />
-            <span>
-              <apex:outputText value="$ {!trollingMotorUpgradePrice}"
-                         rendered="{!trollingMotorUpgradePrice != null}" />
-            </span>
-          </p>
-          <apex:variable value="{!selectedItemsMap['trolling motor']}" var="items" />
-          <apex:repeat value="{!items}" var="key">
-
-            <p class="subItem">
-              <span class="quantity">
-                {!items[key].quantity}
-              </span>
-              <apex:outputText value="{!items[key].description}" />
-              <span>
-                <apex:outputText value="$ {!items[key].upgrade_cost}" />
-              </span>
-            </p>
-          </apex:repeat>
-          </apex:outputPanel>
-
-          <apex:outputPanel layout="none" >
-
-            <apex:outputPanel >
-
-              <h3>Options &amp; Accessories</h3>
-              <apex:variable value="{!selectedItemsMap['boat']}" var="items" />
-              <apex:repeat value="{!items}" var="key">
-                <div class="option_and_accessories_line_item">
-                <p>
-                  <span class='quantity'>
-                    {!items[key].quantity}
-                  </span>
-                  <apex:outputText value="{!items[key].description}" />
+        <!-- ============== SUMMARY ======================= -->
+        <div class="cell cell50">
+          <apex:outputPanel id="summary">
+            <apex:pageBlock title="Summary" rendered="{!selectedBoat != null}">
+              <apex:outputPanel id="summary_list">
+                <p class="total">
                   <span>
-                    <apex:outputText value="$ {!items[key].upgrade_cost}" />
+                    <apex:outputText value="   ${!runningPrice}" rendered="{!runningPrice != null}" />
                   </span>
                 </p>
-                <apex:repeat value="{!items[key].subItems}" var="subkey">
-                  <apex:variable value="{!items[key].subItems[subkey]}"
-                                 var="subItem" />
-                  <p class="subItem">
-                    <span class="quantity">
-                      {!subItem.quantity}
-                    </span>
-                    <apex:outputText value="{!subItem.description}" />
+
+                <div class="summary_table">
+                  <h3>Boat</h3>
+                  <p>
+                    <apex:outputText value="{!selectedBoat.Name}" />
                     <span>
-                      <apex:outputText value="$ {!subItem.upgrade_cost}" />
+                      <apex:outputText value=" ${!basePrice}" rendered="{!basePrice != null}" />
                     </span>
                   </p>
-                </apex:repeat>
-              </div>
-              </apex:repeat>
 
-            </apex:outputPanel>
+                  <apex:outputPanel layout="none" rendered="{!selectedMotor != null}">
+                    <h3>Motor</h3>
+                    <p>
+                      <apex:outputText value=" {!selectedMotor.Name}" rendered="{!selectedMotor != null}" />
+                      <span>
+                        <apex:outputText value="$ {!motorUpgradePrice}" rendered="{!motorUpgradePrice != null}" />
+                      </span>
+                    </p>
+                    <apex:variable value="{!selectedItemsMap['motor']}" var="items" />
+                    <apex:repeat value="{!items}" var="key">
+                      <p class="subItem">
+                        <span class="quantity"> {!items[key].quantity} </span>
+                        <apex:outputText value="{!items[key].description}" />
+                        <span>
+                          <apex:outputText value="$ {!items[key].upgrade_cost}" />
+                        </span>
+                      </p>
+                    </apex:repeat>
+                  </apex:outputPanel>
 
-            <!-- <apex:outputPanel rendered="true">
+                  <apex:outputPanel layout="none" rendered="{!selectedTrailer != null}">
+                    <h3>Trailer</h3>
+                    <p>
+                      <apex:outputText value=" {!selectedTrailer.Name}" rendered="{!selectedTrailer != null}" />
+                      <span>
+                        <apex:outputText value="$ {!trailerUpgradePrice}" rendered="{!trailerUpgradePrice != null}" />
+                      </span>
+                    </p>
+                    <apex:variable value="{!selectedItemsMap['trailer']}" var="items" />
+                    <apex:repeat value="{!items}" var="key">
+                      <p class="subItem">
+                        <span class="quantity"> {!items[key].quantity} </span>
+                        <apex:outputText value="{!items[key].description}" />
+                        <span>
+                          <apex:outputText value="$ {!items[key].upgrade_cost}" />
+                        </span>
+                      </p>
+                    </apex:repeat>
+                  </apex:outputPanel>
+
+                  <apex:outputPanel layout="none" rendered="{!selectedTrollingMotor != null}">
+                    <h3>Trolling Motor</h3>
+                    <p>
+                      <apex:outputText
+                        value=" {!selectedTrollingMotor.Name}"
+                        rendered="{!selectedTrollingMotor != null}"
+                      />
+                      <span>
+                        <apex:outputText
+                          value="$ {!trollingMotorUpgradePrice}"
+                          rendered="{!trollingMotorUpgradePrice != null}"
+                        />
+                      </span>
+                    </p>
+                    <apex:variable value="{!selectedItemsMap['trolling motor']}" var="items" />
+                    <apex:repeat value="{!items}" var="key">
+                      <p class="subItem">
+                        <span class="quantity"> {!items[key].quantity} </span>
+                        <apex:outputText value="{!items[key].description}" />
+                        <span>
+                          <apex:outputText value="$ {!items[key].upgrade_cost}" />
+                        </span>
+                      </p>
+                    </apex:repeat>
+                  </apex:outputPanel>
+
+                  <apex:outputPanel layout="none">
+                    <apex:outputPanel>
+                      <h3>Options &amp; Accessories</h3>
+                      <apex:variable value="{!selectedItemsMap['boat']}" var="items" />
+                      <apex:repeat value="{!items}" var="key">
+                        <div class="option_and_accessories_line_item">
+                          <p>
+                            <span class="quantity"> {!items[key].quantity} </span>
+                            <apex:outputText value="{!items[key].description}" />
+                            <span>
+                              <apex:outputText value="$ {!items[key].upgrade_cost}" />
+                            </span>
+                          </p>
+                          <apex:repeat value="{!items[key].subItems}" var="subkey">
+                            <apex:variable value="{!items[key].subItems[subkey]}" var="subItem" />
+                            <p class="subItem">
+                              <span class="quantity"> {!subItem.quantity} </span>
+                              <apex:outputText value="{!subItem.description}" />
+                              <span>
+                                <apex:outputText value="$ {!subItem.upgrade_cost}" />
+                              </span>
+                            </p>
+                          </apex:repeat>
+                        </div>
+                      </apex:repeat>
+                    </apex:outputPanel>
+
+                    <!-- <apex:outputPanel rendered="true">
               <h3>Electronics</h3>
               <apex:repeat value="{!optionLineItems}" var="key">
                 <apex:outputPanel layout="none" rendered="{!optionLineItems[key].Product_Family == 'Electronics'}">
@@ -1109,23 +1198,20 @@
               </apex:outputPanel>
               </apex:repeat>
             </apex:outputPanel>
- -->
-          </apex:outputPanel><!-- option line items -->
-
-
-        </div> <!-- .summary_table -->
-        </apex:outputPanel><!-- summary-list -->
-
-
-      </apex:pageBlock>
-      </apex:outputPanel>
-    </div>
-<!-- ================== END SUMMARY =============== -->
-
-  </div><!-- container -->
-</apex:pageBlock>
-</apex:form>
-<!--
+ --> </apex:outputPanel
+                  ><!-- option line items -->
+                </div>
+                <!-- .summary_table --> </apex:outputPanel
+              ><!-- summary-list -->
+            </apex:pageBlock>
+          </apex:outputPanel>
+        </div>
+        <!-- ================== END SUMMARY =============== -->
+      </div>
+      <!-- container -->
+    </apex:pageBlock>
+  </apex:form>
+  <!--
       <div class="cell cell50">
 
         <apex:panelGroup rendered="{!boatFeatures != null}">
@@ -1141,7 +1227,4 @@
         </apex:panelGroup>
 
       </div> -->
-
-
-
 </apex:page>

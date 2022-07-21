@@ -1,267 +1,311 @@
-<apex:page standardController="Account" extensions="gcAPStatement_PDF" sidebar="false" showHeader="false" applyHtmlTag="false" standardStylesheets="false" renderAs="pdf">
-<head>
-<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
-<style>
-    @page{
-        size:portrait;
-        margin-right: 0.50in;
-        margin-left: 0.50in;
-        margin-top: 0.50in;
-        margin-bottom: 0.50in;
+<apex:page
+  standardController="Account"
+  extensions="gcAPStatement_PDF"
+  sidebar="false"
+  showHeader="false"
+  applyHtmlTag="false"
+  standardStylesheets="false"
+  renderAs="pdf"
+>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+    <style>
+      @page {
+        size: portrait;
+        margin-right: 0.5in;
+        margin-left: 0.5in;
+        margin-top: 0.5in;
+        margin-bottom: 0.5in;
         @top-center {
-            content: element(header);
+          content: element(header);
         }
         @bottom-center {
-            content: element(footer);
+          content: element(footer);
         }
-    }
-    body {
-        margin:0 auto;
-        padding:0;
+      }
+      body {
+        margin: 0 auto;
+        padding: 0;
         font-size: 12px;
-    }
-    .runningHeader {
-        position:running(header);
-        width:100%;
-        border:1px solid white;
+      }
+      .runningHeader {
+        position: running(header);
+        width: 100%;
+        border: 1px solid white;
         margin-top: 15px;
-    }
-    .runningFooter {
+      }
+      .runningFooter {
         position: running(footer);
-        width:100%;
-        border:1px solid white;
-        padding:0;
-        margin:0 auto;
-    }
-    .invoiceTitle {
+        width: 100%;
+        border: 1px solid white;
+        padding: 0;
+        margin: 0 auto;
+      }
+      .invoiceTitle {
         font-family: sans-serif;
-        font-size:24px;
-        text-align:center;
-        vertical-align:top;
-    }
-    table {
-        width:100%;
+        font-size: 24px;
+        text-align: center;
+        vertical-align: top;
+      }
+      table {
+        width: 100%;
         table-layout: fixed;
-        border-collapse:collapse;
-    }
-    * {
+        border-collapse: collapse;
+      }
+      * {
         font-family: sans-serif;
-    }
-    table.apData {
+      }
+      table.apData {
         -fs-table-paginate: paginate;
-    }
-    table.apData th {
+      }
+      table.apData th {
         font-weight: bold;
-        background-color: #DADADA;
+        background-color: #dadada;
         vertical-align: top;
         margin: 0;
         padding: 4px;
-    }
-    table.apData th {
+      }
+      table.apData th {
         border-top: 1px solid #f9f9f9;
         border-bottom: 1px solid #f9f9f9;
         border-right: 1px solid #f9f9f9;
-    }
-    table.apData th:first-child {
+      }
+      table.apData th:first-child {
         border-left: 1px solid #f9f9f9;
-    }
-    table.apData tbody td {
+      }
+      table.apData tbody td {
         padding: 4px;
-        border-bottom: 1px solid #DADADA;
-    }
-    .pageNumber:before {
-        content:counter(page);
-    }
-    .pageCount:before {
+        border-bottom: 1px solid #dadada;
+      }
+      .pageNumber:before {
+        content: counter(page);
+      }
+      .pageCount:before {
         content: counter(pages);
-    }
-    .noBottomLine td
-    {
-      border-bottom: none !important;
-    }
-    .projectNameRow
-    {
-      padding-left: 20px !important;
-      padding-bottom: 5px !important;
-      border-top: none !important;
-    }
-    .rightAlign {
+      }
+      .noBottomLine td {
+        border-bottom: none !important;
+      }
+      .projectNameRow {
+        padding-left: 20px !important;
+        padding-bottom: 5px !important;
+        border-top: none !important;
+      }
+      .rightAlign {
         text-align: right;
-    }
-    .leftAlign {
+      }
+      .leftAlign {
         text-align: left;
-    }
-    .centerAlign {
+      }
+      .centerAlign {
         text-align: center;
-    }
-    .textBold {
+      }
+      .textBold {
         font-weight: bold;
-    }
-    .apDataList {
+      }
+      .apDataList {
         font-size: 12px;
-    }
-    .apDataList td,  .apDataList th {
+      }
+      .apDataList td,
+      .apDataList th {
         height: 21px;
-    }
-    .firstAPList {
+      }
+      .firstAPList {
         height: 375px;
-    }
-    .amountInWord {
+      }
+      .amountInWord {
         padding: 25px 0 8px 0;
-    }
-    .address {
+      }
+      .address {
         padding-left: 25px;
         font-size: 12px;
         height: 190px;
-    }
-    .tableRowAmount {
-        background-color: #DADADA;
+      }
+      .tableRowAmount {
+        background-color: #dadada;
         padding: 5px;
-    }
-</style>
-</head>
-<body>
-  <div class="headerFirst">
-    <table style="width:100%">
+      }
+    </style>
+  </head>
+  <body>
+    <div class="headerFirst">
+      <table style="width: 100%">
+        <tr>
+          <td>
+            <table style="width: 300px; border-collapse: collapse">
+              <tr>
+                <td>{!$Organization.Name}</td>
+              </tr>
+              <tr>
+                <td>{!$Organization.Street}</td>
+              </tr>
+              <tr>
+                <td>{!$Organization.City}, {!$Organization.State} {!$Organization.PostalCode}</td>
+              </tr>
+              <tr>
+                <td>{!$Organization.Country}</td>
+              </tr>
+            </table>
+          </td>
+          <td style="width: 350px">&nbsp;</td>
+          <td style="vertical-align: top; text-align: right"><img src="{!$Resource.LegendLogo}" width="200" /></td>
+        </tr>
+      </table>
+    </div>
+    <br />
+    <br />
+    <table width="100%" cellspacing="0" cellpadding="0" border="0">
       <tr>
-        <td><table style="width:300px;border-collapse:collapse;">
+        <td style="padding-left: 50px">
+          <table cellpadding="0" cellspacing="0" border="0">
             <tr>
-              <td> {!$Organization.Name} </td>
+              <td>{!accMap['name']}</td>
             </tr>
             <tr>
-              <td> {!$Organization.Street} </td>
+              <td>
+                <apex:outputText value="{!accMap['billingContact']}" rendered="{!!ISBLANK(accMap['billingContact'])}" />
+              </td>
             </tr>
             <tr>
-              <td> {!$Organization.City}, {!$Organization.State} {!$Organization.PostalCode} </td>
+              <td>
+                <apex:outputText value="{!accMap['billingStreet']}" rendered="{!!ISBLANK(accMap['billingStreet'])}" />
+              </td>
             </tr>
             <tr>
-              <td> {!$Organization.Country} </td>
+              <td>
+                <apex:outputText
+                  value="{!accMap['billingCity']}, "
+                  rendered="{!IF(accMap['billingCity'] == 'N/A',false,true)}"
+                />
+                <apex:outputText
+                  value="{!accMap['billingState']} "
+                  rendered="{!IF(accMap['billingState'] == 'N/A',false,true)}"
+                />
+                <apex:outputText value="{!accMap['billingPostalCode']}" />
+              </td>
             </tr>
-          </table></td>
-        <td style="width:350px;">&nbsp;</td>
-        <td style="vertical-align:top;text-align:right"><img src="{!$Resource.LegendLogo}" width="200" /></td>
+            <tr>
+              <td>
+                <apex:outputText value="{!accMap['billingCountry']}" />
+                <apex:outputText rendered="{!IF(accMap['nameRecordType'] == 'Supplier',true,false)}">
+                  <apex:outputText rendered="{!IF(accMap['phoneNumber'] == 'N/A',false,true)}"
+                    ><br />
+                    {!accMap['phoneNumber']}
+                  </apex:outputText>
+                  <apex:outputText rendered="{!IF(accMap['paymentReference'] == 'N/A',false,true)}"
+                    ><br /><br />
+                    <div style="text-align: center; width: auto !important" class="tableRowAmount">
+                      Payment Reference: {!accMap['paymentReference']}
+                    </div>
+                  </apex:outputText>
+                </apex:outputText>
+              </td>
+            </tr>
+          </table>
+        </td>
+        <td>
+          <table style="width: 250px; border-collapse: collapse; float: right">
+            <tr>
+              <td style="padding: 6px"><apex:outputText value="Statement Date" /></td>
+              <td style="text-align: right; padding: 6px">
+                <apex:outputText value="{0, date, MMM dd', 'yyyy}">
+                  <apex:param value="{!today()}" />
+                </apex:outputText>
+              </td>
+            </tr>
+            <tr class="tableRowAmount">
+              <td style="padding: 6px">
+                <span style="font-weight: bold">
+                  <apex:outputText value="Total Balance:" />
+                </span>
+              </td>
+              <td style="text-align: right; padding: 6px">
+                <span style="font-weight: bold">
+                  <apex:outputText value="${0,number,###,###,##0.00}">
+                    <apex:param value="{!totalBalance}" />
+                  </apex:outputText>
+                </span>
+              </td>
+            </tr>
+          </table>
+        </td>
       </tr>
     </table>
-  </div>
-  <br/>
-  <br/>
-  <table width="100%" cellspacing="0" cellpadding="0" border="0">
-    <tr>
-      <td style="padding-left: 50px;"><table cellpadding="0" cellspacing="0" border="0">
+    <br />
+    <apex:outputText rendered="{!If(totalRecords > 0,true,false)}">
+      <apex:repeat value="{!keyList}" var="keyVal">
+        <apex:variable value="{!apList[keyVal]}" var="apl" />
+        <apex:variable value="{!0}" var="loopTotal" />
+        <table width="100%" cellspacing="0">
           <tr>
-            <td>{!accMap['name']}</td>
+            <td style="padding: 6px; font-size: 14px"><strong>{!keyVal}:</strong></td>
           </tr>
-          <tr>
-            <td><apex:outputText value="{!accMap['billingContact']}" rendered="{!!ISBLANK(accMap['billingContact'])}"/></td>
-          </tr>
-          <tr>
-            <td><apex:outputText value="{!accMap['billingStreet']}" rendered="{!!ISBLANK(accMap['billingStreet'])}" /></td>
-          </tr>
-          <tr>
-            <td><apex:outputText value="{!accMap['billingCity']}, " rendered="{!IF(accMap['billingCity'] == 'N/A',false,true)}" />
-              <apex:outputText value="{!accMap['billingState']} " rendered="{!IF(accMap['billingState'] == 'N/A',false,true)}" />
-              <apex:outputText value="{!accMap['billingPostalCode']}" /></td>
-          </tr>
+        </table>
+        <table width="100%" cellspacing="0">
           <tr>
             <td>
-              <apex:outputText value="{!accMap['billingCountry']}" />
-              <apex:outputText rendered="{!IF(accMap['nameRecordType'] == 'Supplier',true,false)}">
-                <apex:outputText rendered="{!IF(accMap['phoneNumber'] == 'N/A',false,true)}"><br/>
-                  {!accMap['phoneNumber']}
-                </apex:outputText>
-                <apex:outputText rendered="{!IF(accMap['paymentReference'] == 'N/A',false,true)}"><br/><br/>
-                  <div style="text-align: center; width: auto !important;" class="tableRowAmount">Payment Reference: {!accMap['paymentReference']}</div>
-                </apex:outputText>
-              
+              <table width="100%" class="apData apDataList" cellspacing="0">
+                <thead>
+                  <tr>
+                    <th width="80" class="leftAlign">Name</th>
+                    <th width="80" class="leftAlign">Type</th>
+                    <th width="80" class="centerAlign">Date</th>
+                    <th>Reference</th>
+                    <th width="80" class="centerAlign">Due Date</th>
+                    <th width="120" class="rightAlign">Total</th>
+                    <th width="120" class="rightAlign">Balance</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <apex:repeat value="{!apl}" var="ap">
+                    <tr class="{!IF(LEN(ap['apProject']) == 0,'','noBottomLine')}">
+                      <td class="leftAlign">{!ap['apName']}</td>
+                      <td class="leftAlign">{!ap['apType']}</td>
+                      <td class="centerAlign">{!ap['apDate']}</td>
+                      <td>{!ap['apRef']}</td>
+                      <td class="centerAlign">{!ap['apDueDate']}</td>
+                      <td class="rightAlign">
+                        <apex:outputText value="${0,number,###,###,##0.00}">
+                          <apex:param value="{!VALUE(ap['apTotal'])}" />
+                        </apex:outputText>
+                      </td>
+                      <td class="rightAlign">
+                        <apex:outputText value="${0,number,###,###,##0.00}">
+                          <apex:param value="{!VALUE(ap['apBalance'])}" />
+                        </apex:outputText>
+                      </td>
+                    </tr>
+                    <apex:outputText rendered="{!IF(LEN(ap['apProject']) == 0,false,true)}">
+                      <tr>
+                        <td class="leftAlign projectNameRow" colspan="7">
+                          &raquo;&nbsp;<strong>ERP Order: </strong>{!ap['apProject']}
+                        </td>
+                      </tr>
+                    </apex:outputText>
+                    <apex:variable value="{!loopTotal + VALUE(ap['apBalance'])}" var="loopTotal" />
+                  </apex:repeat>
+                </tbody>
+              </table>
+            </td>
+          </tr>
+          <tr class="tableRowAmount">
+            <td style="padding: 6px" class="rightAlign">
+              <strong>Balance: </strong>
+              <apex:outputText value="${0,number,###,###,##0.00}">
+                <apex:param value="{!loopTotal}" />
               </apex:outputText>
             </td>
           </tr>
-        </table></td>
-      <td><table style="width:250px;border-collapse:collapse;float:right;">
-          <tr>
-            <td style="padding:6px"><apex:outputText value="Statement Date" /></td>
-            <td style="text-align:right;padding:6px"><apex:outputText value="{0, date, MMM dd', 'yyyy}">
-                <apex:param value="{!today()}" />
-              </apex:outputText></td>
-          </tr>
-          <tr class="tableRowAmount">
-            <td style="padding:6px"><span style="font-weight:bold">
-              <apex:outputText value="Total Balance:"/>
-              </span></td>
-            <td style="text-align:right;padding:6px"><span style="font-weight:bold">
-              <apex:outputText value="${0,number,###,###,##0.00}">
-                <apex:param value="{!totalBalance}" />
-              </apex:outputText>
-              </span></td>
-          </tr>
-        </table></td>
-    </tr>
-  </table>
-  <br/>
-  <apex:outputText rendered="{!If(totalRecords > 0,true,false)}">
-  <apex:repeat value="{!keyList}" var="keyVal">
-  <apex:variable value="{!apList[keyVal]}" var="apl"/>
-  <apex:variable value="{!0}" var="loopTotal"/>
-  <table width="100%" cellspacing="0">
-      <tr>
-          <td style="padding: 6px; font-size: 14px;"><strong>{!keyVal}:</strong></td>
-      </tr>
-  </table>
-  <table width="100%" cellspacing="0">
-    <tr>
-      <td><table width="100%" class="apData apDataList" cellspacing="0">
-          <thead>
-            <tr>
-              <th width="80" class="leftAlign">Name</th>
-              <th width="80" class="leftAlign">Type</th>
-              <th width="80" class="centerAlign">Date</th>
-              <th>Reference</th>
-              <th width="80" class="centerAlign">Due Date</th>
-              <th width="120" class="rightAlign">Total</th>
-              <th width="120" class="rightAlign">Balance</th>
-            </tr>
-          </thead>
-          <tbody>
-            <apex:repeat value="{!apl}" var="ap">
-              <tr class="{!IF(LEN(ap['apProject']) == 0,'','noBottomLine')}">
-                <td class="leftAlign">{!ap['apName']}</td>
-                <td class="leftAlign">{!ap['apType']}</td>
-                <td class="centerAlign">{!ap['apDate']}</td>
-                <td>{!ap['apRef']}</td>
-                <td class="centerAlign">{!ap['apDueDate']}</td>
-                <td class="rightAlign"><apex:outputText value="${0,number,###,###,##0.00}">
-                    <apex:param value="{!VALUE(ap['apTotal'])}" />
-                  </apex:outputText></td>
-                <td class="rightAlign"><apex:outputText value="${0,number,###,###,##0.00}">
-                    <apex:param value="{!VALUE(ap['apBalance'])}" />
-                  </apex:outputText></td>
-              </tr>
-              <apex:outputText rendered="{!IF(LEN(ap['apProject']) == 0,false,true)}">
-              <tr>
-                  <td class="leftAlign projectNameRow" colspan="7">&raquo;&nbsp;<strong>ERP Order: </strong>{!ap['apProject']}</td>
-              </tr>
-              </apex:outputText>
-              <apex:variable value="{!loopTotal + VALUE(ap['apBalance'])}" var="loopTotal"/>
-            </apex:repeat>
-          </tbody>
-        </table></td>
-    </tr>
-    <tr class="tableRowAmount">
-      <td style="padding:6px" class="rightAlign"><strong>Balance: </strong>
-        <apex:outputText value="${0,number,###,###,##0.00}">
-          <apex:param value="{!loopTotal}" />
-        </apex:outputText></td>
-    </tr>
-  </table>
-  <br/>
-  </apex:repeat>
-  </apex:outputText>
-<apex:outputText rendered="{!IF(totalRecords == 0,true,false)}">
-    <table>
-    <tr>
-        <td>No Records Found</td>
-    </tr>
-    </table>
-</apex:outputText>
-</body>
+        </table>
+        <br />
+      </apex:repeat>
+    </apex:outputText>
+    <apex:outputText rendered="{!IF(totalRecords == 0,true,false)}">
+      <table>
+        <tr>
+          <td>No Records Found</td>
+        </tr>
+      </table>
+    </apex:outputText>
+  </body>
 </apex:page>

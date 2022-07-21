@@ -1,142 +1,147 @@
-<apex:page StandardController="Boat_Appraisal__c" Extensions="BoatAppraisal_Ext"
-           renderAs="pdf">
-         
-           <apex:stylesheet value="{!URLFOR($Resource.LegendPDF,'css/invoicePDF.min.css')}" />
-           <apex:stylesheet value="{!URLFOR($Resource.LegendPDF,'css/invoice_page_size.min.css')}" />
-           
-            <img style="float: right;" src="{!URLFOR($Resource.LegendPDF,'image/logo_220x26.png')}" />
-            
-    <h1><apex:outputText style="color:#34AAEB" value="Boat Appraisal"/></h1>  
-    
-     <h2><apex:outputText style="color:#34AAEB" value="Boat"/></h2> 
-     <div style="width:49%;display:inline-block;line-height: 1.8;">
-         <p><b>Boat Year: </b><apex:outputfield value="{!Boat_Appraisal__c.Boat_Year__c}"/></p>
-         <p><b>Boat Make: </b>{!Boat_Appraisal__c.Boat_Make__c}</p>
-         <p><b>Boat Model: </b>{!Boat_Appraisal__c.Boat_Model__c}</p>
-         <p><b>Boat Serial Number: </b>{!Boat_Appraisal__c.Boat_Serial_Number__c}</p>
-         <p><b>Boat Length: </b>{!Boat_Appraisal__c.Boat_Length__c}</p>
-         <p><b>Boat Material: </b>{!Boat_Appraisal__c.Boat_Material__c}</p>
-         <p><b>Does Boat Leak?: </b>{!Boat_Appraisal__c.Does_Boat_Leak__c}</p>
-         <p><b>Any Hull Damage?: </b>{!Boat_Appraisal__c.Any_Hull_Damage__c}</p>
-         <p><b>Windshield/Screen: </b>{!Boat_Appraisal__c.Windshield_screen__c}</p>
-         <p><b>Bilge Pump: </b>{!Boat_Appraisal__c.Bilge_Pump_Working__c}</p>
-         <p><b>Make of Fishfinder: </b>{!Boat_Appraisal__c.Make_of_Fishfinder__c}</p>
-         <p><b>Does Fishfinder Work?: </b>{!Boat_Appraisal__c.Does_Fishfinder_Work__c}</p>
-         <p><b>Number of Seats: </b>{!Boat_Appraisal__c.Number_of_Seats__c}</p>
-         <p><b>Condition of Seats: </b>{!Boat_Appraisal__c.Condition_of_Seats__c}</p>
-         <p><b>Condition of Trolling Motor: </b>{!Boat_Appraisal__c.Condition_of_Trolling_Motor__c}</p>
-         <p><b>Trolling Motor Make: </b>{!Boat_Appraisal__c.Trolling_Motor_Make__c}</p>
-         <p><b>Trolling Motor Model: </b>{!Boat_Appraisal__c.Trolling_Motor_Model__c}</p>
-         <br/>           
-     </div>
-      <div style="width:49%;display:inline-block;line-height: 1.8;">
-         <p><b>Is Fiberglass Blistering?: </b>{!Boat_Appraisal__c.Is_Fiberglass_Blistering__c}</p>
-         <p><b>Condition of Paint: </b>{!Boat_Appraisal__c.Condition_of_Paint__c}</p>
-         <p><b>Condition of Decals: </b>{!Boat_Appraisal__c.Condition_of_Decals__c}</p>
-         <p><b>Does Boat Have A Floor?: </b>{!Boat_Appraisal__c.Does_Boat_Have_A_Floor__c}</p>
-         <p><b>Floor Material: </b>{!Boat_Appraisal__c.Floor_Material__c}</p>
-         <p><b>Condition of Floor: </b>{!Boat_Appraisal__c.Condition_of_Floor__c}</p>
-         <p><b>Condition of Material: </b>{!Boat_Appraisal__c.Condition_of_Material__c}</p>
-         <p><b>Livewell Working?: </b>{!Boat_Appraisal__c.Livewell_Working__c}</p>
-         <p><b>Condition of Material: </b>{!Boat_Appraisal__c.Condition_of_Material__c}</p>
-         <p><b>Condition of Windshield: </b>{!Boat_Appraisal__c.Condition_of_Windshield__c}</p>
-         <p><b>Travel Cover: </b>{!Boat_Appraisal__c.Travel_Cover__c}</p>
-         <p><b>Condition of Cover: </b>{!Boat_Appraisal__c.Condition_of_Cover__c}</p>
-         <p><b>Condition of Top: </b>{!Boat_Appraisal__c.Condition_of_Top__c}</p>
-         <p><b>Condition of Curtains: </b>{!Boat_Appraisal__c.Condition_of_Curtains__c}</p>
-         <p><b>Aft Side and Back Curtains: </b>{!Boat_Appraisal__c.Aft_Side_Back_Curtains__c}</p>
-         <p><b>Problems with Current Boat Package?: </b>{!Boat_Appraisal__c.Problems_with_Current_Boat_Package__c}</p>
-         <p><b>Boat Package Problem Description: </b>{!Boat_Appraisal__c.Boat_Package_Problem_Description__c}</p>
-     </div>  
-     
-    <br/><hr/><br/>
-    
-    <h2><apex:outputText style="color:#34AAEB" value="Motor"/></h2> 
-     <div style="width:49%;display:inline-block;line-height: 1.8;">
-         <p><b>Motor Year: </b><apex:outputfield value="{!Boat_Appraisal__c.Motor_Year__c}"/></p>
-         <p><b>Motor Make: </b>{!Boat_Appraisal__c.Motor_Make__c}</p>
-         <p><b>Motor Model: </b>{!Boat_Appraisal__c.Motor_Model__c}</p>
-         <p><b>Motor Serial Number: </b>{!Boat_Appraisal__c.Motor_Serial_Number__c}</p>
-         <p><b>Horsepower: </b>{!Boat_Appraisal__c.Horsepower__c}</p>
-         <p><b>Engine Stroke Type: </b>{!Boat_Appraisal__c.Engine_Stroke_Type__c}</p>
-         <p><b>Does Motor Run Well?: </b>{!Boat_Appraisal__c.Does_Motor_Run_Well__c}</p>
-         <p><b>Power Tilt and Trim: </b>{!Boat_Appraisal__c.Power_Tilt_Trim__c}</p>         
-     </div>
-      <div style="width:49%;display:inline-block;line-height: 1.8;">
-         <p><b>Extended Warranty: </b>{!Boat_Appraisal__c.Extended_Warranty__c}</p>
-         <p><b>Electric Start: </b>{!Boat_Appraisal__c.Electric_Start__c}</p>
-         <p><b>Battery: </b>{!Boat_Appraisal__c.Battery__c}</p>
-         <p><b>Last Maintenance Date: </b><apex:outputfield value="{!Boat_Appraisal__c.Last_Maintenance_Date__c}"/></p>
-         <p><b>Type of Prop: </b>{!Boat_Appraisal__c.Type_of_Prop__c}</p>
-         <p><b>Condition of Prop: </b>{!Boat_Appraisal__c.Condition_of_Prop__c}</p>
-         <p><b>Notes on Motor: </b>{!Boat_Appraisal__c.Notes_on_Motor__c}</p>
-         <p><b>Does Tilt and Trim Work?: </b>{!Boat_Appraisal__c.Does_Tilt_Trim_Work__c}</p>
-     </div>
-        
-        <br/><hr/><br/>
-        
-     
-     <h2><apex:outputText style="color:#34AAEB" value="Trailer"/></h2> 
-     <div style="width:49%;display:inline-block;line-height: 1.8;">
-         <p><b>Trailer Year: </b><apex:outputfield value="{!Boat_Appraisal__c.Trailer_Year__c}"/></p>
-         <p><b>Trailer Make: </b>{!Boat_Appraisal__c.Trailer_Make__c}</p>
-         <p><b>Trailer Model: </b>{!Boat_Appraisal__c.Trailer_Model__c}</p>
-         <p><b>Trailer Capacity: </b>{!Boat_Appraisal__c.Trailer_Capacity__c}</p>
-         <p><b>Trailer Type: </b>{!Boat_Appraisal__c.Trailer_Type__c}</p>
-         <p><b>Condition of Trailer: </b>{!Boat_Appraisal__c.Condition_of_Trailer__c}</p>        
-     </div>
-      <div style="width:49%;display:inline-block;line-height: 1.8;">
-         <p><b>Load Guides: </b>{!Boat_Appraisal__c.Load_Guides__c}</p>
-         <p><b>Swing Tongue: </b>{!Boat_Appraisal__c.Swing_Tongue__c}</p>
-         <p><b>Jack and Dolly: </b>{!Boat_Appraisal__c.Jack_and_Dolly__c}</p>
-         <p><b>Galvanized Trailer: </b>{!Boat_Appraisal__c.Galvanized_Trailer__c}</p>
-         <p><b>Do Lights Work?: </b>{!Boat_Appraisal__c.Do_Lights_Work__c}</p>
-         <p><b>Condition of Tires: </b>{!Boat_Appraisal__c.Condition_of_Tires__c}</p>
-     </div>
-     
-      <br/><hr/><br/>
-      
-      <div style="page-break-after: always"/>
-      
-      <h2><apex:outputText style="color:#34AAEB" value="Valuation"/></h2> 
-     <div style="width:49%;display:inline-block;line-height: 1.8;">
-         <p><b>Comparable New: </b><apex:outputfield value="{!Boat_Appraisal__c.Comparable_New__c}"/></p>
-         <p><b>Family/Friend Boat Value: </b><apex:outputfield value="{!Boat_Appraisal__c.Family_Friend_Boat_Value__c}"/></p>
-         <p><b>Internet Search Value: </b><apex:outputfield value="{!Boat_Appraisal__c.Internet_Search_Value__c}"/></p>
-         <p><b>Estimated Trade Value Before Inspection: </b><apex:outputfield value="{!Boat_Appraisal__c.Estimated_Trade_Value_Before_Inspection__c}"/></p>   
-     </div>
-      <div style="width:49%;display:inline-block;line-height: 1.8;">
-         <p><b>Boat Appraisal Name: </b>{!Boat_Appraisal__c.Name}</p>
-         <p><b>Customer: </b><apex:outputfield value="{!Boat_Appraisal__c.Customer__c}"/></p>
-         <p><b>Related to Opportunity: </b><apex:outputfield value="{!Boat_Appraisal__c.Related_to_Opportunity__c}"/></p>
-     </div>
-     
-      <br/><hr/><br/>
-      
-    
+<apex:page StandardController="Boat_Appraisal__c" Extensions="BoatAppraisal_Ext" renderAs="pdf">
+  <apex:stylesheet value="{!URLFOR($Resource.LegendPDF,'css/invoicePDF.min.css')}" />
+  <apex:stylesheet value="{!URLFOR($Resource.LegendPDF,'css/invoice_page_size.min.css')}" />
 
-        
-        <h2><apex:outputText style="color:#34AAEB" value="Signature"/></h2>
-        <div style="border-style: groove; text-align:justify">
-        <apex:outputText value="The statements made on this appraisal are true & accurate to the best of my knowledge. 
+  <img style="float: right" src="{!URLFOR($Resource.LegendPDF,'image/logo_220x26.png')}" />
+
+  <h1><apex:outputText style="color: #34aaeb" value="Boat Appraisal" /></h1>
+
+  <h2><apex:outputText style="color: #34aaeb" value="Boat" /></h2>
+  <div style="width: 49%; display: inline-block; line-height: 1.8">
+    <p><b>Boat Year: </b><apex:outputfield value="{!Boat_Appraisal__c.Boat_Year__c}" /></p>
+    <p><b>Boat Make: </b>{!Boat_Appraisal__c.Boat_Make__c}</p>
+    <p><b>Boat Model: </b>{!Boat_Appraisal__c.Boat_Model__c}</p>
+    <p><b>Boat Serial Number: </b>{!Boat_Appraisal__c.Boat_Serial_Number__c}</p>
+    <p><b>Boat Length: </b>{!Boat_Appraisal__c.Boat_Length__c}</p>
+    <p><b>Boat Material: </b>{!Boat_Appraisal__c.Boat_Material__c}</p>
+    <p><b>Does Boat Leak?: </b>{!Boat_Appraisal__c.Does_Boat_Leak__c}</p>
+    <p><b>Any Hull Damage?: </b>{!Boat_Appraisal__c.Any_Hull_Damage__c}</p>
+    <p><b>Windshield/Screen: </b>{!Boat_Appraisal__c.Windshield_screen__c}</p>
+    <p><b>Bilge Pump: </b>{!Boat_Appraisal__c.Bilge_Pump_Working__c}</p>
+    <p><b>Make of Fishfinder: </b>{!Boat_Appraisal__c.Make_of_Fishfinder__c}</p>
+    <p><b>Does Fishfinder Work?: </b>{!Boat_Appraisal__c.Does_Fishfinder_Work__c}</p>
+    <p><b>Number of Seats: </b>{!Boat_Appraisal__c.Number_of_Seats__c}</p>
+    <p><b>Condition of Seats: </b>{!Boat_Appraisal__c.Condition_of_Seats__c}</p>
+    <p><b>Condition of Trolling Motor: </b>{!Boat_Appraisal__c.Condition_of_Trolling_Motor__c}</p>
+    <p><b>Trolling Motor Make: </b>{!Boat_Appraisal__c.Trolling_Motor_Make__c}</p>
+    <p><b>Trolling Motor Model: </b>{!Boat_Appraisal__c.Trolling_Motor_Model__c}</p>
+    <br />
+  </div>
+  <div style="width: 49%; display: inline-block; line-height: 1.8">
+    <p><b>Is Fiberglass Blistering?: </b>{!Boat_Appraisal__c.Is_Fiberglass_Blistering__c}</p>
+    <p><b>Condition of Paint: </b>{!Boat_Appraisal__c.Condition_of_Paint__c}</p>
+    <p><b>Condition of Decals: </b>{!Boat_Appraisal__c.Condition_of_Decals__c}</p>
+    <p><b>Does Boat Have A Floor?: </b>{!Boat_Appraisal__c.Does_Boat_Have_A_Floor__c}</p>
+    <p><b>Floor Material: </b>{!Boat_Appraisal__c.Floor_Material__c}</p>
+    <p><b>Condition of Floor: </b>{!Boat_Appraisal__c.Condition_of_Floor__c}</p>
+    <p><b>Condition of Material: </b>{!Boat_Appraisal__c.Condition_of_Material__c}</p>
+    <p><b>Livewell Working?: </b>{!Boat_Appraisal__c.Livewell_Working__c}</p>
+    <p><b>Condition of Material: </b>{!Boat_Appraisal__c.Condition_of_Material__c}</p>
+    <p><b>Condition of Windshield: </b>{!Boat_Appraisal__c.Condition_of_Windshield__c}</p>
+    <p><b>Travel Cover: </b>{!Boat_Appraisal__c.Travel_Cover__c}</p>
+    <p><b>Condition of Cover: </b>{!Boat_Appraisal__c.Condition_of_Cover__c}</p>
+    <p><b>Condition of Top: </b>{!Boat_Appraisal__c.Condition_of_Top__c}</p>
+    <p><b>Condition of Curtains: </b>{!Boat_Appraisal__c.Condition_of_Curtains__c}</p>
+    <p><b>Aft Side and Back Curtains: </b>{!Boat_Appraisal__c.Aft_Side_Back_Curtains__c}</p>
+    <p><b>Problems with Current Boat Package?: </b>{!Boat_Appraisal__c.Problems_with_Current_Boat_Package__c}</p>
+    <p><b>Boat Package Problem Description: </b>{!Boat_Appraisal__c.Boat_Package_Problem_Description__c}</p>
+  </div>
+
+  <br />
+  <hr />
+  <br />
+
+  <h2><apex:outputText style="color: #34aaeb" value="Motor" /></h2>
+  <div style="width: 49%; display: inline-block; line-height: 1.8">
+    <p><b>Motor Year: </b><apex:outputfield value="{!Boat_Appraisal__c.Motor_Year__c}" /></p>
+    <p><b>Motor Make: </b>{!Boat_Appraisal__c.Motor_Make__c}</p>
+    <p><b>Motor Model: </b>{!Boat_Appraisal__c.Motor_Model__c}</p>
+    <p><b>Motor Serial Number: </b>{!Boat_Appraisal__c.Motor_Serial_Number__c}</p>
+    <p><b>Horsepower: </b>{!Boat_Appraisal__c.Horsepower__c}</p>
+    <p><b>Engine Stroke Type: </b>{!Boat_Appraisal__c.Engine_Stroke_Type__c}</p>
+    <p><b>Does Motor Run Well?: </b>{!Boat_Appraisal__c.Does_Motor_Run_Well__c}</p>
+    <p><b>Power Tilt and Trim: </b>{!Boat_Appraisal__c.Power_Tilt_Trim__c}</p>
+  </div>
+  <div style="width: 49%; display: inline-block; line-height: 1.8">
+    <p><b>Extended Warranty: </b>{!Boat_Appraisal__c.Extended_Warranty__c}</p>
+    <p><b>Electric Start: </b>{!Boat_Appraisal__c.Electric_Start__c}</p>
+    <p><b>Battery: </b>{!Boat_Appraisal__c.Battery__c}</p>
+    <p><b>Last Maintenance Date: </b><apex:outputfield value="{!Boat_Appraisal__c.Last_Maintenance_Date__c}" /></p>
+    <p><b>Type of Prop: </b>{!Boat_Appraisal__c.Type_of_Prop__c}</p>
+    <p><b>Condition of Prop: </b>{!Boat_Appraisal__c.Condition_of_Prop__c}</p>
+    <p><b>Notes on Motor: </b>{!Boat_Appraisal__c.Notes_on_Motor__c}</p>
+    <p><b>Does Tilt and Trim Work?: </b>{!Boat_Appraisal__c.Does_Tilt_Trim_Work__c}</p>
+  </div>
+
+  <br />
+  <hr />
+  <br />
+
+  <h2><apex:outputText style="color: #34aaeb" value="Trailer" /></h2>
+  <div style="width: 49%; display: inline-block; line-height: 1.8">
+    <p><b>Trailer Year: </b><apex:outputfield value="{!Boat_Appraisal__c.Trailer_Year__c}" /></p>
+    <p><b>Trailer Make: </b>{!Boat_Appraisal__c.Trailer_Make__c}</p>
+    <p><b>Trailer Model: </b>{!Boat_Appraisal__c.Trailer_Model__c}</p>
+    <p><b>Trailer Capacity: </b>{!Boat_Appraisal__c.Trailer_Capacity__c}</p>
+    <p><b>Trailer Type: </b>{!Boat_Appraisal__c.Trailer_Type__c}</p>
+    <p><b>Condition of Trailer: </b>{!Boat_Appraisal__c.Condition_of_Trailer__c}</p>
+  </div>
+  <div style="width: 49%; display: inline-block; line-height: 1.8">
+    <p><b>Load Guides: </b>{!Boat_Appraisal__c.Load_Guides__c}</p>
+    <p><b>Swing Tongue: </b>{!Boat_Appraisal__c.Swing_Tongue__c}</p>
+    <p><b>Jack and Dolly: </b>{!Boat_Appraisal__c.Jack_and_Dolly__c}</p>
+    <p><b>Galvanized Trailer: </b>{!Boat_Appraisal__c.Galvanized_Trailer__c}</p>
+    <p><b>Do Lights Work?: </b>{!Boat_Appraisal__c.Do_Lights_Work__c}</p>
+    <p><b>Condition of Tires: </b>{!Boat_Appraisal__c.Condition_of_Tires__c}</p>
+  </div>
+
+  <br />
+  <hr />
+  <br />
+
+  <div style="page-break-after: always" />
+
+  <h2><apex:outputText style="color: #34aaeb" value="Valuation" /></h2>
+  <div style="width: 49%; display: inline-block; line-height: 1.8">
+    <p><b>Comparable New: </b><apex:outputfield value="{!Boat_Appraisal__c.Comparable_New__c}" /></p>
+    <p>
+      <b>Family/Friend Boat Value: </b><apex:outputfield value="{!Boat_Appraisal__c.Family_Friend_Boat_Value__c}" />
+    </p>
+    <p><b>Internet Search Value: </b><apex:outputfield value="{!Boat_Appraisal__c.Internet_Search_Value__c}" /></p>
+    <p>
+      <b>Estimated Trade Value Before Inspection: </b
+      ><apex:outputfield value="{!Boat_Appraisal__c.Estimated_Trade_Value_Before_Inspection__c}" />
+    </p>
+  </div>
+  <div style="width: 49%; display: inline-block; line-height: 1.8">
+    <p><b>Boat Appraisal Name: </b>{!Boat_Appraisal__c.Name}</p>
+    <p><b>Customer: </b><apex:outputfield value="{!Boat_Appraisal__c.Customer__c}" /></p>
+    <p><b>Related to Opportunity: </b><apex:outputfield value="{!Boat_Appraisal__c.Related_to_Opportunity__c}" /></p>
+  </div>
+
+  <br />
+  <hr />
+  <br />
+
+  <h2><apex:outputText style="color: #34aaeb" value="Signature" /></h2>
+  <div style="border-style: groove; text-align: justify">
+    <apex:outputText
+      value="The statements made on this appraisal are true & accurate to the best of my knowledge. 
         I understand and agree that this appraisal is approximate only & subject to a visual & running inspection or
         any adjustment due to any false criteria as described above on value by Legend Boats (Duhamel and Dewar Inc.) 
         as being absolute and just & must be agreed to by both parties. Customer is responsible to pay for any repairs and the remedy any issues or problems 
-        not described above or a new trade value would have to be determined between both parties."/>
-        </div>
-       <apex:pageBlock >
-        <apex:pageBlockSection columns="2">        
-            <apex:outputPanel rendered="{! NOT( ISNULL(signatureId)) }">
-                <apex:image url="/servlet/servlet.FileDownload?file={!signatureId}" width="350" height="150" />
-            </apex:outputPanel>
-        </apex:pageBlockSection>
-        </apex:pageBlock>
-        <div style="width:300px">
-        <hr/>
-        Customer Signature
-        </div>
-        
-        
-    
-    
+        not described above or a new trade value would have to be determined between both parties."
+    />
+  </div>
+  <apex:pageBlock>
+    <apex:pageBlockSection columns="2">
+      <apex:outputPanel rendered="{! NOT( ISNULL(signatureId)) }">
+        <apex:image url="/servlet/servlet.FileDownload?file={!signatureId}" width="350" height="150" />
+      </apex:outputPanel>
+    </apex:pageBlockSection>
+  </apex:pageBlock>
+  <div style="width: 300px">
+    <hr />
+    Customer Signature
+  </div>
 </apex:page>

@@ -1,9 +1,10 @@
-<apex:page controller="Opportunity_PartnerQuote_Ext"
-           showHeader="false"
-           standardStylesheets="false"
-           sidebar="false"
-           renderAs="pdf">
-
+<apex:page
+  controller="Opportunity_PartnerQuote_Ext"
+  showHeader="false"
+  standardStylesheets="false"
+  sidebar="false"
+  renderAs="pdf"
+>
   <apex:stylesheet value="{!URLFOR($Resource.LegendPDF,'css/quote_page.css')}" />
   <apex:stylesheet value="{!URLFOR($Resource.LegendPDF,'css/invoicePDF.min.css')}" />
   <apex:stylesheet value="{!URLFOR($Resource.LegendPDF,'css/partner_quote.min.css')}" />
@@ -12,15 +13,12 @@
     <span class="page-number">Page</span>
   </div>
 
-  <div id="footerLeft">
-
-  </div>
+  <div id="footerLeft"></div>
 
   <div id="footerCenter">
     Thank you for choosing <b>{!partner.Name}</b> to help you create memories on the water!
     <p>
-      {!partner.BillingStreet}, {!partner.BillingCity},
-      {!partner.BillingState}, {!partner.BillingCountry},
+      {!partner.BillingStreet}, {!partner.BillingCity}, {!partner.BillingState}, {!partner.BillingCountry},
       {!partner.BillingPostalCode}
     </p>
   </div>
@@ -28,54 +26,46 @@
   <page size="A4">
     <!-- ++++++++++++++++++++++++++++++++++++++ HEADER 1 ++++++++++++++++++++++++ -->
     <div class="row header1">
-
-      <div class="left" >
-        <apex:outputText value="{!partner.Company_Logo__c}" escape="false"/>
+      <div class="left">
+        <apex:outputText value="{!partner.Company_Logo__c}" escape="false" />
       </div>
 
       <div class="right">
-
         <div>
           <img src="{!URLFOR($Resource.LegendPDF,'Icons/Email.png')}" />
-          <p>
-              {!partner.AccountEmail__c}
-          </p>
+          <p>{!partner.AccountEmail__c}</p>
         </div>
 
         <div>
           <img src="{!URLFOR($Resource.LegendPDF,'Icons/Phone.png')}" />
           <p>
             phone
-            <span style="float:right;padding-right:25px;">
-              {!partner.Phone}
-            </span>
+            <span style="float: right; padding-right: 25px"> {!partner.Phone} </span>
           </p>
           <p>
             fax
-            <span style="float:right;padding-right:25px;">
-              {!partner.Fax}
-            </span>
+            <span style="float: right; padding-right: 25px"> {!partner.Fax} </span>
           </p>
         </div>
 
-        <div style="position:relative">
+        <div style="position: relative">
           <img src="{!URLFOR($Resource.LegendPDF,'Icons/WorldWideWeb.png')}" />
           <p>{!partner.Website}</p>
           <apex:outputField value="{!opp.Invoice_Number_BarCode__c}"></apex:outputField>
           <p class="invoice_number">{!qt.QuoteNumber}</p>
           <!-- <apex:outputField value="{!boatBuilder.opportunity.BarCode__c}"></apex:outputField> -->
-           <!-- <p class="invoice_number">{!Opportunity.InvoiceNumber__c}</p> -->
+          <!-- <p class="invoice_number">{!Opportunity.InvoiceNumber__c}</p> -->
         </div>
-
-      </div><!--header right close -->
-    </div><!-- /header1 -->
+      </div>
+      <!--header right close -->
+    </div>
+    <!-- /header1 -->
     <!-- ================================ /HEADER 1 ============================  -->
 
     <!-- ++++++++++++++++++++++++++++++++ HEADER 2 ++++++++++++++++++++++++++++++ -->
     <div class="row header2 {!IF(displayPayments, ' payments-visible', '')}">
-
       <div>
-        <p >
+        <p>
           <img src="{!URLFOR($Resource.LegendPDF,'Icons/Invoice.png')}" />
           QUOTE FOR:
         </p>
@@ -96,45 +86,46 @@
                   <img src="{!URLFOR($Resource.LegendPDF,'image/calendar_trans.png')}" width="25" height="25" />
                 </td>
               </tr>
-
             </table>
 
             <div style="">
               <table>
                 <tr>
-                    <td>
-                        <p>Quote Total:</p>
-                        <p>
-                         <apex:outputText value="${0, number, ###,###,###,##0.00}">
-                            <apex:param value="{!qt.Grand_Total__c}"/>
-                         </apex:outputText>
-                         </p>
-                    </td>
-                    <td>
-                        <p>Quoted On:</p>
-                        <p>
-                          <apex:outputText value="{0, date, MMMM dd, yyyy}">
-                                <apex:param value="{!NOW()}" />
-                          </apex:outputText>
-                        </p>
-                    </td>
-                    <td>
-                        <p>Valid Until: </p>
-                        <p>
-                           <apex:outputText value="{0, date, MMMM dd, yyyy}">
-                                <apex:param value="{!expireDate}" />
-                          </apex:outputText> *
-                        </p>
-                    </td>
+                  <td>
+                    <p>Quote Total:</p>
+                    <p>
+                      <apex:outputText value="${0, number, ###,###,###,##0.00}">
+                        <apex:param value="{!qt.Grand_Total__c}" />
+                      </apex:outputText>
+                    </p>
+                  </td>
+                  <td>
+                    <p>Quoted On:</p>
+                    <p>
+                      <apex:outputText value="{0, date, MMMM dd, yyyy}">
+                        <apex:param value="{!NOW()}" />
+                      </apex:outputText>
+                    </p>
+                  </td>
+                  <td>
+                    <p>Valid Until:</p>
+                    <p>
+                      <apex:outputText value="{0, date, MMMM dd, yyyy}">
+                        <apex:param value="{!expireDate}" />
+                      </apex:outputText>
+                      *
+                    </p>
+                  </td>
                 </tr>
                 <tr>
                   <td>
                     Weekly:<br />
                     <span>
                       <apex:outputText value="${0, number, ###,###,###,##0.00}">
-                        <apex:param value="{!qt.Weekly_Payment__c}"/>
+                        <apex:param value="{!qt.Weekly_Payment__c}" />
                       </apex:outputText>
-                    </span> **
+                    </span>
+                    **
                   </td>
                   <td>
                     Bi-Weekly:<br />
@@ -142,7 +133,8 @@
                       <apex:outputText value="${0, number, ###,###,###,##0.00}">
                         <apex:param value="{!qt.Bi_Weekly_Payment__c}" />
                       </apex:outputText>
-                    </span> **
+                    </span>
+                    **
                   </td>
                   <td>
                     Monthly:<br />
@@ -150,7 +142,8 @@
                       <apex:outputText value="${0, number, ###,###,###,##0.00}">
                         <apex:param value="{!qt.Monthly_Payment__c}" />
                       </apex:outputText>
-                    </span> **
+                    </span>
+                    **
                   </td>
                 </tr>
               </table>
@@ -167,19 +160,13 @@
 
     <!-- +++++++++++++++++++++++++++++ CUSTOMER INFO ++++++++++++++++++++++++++++ -->
     <div class="row customer_info">
-
       <!-- +++++++++++++++++ ACCOUNT INFO +++++++++++++++++++++ -->
 
-      <div class="col col40" style="margin-bottom:10px">
-        <p class="buyer_name">
-          {!UPPER(customer.Name)}
-        </p>
+      <div class="col col40" style="margin-bottom: 10px">
+        <p class="buyer_name">{!UPPER(customer.Name)}</p>
         <p class="buyer_address">
-          {!customer.BillingStreet}<br />
-          {!customer.BillingCity},
-          {!customer.BillingState},
-          {!customer.BillingPostalCode},
-          {!customer.BillingCountry}<br />
+          {!customer.BillingStreet}<br /> {!customer.BillingCity}, {!customer.BillingState},
+          {!customer.BillingPostalCode}, {!customer.BillingCountry}<br />
         </p>
         <div class="buyer_details">
           <table>
@@ -188,13 +175,15 @@
                 <img src="{!URLFOR($Resource.LegendPDF,'Icons/Email.png')}" />
               </td>
               <td>
-                <apex:outputText value="{! IF( customer.IsPersonAccount,
+                <apex:outputText
+                  value="{! IF( customer.IsPersonAccount,
                                                buyer.Email,
-                                               customer.AccountEmail__c)}" />
+                                               customer.AccountEmail__c)}"
+                />
               </td>
               <apex:outputPanel layout="none" rendered="{! customer.IsPersonAccount}">
                 <td class="icon">
-                   <img src="{!URLFOR($Resource.LegendPDF,'Icons/Birthday.png')}" />
+                  <img src="{!URLFOR($Resource.LegendPDF,'Icons/Birthday.png')}" />
                 </td>
                 <td>
                   <apex:outputText value="{0, date, MMMM dd yyyy}">
@@ -207,26 +196,20 @@
               <td class="icon">
                 <img src="{!URLFOR($Resource.LegendPDF,'Icons/Cell.png')}" />
               </td>
-              <td>
-                {!customer.Phone}
-              </td>
+              <td>{!customer.Phone}</td>
               <apex:outputPanel layout="none" rendered="{! customer.IsPersonAccount}">
                 <td class="icon">
                   <img src="{!URLFOR($Resource.LegendPDF,'Icons/DriverLicense.png')}" />
                 </td>
-                <td>
-                  {!customer.Drivers_License__c}
-                </td>
+                <td>{!customer.Drivers_License__c}</td>
               </apex:outputPanel>
             </tr>
           </table>
           <apex:outputPanel layout="none" rendered="{! customer.Tax_Exempt_Status_Card_Number__pc != null}">
             <table>
               <tr>
-                <td style="width: 20%;font-size:10px;color:#777; font-weight: bold;">
-                  Tax Ex. #
-                </td>
-                <td style="width:80%;font-size:10px;color:#777;">
+                <td style="width: 20%; font-size: 10px; color: #777; font-weight: bold">Tax Ex. #</td>
+                <td style="width: 80%; font-size: 10px; color: #777">
                   {! customer.Tax_Exempt_Status_Card_Number__pc }
                 </td>
               </tr>
@@ -237,15 +220,10 @@
 
       <!-- +++++ Business Account +++++ -->
       <apex:outputPanel layout="none" rendered="{! !customer.IsPersonAccount}">
-        <div class="col col40" >
-          <p class="buyer_name">
-            {!UPPER(buyer.Name)}
-          </p>
+        <div class="col col40">
+          <p class="buyer_name">{!UPPER(buyer.Name)}</p>
           <p class="buyer_address">
-            {!buyer.MailingStreet},
-            {!buyer.MailingCity},
-            {!buyer.MailingState}
-            {!buyer.MailingPostalCode},
+            {!buyer.MailingStreet}, {!buyer.MailingCity}, {!buyer.MailingState} {!buyer.MailingPostalCode},
             {!buyer.MailingCountry}
           </p>
           <div class="buyer_details">
@@ -254,9 +232,7 @@
                 <td class="icon">
                   <img src="{!URLFOR($Resource.LegendPDF,'Icons/Email.png')}" />
                 </td>
-                <td>
-                  {!buyer.Email}
-                </td>
+                <td>{!buyer.Email}</td>
                 <td class="icon">
                   <img src="{!URLFOR($Resource.LegendPDF,'Icons/Birthday.png')}" />
                 </td>
@@ -270,9 +246,7 @@
                 <td class="icon">
                   <img src="{!URLFOR($Resource.LegendPDF,'Icons/Cell.png')}" />
                 </td>
-                <td>
-                  {!buyer.Phone}
-                </td>
+                <td>{!buyer.Phone}</td>
                 <!-- <td class="icon">
                   <img src="{!URLFOR($Resource.LegendPDF,'Icons/DriverLicense.png')}" />
                 </td>
@@ -284,12 +258,8 @@
             <apex:outputPanel layout="none" rendered="{!buyer.Tax_Exempt_Status_Card_Number__c != null}">
               <table>
                 <tr>
-                  <td style="width: 20%;font-size:10px;color:#777; font-weight: bold;">
-                    Tax Ex. #
-                  </td>
-                  <td style="width:80%;font-size:10px;color:#777;">
-                    {! buyer.Tax_Exempt_Status_Card_Number__c }
-                  </td>
+                  <td style="width: 20%; font-size: 10px; color: #777; font-weight: bold">Tax Ex. #</td>
+                  <td style="width: 80%; font-size: 10px; color: #777">{! buyer.Tax_Exempt_Status_Card_Number__c }</td>
                 </tr>
               </table>
             </apex:outputPanel>
@@ -304,81 +274,63 @@
 
       <!-- ++++++++++++++++++ CO-BUYER INFO ++++++++++++++++ -->
       <apex:outputPanel layout="none" rendered="{!customer.IsPersonAccount}">
-        <div class="col col40" >
+        <div class="col col40">
           <apex:outputPanel layout="none" rendered="{!cobuyer != null}">
-
-              <p class="buyer_name">
-                {!UPPER(cobuyer.Name)}
-              </p>
-              <p class="buyer_address">
-                {!cobuyer.MailingStreet},
-                {!cobuyer.MailingCity},
-                {!cobuyer.MailingState}
-                {!cobuyer.MailingPostalCode},
-                {!cobuyer.MailingCountry}
-              </p>
-              <div class="buyer_details">
-                <table>
-                  <tr>
-                    <td class="icon">
-                      <img src="{!URLFOR($Resource.LegendPDF,'Icons/Email.png')}" />
-                    </td>
-                    <td>
-                      {!cobuyer.Email}
-                    </td>
-                    <td class="icon">
-                      <img src="{!URLFOR($Resource.LegendPDF,'Icons/Birthday.png')}" />
-                    </td>
-                    <td>
-                      <apex:outputText value="{0, date, MMMM dd yyyy}">
-                        <apex:param value="{!cobuyer.Birthdate}" />
-                      </apex:outputText>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="icon">
-                      <img src="{!URLFOR($Resource.LegendPDF,'Icons/Cell.png')}" />
-                    </td>
-                    <td>
-                      {!cobuyer.Phone}
-                    </td>
-                    <!-- <td class="icon">
+            <p class="buyer_name">{!UPPER(cobuyer.Name)}</p>
+            <p class="buyer_address">
+              {!cobuyer.MailingStreet}, {!cobuyer.MailingCity}, {!cobuyer.MailingState} {!cobuyer.MailingPostalCode},
+              {!cobuyer.MailingCountry}
+            </p>
+            <div class="buyer_details">
+              <table>
+                <tr>
+                  <td class="icon">
+                    <img src="{!URLFOR($Resource.LegendPDF,'Icons/Email.png')}" />
+                  </td>
+                  <td>{!cobuyer.Email}</td>
+                  <td class="icon">
+                    <img src="{!URLFOR($Resource.LegendPDF,'Icons/Birthday.png')}" />
+                  </td>
+                  <td>
+                    <apex:outputText value="{0, date, MMMM dd yyyy}">
+                      <apex:param value="{!cobuyer.Birthdate}" />
+                    </apex:outputText>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="icon">
+                    <img src="{!URLFOR($Resource.LegendPDF,'Icons/Cell.png')}" />
+                  </td>
+                  <td>{!cobuyer.Phone}</td>
+                  <!-- <td class="icon">
                       <img src="{!URLFOR($Resource.LegendPDF,'Icons/DriverLicense.png')}" />
                     </td>
                     <td>
                       {!Opportunity.Account.Drivers_License__c}
                     </td> -->
+                </tr>
+              </table>
+              <apex:outputPanel layout="none" rendered="{!cobuyer.Tax_Exempt_Status_Card_Number__c != null}">
+                <table>
+                  <tr>
+                    <td style="width: 20%; font-size: 10px; color: #777; font-weight: bold">Tax Ex. #</td>
+                    <td style="width: 80%; font-size: 10px; color: #777">
+                      {! cobuyer.Tax_Exempt_Status_Card_Number__c }
+                    </td>
                   </tr>
                 </table>
-                <apex:outputPanel layout="none" rendered="{!cobuyer.Tax_Exempt_Status_Card_Number__c != null}">
-                  <table>
-                    <tr>
-                      <td style="width: 20%;font-size:10px;color:#777; font-weight: bold;">
-                        Tax Ex. #
-                      </td>
-                      <td style="width:80%;font-size:10px;color:#777;">
-                        {! cobuyer.Tax_Exempt_Status_Card_Number__c }
-                      </td>
-                    </tr>
-                  </table>
-                </apex:outputPanel>
-              </div>
+              </apex:outputPanel>
+            </div>
           </apex:outputPanel>
-          <apex:outputPanel layout="none" rendered="{!cobuyer = null}">
-            &nbsp;
-          </apex:outputPanel>
+          <apex:outputPanel layout="none" rendered="{!cobuyer = null}"> &nbsp; </apex:outputPanel>
         </div>
       </apex:outputPanel>
       <!-- ================= /CO-BUYER INFO ================= -->
 
       <!-- ++++++++++++++++ MEMORY MAKER ++++++++++++++++++++ -->
-      <div class="col memory_maker" style="border-left:1px solid #CCC; width:19%;">
-        <p>
-          SALES REPRESENTATIVE
-        </p>
-        <p>
-          {!UPPER(opp.Owner.FirstName + ' ' + opp.Owner.LastName)}
-        </p>
+      <div class="col memory_maker" style="border-left: 1px solid #ccc; width: 19%">
+        <p>SALES REPRESENTATIVE</p>
+        <p>{!UPPER(opp.Owner.FirstName + ' ' + opp.Owner.LastName)}</p>
       </div>
       <!-- ================ /MEMORY MAKER =================== -->
     </div>
@@ -386,7 +338,6 @@
 
     <!-- +++++++++++++++++++++++++++++ MAJOR ITEMS TABLE +++++++++++++++++++++++++++++++ -->
     <div class="major_items">
-
       <table class="itemsTable">
         <thead>
           <tr>
@@ -405,7 +356,7 @@
               <td class="w25">&nbsp;</td>
               <td class="w15 right">
                 <apex:outputText value="${0, number, ###,###,###,##0.00}">
-                  <apex:param value="{!theCPQ.theBoat.activePrice}"/>
+                  <apex:param value="{!theCPQ.theBoat.activePrice}" />
                 </apex:outputText>
               </td>
             </tr>
@@ -443,78 +394,76 @@
               <td class="w15 right">$ {!theCPQ.theTrollingMotor.activeUpgradeCost}</td>
             </tr>
           </apex:outputPanel>
-
         </tbody>
-
       </table>
     </div>
     <!-- ========================= /MAJOR ITEMS TABLE ================================== -->
 
     <!-- +++++++++++++++++++++++++ INVOICE BODY +++++++++++++++++++++++++++++++ -->
     <div class="row invoice_body summary_table invoice">
-
       <!-- ++++++++++++++++++++++++++++++ LEFT COLUMN ++++++++++++++++++++++ -->
       <div class="col invoice-body-left">
-
-        <apex:outputPanel >
-
+        <apex:outputPanel>
           <h3>Options &amp; Accessories</h3>
           <apex:variable value="{!1}" var="rowCount" />
           <apex:variable value="{!0}" var="optionsTotal" />
 
           <!-- ++++++++++++++++++ OPTIONS & ACCESSORIES +++++++++++++++++++++++++++++++ -->
           <apex:repeat value="{!theCPQ.saleItems}" var="saleItem">
-
-            <c:Opportunity_PartnerQuoteOptionLine rowClass="itemRow {!IF(MOD(rowCount,2)=0,'even','odd')}"
-                                 quantity="{!saleItem.quantity}"
-                                 description="{!saleItem.productName}"
-                                 cost="{!IF( saleItem.lineTotal=0,'Included',TEXT(saleItem.lineTotal))}" />
+            <c:Opportunity_PartnerQuoteOptionLine
+              rowClass="itemRow {!IF(MOD(rowCount,2)=0,'even','odd')}"
+              quantity="{!saleItem.quantity}"
+              description="{!saleItem.productName}"
+              cost="{!IF( saleItem.lineTotal=0,'Included',TEXT(saleItem.lineTotal))}"
+            />
 
             <apex:variable value="{!rowCount+1}" var="rowCount" />
             <apex:variable value="{!optionsTotal + saleItem.lineTotal }" var="optionsTotal" />
 
             <!-- Features contained inon Item -->
             <apex:repeat value="{!saleItem.premiumPackage}" var="feature">
-              <c:Opportunity_PartnerQuoteOptionLine rowClass="itemRow subItemRow {!IF(MOD(rowCount,2)=0,'even','odd')}"
-                                   description="{!feature}"
-                                   cost="Included" />
+              <c:Opportunity_PartnerQuoteOptionLine
+                rowClass="itemRow subItemRow {!IF(MOD(rowCount,2)=0,'even','odd')}"
+                description="{!feature}"
+                cost="Included"
+              />
 
               <apex:variable value="{!rowCount+1}" var="rowCount" />
             </apex:repeat>
             <!-- /Features contained on Item -->
 
             <apex:repeat value="{!saleItem.subSaleItems}" var="subSaleItem">
-
-              <c:Opportunity_PartnerQuoteOptionLine rowClass="itemRow subItemRow {!IF(MOD(rowCount,2)=0,'even','odd')}"
-                                   quantity="{!subSaleItem.quantity}"
-                                   description="{!subSaleItem.productName}"
-                                   cost="{!IF( subSaleItem.lineTotal=0,'Included',TEXT(subSaleItem.lineTotal))}" />
+              <c:Opportunity_PartnerQuoteOptionLine
+                rowClass="itemRow subItemRow {!IF(MOD(rowCount,2)=0,'even','odd')}"
+                quantity="{!subSaleItem.quantity}"
+                description="{!subSaleItem.productName}"
+                cost="{!IF( subSaleItem.lineTotal=0,'Included',TEXT(subSaleItem.lineTotal))}"
+              />
 
               <apex:variable value="{!rowCount+1}" var="rowCount" />
               <apex:variable value="{!optionsTotal + subSaleItem.lineTotal }" var="optionsTotal" />
-
             </apex:repeat>
-
           </apex:repeat>
           <!-- ============================= /BOAT OPTIONS =================== -->
 
           <!-- +++++++++++++++++++++++++++++ CUSTOM PRODUCTS +++++++++++ -->
           <apex:outputPanel layout="none" rendered="{! NOT( theCPQ.customProducts.empty )}">
             <apex:repeat value="{!theCPQ.customProducts}" var="item">
+              <c:Opportunity_PartnerQuoteOptionLine
+                rowClass="itemRow {!IF(MOD(rowCount,2)=0,'even','odd')}"
+                quantity="{!item.quantity}"
+                description="{!item.description}, (${!item.amount} ea.)"
+                cost="{!TEXT(item.quantity * item.amount)}"
+              />
 
-              <c:Opportunity_PartnerQuoteOptionLine rowClass="itemRow {!IF(MOD(rowCount,2)=0,'even','odd')}"
-                                   quantity="{!item.quantity}"
-                                   description="{!item.description}, (${!item.amount} ea.)"
-                                   cost="{!TEXT(item.quantity * item.amount)}" />
-
-               <apex:variable value="{!rowCount+1}" var="rowCount" />
+              <apex:variable value="{!rowCount+1}" var="rowCount" />
               <apex:variable value="{!optionsTotal + (item.Quantity * item.amount) }" var="optionsTotal" />
             </apex:repeat>
           </apex:outputPanel>
-        <!-- ============================ /CUSTOM PRODUCTS ============= -->
+          <!-- ============================ /CUSTOM PRODUCTS ============= -->
 
-        <!-- ++++++++++++++++++++++++++ TABLE FILLER ++++++++++++++++++++++ -->
-       <!--  <apex:repeat value="{!boatBuilder.invoiceOptionRowFiller}" var="count">
+          <!-- ++++++++++++++++++++++++++ TABLE FILLER ++++++++++++++++++++++ -->
+          <!--  <apex:repeat value="{!boatBuilder.invoiceOptionRowFiller}" var="count">
           <apex:outputPanel layout="none" rendered="{!count == (rowCount +1)}">
             <c:Opportunity_PartnerQuoteOptionLine rowClass="itemRow {!IF(MOD(rowCount,2)=0,'even','odd')}"
                                    quantity="{!null}"
@@ -525,69 +474,60 @@
 
         </apex:repeat> -->
 
-        <!-- ========================== /TABLE FILLER ===================== -->
+          <!-- ========================== /TABLE FILLER ===================== -->
 
-        <p class="itemRow sub_total">
-          <span class="quantity">&nbsp;</span>
-          Sub Total
-          <span class="cost">
-            <apex:outputText value="${0, number, ###,###,###,##0.00}">
-              <apex:param value="{!optionsTotal}"/>
-            </apex:outputText>
-          </span>
-        </p>
-
+          <p class="itemRow sub_total">
+            <span class="quantity">&nbsp;</span>
+            Sub Total
+            <span class="cost">
+              <apex:outputText value="${0, number, ###,###,###,##0.00}">
+                <apex:param value="{!optionsTotal}" />
+              </apex:outputText>
+            </span>
+          </p>
         </apex:outputPanel>
-
       </div>
       <!-- ================================ LEFT COLUMN ======================= -->
 
       <!-- ++++++++++++++++++++++++++++++++ RIGHT COLUMN ++++++++++++++++++ -->
       <div class="col invoice-body-right">
-
         <!-- ++++++++++++++++++++++++++++ ADDITIONAL FEES ++++++++++++++++++++++ -->
 
         <apex:outputPanel layout="none" rendered="{!NOT( allFees.empty)}">
           <table class="itemsTable">
             <thead>
               <tr>
-                <td colspan="3" style="padding-left:20px;">Additional Fees</td>
+                <td colspan="3" style="padding-left: 20px">Additional Fees</td>
               </tr>
             </thead>
             <tbody>
               <apex:variable value="{!1}" var="rowCount" />
               <apex:variable value="{!0}" var="feeTotal" />
               <apex:repeat value="{!allFees}" var="fee">
-
-
-                      <tr class="{!IF(MOD(rowCount,2)=0,'even','odd')}">
-                        <td class="w70">
-                          <apex:outputText value="{!fee.feeName}"/>
-                        </td>
-                        <td class="w30 right">
-                          <apex:outputText value="$ {!fee.retailAmount}" rendered="{!fee.retailAmount != 0}"/>
-                          <apex:outputText value="$ Included" rendered="{!fee.retailAmount == 0}"/>
-                        </td>
-                      </tr>
-                      <apex:variable value="{!rowCount+1}" var="rowCount" />
-                      <apex:variable value="{!feeTotal + fee.retailAmount}" var="feeTotal" />
-
-
+                <tr class="{!IF(MOD(rowCount,2)=0,'even','odd')}">
+                  <td class="w70">
+                    <apex:outputText value="{!fee.feeName}" />
+                  </td>
+                  <td class="w30 right">
+                    <apex:outputText value="$ {!fee.retailAmount}" rendered="{!fee.retailAmount != 0}" />
+                    <apex:outputText value="$ Included" rendered="{!fee.retailAmount == 0}" />
+                  </td>
+                </tr>
+                <apex:variable value="{!rowCount+1}" var="rowCount" />
+                <apex:variable value="{!feeTotal + fee.retailAmount}" var="feeTotal" />
               </apex:repeat>
               <tr class="subTotal">
-                <td colspan="1">
-                  Sub Total
-                </td>
+                <td colspan="1">Sub Total</td>
                 <td class="w30 right">
                   <apex:outputText value="${0, number, ###,###,###,##0.00}">
-                    <apex:param value="{!feeTotal}"/>
+                    <apex:param value="{!feeTotal}" />
                   </apex:outputText>
                 </td>
               </tr>
               <apex:variable value="{!rowCount+1}" var="rowCount" />
             </tbody>
-          </table>
-        </apex:outputPanel><!-- /Additional Fees -->
+          </table> </apex:outputPanel
+        ><!-- /Additional Fees -->
 
         <!-- =========================== ADDITIONAL FEES ======================= -->
 
@@ -628,44 +568,36 @@
 
         <!-- +++++++++++++++++++++++++++  SPECIAL SAVINGS ++++++++++++++++++++++ -->
         <apex:outputPanel layout="none" rendered="{!NOT(theCPQ.savings.empty)}">
-        <table class="itemsTable" style="margin-top:10px;">
-          <thead>
-            <tr>
-              <td colspan="2">Special Savings</td>
-            </tr>
-          </thead>
-          <tbody>
-            <apex:variable value="{!0}" var="savingsTotal" />
-            <apex:repeat value="{!theCPQ.savings}" var="discount" >
-
-              <tr class="{!IF(MOD(rowCount,2)=0,'even','odd')}">
-                <td class="w70">
-                  {!discount.description}
-                </td>
+          <table class="itemsTable" style="margin-top: 10px">
+            <thead>
+              <tr>
+                <td colspan="2">Special Savings</td>
+              </tr>
+            </thead>
+            <tbody>
+              <apex:variable value="{!0}" var="savingsTotal" />
+              <apex:repeat value="{!theCPQ.savings}" var="discount">
+                <tr class="{!IF(MOD(rowCount,2)=0,'even','odd')}">
+                  <td class="w70">{!discount.description}</td>
+                  <td class="w30 right">
+                    <apex:outputText value="-$ {!discount.amount}" />
+                  </td>
+                </tr>
+                <apex:variable value="{!rowCount+1}" var="rowCount" />
+                <apex:variable value="{!savingsTotal + discount.amount}" var="savingsTotal" />
+              </apex:repeat>
+              <tr class="total_savings">
+                <td class="w70">Total Saving</td>
                 <td class="w30 right">
-                  <apex:outputText value="-$ {!discount.amount}" />
+                  <apex:outputText value="-${0, number, ###,###,###,##0.00}" rendered="{!savingsTotal != null}">
+                    <apex:param value="{!savingsTotal}" />
+                  </apex:outputText>
                 </td>
               </tr>
-              <apex:variable value="{!rowCount+1}" var="rowCount" />
-              <apex:variable value="{!savingsTotal + discount.amount}" var="savingsTotal" />
-            </apex:repeat>
-            <tr class="total_savings">
-              <td class="w70">
-                Total Saving
-              </td>
-              <td class="w30 right">
-                <apex:outputText value="-${0, number, ###,###,###,##0.00}"
-                                 rendered="{!savingsTotal != null}">
-                  <apex:param value="{!savingsTotal}"/>
-                </apex:outputText>
-              </td>
-            </tr>
-
-          </tbody>
-        </table>
+            </tbody>
+          </table>
         </apex:outputPanel>
         <!-- ========================== SPECIAL SAVINGS =========================== -->
-
       </div>
       <!-- ================================ /RIGHT COLUMN ==================== -->
     </div>
@@ -673,7 +605,6 @@
 
     <!-- +++++++++++++++++++++++++++++ TRADE-IN INFORMATION +++++++++++++++++++++ -->
     <div class="row tradin_info">
-
       <div class="col col60">
         <table class="itemsTable">
           <thead>
@@ -730,7 +661,7 @@
               </tr>
               <apex:variable var="rowCount" value="{!rowCount+1}" />
             </apex:outputPanel>
-             <apex:outputPanel layout="none" rendered="{!rowCount == 5}">
+            <apex:outputPanel layout="none" rendered="{!rowCount == 5}">
               <tr class="odd">
                 <td class="w10">&nbsp;</td>
                 <td class="w20">&nbsp;</td>
@@ -744,7 +675,6 @@
       </div>
 
       <div class="col col40">
-
         <table class="itemsTable">
           <thead>
             <tr>
@@ -778,16 +708,18 @@
     <!-- =========================== TRADE-IN INFORMATION ======================= -->
 
     <!-- +++++++++++++++++++++++++++ SIGNATURES AND SUMMARY +++++++++++++++++++++++ -->
-    <div class="row signatures_and_summary customer_notes" style="margin-top:0px">
-
+    <div class="row signatures_and_summary customer_notes" style="margin-top: 0px">
       <!-- ++++++++++++++++++++ SIGNATURES AND STUFF ++++++++++++++++++++++++++++ -->
       <div class="col col70">
-        <div class="notes_container" style="width:90%;margin:auto;margin-top:22px;padding:0 10px;min-height:90px;">
+        <div
+          class="notes_container"
+          style="width: 90%; margin: auto; margin-top: 22px; padding: 0 10px; min-height: 90px"
+        >
           <p>
             <apex:outputField value="{!opp.Customer_Notes__c}" />
           </p>
         </div>
-        <div style="width:90%;margin:auto;padding:0 10px">
+        <div style="width: 90%; margin: auto; padding: 0 10px">
           <b>Please Remember:</b> 2" Ball at 18" height, flat 4-wiring, balance to be paid by certified funds
         </div>
       </div>
@@ -800,26 +732,25 @@
             <td>SUB TOTAL:</td>
             <td>
               <apex:outputText value="${0, number, ###,###,###,##0.00}">
-                <apex:param value="{!qt.TotalPrice + ( -1 * totalSavings) }"/>
+                <apex:param value="{!qt.TotalPrice + ( -1 * totalSavings) }" />
               </apex:outputText>
             </td>
           </tr>
-          <apex:outputPanel layout="none" >
-          <tr>
-            <td class="decrease">SAVINGS:</td>
-            <td class="decrease">
-              - &nbsp;<apex:outputText value="${0, number, ###,###,###,##0.00}"
-                               rendered="{!totalSavings != 0}">
-                <apex:param value="{!totalSavings}"/>
-              </apex:outputText>
-            </td>
-          </tr>
+          <apex:outputPanel layout="none">
+            <tr>
+              <td class="decrease">SAVINGS:</td>
+              <td class="decrease">
+                - &nbsp;<apex:outputText value="${0, number, ###,###,###,##0.00}" rendered="{!totalSavings != 0}">
+                  <apex:param value="{!totalSavings}" />
+                </apex:outputText>
+              </td>
+            </tr>
           </apex:outputPanel>
           <tr>
             <td>TOTAL BEFORE TAX:</td>
             <td>
               <apex:outputText value="${0, number, ###,###,###,##0.00}">
-                <apex:param value="{!qt.Total_Before_Tax__c }"/>
+                <apex:param value="{!qt.Total_Before_Tax__c }" />
                 <!-- <apex:param value="{!opp.Amount - opp.Trade_In_Amount__c }"/> -->
               </apex:outputText>
             </td>
@@ -841,18 +772,18 @@
               <td>TAX ({!theCPQ.taxZone.taxName}): {!qt.Tax_Rate_Federal__c + qt.Tax_Rate_Provincial__c}%:</td>
               <td>
                 <apex:outputText value="${0, number, ###,###,###,##0.00}">
-                  <apex:param value="{!qt.Tax_Amount_Total__c}"/>
+                  <apex:param value="{!qt.Tax_Amount_Total__c}" />
                 </apex:outputText>
               </td>
             </tr>
           </apex:outputPanel>
-            <!-- Seperate taxes -->
+          <!-- Seperate taxes -->
           <apex:outputPanel layout="none" rendered="{!!theCPQ.taxZone.isHarmonized}">
             <tr>
               <td>TAX (GST): {!qt.Tax_Rate_Federal__c}%:</td>
               <td>
                 <apex:outputText value="${0, number, ###,###,###,##0.00}">
-                  <apex:param value="{!qt.Tax_Amount_Federal__c }"/>
+                  <apex:param value="{!qt.Tax_Amount_Federal__c }" />
                 </apex:outputText>
               </td>
             </tr>
@@ -860,7 +791,7 @@
               <td>TAX ({!theCPQ.taxZone.taxName}): {!qt.Tax_Rate_Provincial__c}%:</td>
               <td>
                 <apex:outputText value="${0, number, ###,###,###,##0.00}">
-                  <apex:param value="{!qt.Tax_Amount_Provincial__c}"/>
+                  <apex:param value="{!qt.Tax_Amount_Provincial__c}" />
                 </apex:outputText>
               </td>
             </tr>
@@ -878,8 +809,8 @@
           <tr>
             <td>DEPOSIT:</td>
             <td class="">
-               <apex:outputText value="- ${0, number, ###,###,###,##0.00}">
-                <apex:param value="{!NULLVALUE( deposit  , 0 ) }"/>
+              <apex:outputText value="- ${0, number, ###,###,###,##0.00}">
+                <apex:param value="{!NULLVALUE( deposit  , 0 ) }" />
               </apex:outputText>
             </td>
           </tr>
@@ -887,7 +818,7 @@
             <td>Total:</td>
             <td>
               <apex:outputText value="${0, number, ###,###,###,##0.00}">
-                <apex:param value="{!qt.Grand_Total__c}"/>
+                <apex:param value="{!qt.Grand_Total__c}" />
                 <!-- <apex:param value="{!qt.Amount_Financed__c}"/> -->
               </apex:outputText>
             </td>
@@ -902,7 +833,5 @@
       <!-- ============================ COST SUMMARY ============================ -->
     </div>
     <!-- =========================== /SIGNATURES AND SUMMARY ====================== -->
-
   </page>
-
 </apex:page>

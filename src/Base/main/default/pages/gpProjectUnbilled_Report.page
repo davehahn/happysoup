@@ -1,512 +1,679 @@
 <apex:page controller="gcProjectUnbilled_Report" showHeader="true" sidebar="true" cache="false" readOnly="true">
+  <head>
+    <style>
+      tr.pq-row-select td {
+        background-color: yellow;
+      }
+      tr.total td {
+        font-weight: bold;
+      }
+      div.pq-grid-footer {
+        display: none;
+      }
+      .groupTitle1 {
+        font-weight: bold;
+        font-size: 18px;
+      }
+      #filterContainer select {
+        width: 170px;
+      }
+    </style>
 
-<head>
-<style>
-tr.pq-row-select td{
-    background-color:yellow;
-}
-tr.total td{
-    font-weight: bold;
-}
-div.pq-grid-footer{
-    display:none;
-}
-.groupTitle1
-{
-    font-weight: bold;
-    font-size: 18px;
-}
-#filterContainer select
-{
-    width: 170px;
-}
-</style>
-
-<apex:stylesheet value="{!URLFOR($Resource.GMBLJS__jQueryUI,'/jquery-ui/jquery-ui.min.css')}"/>
-<apex:stylesheet value="{!URLFOR($Resource.GMBLJS__pqGridPro241,'/pqgrid.min.css')}"/>
-
-</head>
-<body>
-    <div style="width:98%; margin:0 auto">
-        <table width="100%">
-            <tr id="filterContainer">
-                <td>
-                    <apex:pageBlock title="ERPs with un-billed items">
-                        <apex:form >
-                            <table cellpadding="5" cellspacing="5" border="0">
-                                <tr>
-                                    <td>
-                                        <div>
-                                            Select Business Unit (GLV1):
-                                            <span class="glv1Selector">
-                                            <apex:selectList size="1" onchange="refreshGrid_erpOrders();">
-                                                <apex:selectOptions value="{!listGLV1}"/>
-                                            </apex:selectList>
-                                            </span>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div>
-                                            Select Department (GLV2):
-                                            <span class="glv2Selector">
-                                            <apex:selectList size="1" onchange="refreshGrid_erpOrders();">
-                                                <apex:selectOptions value="{!listGLV2}"/>
-                                            </apex:selectList>
-                                            </span>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div>
-                                            Select a Account:
-                                            <span class="accountSelector">
-                                            <input type="text" name="accountName" id="accountName"/>
-                                            <input type="hidden" name="accountId" id="accountId"/>
-                                            </span>
-                                        </div>
-                                    </td>
-                                    <td>All ERP Orders:
-                                        <input type="checkbox" name="allTimes" id="allTimes" checked="{!IF(defaultAccount == null, '', 'checked')}" onchange="refreshGrid_erpOrders();" />
-                                    </td>
-                                    <td>
-                                        <span class="dateSpan">ERP Orders from:&nbsp;&nbsp;<input type="text" id="datepicker" readonly="true"/></span>
-                                    </td>
-                                    <td>
-                                        <span class="dateSpan">ERP Orders to:&nbsp;&nbsp;<input type="text" id="datepickerTill" readonly="true"/></span>
-                                    </td>
-                                    <td>Completed ERP:
-                                        <input title="Check This only if you want to load all ERP orders including completed and all billings ERP order items 0 amounts will be discarded as billed." type="checkbox" name="allCompleted" id="allCompleted" onchange="refreshGrid_erpOrders();" />
-                                    </td>
-                                    <td>
-                                        <input type="button" onclick="refreshGrid_erpOrders();" value=" Refresh "/>
-                                    </td>
-                                </tr>
-                            </table>
-                            </apex:form>
-                    </apex:pageBlock>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <div id="erpOrders"></div>                    
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <div id="materials"></div>
-                </td>
-            </tr>
-        </table>
+    <apex:stylesheet value="{!URLFOR($Resource.GMBLJS__jQueryUI,'/jquery-ui/jquery-ui.min.css')}" />
+    <apex:stylesheet value="{!URLFOR($Resource.GMBLJS__pqGridPro241,'/pqgrid.min.css')}" />
+  </head>
+  <body>
+    <div style="width: 98%; margin: 0 auto">
+      <table width="100%">
+        <tr id="filterContainer">
+          <td>
+            <apex:pageBlock title="ERPs with un-billed items">
+              <apex:form>
+                <table cellpadding="5" cellspacing="5" border="0">
+                  <tr>
+                    <td>
+                      <div>
+                        Select Business Unit (GLV1):
+                        <span class="glv1Selector">
+                          <apex:selectList size="1" onchange="refreshGrid_erpOrders();">
+                            <apex:selectOptions value="{!listGLV1}" />
+                          </apex:selectList>
+                        </span>
+                      </div>
+                    </td>
+                    <td>
+                      <div>
+                        Select Department (GLV2):
+                        <span class="glv2Selector">
+                          <apex:selectList size="1" onchange="refreshGrid_erpOrders();">
+                            <apex:selectOptions value="{!listGLV2}" />
+                          </apex:selectList>
+                        </span>
+                      </div>
+                    </td>
+                    <td>
+                      <div>
+                        Select a Account:
+                        <span class="accountSelector">
+                          <input type="text" name="accountName" id="accountName" />
+                          <input type="hidden" name="accountId" id="accountId" />
+                        </span>
+                      </div>
+                    </td>
+                    <td>
+                      All ERP Orders:
+                      <input
+                        type="checkbox"
+                        name="allTimes"
+                        id="allTimes"
+                        checked="{!IF(defaultAccount == null, '', 'checked')}"
+                        onchange="refreshGrid_erpOrders();"
+                      />
+                    </td>
+                    <td>
+                      <span class="dateSpan"
+                        >ERP Orders from:&nbsp;&nbsp;<input type="text" id="datepicker" readonly="true"
+                      /></span>
+                    </td>
+                    <td>
+                      <span class="dateSpan"
+                        >ERP Orders to:&nbsp;&nbsp;<input type="text" id="datepickerTill" readonly="true"
+                      /></span>
+                    </td>
+                    <td>
+                      Completed ERP:
+                      <input
+                        title="Check This only if you want to load all ERP orders including completed and all billings ERP order items 0 amounts will be discarded as billed."
+                        type="checkbox"
+                        name="allCompleted"
+                        id="allCompleted"
+                        onchange="refreshGrid_erpOrders();"
+                      />
+                    </td>
+                    <td>
+                      <input type="button" onclick="refreshGrid_erpOrders();" value=" Refresh " />
+                    </td>
+                  </tr>
+                </table>
+              </apex:form>
+            </apex:pageBlock>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div id="erpOrders"></div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div id="materials"></div>
+          </td>
+        </tr>
+      </table>
     </div>
-</body>
+  </body>
 
-<apex:includeScript value="{!$Resource.GMBLJS__jQuery}"/>
-<apex:includeScript value="{!URLFOR($Resource.GMBLJS__jQueryUI,'/jquery-ui/jquery-ui.min.js')}"/>
-<apex:includeScript value="{!$Resource.GMBLJS__accountingJS}"/>
-<apex:includeScript value="{!$Resource.GMBLJS__ExcellentExport}"/>
+  <apex:includeScript value="{!$Resource.GMBLJS__jQuery}" />
+  <apex:includeScript value="{!URLFOR($Resource.GMBLJS__jQueryUI,'/jquery-ui/jquery-ui.min.js')}" />
+  <apex:includeScript value="{!$Resource.GMBLJS__accountingJS}" />
+  <apex:includeScript value="{!$Resource.GMBLJS__ExcellentExport}" />
 
-<apex:includeScript value="{!URLFOR($Resource.GMBLJS__pqGridPro241,'/pqgrid.min.js')}"/>
+  <apex:includeScript value="{!URLFOR($Resource.GMBLJS__pqGridPro241,'/pqgrid.min.js')}" />
 
-<apex:includeScript value="{!$Resource.GMBLJS__gsrGrid2}"/>
+  <apex:includeScript value="{!$Resource.GMBLJS__gsrGrid2}" />
 
-
-<script>function setFocusOnLoad() {}</script>
-<script type="text/javascript">
-
+  <script>
+    function setFocusOnLoad() {}
+  </script>
+  <script type="text/javascript">
     $j = jQuery.noConflict();
 
-    $j(document).ready(function()
-    {
-        initDatePicker();
-        initGrid_erpOrders();
-        initGrid_materials();
+    $j(document).ready(function () {
+      initDatePicker();
+      initGrid_erpOrders();
+      initGrid_materials();
     });
 
     accounting.settings = {
-        currency: {
-            symbol : "$",   // default currency symbol is '$'
-            format: "%s%v", // controls output: %s = symbol, %v = value/number (can be object: see below)
-            decimal : ".",  // decimal point separator
-            thousand: ",",  // thousands separator
-            precision : 2   // decimal places
+      currency: {
+        symbol: "$", // default currency symbol is '$'
+        format: "%s%v", // controls output: %s = symbol, %v = value/number (can be object: see below)
+        decimal: ".", // decimal point separator
+        thousand: ",", // thousands separator
+        precision: 2 // decimal places
+      },
+      number: {
+        precision: 2, // default precision on numbers is 0
+        thousand: ",",
+        decimal: "."
+      }
+    };
+
+    function initDatePicker() {
+      $j("#datepicker").datepicker({ showButtonPanel: true });
+      $j("#datepickerTill").datepicker({ showButtonPanel: true });
+
+      if ("{!locale}" == "en_CA") $j("#datepicker").datepicker("option", "dateFormat", "dd/mm/yy");
+      if ("{!locale}" == "en_CA") $j("#datepickerTill").datepicker("option", "dateFormat", "dd/mm/yy");
+      if ("{!locale}" == "fr_CA") $j("#datepicker").datepicker("option", "dateFormat", "yy-mm-dd");
+      if ("{!locale}" == "fr_CA") $j("#datepickerTill").datepicker("option", "dateFormat", "yy-mm-dd");
+
+      // $j('#datepicker').datepicker('setDate', new Date(2017, 9, 1));
+      var timeNow = new Date();
+      $j("#datepicker").datepicker(
+        "setDate",
+        new Date(timeNow.getFullYear() - 1, timeNow.getMonth(), timeNow.getDay())
+      );
+      $j("#datepickerTill").datepicker("setDate", new Date());
+
+      $j("#datepicker, #datepickerTill").change(function () {
+        refreshGrid_erpOrders();
+      });
+    }
+
+    function initGrid_erpOrders() {
+      var gridObj = {
+        title: "ERP Orders",
+        collapsible: { on: false, collapsed: false, toggle: false },
+        columnTemplate: { minWidth: 10, sortable: true },
+        dataModel: { data: [], sorting: "local", location: "local", sortDir: "up", sortIndx: "projectName" },
+        detailModel: { cache: false },
+        dragColumns: { enabled: false },
+        editable: false,
+        filterModel: { on: true, mode: "AND", header: true, type: "local" },
+        freezeCols: 0,
+        freezeRows: 0,
+        height: 300,
+        historyModel: { on: false },
+        hoverMode: "row",
+        hwrap: false,
+        numberCell: { show: true },
+        pageModel: { type: null },
+        pasteModel: { on: false },
+        resizable: true,
+        roundCorners: false,
+        scrollModel: { autoFit: true },
+        selectionModel: { type: "row", mode: "range", fireSelectChange: true },
+        showBottom: true,
+        showHeader: true,
+        showTitle: true,
+        showTop: true,
+        showToolbar: true,
+        sortable: true,
+        swipeModel: { on: false },
+        track: false,
+        virtualX: false,
+        //virtualXHeader: false,
+        virtualY: true,
+        width: "auto",
+        wrap: false
+      };
+
+      gridObj.colModel = [
+        { dataIndx: "projectRecordType", title: "Type", align: "left", dataType: "string", gFilter: "select" },
+        { dataIndx: "projectName", title: "Project Name", align: "left", dataType: "string", gFilter: "text" },
+        { dataIndx: "projectStage", title: "Project Stage", align: "left", dataType: "string", gFilter: "select" },
+        {
+          dataIndx: "dateCreated",
+          title: "Project Date",
+          align: "left",
+          dataType: "date",
+          sortType: function (rowData1, rowData2, dataIndx) {
+            return sortDateTime(rowData1, rowData2, "dateCreated");
+          }
         },
-        number: {
-            precision : 2,  // default precision on numbers is 0
-            thousand: ",",
-            decimal : "."
+        {
+          dataIndx: "allQtySpecified",
+          title: "Qty",
+          align: "center",
+          dataType: "float",
+          gFormat: "number",
+          gTotal: true,
+          maxWidth: 100
+        },
+        {
+          dataIndx: "qtyUnbilled",
+          title: "Qty<br/>Unbilled",
+          align: "center",
+          dataType: "float",
+          gFormat: "number",
+          gTotal: true,
+          maxWidth: 100
+        },
+        {
+          dataIndx: "amtUnbilled",
+          title: "Amount<br/>Unbilled",
+          align: "center",
+          dataType: "float",
+          gFormat: "money",
+          gTotal: true,
+          maxWidth: 100
+        },
+        {
+          dataIndx: "qtySpecified",
+          title: "Inv. Prod Qty<br/>Specified",
+          align: "center",
+          dataType: "float",
+          gFormat: "number",
+          gTotal: true,
+          maxWidth: 100
+        },
+        {
+          dataIndx: "qtyWIP",
+          title: "Qty<br/>in WIP",
+          align: "center",
+          dataType: "float",
+          gFormat: "number",
+          gTotal: true,
+          maxWidth: 100
+        },
+        {
+          dataIndx: "qtyNotWIP",
+          title: "Qty<br/>Not in WIP",
+          align: "center",
+          dataType: "float",
+          gFormat: "number",
+          gTotal: true,
+          maxWidth: 100
+        },
+        {
+          dataIndx: "qtyFG",
+          title: "Qty<br/>Finished",
+          align: "center",
+          dataType: "float",
+          gFormat: "number",
+          gTotal: true,
+          maxWidth: 100
+        },
+        {
+          dataIndx: "qtyCOGS",
+          title: "Qty<br/>in COGS",
+          align: "center",
+          dataType: "float",
+          gFormat: "number",
+          gTotal: true,
+          maxWidth: 100
+        },
+        {
+          dataIndx: "noCogsQty",
+          title: "Qty<br/>Not in COGS",
+          align: "center",
+          dataType: "float",
+          gFormat: "number",
+          gTotal: true,
+          maxWidth: 100
+        },
+        { dataIndx: "scrollSpacer", minWidth: 15, maxWidth: 15 }
+      ];
+
+      gGrid.initFormat(gridObj.colModel);
+      gGrid.initFilter(gridObj.colModel);
+
+      $j.each(gridObj.colModel, function (i, col) {
+        if (col.dataIndx == "projectName") {
+          $j.extend(col, {
+            render: function (ui) {
+              if (ui.rowData.isTotal || !ui.rowData.projectName) return "";
+
+              var myHTML = ui.rowData.projectName;
+
+              return '<a href="/' + ui.rowData.idProject + '" target="_blank">' + ui.rowData.projectName + "</a>";
+            }
+          });
         }
-    }
+      });
 
-    function initDatePicker()
-    {
-        $j('#datepicker').datepicker({'showButtonPanel':true});
-        $j('#datepickerTill').datepicker({'showButtonPanel':true});
+      var $gridDiv = $j("#erpOrders");
 
-        if('{!locale}' == 'en_CA') $j('#datepicker').datepicker( "option", "dateFormat", "dd/mm/yy" );
-        if('{!locale}' == 'en_CA') $j('#datepickerTill').datepicker( "option", "dateFormat", "dd/mm/yy" );
-        if('{!locale}' == 'fr_CA') $j('#datepicker').datepicker( "option", "dateFormat", "yy-mm-dd" );
-        if('{!locale}' == 'fr_CA') $j('#datepickerTill').datepicker( "option", "dateFormat", "yy-mm-dd" );
-        
+      $gridDiv.pqGrid(gridObj);
 
-        // $j('#datepicker').datepicker('setDate', new Date(2017, 9, 1));
-        var timeNow = new Date();
-        $j('#datepicker').datepicker('setDate', new Date(timeNow.getFullYear() - 1, timeNow.getMonth(), timeNow.getDay()));
-        $j('#datepickerTill').datepicker('setDate', new Date());
+      gGrid.appendExportLink($gridDiv);
+      gGrid.appendButtonClearSelection($gridDiv);
 
-        $j('#datepicker, #datepickerTill').change(function()
-        {
-            refreshGrid_erpOrders();
-        });
-    }
+      $gridDiv.on("pqgridrefresh", function (event, ui) {
+        gGrid.refreshTotal($j(this), ui.pageData);
+      });
 
-    function initGrid_erpOrders()
-    {
-        var gridObj = {title:"ERP Orders",
-                        collapsible:{on:false,collapsed:false,toggle:false},
-                        columnTemplate: {minWidth:10, sortable:true},
-                        dataModel:{data:[], sorting:'local', location:'local', sortDir:'up', sortIndx:'projectName'}, 
-                        detailModel:{cache:false},
-                        dragColumns:{enabled:false},
-                        editable:false,
-                        filterModel:{on:true, mode:'AND', header:true, type:'local'},
-                        freezeCols:0,
-                        freezeRows:0,
-                        height:300,
-                        historyModel:{on:false},
-                        hoverMode:'row',
-                        hwrap:false,
-                        numberCell:{show:true},
-                        pageModel: {type:null},
-                        pasteModel:{on:false},
-                        resizable: true,
-                        roundCorners: false,
-                        scrollModel: {autoFit:true},
-                        selectionModel: {type:'row', mode:'range', fireSelectChange:true},
-                        showBottom:true,
-                        showHeader:true,
-                        showTitle:true,
-                        showTop:true,
-                        showToolbar:true,
-                        sortable:true,
-                        swipeModel:{on:false},
-                        track:false,
-                        virtualX: false,
-                        //virtualXHeader: false,
-                        virtualY: true,
-                        width:'auto',
-                        wrap:false};
-
-        gridObj.colModel=[
-                          {dataIndx:"projectRecordType",title:"Type",               align:"left",   dataType:"string",  gFilter:"select"},        
-                          {dataIndx:"projectName",      title:"Project Name",       align:"left",   dataType:"string",  gFilter:"text"},
-                          {dataIndx:"projectStage",     title:"Project Stage",       align:"left",   dataType:"string",  gFilter:"select"},
-                          {dataIndx:"dateCreated",      title:"Project Date",       align:"left",   dataType:"date", sortType: function (rowData1, rowData2, dataIndx) {return sortDateTime(rowData1, rowData2,'dateCreated');}},
-                          {dataIndx:"allQtySpecified",  title:"Qty",   align:"center", dataType:"float",   gFormat:'number', gTotal:true, maxWidth:100},
-                          {dataIndx:"qtyUnbilled",      title:"Qty<br/>Unbilled",   align:"center", dataType:"float",   gFormat:'number', gTotal:true, maxWidth:100},
-                          {dataIndx:"amtUnbilled",      title:"Amount<br/>Unbilled",   align:"center", dataType:"float",   gFormat:'money', gTotal:true, maxWidth:100},
-                          {dataIndx:"qtySpecified",     title:"Inv. Prod Qty<br/>Specified",   align:"center", dataType:"float",   gFormat:'number', gTotal:true, maxWidth:100},
-                          {dataIndx:"qtyWIP",           title:"Qty<br/>in WIP",   align:"center", dataType:"float",   gFormat:'number', gTotal:true, maxWidth:100},
-                          {dataIndx:"qtyNotWIP",        title:"Qty<br/>Not in WIP",   align:"center", dataType:"float",   gFormat:'number', gTotal:true, maxWidth:100},
-                          {dataIndx:"qtyFG",            title:"Qty<br/>Finished",   align:"center", dataType:"float",   gFormat:'number', gTotal:true, maxWidth:100},
-                          {dataIndx:"qtyCOGS",          title:"Qty<br/>in COGS",   align:"center", dataType:"float",   gFormat:'number', gTotal:true, maxWidth:100},
-                          {dataIndx:"noCogsQty",        title:"Qty<br/>Not in COGS",   align:"center", dataType:"float",   gFormat:'number', gTotal:true, maxWidth:100},
-                          {dataIndx:"scrollSpacer", minWidth:15, maxWidth:15}];
-
-        gGrid.initFormat(gridObj.colModel);
-        gGrid.initFilter(gridObj.colModel);
-
-        $j.each(gridObj.colModel, function(i,col)
-        {
-            if(col.dataIndx == 'projectName')
-            {
-                $j.extend(col,{
-                    render:function(ui)
-                    {
-                        if (ui.rowData.isTotal || !ui.rowData.projectName) return '';
-
-                        var myHTML = ui.rowData.projectName;
-                        
-                        return '<a href=\"/'+ui.rowData.idProject+'\" target=\"_blank\">'+ui.rowData.projectName+'</a>';
-                    }
-                });                 
-            }
-        });
-
-        var $gridDiv = $j('#erpOrders');
-
-        $gridDiv.pqGrid(gridObj);
-
-        gGrid.appendExportLink($gridDiv);
-        gGrid.appendButtonClearSelection($gridDiv);
-        
-        $gridDiv.on('pqgridrefresh', function(event, ui)
-        {
-            gGrid.refreshTotal($j(this),ui.pageData);
-        });
-
-        $gridDiv.on('pqgridselectchange',function(event,ui)
-        {
-            refreshGrid_materials();
-        });
-
-        $gridDiv.on('pqgridrowclick',function(event,ui)
-        {
-            console.log(ui.rowData);
-        });
-
-        //refreshGrid_erpOrders();
-        var allTimes = $j('#allTimes').is(':checked');
-        if(allTimes) $j("span.dateSpan").hide();
-        else $j("span.dateSpan").show();
-
-        gridObj = null;
-    }
-
-    function refreshGrid_erpOrders()
-    {
-        var $gridDiv = $j('#erpOrders');
-        $gridDiv.pqGrid('showLoading');
-        var accountName = $j('#accountName').val();
-        var idAccount = $j('#accountId').val();
-        if(idAccount == '' || idAccount == undefined)
-            idAccount = null;
-        if(accountName == null || accountName == '' || accountName == undefined)
-            idAccount = null;
-        var glv1Val = $j('span.glv1Selector select').val();
-        var glv2Val = $j('span.glv2Selector select').val();
-        if(idAccount == '' || idAccount == null) $j('#allTimes').prop('checked',false);
-        var dateFrom = $j('#datepicker').val();
-        var dateTill = $j('#datepickerTill').val();
-        var allTimes = $j('#allTimes').is(':checked');
-        var allCompleted = $j('#allCompleted').is(':checked');
-        if(allTimes) $j("span.dateSpan").hide();
-        else $j("span.dateSpan").show();
-        var filter = {'dateFrom': dateFrom,'dateTill': dateTill,'idAccount': idAccount,'allTimes':allTimes, 'glv1Val':glv1Val,'glv2Val':glv2Val,'allCompleted':allCompleted};
-        Visualforce.remoting.Manager.invokeAction(
-            '{!$RemoteAction.gcProjectUnbilled_Report.retrieveUnbilledERP}',
-            filter,
-            function(result,event){
-                if(event.status){
-                    gGrid.refreshGrid_callback($gridDiv,result);
-                }
-                else{
-                    alert(event.message); 
-                }
-                $gridDiv.pqGrid('hideLoading');
-            },
-            {buffer:true, escape:true, timeout:120000});
-
-        filter = null;
-    }
-
-    function initGrid_materials()
-    {
-        var gridObj = {title:"ERP Order Items",
-                        collapsible:{on:false,collapsed:false,toggle:false},
-                        columnTemplate: {minWidth:10, sortable:true},
-                        dataModel:{data:[], sorting:'local', location:'local', sortDir:'up', sortIndx:'productName'}, 
-                        detailModel:{cache:false},
-                        //groupModel:{ on: true, dataIndx: ["projectName"], titleCls:['groupTitle1'], title:["{0}"], collapsed: [false]},
-                        dragColumns:{enabled:false},
-                        editable:false,
-                        filterModel:{on:true, mode:'AND', header:true, type:'local'},
-                        freezeCols:0,
-                        freezeRows:0,
-                        flexHeight:false,
-                        maxHeight:300,
-                        historyModel:{on:false},
-                        hoverMode:'row',
-                        hwrap:false,
-                        numberCell:{show:true},
-                        pageModel: {type:null},
-                        pasteModel:{on:false},
-                        resizable: true,
-                        roundCorners: false,
-                        scrollModel: {autoFit:true},
-                        selectionModel: {type:null},
-                        showBottom:true,
-                        showHeader:true,
-                        showTitle:true,
-                        showTop:true,
-                        showToolbar:true,
-                        sortable:true,
-                        swipeModel:{on:false},
-                        track:false,
-                        virtualX: false,
-                        //virtualXHeader: false,
-                        virtualY: false,
-                        width:'auto',
-                        wrap:false};
-
-        gridObj.colModel=[
-                          {dataIndx:"projectName",      title:"Project Name",       align:"left",   dataType:"string",  gFilter:"select"},
-                          {dataIndx:"taskName",         title:"Task Name",          align:"left",   dataType:"string",  gFilter:"select"},
-                          {dataIndx:"productName",      title:"Product Name",       align:"left",   dataType:"string",  gFilter:"select"},
-                          {dataIndx:"isInventory",      title:"Inv.<br/>Product",   align:"left",   dataType:"string",  gFilter:"select",   gFormat:'checkbox', maxWidth:80, minWidth:80},
-                          {dataIndx:"actQtySpecified",  title:"Qty",   align:"center", dataType:"float",   gFormat:'number', gTotal:true, maxWidth:100},
-                          {dataIndx:"unbilled",         title:"Unbilled",           align:"left",   dataType:"string",  gFilter:"select",   gFormat:'checkbox', maxWidth:80, minWidth:80, hidden:true},
-                          {dataIndx:"notWIP",           title:"WIP",                align:"left",   dataType:"string",  gFilter:"select",   gFormat:'checkbox', maxWidth:80, minWidth:80, hidden:true},
-                          {dataIndx:"qtyUnbilled",      title:"Qty<br/>Unbilled",   align:"center", dataType:"float",   gFormat:'number', gTotal:true, maxWidth:100},
-                          {dataIndx:"amtUnbilled",      title:"Amt<br/>Unbilled",   align:"center", dataType:"float",   gFormat:'money', gTotal:true, maxWidth:100},
-                          {dataIndx:"qtySpecified",     title:"Qty<br/>Specified",   align:"center", dataType:"float",   gFormat:'number', gTotal:true, maxWidth:100, hidden:true},
-                          {dataIndx:"qtyInWIP",         title:"Qty<br/>in WIP",   align:"center", dataType:"float",   gFormat:'number', gTotal:true, maxWidth:100},
-                          {dataIndx:"qtyNotWIP",        title:"Qty<br/>Not in WIP",   align:"center", dataType:"float",   gFormat:'number', gTotal:true, maxWidth:100},
-                          {dataIndx:"cogsQty",          title:"Qty<br/>in COGS",     align:"center", dataType:"float",   gFormat:'number', gTotal:true, maxWidth:100},
-                          {dataIndx:"scrollSpacer", minWidth:15, maxWidth:15}];
-
-        gGrid.initFormat(gridObj.colModel);
-        gGrid.initFilter(gridObj.colModel);
-
-        $j.each(gridObj.colModel, function(i,col)
-        {
-            if(col.dataIndx == 'productName')
-            {
-                $j.extend(col,{
-                    render:function(ui)
-                    {
-                        if (ui.rowData.isTotal || !ui.rowData.productName) return '';
-
-                        var myHTML = ui.rowData.productName;
-                        
-                        return '<a href=\"/'+ui.rowData.idProduct+'\" target=\"_blank\">'+ui.rowData.productName+'</a>';
-                    }
-                });                 
-            }
-            else if(col.dataIndx == 'taskName')
-            {
-                $j.extend(col,{
-                    render:function(ui)
-                    {
-                        if (ui.rowData.isTotal || !ui.rowData.taskName) return '';
-
-                        var myHTML = ui.rowData.taskName;
-                        
-                        return '<a href=\"/'+ui.rowData.idTask+'\" target=\"_blank\">'+ui.rowData.taskName+'</a>';
-                    }
-                });                 
-            }
-        });
-
-        var $gridDiv = $j('#materials');
-        
-        $gridDiv.on('pqgridrefresh', function(event, ui)
-        {
-            gGrid.refreshTotal($j(this),ui.pageData);
-        });
-
-        $gridDiv.pqGrid(gridObj);
-
-        gGrid.appendExportLink($gridDiv);
-
+      $gridDiv.on("pqgridselectchange", function (event, ui) {
         refreshGrid_materials();
+      });
 
-        gridObj = null;
+      $gridDiv.on("pqgridrowclick", function (event, ui) {
+        console.log(ui.rowData);
+      });
+
+      //refreshGrid_erpOrders();
+      var allTimes = $j("#allTimes").is(":checked");
+      if (allTimes) $j("span.dateSpan").hide();
+      else $j("span.dateSpan").show();
+
+      gridObj = null;
     }
 
-    function refreshGrid_materials()
-    {
-        var $gridDiv = $j('#materials');
-        $gridDiv.pqGrid('showLoading');
+    function refreshGrid_erpOrders() {
+      var $gridDiv = $j("#erpOrders");
+      $gridDiv.pqGrid("showLoading");
+      var accountName = $j("#accountName").val();
+      var idAccount = $j("#accountId").val();
+      if (idAccount == "" || idAccount == undefined) idAccount = null;
+      if (accountName == null || accountName == "" || accountName == undefined) idAccount = null;
+      var glv1Val = $j("span.glv1Selector select").val();
+      var glv2Val = $j("span.glv2Selector select").val();
+      if (idAccount == "" || idAccount == null) $j("#allTimes").prop("checked", false);
+      var dateFrom = $j("#datepicker").val();
+      var dateTill = $j("#datepickerTill").val();
+      var allTimes = $j("#allTimes").is(":checked");
+      var allCompleted = $j("#allCompleted").is(":checked");
+      if (allTimes) $j("span.dateSpan").hide();
+      else $j("span.dateSpan").show();
+      var filter = {
+        dateFrom: dateFrom,
+        dateTill: dateTill,
+        idAccount: idAccount,
+        allTimes: allTimes,
+        glv1Val: glv1Val,
+        glv2Val: glv2Val,
+        allCompleted: allCompleted
+      };
+      Visualforce.remoting.Manager.invokeAction(
+        "{!$RemoteAction.gcProjectUnbilled_Report.retrieveUnbilledERP}",
+        filter,
+        function (result, event) {
+          if (event.status) {
+            gGrid.refreshGrid_callback($gridDiv, result);
+          } else {
+            alert(event.message);
+          }
+          $gridDiv.pqGrid("hideLoading");
+        },
+        { buffer: true, escape: true, timeout: 120000 }
+      );
 
-        var idProjectArray = [];
-        $j.each($j('#erpOrders').pqGrid( "selection",{type:'row', method:'getSelection'}), function(i,row)
+      filter = null;
+    }
+
+    function initGrid_materials() {
+      var gridObj = {
+        title: "ERP Order Items",
+        collapsible: { on: false, collapsed: false, toggle: false },
+        columnTemplate: { minWidth: 10, sortable: true },
+        dataModel: { data: [], sorting: "local", location: "local", sortDir: "up", sortIndx: "productName" },
+        detailModel: { cache: false },
+        //groupModel:{ on: true, dataIndx: ["projectName"], titleCls:['groupTitle1'], title:["{0}"], collapsed: [false]},
+        dragColumns: { enabled: false },
+        editable: false,
+        filterModel: { on: true, mode: "AND", header: true, type: "local" },
+        freezeCols: 0,
+        freezeRows: 0,
+        flexHeight: false,
+        maxHeight: 300,
+        historyModel: { on: false },
+        hoverMode: "row",
+        hwrap: false,
+        numberCell: { show: true },
+        pageModel: { type: null },
+        pasteModel: { on: false },
+        resizable: true,
+        roundCorners: false,
+        scrollModel: { autoFit: true },
+        selectionModel: { type: null },
+        showBottom: true,
+        showHeader: true,
+        showTitle: true,
+        showTop: true,
+        showToolbar: true,
+        sortable: true,
+        swipeModel: { on: false },
+        track: false,
+        virtualX: false,
+        //virtualXHeader: false,
+        virtualY: false,
+        width: "auto",
+        wrap: false
+      };
+
+      gridObj.colModel = [
+        { dataIndx: "projectName", title: "Project Name", align: "left", dataType: "string", gFilter: "select" },
+        { dataIndx: "taskName", title: "Task Name", align: "left", dataType: "string", gFilter: "select" },
+        { dataIndx: "productName", title: "Product Name", align: "left", dataType: "string", gFilter: "select" },
         {
-            idProjectArray.push(row.rowData.idProject);
-        });
-        if(idProjectArray.length == 0)
+          dataIndx: "isInventory",
+          title: "Inv.<br/>Product",
+          align: "left",
+          dataType: "string",
+          gFilter: "select",
+          gFormat: "checkbox",
+          maxWidth: 80,
+          minWidth: 80
+        },
         {
-            $gridDiv.pqGrid('hideLoading');
-            gGrid.refreshGrid_callback($gridDiv,[]);
-            return;
+          dataIndx: "actQtySpecified",
+          title: "Qty",
+          align: "center",
+          dataType: "float",
+          gFormat: "number",
+          gTotal: true,
+          maxWidth: 100
+        },
+        {
+          dataIndx: "unbilled",
+          title: "Unbilled",
+          align: "left",
+          dataType: "string",
+          gFilter: "select",
+          gFormat: "checkbox",
+          maxWidth: 80,
+          minWidth: 80,
+          hidden: true
+        },
+        {
+          dataIndx: "notWIP",
+          title: "WIP",
+          align: "left",
+          dataType: "string",
+          gFilter: "select",
+          gFormat: "checkbox",
+          maxWidth: 80,
+          minWidth: 80,
+          hidden: true
+        },
+        {
+          dataIndx: "qtyUnbilled",
+          title: "Qty<br/>Unbilled",
+          align: "center",
+          dataType: "float",
+          gFormat: "number",
+          gTotal: true,
+          maxWidth: 100
+        },
+        {
+          dataIndx: "amtUnbilled",
+          title: "Amt<br/>Unbilled",
+          align: "center",
+          dataType: "float",
+          gFormat: "money",
+          gTotal: true,
+          maxWidth: 100
+        },
+        {
+          dataIndx: "qtySpecified",
+          title: "Qty<br/>Specified",
+          align: "center",
+          dataType: "float",
+          gFormat: "number",
+          gTotal: true,
+          maxWidth: 100,
+          hidden: true
+        },
+        {
+          dataIndx: "qtyInWIP",
+          title: "Qty<br/>in WIP",
+          align: "center",
+          dataType: "float",
+          gFormat: "number",
+          gTotal: true,
+          maxWidth: 100
+        },
+        {
+          dataIndx: "qtyNotWIP",
+          title: "Qty<br/>Not in WIP",
+          align: "center",
+          dataType: "float",
+          gFormat: "number",
+          gTotal: true,
+          maxWidth: 100
+        },
+        {
+          dataIndx: "cogsQty",
+          title: "Qty<br/>in COGS",
+          align: "center",
+          dataType: "float",
+          gFormat: "number",
+          gTotal: true,
+          maxWidth: 100
+        },
+        { dataIndx: "scrollSpacer", minWidth: 15, maxWidth: 15 }
+      ];
+
+      gGrid.initFormat(gridObj.colModel);
+      gGrid.initFilter(gridObj.colModel);
+
+      $j.each(gridObj.colModel, function (i, col) {
+        if (col.dataIndx == "productName") {
+          $j.extend(col, {
+            render: function (ui) {
+              if (ui.rowData.isTotal || !ui.rowData.productName) return "";
+
+              var myHTML = ui.rowData.productName;
+
+              return '<a href="/' + ui.rowData.idProduct + '" target="_blank">' + ui.rowData.productName + "</a>";
+            }
+          });
+        } else if (col.dataIndx == "taskName") {
+          $j.extend(col, {
+            render: function (ui) {
+              if (ui.rowData.isTotal || !ui.rowData.taskName) return "";
+
+              var myHTML = ui.rowData.taskName;
+
+              return '<a href="/' + ui.rowData.idTask + '" target="_blank">' + ui.rowData.taskName + "</a>";
+            }
+          });
         }
-        var allCompleted = $j('#allCompleted').is(':checked');
-        Visualforce.remoting.Manager.invokeAction(
-            '{!$RemoteAction.gcProjectUnbilled_Report.retrieveUnbilledERPMaterials}',
-            idProjectArray, allCompleted,
-            function(result,event){
-                if(event.status){
-                    gGrid.refreshGrid_callback($gridDiv,result);
-                }
-                else{
-                    alert(event.message); 
-                }
-                $gridDiv.pqGrid('hideLoading');
-            },
-            {buffer:true, escape:true, timeout:120000});
+      });
 
-        filter = null;
-        groupBy = null;
+      var $gridDiv = $j("#materials");
+
+      $gridDiv.on("pqgridrefresh", function (event, ui) {
+        gGrid.refreshTotal($j(this), ui.pageData);
+      });
+
+      $gridDiv.pqGrid(gridObj);
+
+      gGrid.appendExportLink($gridDiv);
+
+      refreshGrid_materials();
+
+      gridObj = null;
     }
 
-    function sortDateTime(rowData1, rowData2, dataIndx)
-    {
+    function refreshGrid_materials() {
+      var $gridDiv = $j("#materials");
+      $gridDiv.pqGrid("showLoading");
+
+      var idProjectArray = [];
+      $j.each($j("#erpOrders").pqGrid("selection", { type: "row", method: "getSelection" }), function (i, row) {
+        idProjectArray.push(row.rowData.idProject);
+      });
+      if (idProjectArray.length == 0) {
+        $gridDiv.pqGrid("hideLoading");
+        gGrid.refreshGrid_callback($gridDiv, []);
+        return;
+      }
+      var allCompleted = $j("#allCompleted").is(":checked");
+      Visualforce.remoting.Manager.invokeAction(
+        "{!$RemoteAction.gcProjectUnbilled_Report.retrieveUnbilledERPMaterials}",
+        idProjectArray,
+        allCompleted,
+        function (result, event) {
+          if (event.status) {
+            gGrid.refreshGrid_callback($gridDiv, result);
+          } else {
+            alert(event.message);
+          }
+          $gridDiv.pqGrid("hideLoading");
+        },
+        { buffer: true, escape: true, timeout: 120000 }
+      );
+
+      filter = null;
+      groupBy = null;
+    }
+
+    function sortDateTime(rowData1, rowData2, dataIndx) {
       var data1 = rowData1[dataIndx],
-          data2 = rowData2[dataIndx],
-          data1Arr = data1.split('/'),
-          data2Arr = data2.split('/'),
-          date1 = new Date(data1Arr[2],data1Arr[1],data1Arr[0]),
-          date2 = new Date(data2Arr[2],data2Arr[1],data2Arr[0]),
-          time1 = date1.getTime(),
-          time2 = date2.getTime();
+        data2 = rowData2[dataIndx],
+        data1Arr = data1.split("/"),
+        data2Arr = data2.split("/"),
+        date1 = new Date(data1Arr[2], data1Arr[1], data1Arr[0]),
+        date2 = new Date(data2Arr[2], data2Arr[1], data2Arr[0]),
+        time1 = date1.getTime(),
+        time2 = date2.getTime();
 
       if (time1 > time2) {
-          return 1;
-      }
-      else if (time1 < time2) {
-          return -1;
-      }
-      else {
-          return 0;
+        return 1;
+      } else if (time1 < time2) {
+        return -1;
+      } else {
+        return 0;
       }
     }
 
     /// Account Selection
     $currentSelection = null;
-    $j('#accountName').autocomplete({
-        minLength: 2,
-        autoFocus: false,
-        source: function (request, response) {
-            Visualforce.remoting.Manager.invokeAction(
-                '{!$RemoteAction.gcProjectUnbilled_Report.searchAccount}',
-                 request.term,
-                function (result, event) {
-                    if (event.status) {
-                        $j.each(result,function(k,item){
-                            if(item.label == undefined)
-                                result[k].label = item.Name;
-                            if(item.value == undefined)
-                                result[k].value = item.Id;
-                        })
-                        response(result);
-                    } else {
-                        alert(event.message);
-                    }
-                }, {
-                    buffer: true,
-                    escape: true,
-                    timeout: 120000
-                });
-        },
-        focus: function (event, ui) {
-            $j(this).val(ui.item.Name);
-            $currentSelection = ui.item;
-            return false;
-        },
-        select: function (event, ui) {
-            $j(this).next().val(ui.item.Id);
-            refreshGrid_erpOrders();
-            return false;
-        },
-        change: function (event, ui) {
-            if($currentSelection != null)
-            {
-                $j(this).next().val(ui.item.Id);
-                refreshGrid_erpOrders();
-                $currentSelection = null;
+    $j("#accountName").autocomplete({
+      minLength: 2,
+      autoFocus: false,
+      source: function (request, response) {
+        Visualforce.remoting.Manager.invokeAction(
+          "{!$RemoteAction.gcProjectUnbilled_Report.searchAccount}",
+          request.term,
+          function (result, event) {
+            if (event.status) {
+              $j.each(result, function (k, item) {
+                if (item.label == undefined) result[k].label = item.Name;
+                if (item.value == undefined) result[k].value = item.Id;
+              });
+              response(result);
+            } else {
+              alert(event.message);
             }
-            return false;
+          },
+          {
+            buffer: true,
+            escape: true,
+            timeout: 120000
+          }
+        );
+      },
+      focus: function (event, ui) {
+        $j(this).val(ui.item.Name);
+        $currentSelection = ui.item;
+        return false;
+      },
+      select: function (event, ui) {
+        $j(this).next().val(ui.item.Id);
+        refreshGrid_erpOrders();
+        return false;
+      },
+      change: function (event, ui) {
+        if ($currentSelection != null) {
+          $j(this).next().val(ui.item.Id);
+          refreshGrid_erpOrders();
+          $currentSelection = null;
         }
+        return false;
+      }
     });
-
-</script>
-
+  </script>
 </apex:page>

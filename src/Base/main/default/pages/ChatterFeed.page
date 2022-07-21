@@ -1,22 +1,20 @@
 <apex:page showHeader="false" sidebar="false">
   <style>
+    #lgnd-feedContainer {
+      display: none;
+    }
 
-  #lgnd-feedContainer {
-    display: none;
-  }
+    .feedpage {
+      min-height: 400px !important;
+    }
 
-  .feedpage {
-    min-height:400px !important;
-  }
+    .feeditem {
+      background: #fff;
+    }
 
-  .feeditem {
-    background: #FFF;
-  }
-
-  .feeditemcontent {
-    padding-top:10px !important;
-  }
-
+    .feeditemcontent {
+      padding-top: 10px !important;
+    }
   </style>
   <div id="lgnd-feedContainer">
     <chatter:feedWithFollowers entityId="{!$CurrentPage.Parameters.Id}" />
@@ -25,14 +23,13 @@
   <script type="text/javascript">
     $j = jQuery.noConflict();
 
-    $j(document).ready( function() {
-      var $showBtn = $j('#showFeedLink a');
-      if( $j('.chatterexpando').length === 0 )
-      {
+    $j(document).ready(function () {
+      var $showBtn = $j("#showFeedLink a");
+      if ($j(".chatterexpando").length === 0) {
         $showBtn.click();
-     }
-      $j('.metadata').hide();
-      $j('#lgnd-feedContainer').show();
+      }
+      $j(".metadata").hide();
+      $j("#lgnd-feedContainer").show();
     });
   </script>
 </apex:page>

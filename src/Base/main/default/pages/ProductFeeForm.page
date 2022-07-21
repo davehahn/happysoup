@@ -1,117 +1,108 @@
 <apex:page standardController="Product_Fee_Map__c" extensions="ProductFeeExt" showHeader="true" sidebar="true">
-	<apex:stylesheet value="{!URLFOR($Resource.LegendStyles)}" />
+  <apex:stylesheet value="{!URLFOR($Resource.LegendStyles)}" />
   <apex:stylesheet value="{!URLFOR($Resource.multiselect_styles)}" />
-
-
 
   <apex:sectionHeader title="Fee Edit" subtitle="{!currentProduct.Name}" />
   <apex:form id="productFeeForm">
     <apex:messages />
 
     <apex:pageBlock title="Option Edit">
-
-      <apex:pageBlockButtons >
-          <apex:commandButton action="/{!currentProduct.Id}" value="Cancel" />
-          <apex:commandButton action="{!save}" value="Save" />
+      <apex:pageBlockButtons>
+        <apex:commandButton action="/{!currentProduct.Id}" value="Cancel" />
+        <apex:commandButton action="{!save}" value="Save" />
       </apex:pageBlockButtons>
 
       <div class="tabContainer blue">
-      <apex:tabPanel selectedTab="bankRegTab"
-                     switchType="client"
-                     inActiveTabClass="inActiveTab__c"
-                     tabClass="tab__c big">
+        <apex:tabPanel
+          selectedTab="bankRegTab"
+          switchType="client"
+          inActiveTabClass="inActiveTab__c"
+          tabClass="tab__c big"
+        >
+          <!--+++++++++++++++++++++++++++++++++++++ Bank Registration PPSA Fee Tab +++++++++++++++++++++++++++++++++++++++++++++++++ -->
 
+          <apex:tab name="bankReg" label="Bank Registration PPSA Fee" id="bankRegTab">
+            <apex:pageBlockSection columns="1">
+              <c:MultiselectPicklist
+                leftLabel="Available"
+                leftOptions="{!availBank}"
+                rightLabel="Selected"
+                rightOptions="{!selectedBank}"
+                size="20"
+              />
+            </apex:pageBlockSection>
+          </apex:tab>
 
-<!--+++++++++++++++++++++++++++++++++++++ Bank Registration PPSA Fee Tab +++++++++++++++++++++++++++++++++++++++++++++++++ -->
+          <!--+++++++++++++++++++++++++++++++++++++++++ Documentation Fee Tab +++++++++++++++++++++++++++++++++++++++++++ -->
 
-        <apex:tab name="bankReg" label="Bank Registration PPSA Fee" id="bankRegTab">
+          <apex:tab name="Documentation" label="Documentation Fees" id="docTab">
+            <apex:pageBlockSection columns="1">
+              <c:MultiselectPicklist
+                leftLabel="Available"
+                leftOptions="{!availDoc}"
+                rightLabel="Selected"
+                rightOptions="{!selectedDoc}"
+                size="20"
+              />
+            </apex:pageBlockSection>
+          </apex:tab>
 
-          <apex:pageBlockSection columns="1">
-            <c:MultiselectPicklist leftLabel="Available"
-            leftOptions="{!availBank}"
-            rightLabel="Selected"
-            rightOptions="{!selectedBank}"
-            size="20"/>
-          </apex:pageBlockSection>
+          <!--+++++++++++++++++++++++++++++++++++++++ Freight Tab +++++++++++++++++++++++++++++++++++++++++++++++++ -->
 
-        </apex:tab>
+          <apex:tab name="Freight" label="Freight" id="freightTab">
+            <apex:pageBlockSection columns="1">
+              <c:MultiselectPicklist
+                leftLabel="Available"
+                leftOptions="{!availFreight}"
+                rightLabel="Selected"
+                rightOptions="{!selectedFreight}"
+                size="20"
+              />
+            </apex:pageBlockSection>
+          </apex:tab>
+          <!--+++++++++++++++++++++++++++++++++++++++ License Fee Tab +++++++++++++++++++++++++++++++++++++++++++ -->
 
-<!--+++++++++++++++++++++++++++++++++++++++++ Documentation Fee Tab +++++++++++++++++++++++++++++++++++++++++++ -->
+          <apex:tab name="License" label="License Fees" id="licenseTab">
+            <apex:pageBlockSection columns="1">
+              <c:MultiselectPicklist
+                leftLabel="Available"
+                leftOptions="{!availLicense}"
+                rightLabel="Selected"
+                rightOptions="{!selectedLicense}"
+                size="20"
+              />
+            </apex:pageBlockSection>
+          </apex:tab>
 
-        <apex:tab name="Documentation" label="Documentation Fees" id="docTab">
+          <!--++++++++++++++++++++++++++++ Rigging and Preparation Tab +++++++++++++++++++++++++++++++++++++++++++++++++ -->
 
-          <apex:pageBlockSection columns="1">
-            <c:MultiselectPicklist leftLabel="Available"
-            leftOptions="{!availDoc}"
-            rightLabel="Selected"
-            rightOptions="{!selectedDoc}"
-            size="20"/>
-          </apex:pageBlockSection>
+          <apex:tab name="RiggingandPrep" label="Rigging & Prep. Fees" id="riggingTab">
+            <apex:pageBlockSection columns="1">
+              <c:MultiselectPicklist
+                leftLabel="Available"
+                leftOptions="{!availRigging}"
+                rightLabel="Selected"
+                rightOptions="{!selectedRigging}"
+                size="20"
+              />
+            </apex:pageBlockSection>
+          </apex:tab>
 
-        </apex:tab>
+          <!--++++++++++++++++++++++++++++++++++++ Tire Stewardship Fee Tab +++++++++++++++++++++++++++++++++++++++++++++++++ -->
 
-<!--+++++++++++++++++++++++++++++++++++++++ Freight Tab +++++++++++++++++++++++++++++++++++++++++++++++++ -->
-
-        <apex:tab name="Freight"
-                  label="Freight"
-                  id="freightTab">
-
-          <apex:pageBlockSection columns="1">
-            <c:MultiselectPicklist leftLabel="Available"
-            leftOptions="{!availFreight}"
-            rightLabel="Selected"
-            rightOptions="{!selectedFreight}"
-            size="20"/>
-          </apex:pageBlockSection>
-
-        </apex:tab>
-<!--+++++++++++++++++++++++++++++++++++++++ License Fee Tab +++++++++++++++++++++++++++++++++++++++++++ -->
-
-        <apex:tab name="License" label="License Fees" id="licenseTab">
-
-          <apex:pageBlockSection columns="1">
-            <c:MultiselectPicklist leftLabel="Available"
-            leftOptions="{!availLicense}"
-            rightLabel="Selected"
-            rightOptions="{!selectedLicense}"
-            size="20"/>
-          </apex:pageBlockSection>
-
-        </apex:tab>
-
-<!--++++++++++++++++++++++++++++ Rigging and Preparation Tab +++++++++++++++++++++++++++++++++++++++++++++++++ -->
-
-        <apex:tab name="RiggingandPrep" label="Rigging & Prep. Fees" id="riggingTab">
-
-          <apex:pageBlockSection columns="1">
-            <c:MultiselectPicklist leftLabel="Available"
-            leftOptions="{!availRigging}"
-            rightLabel="Selected"
-            rightOptions="{!selectedRigging}"
-            size="20"/>
-          </apex:pageBlockSection>
-
-        </apex:tab>
-
-<!--++++++++++++++++++++++++++++++++++++ Tire Stewardship Fee Tab +++++++++++++++++++++++++++++++++++++++++++++++++ -->
-
-        <apex:tab name="tire" label="Tire Stewardship Fees" id="tireTab">
-
-          <apex:pageBlockSection columns="1">
-            <c:MultiselectPicklist leftLabel="Available"
-            leftOptions="{!availTire}"
-            rightLabel="Selected"
-            rightOptions="{!selectedTire}"
-            size="20"/>
-          </apex:pageBlockSection>
-
-        </apex:tab>
-
-
-      </apex:tabPanel>
+          <apex:tab name="tire" label="Tire Stewardship Fees" id="tireTab">
+            <apex:pageBlockSection columns="1">
+              <c:MultiselectPicklist
+                leftLabel="Available"
+                leftOptions="{!availTire}"
+                rightLabel="Selected"
+                rightOptions="{!selectedTire}"
+                size="20"
+              />
+            </apex:pageBlockSection>
+          </apex:tab>
+        </apex:tabPanel>
       </div>
-
     </apex:pageBlock>
-
   </apex:form>
 </apex:page>

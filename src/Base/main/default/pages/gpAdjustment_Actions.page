@@ -1,11 +1,13 @@
-<apex:page showHeader="true" 
-	sidebar="true" 
-	standardController="GMBLASERP__Inventory_Adjustment__c"
-	extensions="gcAdjustment_Actions"
-	recordSetVar="adjustments" 
-	action="{!init}">
-	<apex:pageMessages escape="false"/>
-	<apex:form >
-		<div style="text-align: center;"><apex:commandButton action="{!back}" value="Go Back"></apex:commandButton></div>
-	</apex:form>
+<apex:page
+  showHeader="true"
+  sidebar="true"
+  standardController="GMBLASERP__Inventory_Adjustment__c"
+  extensions="gcAdjustment_Actions"
+  recordSetVar="adjustments"
+  action="{!init}"
+>
+  <apex:pageMessages escape="false" />
+  <apex:form>
+    <div style="text-align: center"><apex:commandButton action="{!back}" value="Go Back"></apex:commandButton></div>
+  </apex:form>
 </apex:page>

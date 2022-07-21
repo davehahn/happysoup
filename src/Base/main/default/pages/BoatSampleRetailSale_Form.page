@@ -1,14 +1,15 @@
-<apex:page showHeader="true"
-            sidebar="true"
-             docType="html-5.0"
-            standardController="Boat_Sample_Retail_Sale__c"
-            extensions="BoatSampleRetailSale_Ext">
-
-  <c:LegendFormResources includeFontAwesome="true"/>
+<apex:page
+  showHeader="true"
+  sidebar="true"
+  docType="html-5.0"
+  standardController="Boat_Sample_Retail_Sale__c"
+  extensions="BoatSampleRetailSale_Ext"
+>
+  <c:LegendFormResources includeFontAwesome="true" />
 
   <style type="text/css">
     .results_table {
-      width:100%;
+      width: 100%;
       border-spacing: 0;
       border-top-color: transparent !important;
     }
@@ -22,157 +23,156 @@
       display: block;
     }
 
-  .results_table thead td:first-child,
-  .results_table tbody td:first-child {
-    width:100%;
-    float:left;
-    padding:0;
-  }
+    .results_table thead td:first-child,
+    .results_table tbody td:first-child {
+      width: 100%;
+      float: left;
+      padding: 0;
+    }
 
-  .results_table thead td:first-child {
-    padding-left:15px;
-    line-height:45px;
-  }
+    .results_table thead td:first-child {
+      padding-left: 15px;
+      line-height: 45px;
+    }
 
-  .results_table tbody td:first-child a {
-    display: block;
-    width:100%;
-    margin:0;
-    padding:0;
-    padding-left:15px;
-    text-decoration: none;
-    line-height: 45px;
-    padding-left:15px;
-    color: #444;
-  }
+    .results_table tbody td:first-child a {
+      display: block;
+      width: 100%;
+      margin: 0;
+      padding: 0;
+      padding-left: 15px;
+      text-decoration: none;
+      line-height: 45px;
+      padding-left: 15px;
+      color: #444;
+    }
 
-  .results_table tbody td:first-child a:hover {
-    text-decoration: none;
-    background: #C2F8FF;
-  }
+    .results_table tbody td:first-child a:hover {
+      text-decoration: none;
+      background: #c2f8ff;
+    }
 
+    .results_table thead tr {
+      /* fallback */
+      width: 97%;
+      /* minus scroll bar width */
+      width: -webkit-calc(100% - 16px);
+      width: -moz-calc(100% - 16px);
+      width: calc(100% - 16px);
+    }
 
-  .results_table thead tr {
-    /* fallback */
-    width: 97%;
-    /* minus scroll bar width */
-    width: -webkit-calc(100% - 16px);
-    width:    -moz-calc(100% - 16px);
-    width:         calc(100% - 16px);
-  }
+    .results_table tr:after {
+      /* clearing float */
+      content: " ";
+      display: block;
+      visibility: hidden;
+      clear: both;
+    }
 
-  .results_table tr:after {  /* clearing float */
-    content: ' ';
-    display: block;
-    visibility: hidden;
-    clear: both;
-  }
+    .results_table tbody {
+      max-height: 200px;
+      min-height: 200px;
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
 
-  .results_table tbody {
-    max-height:200px;
-    min-height:200px;
-    overflow-y: auto;
-    overflow-x: hidden;
-  }
+    .results_table tbody tr td {
+      line-height: 30px !important;
+      -webkit-transition: background-color 1s ease-in-out;
+      -moz-transition: background-color 1s ease-in-out;
+      -o-transition: background-color 1s ease-in-out;
+      transition: background-color 1s ease-in-out;
+    }
 
-  .results_table tbody tr td {
-    line-height: 30px !important;
-    -webkit-transition:background-color 1s ease-in-out;
-    -moz-transition:background-color 1s ease-in-out;
-    -o-transition:background-color 1s ease-in-out;
-    transition:background-color 1s ease-in-out;
-  }
+    .results_table tbody td.no_results {
+      color: #ccc;
+      text-align: center;
+      line-height: 200px !important;
+      height: 200px;
+      font-size: 22px;
+      width: 100%;
+    }
 
-  .results_table tbody td.no_results {
-    color:#CCC;
-    text-align:center;
-    line-height:200px !important;
-    height: 200px;
-    font-size:22px;
-    width:100%;
-  }
+    .results_table tbody tr.rowAdded td {
+      background: #00aaf9;
+    }
 
-  .results_table tbody tr.rowAdded td {
-    background: #00AAF9;
-  }
+    .selected_table {
+      border: none !important;
+      width: 100%;
+    }
 
-  .selected_table {
-    border:none !important;
-    width: 100%;
-  }
+    .selected_table tr td {
+      line-height: 45px;
+      border-bottom: 1px solid #ccc;
+    }
 
-  .selected_table tr td {
-    line-height: 45px;
-    border-bottom: 1px solid #CCC;
-  }
+    .selected_table tr td a {
+      color: #999;
+    }
 
-  .selected_table tr td a {
-    color: #999;
-  }
+    .selected_table tr td a:hover {
+      color: #ff2828;
+      text-decoration: none;
+    }
 
-  .selected_table tr td a:hover {
-    color: #FF2828;
-    text-decoration: none;
-  }
+    .selected_table tr td:first-child {
+      width: 95%;
+    }
 
-  .selected_table tr td:first-child {
-    width:95%;
-  }
+    .selected_table tr td:last-child {
+      width: 5%;
+    }
 
-  .selected_table tr td:last-child {
-    width:5%;
-  }
+    .selected_table tr:first-child td {
+      border-top: 1px solid #ccc;
+    }
 
-  .selected_table tr:first-child td {
-    border-top: 1px solid #CCC;
-  }
-
-  #productSearch {
-    margin-bottom: 0;
-  }
-
+    #productSearch {
+      margin-bottom: 0;
+    }
   </style>
 
   <h1>Sample Retail Sale</h1>
 
   <div class="row">
     <div class="column large-8 large-offset-2">
-      <apex:messages styleClass="alert-box alert"/>
+      <apex:messages styleClass="alert-box alert" />
     </div>
   </div>
 
   <apex:form id="sampleRetailSaleForm" styleClass="legendForm">
-
-    <apex:actionFunction name="apex_ProductSearch"
-                         action="{!productSearch}"
-                         immediate="true"
-                         rerender="searchResults"
-                         oncomplete="searchComplete()">
+    <apex:actionFunction
+      name="apex_ProductSearch"
+      action="{!productSearch}"
+      immediate="true"
+      rerender="searchResults"
+      oncomplete="searchComplete()"
+    >
       <apex:param name="qString" value="" />
     </apex:actionFunction>
 
-    <apex:actionFunction name="apex_SelectProduct"
-                         action="{!selectProduct}"
-                         immediate="true"
-                         rerender="searchResults, selected_products"
-                         >
+    <apex:actionFunction
+      name="apex_SelectProduct"
+      action="{!selectProduct}"
+      immediate="true"
+      rerender="searchResults, selected_products"
+    >
       <apex:param name="product_option_id" value="" />
     </apex:actionFunction>
 
-
-    <apex:actionFunction name="apex_RemoveProduct"
-                         action="{!removeProduct}"
-                         immediate="true"
-                         rerender="searchResults, selected_products"
-                         >
+    <apex:actionFunction
+      name="apex_RemoveProduct"
+      action="{!removeProduct}"
+      immediate="true"
+      rerender="searchResults, selected_products"
+    >
       <apex:param name="product_option_id" value="" />
     </apex:actionFunction>
 
     <div class="row">
-
       <!-- ++++++++++++++++++++++++++++++++ LEFT COLUMN ++++++++++++++++++ -->
       <div class="column large-6">
-
         <apex:repeat value="{!$ObjectType.Boat_Sample_Retail_Sale__c.FieldSets['Form_Left_Column']}" var="f">
           <div class="row">
             <div class="columns large-4">
@@ -183,13 +183,11 @@
             </div>
           </div>
         </apex:repeat>
-
       </div>
       <!-- ================================ LEFT COLUMN ================== -->
 
       <!-- +++++++++++++++++++++++++++++++ RIGHT COLUMN ++++++++++++++++++ -->
       <div class="column large-6">
-
         <apex:repeat value="{!$ObjectType.Boat_Sample_Retail_Sale__c.FieldSets['Form_Right_Column']}" var="f">
           <div class="row">
             <div class="column large-4">
@@ -200,17 +198,13 @@
             </div>
           </div>
         </apex:repeat>
-
       </div>
       <!-- =============================== RIGHT COLUMN ================== -->
-
     </div>
 
-
     <div class="row">
-
       <div class="column large-6">
-       <h3>Available Example Products</h3>
+        <h3>Available Example Products</h3>
 
         <div class="row collapse">
           <div class="large-1 column">
@@ -219,13 +213,12 @@
             </span>
           </div>
           <div class="large-11 column">
-            <input type="text" id="productSearch" placeholder="... by Name, Family or RecordType"></input>
+            <input type="text" id="productSearch" placeholder="... by Name, Family or RecordType" />
           </div>
         </div>
 
-
         <apex:outputPanel id="searchResults">
-          <table class="fd_table fd_table_striped results_table" style="width:100%">
+          <table class="fd_table fd_table_striped results_table" style="width: 100%">
             <tbody>
               <apex:repeat value="{!resultOptions}" var="po" rendered="{!resultOptions.size > 0}">
                 <tr>
@@ -244,11 +237,9 @@
             </tbody>
           </table>
         </apex:outputPanel>
-
       </div>
 
       <div class="column large-6">
-
         <h3>Selected Example Products</h3>
 
         <apex:outputPanel id="selected_products">
@@ -266,80 +257,62 @@
           </table>
         </apex:outputPanel>
       </div>
-
     </div>
 
     <!-- the buttons -->
     <div class="row formBtnRow">
-
       <div class="column large-4 large-offset-8">
-        <apex:commandButton action="{!save}"
-                            styleClass="fd_button small invert success right"
-                            value="Save" />
-         <!-- <apex:commandLink action="{!returnToProduct}"
+        <apex:commandButton action="{!save}" styleClass="fd_button small invert success right" value="Save" />
+        <!-- <apex:commandLink action="{!returnToProduct}"
                      styleClass="fd_button small invert cancelLink right"
                      value="Cancel">
           </apex:commandLink> -->
-          <a href="/{!record.Boat__c}" class="fd_button small invert cancelLink right">Cancel</a>
-        </div>
-
+        <a href="/{!record.Boat__c}" class="fd_button small invert cancelLink right">Cancel</a>
+      </div>
     </div>
-
   </apex:form>
 
   <script type="text/javascript">
+    var $j = jQuery.noConflict();
 
-  var $j = jQuery.noConflict();
+    function doSearch($input) {
+      var qString = $input.val();
 
-  function doSearch($input)
-  {
-    var qString = $input.val();
+      $input.addClass("busy").data("orig-query", qString);
+      apex_ProductSearch(qString);
+    }
 
-    $input.addClass('busy')
-    .data('orig-query', qString);
-    apex_ProductSearch(qString);
-  }
-
-  function searchComplete()
-  {
-    var $input = $j('#productSearch'),
-        origQuery = $input.data('orig-query'),
+    function searchComplete() {
+      var $input = $j("#productSearch"),
+        origQuery = $input.data("orig-query"),
         qString = $input.val();
 
-    if( origQuery === qString )
-    {
-      $input.removeClass('busy')
-      .data('orig-query', '');
+      if (origQuery === qString) {
+        $input.removeClass("busy").data("orig-query", "");
+      } else {
+        doSearch($input);
+      }
     }
-    else
-    {
-      doSearch($input);
-    }
-  }
 
-    $j('#productSearch').on('keyup', function(e) {
+    $j("#productSearch").on("keyup", function (e) {
       e.preventDefault();
       var $this = $j(this);
 
-      if( !$this.hasClass('busy') )
-      {
+      if (!$this.hasClass("busy")) {
         doSearch($this);
       }
-
     });
 
-    $j(document).on('click', 'a.selectProductLink', function(e) {
+    $j(document).on("click", "a.selectProductLink", function (e) {
       e.preventDefault();
-      console.log($j(this).data('product-option-id'));
-      apex_SelectProduct( $j(this).data('product-option-id') );
+      console.log($j(this).data("product-option-id"));
+      apex_SelectProduct($j(this).data("product-option-id"));
     });
 
-    $j(document).on('click', 'a.removeSelectedLink', function(e) {
+    $j(document).on("click", "a.removeSelectedLink", function (e) {
       e.preventDefault();
-       console.log($j(this).data('product-option-id'));
-      apex_RemoveProduct( $j(this).data('product-option-id') );
-
+      console.log($j(this).data("product-option-id"));
+      apex_RemoveProduct($j(this).data("product-option-id"));
     });
   </script>
-
 </apex:page>

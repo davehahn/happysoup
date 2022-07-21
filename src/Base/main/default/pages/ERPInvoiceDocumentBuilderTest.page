@@ -1,13 +1,9 @@
-<apex:page Controller="ERPInvoiceDocumentBuilder"
-           docType="html-5.0"
-           showHeader="true"
-           sidebar="true">
-
-  <apex:stylesheet value="{!URLFOR($Resource.LGND_SLDS_203, 'assets/styles/salesforce-lightning-design-system-vf.min.css')}" />
+<apex:page Controller="ERPInvoiceDocumentBuilder" docType="html-5.0" showHeader="true" sidebar="true">
+  <apex:stylesheet
+    value="{!URLFOR($Resource.LGND_SLDS_203, 'assets/styles/salesforce-lightning-design-system-vf.min.css')}"
+  />
 
   <style type="text/css">
- 
-
     .serials-table td {
       line-height: 35px;
       vertical-align: middle;
@@ -22,7 +18,7 @@
     }
 
     .serial-search.busy .slds-spinner_container {
-      display:block;
+      display: block;
     }
 
     .serial-search.busy span {
@@ -30,7 +26,7 @@
     }
 
     #page-indicator {
-      display:none;
+      display: none;
     }
 
     .slds-dropdown-trigger > button > img {
@@ -57,13 +53,13 @@
     }
 
     #serial-filter {
-      border-radius: .25rem .25rem 0 0;
+      border-radius: 0.25rem 0.25rem 0 0;
       border-bottom: none;
     }
 
     .serial-list {
       width: 100%;
-      border: 1px solid #CCC;
+      border: 1px solid #ccc;
       min-height: 6rem;
       max-height: 12rem;
       overflow-y: auto;
@@ -80,7 +76,7 @@
 
     .serial-list a.selected {
       background: green;
-      color: #FFF;
+      color: #fff;
       text-decoration: none;
     }
 
@@ -93,16 +89,15 @@
     }
 
     .serial-list a:not(.selected):hover {
-      color: #FFF;
-      background: #00AAF9;
+      color: #fff;
+      background: #00aaf9;
     }
     #viewerIframe.temp_hidden {
-      opacity:0;
+      opacity: 0;
     }
-    
   </style>
 
-<div class="lgnd">
+  <div class="lgnd">
     <div class="slds-backdrop"></div>
     <div id="page-indicator" class="slds-spinner_container">
       <div class="slds-spinner--brand slds-spinner slds-spinner--large" role="alert">
@@ -115,86 +110,127 @@
     <div class="slds-page-header" role="banner">
       <!-- <h1 id="testOutput"></h1> -->
       <div class="slds-grid slds-wrap">
-
         <div class="slds-col slds-has-flexi-truncate">
           <div class="slds-media slds-no-space slds-grow">
             <div class="slds-media__figure">
-              <img src="{!URLFOR($Resource.LGND_SLDS_203, 'assets/icons/custom/custom98_60.png')}" style="background: #00AAF9"/>
+              <img
+                src="{!URLFOR($Resource.LGND_SLDS_203, 'assets/icons/custom/custom98_60.png')}"
+                style="background: #00aaf9"
+              />
             </div>
             <div class="slds-media__body">
               <p class="slds-text-title--caps slds-line-height--reset">ERP Order</p>
               <h1 class="slds-page-header__title slds-m-right--small slds-align-middle slds-truncate">
-               {!erpOrder.name}</h1>
+                {!erpOrder.name}
+              </h1>
             </div>
           </div>
         </div>
         <div class="slds-col slds-no-flex slds-grid slds-align-top">
-
-
-          <div class=" slds-large-show">
+          <div class="slds-large-show">
             <div class="slds-button-group" role="group">
               <a href="/{!erpOrderID}" class="slds-button slds-button--neutral">Cancel</a>
               <apex:form id="form" styleClass="legendForm">
-              <apex:commandButton value="Save to ERP Invoice" action="{!savePDF}" StyleClass="slds-button slds-button--neutral"/>
+                <apex:commandButton
+                  value="Save to ERP Invoice"
+                  action="{!savePDF}"
+                  StyleClass="slds-button slds-button--neutral"
+                />
               </apex:form>
             </div>
-
           </div>
-
         </div>
-
       </div>
       <div class="slds-grid slds-wrap header-detail">
         <div class="slds-p-horizontal--small slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-4">
           <div class="slds-grid slds-wrap">
-            <p style="font-size: 18px" class="slds-text-title slds-truncate slds-m-bottom--none slds-p-horizontal--small slds-size--1-of-3 slds-medium-size--1-of-1 slds-large-size--1-of-1" title="Field 1">Account Name:</p>
-            <p class="slds-text-body--regular slds-truncate slds-p-horizontal--small slds-size--2-of-3 slds-medium-size--1-of-1 slds-large-size--1-of-1">{!erpOrder.AcctSeed__Account__r.name}</p>
-          </div>
-        </div>
-        <div class="slds-p-horizontal--small slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-4">
-          <div class='slds-grid slds-wrap'>
-            <p style="font-size: 18px" class="slds-text-title slds-truncate slds-m-bottom--none slds-p-horizontal--small slds-size--1-of-3 slds-medium-size--1-of-1 slds-large-size--1-of-1">ERP Order Number:</p>
-            <p class="slds-text-body--regular slds-p-horizontal--small slds-size--2-of-3 slds-medium-size--1-of-1 slds-large-size--1-of-1">{!erpOrder.AcctSeedERP__Work_Order_Number__c}</p>
-          </div>
-        </div>
-        <div class="slds-p-horizontal--small slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-4">
-          <div style="font-size: 18px" class='slds-grid slds-wrap'>
-            <p class="slds-text-title slds-truncate slds-m-bottom--none slds-p-horizontal--small slds-size--1-of-3 slds-medium-size--1-of-1 slds-large-size--1-of-1">Sale Type:</p>
-            <p class="slds-text-body--regular slds-p-horizontal--small slds-size--2-of-3 slds-medium-size--1-of-1 slds-large-size--1-of-1">{!erpOrder.Sale_Type__c}</p>
-          </div>
-        </div>
-        <div class="slds-p-horizontal--small slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-4">
-          <div style="font-size: 18px" class='slds-grid slds-wrap'>
-            <p class="slds-text-title slds-truncate slds-m-bottom--none slds-p-horizontal--small slds-size--1-of-3 slds-medium-size--1-of-1 slds-large-size--1-of-1">Language:</p>
-            <p class="slds-text-body--regular slds-p-horizontal--small slds-size--2-of-3 slds-medium-size--1-of-1 slds-large-size--1-of-1">English</p>
+            <p
+              style="font-size: 18px"
+              class="slds-text-title slds-truncate slds-m-bottom--none slds-p-horizontal--small slds-size--1-of-3 slds-medium-size--1-of-1 slds-large-size--1-of-1"
+              title="Field 1"
+            >
+              Account Name:
+            </p>
+            <p
+              class="slds-text-body--regular slds-truncate slds-p-horizontal--small slds-size--2-of-3 slds-medium-size--1-of-1 slds-large-size--1-of-1"
+            >
+              {!erpOrder.AcctSeed__Account__r.name}
+            </p>
           </div>
         </div>
         <div class="slds-p-horizontal--small slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-4">
           <div class="slds-grid slds-wrap">
-            <p class="slds-text-body--regular slds-p-horizontal--small slds-size--2-of-3 slds-medium-size--1-of-1 slds-large-size--1-of-1" style="font-size:1rem">
-        
+            <p
+              style="font-size: 18px"
+              class="slds-text-title slds-truncate slds-m-bottom--none slds-p-horizontal--small slds-size--1-of-3 slds-medium-size--1-of-1 slds-large-size--1-of-1"
+            >
+              ERP Order Number:
             </p>
+            <p
+              class="slds-text-body--regular slds-p-horizontal--small slds-size--2-of-3 slds-medium-size--1-of-1 slds-large-size--1-of-1"
+            >
+              {!erpOrder.AcctSeedERP__Work_Order_Number__c}
+            </p>
+          </div>
+        </div>
+        <div class="slds-p-horizontal--small slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-4">
+          <div style="font-size: 18px" class="slds-grid slds-wrap">
+            <p
+              class="slds-text-title slds-truncate slds-m-bottom--none slds-p-horizontal--small slds-size--1-of-3 slds-medium-size--1-of-1 slds-large-size--1-of-1"
+            >
+              Sale Type:
+            </p>
+            <p
+              class="slds-text-body--regular slds-p-horizontal--small slds-size--2-of-3 slds-medium-size--1-of-1 slds-large-size--1-of-1"
+            >
+              {!erpOrder.Sale_Type__c}
+            </p>
+          </div>
+        </div>
+        <div class="slds-p-horizontal--small slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-4">
+          <div style="font-size: 18px" class="slds-grid slds-wrap">
+            <p
+              class="slds-text-title slds-truncate slds-m-bottom--none slds-p-horizontal--small slds-size--1-of-3 slds-medium-size--1-of-1 slds-large-size--1-of-1"
+            >
+              Language:
+            </p>
+            <p
+              class="slds-text-body--regular slds-p-horizontal--small slds-size--2-of-3 slds-medium-size--1-of-1 slds-large-size--1-of-1"
+            >
+              English
+            </p>
+          </div>
+        </div>
+        <div class="slds-p-horizontal--small slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-4">
+          <div class="slds-grid slds-wrap">
+            <p
+              class="slds-text-body--regular slds-p-horizontal--small slds-size--2-of-3 slds-medium-size--1-of-1 slds-large-size--1-of-1"
+              style="font-size: 1rem"
+            ></p>
           </div>
         </div>
       </div>
     </div>
 
-    <div style="width: 80% !important; margin-left:10%; margin-top: 30px"> 
-       	<div style="width: 100% !important;">
-		   	 <apex:outputPanel layout="none">
-		            <apex:outputPanel layout="none">
-		              <iframe height="800px" id="viewerIframe" name="InvoicePDF" src="/apex/{!docType}?erpOrderId={!erpOrderID}" width="100%" ></iframe>
-		            </apex:outputPanel>
-
-		</apex:outputPanel>
-    	</div>
-    </div>     
-</div>
+    <div style="width: 80% !important; margin-left: 10%; margin-top: 30px">
+      <div style="width: 100% !important">
+        <apex:outputPanel layout="none">
+          <apex:outputPanel layout="none">
+            <iframe
+              height="800px"
+              id="viewerIframe"
+              name="InvoicePDF"
+              src="/apex/{!docType}?erpOrderId={!erpOrderID}"
+              width="100%"
+            ></iframe>
+          </apex:outputPanel>
+        </apex:outputPanel>
+      </div>
+    </div>
+  </div>
   <!-- <apex:includeScript value="{!URLFOR($Resource.Libraries, 'js/QuaggaJS/file_input.js')}" /> -->
 
   <script>
-  	function testDeClick() {
-      
-  	}
-    </script>
+    function testDeClick() {}
+  </script>
 </apex:page>
