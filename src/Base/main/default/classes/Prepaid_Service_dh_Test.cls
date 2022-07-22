@@ -2,6 +2,7 @@
 private class Prepaid_Service_dh_Test {
   static User whitefishUser;
   static User sysAdmin;
+  static User noAccessUser;
   static Account person;
   static AcctSeedERP__Warehouse__c wh;
   static AcctSeed__Project__c erp;
@@ -24,6 +25,7 @@ private class Prepaid_Service_dh_Test {
         wh = warehouse;
     }
     whitefishUser = Factory_User.newUser('whitefish', 'mcTesterson', 'Legend Standard User - New', wh);
+    noAccessUser = Factory_User.newUser('noaccess', 'mcTesterson', 'Minimum Access - Salesforce', wh);
     sysAdmin = Factory_User.newUser('sysAdmin', 'mcTesterson', 'System Administrator', wh);
     person = Factory_Account.insertFullPersonAccount('Testy', 'McTesterson');
     serial = Factory_SerialNumber.insertFullSerials(1, 'Boat', 'Pontoon')[0];
@@ -61,8 +63,8 @@ private class Prepaid_Service_dh_Test {
   @isTest
   static void initData_noAccess_Test() {
     init();
-    System.runAs(whitefishUser) {
-      buildERP();
+    buildERP();
+    System.runAs(noAccessUser) {
       Test.startTest();
       String err;
       try {

@@ -94,7 +94,7 @@ private class BoatBuilder_Test {
     /* set current page to the BoatBuilder  */
     Datetime dt = Datetime.now();
     String dateString1 = (dt + 30).format('d/MM/yy');
-    pageRef = Page.BoatBuilder;
+    pageRef = Page.BoatConfigurator;
     pageRef.getParameters().put('opportunity_id', opp.Id);
     pageRef.getParameters().put('quote_valid_date', dateString1);
     Test.setCurrentPageReference(pageRef);

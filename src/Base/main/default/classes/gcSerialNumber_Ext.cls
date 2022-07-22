@@ -38,7 +38,7 @@ global without sharing class gcSerialNumber_Ext {
 
   @RemoteAction
   @ReadOnly
-  public static List<Product2> searchProductForSerial(String searchTxt) {
+  global static List<Product2> searchProductForSerial(String searchTxt) {
     List<Product2> listProduct = new List<Product2>();
     searchTxt = '%' + searchTxt.replaceAll('[*]', '%') + '%';
 
