@@ -4,7 +4,7 @@
         <processMetadataValues>
             <name>textJson</name>
             <value>
-                <stringValue>{&quot;mentions&quot;:[{&quot;name&quot;:&quot;Jesse Davis&quot;,&quot;id&quot;:&quot;005i0000002c3RpAAI&quot;},{&quot;name&quot;:&quot;Yves Lavallee&quot;,&quot;id&quot;:&quot;005i0000002c3PyAAI&quot;},{&quot;name&quot;:&quot;John Winter&quot;,&quot;id&quot;:&quot;0051Y000009wKCwQAM&quot;},{&quot;name&quot;:&quot;Simon Labelle&quot;,&quot;id&quot;:&quot;0054z000007HKpBAAW&quot;},{&quot;name&quot;:&quot;Lorenzo Beaudoin&quot;,&quot;id&quot;:&quot;0054z000008ResBAAS&quot;},{&quot;name&quot;:&quot;Nicolas Roy&quot;,&quot;id&quot;:&quot;0051Y00000ArpbtQAB&quot;},{&quot;name&quot;:&quot;Gillian Groves&quot;,&quot;id&quot;:&quot;0054z000008SXg0AAG&quot;},{&quot;name&quot;:&quot;Roxanne MacLean&quot;,&quot;id&quot;:&quot;0051Y000009yA4fQAE&quot;}],&quot;message&quot;:&quot;New Partner Survey!\n\n\nLegend Partner {![GetFeedback_Survey_Response__c].Registered_By__c}&apos;s customer {![GetFeedback_Survey_Response__c].Registered_To__c} filled out a Partner Survey with an NPS score of {![GetFeedback_Survey_Response__c].NPS_Score__c}.\n\n@[005i0000002c3RpAAI] @[005i0000002c3PyAAI] @[0051Y000009wKCwQAM] @[0054z000007HKpBAAW] @[0054z000008ResBAAS] @[0051Y00000ArpbtQAB] @[0054z000008SXg0AAG] @[0051Y000009yA4fQAE] &quot;}</stringValue>
+                <stringValue>{&quot;mentions&quot;:[{&quot;name&quot;:&quot;Jesse Davis&quot;,&quot;id&quot;:&quot;005i0000002c3RpAAI&quot;},{&quot;name&quot;:&quot;John Winter&quot;,&quot;id&quot;:&quot;0051Y000009wKCwQAM&quot;},{&quot;name&quot;:&quot;Simon Labelle&quot;,&quot;id&quot;:&quot;0054z000007HKpBAAW&quot;},{&quot;name&quot;:&quot;Lorenzo Beaudoin&quot;,&quot;id&quot;:&quot;0054z000008ResBAAS&quot;},{&quot;name&quot;:&quot;Nicolas Roy&quot;,&quot;id&quot;:&quot;0051Y00000ArpbtQAB&quot;},{&quot;name&quot;:&quot;Gillian Groves&quot;,&quot;id&quot;:&quot;0054z000008SXg0AAG&quot;},{&quot;name&quot;:&quot;Roxanne MacLean&quot;,&quot;id&quot;:&quot;0051Y000009yA4fQAE&quot;}],&quot;message&quot;:&quot;New Partner Survey!\n\n\nLegend Partner {![GetFeedback_Survey_Response__c].Registered_By__c}&apos;s customer {![GetFeedback_Survey_Response__c].Registered_To__c} filled out a Partner Survey with an NPS score of {![GetFeedback_Survey_Response__c].NPS_Score__c}.\n\n@[005i0000002c3RpAAI] @[0051Y000009wKCwQAM] @[0054z000007HKpBAAW] @[0054z000008ResBAAS] @[0051Y00000ArpbtQAB] @[0054z000008SXg0AAG] @[0051Y000009yA4fQAE]&quot;}</stringValue>
             </value>
         </processMetadataValues>
         <name>myRule_1_A1</name>
@@ -22,7 +22,7 @@
 
 Legend Partner {!myVariable_current.Registered_By__c}&apos;s customer {!myVariable_current.Registered_To__c} filled out a Partner Survey with an NPS score of {!myVariable_current.NPS_Score__c}.
 
-@[005i0000002c3RpAAI] @[005i0000002c3PyAAI] @[0051Y000009wKCwQAM] @[0054z000007HKpBAAW] @[0054z000008ResBAAS] @[0051Y00000ArpbtQAB] @[0054z000008SXg0AAG] @[0051Y000009yA4fQAE] </stringValue>
+@[005i0000002c3RpAAI] @[0051Y000009wKCwQAM] @[0054z000007HKpBAAW] @[0054z000008ResBAAS] @[0051Y00000ArpbtQAB] @[0054z000008SXg0AAG] @[0051Y000009yA4fQAE]</stringValue>
             </value>
         </inputParameters>
         <inputParameters>
@@ -79,7 +79,7 @@ Legend Partner {!myVariable_current.Registered_By__c}&apos;s customer {!myVariab
                 <leftValueReference>myVariable_current.Name</leftValueReference>
                 <operator>Contains</operator>
                 <rightValue>
-                    <stringValue>Your Legend Experience Partner Dealers</stringValue>
+                    <stringValue>Your Legend Experience - Partner</stringValue>
                 </rightValue>
             </conditions>
             <connector>
@@ -89,7 +89,7 @@ Legend Partner {!myVariable_current.Registered_By__c}&apos;s customer {!myVariab
         </rules>
     </decisions>
     <description>Chatters on the record when a new Partner NPS survey is completed.</description>
-    <interviewLabel>Chatter_on_Dealer_NPS_Get_Feedback_Survey-17_InterviewLabel</interviewLabel>
+    <interviewLabel>Chatter_on_Dealer_NPS_Get_Feedback_Survey-20_InterviewLabel</interviewLabel>
     <label>Chatter on Dealer NPS Get Feedback Survey</label>
     <processMetadataValues>
         <name>ObjectType</name>
