@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-    <label>TA Lead AcceptedTimeStamp</label>
+    <label>TA Lead SetOwnerOnAccepted</label>
     <protected>false</protected>
     <values>
         <field>After_Delete__c</field>
@@ -24,7 +24,7 @@
     </values>
     <values>
         <field>Apex_Class_Name__c</field>
-        <value xsi:type="xsd:string">TA_Lead_AcceptedTimeStamp</value>
+        <value xsi:type="xsd:string">TA_Lead_SetOwnerOnAccepted</value>
     </values>
     <values>
         <field>Before_Delete__c</field>
@@ -48,7 +48,7 @@
     </values>
     <values>
         <field>Description__c</field>
-        <value xsi:type="xsd:string">Time stamp when the Lead was accepted from a Queue by a User</value>
+        <value xsi:type="xsd:string">Sets the record owner to the current user if the Status is change from New to anything else</value>
     </values>
     <values>
         <field>Flow_Name__c</field>
@@ -56,7 +56,7 @@
     </values>
     <values>
         <field>Order__c</field>
-        <value xsi:type="xsd:double">10.0</value>
+        <value xsi:type="xsd:double">1.0</value>
     </values>
     <values>
         <field>Required_Permission__c</field>
