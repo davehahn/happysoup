@@ -10,7 +10,7 @@
   <aura:attribute type="Boolean" name="hasOptions" />
   <aura:attribute type="String" name="className" default="" />
   <aura:attribute type="Object" name="subOptions" />
-  <aura:attribute type="Boolean" name="isSelected"/>
+  <aura:attribute type="Boolean" name="isSelected" />
   <aura:attribute type="Boolean" name="isCheckbox" />
   <aura:attribute type="Boolean" name="isPrepayable" />
   <aura:attribute type="Boolean" name="isPrepaid" />
@@ -21,9 +21,11 @@
 
   <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
 
-  <ltng:require scripts="{!join(',', $Resource.Libraries +'/js/LightningApex.js',
+  <ltng:require
+    scripts="{!join(',', $Resource.Libraries +'/js/LightningApex.js',
                                      $Resource.Libraries +'/js/LightningUtils.js') }"
-                afterScriptsLoaded="{!c.doInit}"/>
+    afterScriptsLoaded="{!c.doInit}"
+  />
 
   <!-- Events -->
   <aura:registerEvent name="optionChanged" type="c:CPQ_OptionLine_ChangeEvent_dh" />
@@ -31,11 +33,13 @@
   <div class="{! 'slds-grid option-row slds-wrap ' + v.className}">
     <div class="slds-col slds-size--1-of-1 slds-medium-size--2-of-12 slds-large-size--2-of-12">
       <aura:if isTrue="{!v.isCheckbox}">
-        <lightning:input type="toggle"
-                 name="{!v.productName + '-toggle'}"
-                 label="{!v.productName}"
-                 checked="{!v.isSelected}"
-                 onchange="{!c.toggleSelected}" />
+        <lightning:input
+          type="toggle"
+          name="{!v.productName + '-toggle'}"
+          label="{!v.productName}"
+          checked="{!v.isSelected}"
+          onchange="{!c.toggleSelected}"
+        />
       </aura:if>
       <aura:if isTrue="{! not(v.isCheckbox) }">
         <lightning:select label="{!v.productName}" value="{!v.quantitySelected}" onchange="{!c.selectChanged}">
@@ -46,36 +50,37 @@
       </aura:if>
     </div>
     <div class="slds-col slds-size--1-of-1 slds-medium-size--6-of-12 slds-large-size--6-of-12">
-      <div class="slds-truncate">
-        {!v.productName}
-      </div>
+      <div class="slds-truncate">{!v.productName}</div>
     </div>
     <div class="slds-col slds-size--1-of-1 slds-medium-size--2-of-12 slds-large-size--2-of-12 slds-text-align--right">
-        <lightning:formattedNumber value="{!v.unitCost}" style="currency" currencyCode="CAD" />
+      <lightning:formattedNumber value="{!v.unitCost}" style="currency" currencyCode="CAD" />
     </div>
-    <div class="slds-col slds-size--1-of-1 slds-medium-size--2-of-12 slds-large-size--2-of-12 slds-text-align--right prepaid">
+    <div
+      class="slds-col slds-size--1-of-1 slds-medium-size--2-of-12 slds-large-size--2-of-12 slds-text-align--right prepaid"
+    >
       <aura:if isTrue="{!v.isPrepayable}">
-        <lightning:input type="checkbox" label="Prepaid" checked="{!v.isPrepaid}" onchange="{!c.prepaidChanged}"/>
+        <lightning:input type="checkbox" label="Prepaid" checked="{!v.isPrepaid}" onchange="{!c.prepaidChanged}" />
       </aura:if>
     </div>
   </div>
   <aura:renderIf isTrue="{!!empty(v.subOptions)}">
     <aura:iteration items="{!v.subOptions}" var="sub">
-      <c:CPQ_OptionLine_dh productId="{!sub.productId}"
-                           pricebookId="{!v.pricebookId}"
-                           pricebookEntryId="{!sub.pricebookEntryId}"
-                           productName="{!sub.productName}"
-                           unitCost="{!sub.unitCost}"
-                           isSelected="{!sub.isSelected}"
-                           isCheckbox="{!sub.isCheckbox}"
-                           isPrepayable="{!sub.isPrepayable}"
-                           isPrepaid="{!sub.isPrepaid}"
-                           standard="{!sub.standard}"
-                           maximum="{!sub.maximum}"
-                           quantitySelected="{!sub.quantitySelected}"
-                           parentProductId="{!sub.parentProductId}"
-                           className="subOption" />
-  </aura:iteration>
-
+      <c:CPQ_OptionLine_dh
+        productId="{!sub.productId}"
+        pricebookId="{!v.pricebookId}"
+        pricebookEntryId="{!sub.pricebookEntryId}"
+        productName="{!sub.productName}"
+        unitCost="{!sub.unitCost}"
+        isSelected="{!sub.isSelected}"
+        isCheckbox="{!sub.isCheckbox}"
+        isPrepayable="{!sub.isPrepayable}"
+        isPrepaid="{!sub.isPrepaid}"
+        standard="{!sub.standard}"
+        maximum="{!sub.maximum}"
+        quantitySelected="{!sub.quantitySelected}"
+        parentProductId="{!sub.parentProductId}"
+        className="subOption"
+      />
+    </aura:iteration>
   </aura:renderIf>
 </aura:component>

@@ -4,7 +4,6 @@
 
 <!-- Boat Reservation Thankyou -->
 <template>
-
   <c-legend-spinner visible="true"></c-legend-spinner>
 
   <template if:true={dataLoaded}>
@@ -12,7 +11,7 @@
       <div class="branding">
         <h1 class="main-logo">
           <span class="vh">Legend Boats - Boat Builder</span>
-          <button onclick={handleHomeNav} data-click-focus="unset"><img src={logo}></button>
+          <button onclick={handleHomeNav} data-click-focus="unset"><img src={logo} /></button>
         </h1>
       </div>
     </header>
@@ -20,9 +19,11 @@
     <section class={containerClass} data-thanks="show">
       <div class="thanks_intro" if:false={pickupDealershipSelected}>
         <div class="thanks_model">
-          <c-cust-comm-order-boat-image size="small"
-                                        page='thankyou'
-                                        summary-images={summaryImages}></c-cust-comm-order-boat-image>
+          <c-cust-comm-order-boat-image
+            size="small"
+            page="thankyou"
+            summary-images={summaryImages}
+          ></c-cust-comm-order-boat-image>
         </div>
         <header>
           <h2>
@@ -40,7 +41,6 @@
         </header>
       </div>
 
-
       <div class="pickup-selector" if:false={pickupDealershipSelected}>
         <h4>
           <template if:true={isEN}>Dealers nearest to you:</template>
@@ -49,24 +49,26 @@
         <!-- TODO:  Add proper verbiage,style and check translation -->
         <div class="partner-locations-wrap">
           <div class="partner-locations">
-            <c-account-find-closest-partner partner-count="3"
-                                            is-selectable="true"
-                                            hide-result-icon="true"
-                                            hide-search="true"
-                                            input-label="Your Postal Code or City"
-                                            onaccountselected={handleAccountSelected}></c-account-find-closest-partner>
+            <c-account-find-closest-partner
+              partner-count="3"
+              is-selectable="true"
+              hide-result-icon="true"
+              hide-search="true"
+              input-label="Your Postal Code or City"
+              onaccountselected={handleAccountSelected}
+            ></c-account-find-closest-partner>
           </div>
         </div>
-
       </div>
 
       <div class="thanks_body" if:true={pickupDealershipSelected}>
-
         <div class="thanks_intro">
           <div class="thanks_model">
-            <c-cust-comm-order-boat-image size="small"
-                                          page='thankyou'
-                                          summary-images={summaryImages}></c-cust-comm-order-boat-image>
+            <c-cust-comm-order-boat-image
+              size="small"
+              page="thankyou"
+              summary-images={summaryImages}
+            ></c-cust-comm-order-boat-image>
           </div>
           <header>
             <h2>
@@ -81,14 +83,14 @@
         </div>
 
         <section class="thanks_overview">
-
           <div class="thanks_paymentDetails">
             <ul class="thanks_details">
               <li class="thanks_detail thanks_detail--horizontal">
                 <strong>
                   <template if:true={isEN}>Order Number:</template>
                   <template if:true={isFR}>Numéro de commande:</template>
-                </strong> <span>{orderNumber}</span>
+                </strong>
+                <span>{orderNumber}</span>
               </li>
               <li class="thanks_detail thanks_detail--horizontal">
                 <strong>
@@ -96,11 +98,13 @@
                   <template if:true={isFR}>Paiement :</template>
                 </strong>
                 <span>
-                      <lightning-formatted-number value={paymentAmount}
-                                                  format-style="currency"
-                                                  currency-code="CAD"
-                                                  maximum-fraction-digits="2"></lightning-formatted-number>
-                    </span>
+                  <lightning-formatted-number
+                    value={paymentAmount}
+                    format-style="currency"
+                    currency-code="CAD"
+                    maximum-fraction-digits="2"
+                  ></lightning-formatted-number>
+                </span>
               </li>
               <li class="thanks_detail thanks_detail--horizontal">
                 <template if:true={isEN}>Estimated Deliver: <span>{shippingTiming}</span></template>
@@ -139,7 +143,6 @@
               </ul>
             </section>
           </div>
-
         </section>
 
         <footer class="thanks_footer">
@@ -148,27 +151,28 @@
               <strong>
                 <template if:true={isEN}>Order Number:</template>
                 <template if:true={isFR}>Numéro de commande:</template>
-              </strong> <span>{orderNumber}</span>
+              </strong>
+              <span>{orderNumber}</span>
             </li>
             <li class="thanks_footerDetail">
               <strong>
                 <template if:true={isEN}>Billed To:</template>
                 <template if:true={isFR}>Facturé à:</template>
-              </strong> <span>{customer.FirstName} {customer.LastName}</span>
+              </strong>
+              <span>{customer.FirstName} {customer.LastName}</span>
             </li>
             <li class="thanks_footerDetail">
               <strong>
                 <template if:true={isEN}>Pickup at:</template>
                 <template if:true={isFR}>Ramassage à:</template>
-              </strong> <span>{pickupDealershipName}</span>
+              </strong>
+              <span>{pickupDealershipName}</span>
             </li>
           </ul>
         </footer>
-
       </div>
     </section>
 
-    <div class="config-footer">
-    </div>
+    <div class="config-footer"></div>
   </template>
 </template>

@@ -1,451 +1,457 @@
-<apex:page StandardController="AcctSeed__Billing__c"
-					 extensions="DealerPartOrdersStatement_Controller"
-					 showHeader="true"
-					 applyBodyTag="false"
-					 renderAs="pdf">
-	<apex:stylesheet value="https://fonts.googleapis.com/css?family=Montserrat"/>
-	<head>
-		<style>
-			@page {
-				size:portrait;
-				margin: 0.25in 0.25in 0.5in 0.25in;
-				@bottom-center{content: element(footer);}
-	    }
+<apex:page
+  StandardController="AcctSeed__Billing__c"
+  extensions="DealerPartOrdersStatement_Controller"
+  showHeader="true"
+  applyBodyTag="false"
+  renderAs="pdf"
+>
+  <apex:stylesheet value="https://fonts.googleapis.com/css?family=Montserrat" />
+  <head>
+    <style>
+      @page {
+        size: portrait;
+        margin: 0.25in 0.25in 0.5in 0.25in;
+        @bottom-center {
+          content: element(footer);
+        }
+      }
 
-			.footer {
-				display: block;
-				padding: 5px;
-				position: running(footer);
-				font-size: 6pt;
-        width:100%;
+      .footer {
+        display: block;
+        padding: 5px;
+        position: running(footer);
+        font-size: 6pt;
+        width: 100%;
         border-top: 2pt solid #00b1f0;
         line-height: 3em;
-			}
-				.footer .left {
-					float: left;
-					text-align: left;
-					width: 25%;
-				}
-					.footer .left img {
-						width: 80%;
-					}
-				.footer .center {
-					float: left;
-					width: 50%;
-					text-align: center;
-				}
-				.footer .right {
-					float: right;
-					width: 25%;
-					text-align: right;
-				}
+      }
+      .footer .left {
+        float: left;
+        text-align: left;
+        width: 25%;
+      }
+      .footer .left img {
+        width: 80%;
+      }
+      .footer .center {
+        float: left;
+        width: 50%;
+        text-align: center;
+      }
+      .footer .right {
+        float: right;
+        width: 25%;
+        text-align: right;
+      }
 
-			.pagenumber:before {
-				content: counter(page);
-			}
-			.pagecount:before {
-				content: counter(pages);
-			}
+      .pagenumber:before {
+        content: counter(page);
+      }
+      .pagecount:before {
+        content: counter(pages);
+      }
 
-	    body {
-	    	font-family: 'Montserrat', Helvetica, Arial, sans-serif;
-	    	font-size: 10pt;
-	    	color: #333;
-	    }
+      body {
+        font-family: "Montserrat", Helvetica, Arial, sans-serif;
+        font-size: 10pt;
+        color: #333;
+      }
 
-	    table {
-	    	border-spacing: 0;
-	    }
+      table {
+        border-spacing: 0;
+      }
 
-	    .content h1 {
-    		font-size: 14pt;
-    		font-weight: bold;
-    		text-align: center;
-    		padding: 1.5em 0 0.5em 0;
-    	}
+      .content h1 {
+        font-size: 14pt;
+        font-weight: bold;
+        text-align: center;
+        padding: 1.5em 0 0.5em 0;
+      }
 
-    	.logo {
-    		text-align: right;
-    	}
-    	.logo img {
-    		width: 55%;
-    	}
+      .logo {
+        text-align: right;
+      }
+      .logo img {
+        width: 55%;
+      }
 
-	    th, td {
-	    	padding: 4pt;
-	    	font-weight: normal;
-	    	font-size: 8pt;
-	    }
+      th,
+      td {
+        padding: 4pt;
+        font-weight: normal;
+        font-size: 8pt;
+      }
 
-	    table.summary {
-	    	width: 100%;
-	    	margin: 1em 0;
-	    }
-	    table.summary table { width: 100%; }
-	    table.summary td {
-	    	width: 70%;
-	    	padding: 0;
-	    }
-	    	table.summary table td {
-	    		padding: 5pt 4pt;
-	    		width: auto;
-	    	}
-	    table.summary td+td {
-	    	width: 30%;
-	    }
-	    table.summary tr.last th,
-	    table.summary tr.last td {
-	    	font-weight: bold;
-	    	background: #c6f0ff;
-	    }
+      table.summary {
+        width: 100%;
+        margin: 1em 0;
+      }
+      table.summary table {
+        width: 100%;
+      }
+      table.summary td {
+        width: 70%;
+        padding: 0;
+      }
+      table.summary table td {
+        padding: 5pt 4pt;
+        width: auto;
+      }
+      table.summary td + td {
+        width: 30%;
+      }
+      table.summary tr.last th,
+      table.summary tr.last td {
+        font-weight: bold;
+        background: #c6f0ff;
+      }
 
-	    .master {
-	    	margin: 2em 0 0 0;
-	    	page-break-inside: avoid;
-	    }
+      .master {
+        margin: 2em 0 0 0;
+        page-break-inside: avoid;
+      }
 
-	    .master th {
-	    	border-top: 0.5pt solid #00b1f0;
-	    	font-weight: bold;
-	    	background: #c6f0ff;
-	    }
-	    	.master th.tableHeader {
-	    		border-top: 2pt solid #00b1f0;
-	    		padding: 5pt 4pt;
-	    		font-weight: bold;
-	    		background: none;
-	    		font-size: 10pt;
-	    		color: #002938;
-	    	}
-	    .master td {
-	    	border-top: 0.5pt solid #7fddff;
-	    }
-	    	.master .erp td {
-	    		border-top: none;
-	    		padding-left: 2em;
-	    		padding-top: 0;
-	    	}
-	    	.master .subtotal td {
-	    		border-top: none;
-	    		padding-top: 0;
-	    	}
+      .master th {
+        border-top: 0.5pt solid #00b1f0;
+        font-weight: bold;
+        background: #c6f0ff;
+      }
+      .master th.tableHeader {
+        border-top: 2pt solid #00b1f0;
+        padding: 5pt 4pt;
+        font-weight: bold;
+        background: none;
+        font-size: 10pt;
+        color: #002938;
+      }
+      .master td {
+        border-top: 0.5pt solid #7fddff;
+      }
+      .master .erp td {
+        border-top: none;
+        padding-left: 2em;
+        padding-top: 0;
+      }
+      .master .subtotal td {
+        border-top: none;
+        padding-top: 0;
+      }
 
-	    .txt { text-align: center; }
-	    .num { text-align: right; }
-	    .header {}
-	    	.header .logo {
-	    		float: right;
-	    	}
-	    	.header .address {
-	    		font-size: 8pt;
-	    		float: left;
-	    	}
+      .txt {
+        text-align: center;
+      }
+      .num {
+        text-align: right;
+      }
+      .header {
+      }
+      .header .logo {
+        float: right;
+      }
+      .header .address {
+        font-size: 8pt;
+        float: left;
+      }
 
-	    .content {
-	    	clear: both;
-	    }
-	    	.content table.master {
-	    		width: 100%;
-	    	}
-	  </style>
-	</head>
-	<body>
-		<div class="header">
-			<div class="logo">
-				<apex:image url="{!$Resource.LegendLogo}" />
-			</div>
-			<div class="address">
-				Legend Boats<br/>
-				4795 Regional Road 55<br/>
-				Whitefish, ON  P0M 3E0<br/>
-				Canada
-			</div>
-		</div>
-		<div class="footer">
-			<div class="left">
-				<img src="{!URLFOR($Resource.LegendPDF,'image/logo_250x30.png')}" />
-			</div>
-			<div class="center">
-				4795 Regional Road 55, Whitefish (Sudbury), ON, Canada, P0M 3E0
-			</div>
-      <div class="right">Page <span class="pagenumber"/> of <span class="pagecount"/></div>
+      .content {
+        clear: both;
+      }
+      .content table.master {
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <div class="logo">
+        <apex:image url="{!$Resource.LegendLogo}" />
+      </div>
+      <div class="address">
+        Legend Boats<br /> 4795 Regional Road 55<br /> Whitefish, ON P0M 3E0<br />
+        Canada
+      </div>
     </div>
-		<div class="content">
-			<h1>Monthly Statement</h1>
+    <div class="footer">
+      <div class="left">
+        <img src="{!URLFOR($Resource.LegendPDF,'image/logo_250x30.png')}" />
+      </div>
+      <div class="center">4795 Regional Road 55, Whitefish (Sudbury), ON, Canada, P0M 3E0</div>
+      <div class="right">Page <span class="pagenumber" /> of <span class="pagecount" /></div>
+    </div>
+    <div class="content">
+      <h1>Monthly Statement</h1>
 
-			<table class="summary">
-				<tr>
-					<td>
-						{! acct.Name }<br/>
-						{! acct.BillingStreet }<br/>
-						{! acct.BillingCity }, {! acct.BillingState }  {! acct.BillingPostalCode }<br/>
-						{! acct.BillingCountry }
-					</td>
-					<td>
-						<table>
-							<tr>
-								<th>Statement Date</th>
-								<td class="num">
-									<apex:outputText value="{0, date, MMMM d, yyyy}">
-									   <apex:param value="{! firstOfMonth }" />
-									</apex:outputText>
-								</td>
-							</tr>
-							<tr>
-								<th>Overdue:</th>
-								<td class="num">
-									<apex:outputText value="{0, Number, Currency}">
-							    	<apex:param value="{! overdueItems['balance'] }" />
-									</apex:outputText>
-								</td>
-							</tr>
-							<tr>
-								<th>New:</th>
-								<td class="num">
-									<apex:outputText value="{0, Number, Currency}">
-							    	<apex:param value="{! currentItems['balance'] }" />
-									</apex:outputText>
-								</td>
-							</tr>
-							<tr class="last">
-								<th>Total:</th>
-								<td class="num">
-									<apex:outputText value="{0, Number, Currency}">
-							    	<apex:param value="{! currentItems['balance'] + overdueItems['balance'] }" />
-									</apex:outputText>
-								</td>
-							</tr>
-							<tr>
-								<td colspan="2" style="text-align: center; font-style: italic">
-									Please pay by <apex:outputText value="{0, date, MMMM d,  yyyy}">
-																  <apex:param value="{!dueDate}" />
-																</apex:outputText>.
-								</td>
-							</tr>
-						</table>
-					</td>
-				</tr>
-			</table>
+      <table class="summary">
+        <tr>
+          <td>
+            {! acct.Name }<br /> {! acct.BillingStreet }<br /> {! acct.BillingCity }, {! acct.BillingState } {!
+            acct.BillingPostalCode }<br />
+            {! acct.BillingCountry }
+          </td>
+          <td>
+            <table>
+              <tr>
+                <th>Statement Date</th>
+                <td class="num">
+                  <apex:outputText value="{0, date, MMMM d, yyyy}">
+                    <apex:param value="{! firstOfMonth }" />
+                  </apex:outputText>
+                </td>
+              </tr>
+              <tr>
+                <th>Overdue:</th>
+                <td class="num">
+                  <apex:outputText value="{0, Number, Currency}">
+                    <apex:param value="{! overdueItems['balance'] }" />
+                  </apex:outputText>
+                </td>
+              </tr>
+              <tr>
+                <th>New:</th>
+                <td class="num">
+                  <apex:outputText value="{0, Number, Currency}">
+                    <apex:param value="{! currentItems['balance'] }" />
+                  </apex:outputText>
+                </td>
+              </tr>
+              <tr class="last">
+                <th>Total:</th>
+                <td class="num">
+                  <apex:outputText value="{0, Number, Currency}">
+                    <apex:param value="{! currentItems['balance'] + overdueItems['balance'] }" />
+                  </apex:outputText>
+                </td>
+              </tr>
+              <tr>
+                <td colspan="2" style="text-align: center; font-style: italic">
+                  Please pay by
+                  <apex:outputText value="{0, date, MMMM d,  yyyy}"> <apex:param value="{!dueDate}" /> </apex:outputText
+                  >.
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
 
-
-			<table class="master">
-				<apex:outputPanel layout="none"
-													rendered="{! or( (overdueItems['count'] > 0), (currentItems['count'] > 0) )}">
-					<tr>
-						<th class="tableHeader" colspan="8">Overdue</th>
-					</tr>
-					<tr>
-						<th class="txt">Billing</th>
-						<th class="txt">Type</th>
-						<th class="num">Billing Date</th>
-						<th class="txt">Partner Reference</th>
-						<th class="num">Invoice #</th>
-						<!-- <th class="num">Due Date</th> -->
-						<th class="num">Total</th>
-						<th class="num">Paid</th>
-						<th class="num">Balance</th>
-					</tr>
-					<!-- <tr style="{! IF(overdueItems['count'] > 0, 'display:initial;', 'display:none;')}">
+      <table class="master">
+        <apex:outputPanel layout="none" rendered="{! or( (overdueItems['count'] > 0), (currentItems['count'] > 0) )}">
+          <tr>
+            <th class="tableHeader" colspan="8">Overdue</th>
+          </tr>
+          <tr>
+            <th class="txt">Billing</th>
+            <th class="txt">Type</th>
+            <th class="num">Billing Date</th>
+            <th class="txt">Partner Reference</th>
+            <th class="num">Invoice #</th>
+            <!-- <th class="num">Due Date</th> -->
+            <th class="num">Total</th>
+            <th class="num">Paid</th>
+            <th class="num">Balance</th>
+          </tr>
+          <!-- <tr style="{! IF(overdueItems['count'] > 0, 'display:initial;', 'display:none;')}">
 						<td colspan="9"><strong>Overdue</strong></td>
 					</tr> -->
-					<apex:repeat value="{!overdueItems['billings']}" var="bl">
-						<tr>
-							<td class="txt">{! bl['billing']['Name'] }</td>
-							<td class="txt">{! bl['billing']['AcctSeed__Type__c'] }</td>
-							<td class="num">
-								<apex:outputText value="{0, date, MM/dd/yyyy}">
-								    <apex:param value="{! bl['billing']['AcctSeed__Date__c'] }" />
-								</apex:outputText>
-							</td>
-							<td class="txt">{! bl['erp']['Partner_External_PO_Number__c'] }</td>
-							<td class="num">
-								{! bl['erp']['AcctSeedERP__Work_Order_Number__c'] }
-							</td>
-							<!-- <td class="num">
+          <apex:repeat value="{!overdueItems['billings']}" var="bl">
+            <tr>
+              <td class="txt">{! bl['billing']['Name'] }</td>
+              <td class="txt">{! bl['billing']['AcctSeed__Type__c'] }</td>
+              <td class="num">
+                <apex:outputText value="{0, date, MM/dd/yyyy}">
+                  <apex:param value="{! bl['billing']['AcctSeed__Date__c'] }" />
+                </apex:outputText>
+              </td>
+              <td class="txt">{! bl['erp']['Partner_External_PO_Number__c'] }</td>
+              <td class="num">{! bl['erp']['AcctSeedERP__Work_Order_Number__c'] }</td>
+              <!-- <td class="num">
 								<apex:outputText value="{0, date, MM/dd/yyyy}">
 								    <apex:param value="{! bl['billing']['AcctSeed__Due_Date2__c'] }" />
 								</apex:outputText>
 							</td> -->
-							<td class="num">
-								<apex:outputText value="{0, Number, Currency}">
-								    <apex:param value="{! bl['billing']['AcctSeed__Total__c'] }" />
-								</apex:outputText>
-							</td>
-							<td class="num">
-								<apex:outputText value="{0, Number, Currency}">
-								    <apex:param value="{! bl['billing']['AcctSeed__Received_Amount__c'] + bl['billing']['AcctSeed__Cash_Application_Adjustment_Amount__c'] + bl['billing']['AcctSeed__Credit_Memo_Applied_Amount__c'] }" />
-								</apex:outputText>
-							</td>
-							<td class="num">
-								<apex:outputText value="{0, Number, Currency}">
-								    <apex:param value="{! bl['billing']['AcctSeed__Balance__c'] }" />
-								</apex:outputText>
-							</td>
-						</tr>
-					</apex:repeat>
-					<tr style="{! IF(overdueItems['count'] > 0, 'display:initial;', 'display:none;')}">
-						<td class="num" colspan="7"><strong>Overdue:</strong></td>
-						<td class="num">
-							<strong>
-							<apex:outputText value="{0, Number, Currency}">
-							    <apex:param value="{! overdueItems['balance'] }" />
-							</apex:outputText>
-						</strong>
-						</td>
-					</tr>
-					<apex:outputPanel layout="none"
-														rendered="{! currentItems['count'] > 0 }">
-						<tr>
-							<th class="tableHeader" colspan="8">Current</th>
-						</tr>
-						<tr>
-							<th class="txt">Billing</th>
-							<th class="txt">Type</th>
-							<th class="num">Billing Date</th>
-							<th class="txt">Partner Reference</th>
-							<th class="num">Invoice #</th>
-							<!-- <th class="num">Due Date</th> -->
-							<th class="num">Total</th>
-							<th class="num">Paid</th>
-							<th class="num">Balance</th>
-						</tr>
-						<apex:repeat value="{!currentItems['billings']}" var="bl">
-							<tr>
-								<td class="txt">{! bl['billing']['Name'] }</td>
-								<td class="txt">{! bl['billing']['AcctSeed__Type__c'] }</td>
-								<td class="num">
-									<apex:outputText value="{0, date, MM/dd/yyyy}">
-									    <apex:param value="{! bl['billing']['AcctSeed__Date__c'] }" />
-									</apex:outputText>
-								</td>
-								<td class="txt">{! bl['erp']['Partner_External_PO_Number__c'] }</td>
-								<td class="num">
-									{! bl['erp']['AcctSeedERP__Work_Order_Number__c'] }
-								</td>
-								<!-- <td class="num">
+              <td class="num">
+                <apex:outputText value="{0, Number, Currency}">
+                  <apex:param value="{! bl['billing']['AcctSeed__Total__c'] }" />
+                </apex:outputText>
+              </td>
+              <td class="num">
+                <apex:outputText value="{0, Number, Currency}">
+                  <apex:param
+                    value="{! bl['billing']['AcctSeed__Received_Amount__c'] + bl['billing']['AcctSeed__Cash_Application_Adjustment_Amount__c'] + bl['billing']['AcctSeed__Credit_Memo_Applied_Amount__c'] }"
+                  />
+                </apex:outputText>
+              </td>
+              <td class="num">
+                <apex:outputText value="{0, Number, Currency}">
+                  <apex:param value="{! bl['billing']['AcctSeed__Balance__c'] }" />
+                </apex:outputText>
+              </td>
+            </tr>
+          </apex:repeat>
+          <tr style="{! IF(overdueItems['count'] > 0, 'display:initial;', 'display:none;')}">
+            <td class="num" colspan="7"><strong>Overdue:</strong></td>
+            <td class="num">
+              <strong>
+                <apex:outputText value="{0, Number, Currency}">
+                  <apex:param value="{! overdueItems['balance'] }" />
+                </apex:outputText>
+              </strong>
+            </td>
+          </tr>
+          <apex:outputPanel layout="none" rendered="{! currentItems['count'] > 0 }">
+            <tr>
+              <th class="tableHeader" colspan="8">Current</th>
+            </tr>
+            <tr>
+              <th class="txt">Billing</th>
+              <th class="txt">Type</th>
+              <th class="num">Billing Date</th>
+              <th class="txt">Partner Reference</th>
+              <th class="num">Invoice #</th>
+              <!-- <th class="num">Due Date</th> -->
+              <th class="num">Total</th>
+              <th class="num">Paid</th>
+              <th class="num">Balance</th>
+            </tr>
+            <apex:repeat value="{!currentItems['billings']}" var="bl">
+              <tr>
+                <td class="txt">{! bl['billing']['Name'] }</td>
+                <td class="txt">{! bl['billing']['AcctSeed__Type__c'] }</td>
+                <td class="num">
+                  <apex:outputText value="{0, date, MM/dd/yyyy}">
+                    <apex:param value="{! bl['billing']['AcctSeed__Date__c'] }" />
+                  </apex:outputText>
+                </td>
+                <td class="txt">{! bl['erp']['Partner_External_PO_Number__c'] }</td>
+                <td class="num">{! bl['erp']['AcctSeedERP__Work_Order_Number__c'] }</td>
+                <!-- <td class="num">
 									<apex:outputText value="{0, date, MM/dd/yyyy}">
 									    <apex:param value="{! bl['billing']['AcctSeed__Due_Date2__c'] }" />
 									</apex:outputText>
 								</td> -->
-								<td class="num">
-									<apex:outputText value="{0, Number, Currency}">
-									    <apex:param value="{! bl['billing']['AcctSeed__Total__c'] }" />
-									</apex:outputText>
-								</td>
-								<td class="num">
-									<apex:outputText value="{0, Number, Currency}">
-									    <apex:param value="{! bl['billing']['AcctSeed__Received_Amount__c'] + bl['billing']['AcctSeed__Cash_Application_Adjustment_Amount__c'] + bl['billing']['AcctSeed__Credit_Memo_Applied_Amount__c'] }" />
-									</apex:outputText>
-								</td>
-								<td class="num">
-									<apex:outputText value="{0, Number, Currency}">
-									    <apex:param value="{! bl['billing']['AcctSeed__Balance__c'] }" />
-									</apex:outputText>
-								</td>
-							</tr>
-						</apex:repeat>
-						<tr>
-							<td class="num" colspan="7"><strong>Current:</strong></td>
-							<td class="num">
-								<strong>
-								<apex:outputText value="{0, Number, Currency}">
-								    <apex:param value="{! currentItems['balance'] }" />
-								</apex:outputText>
-								</strong>
-							</td>
-						</tr>
-					</apex:outputPanel>
-					<tr>
-						<td class="num" colspan="7">
-							<strong>Due </strong>
-							<span>
-								<strong>
-								<apex:outputText value="{0, date, MMMM d,  yyyy}">
-								  <apex:param value="{!dueDate}" />
-								</apex:outputText>
-								</strong>
-							</span>
-						</td>
-						<td class="num">
-							<strong>
-								<apex:outputText value="{0, Number, Currency}">
-								    <apex:param value="{! currentItems['balance'] + overdueItems['balance'] }" />
-								</apex:outputText>
-							</strong>
-						</td>
-					</tr>
-				</apex:outputPanel>
-				<apex:outputPanel layout="none" rendered="{! and( (overdueItems['count'] <= 0), (currentItems['count'] <= 0) ) }">
-					<td>None</td>
-				</apex:outputPanel>
-			</table>
+                <td class="num">
+                  <apex:outputText value="{0, Number, Currency}">
+                    <apex:param value="{! bl['billing']['AcctSeed__Total__c'] }" />
+                  </apex:outputText>
+                </td>
+                <td class="num">
+                  <apex:outputText value="{0, Number, Currency}">
+                    <apex:param
+                      value="{! bl['billing']['AcctSeed__Received_Amount__c'] + bl['billing']['AcctSeed__Cash_Application_Adjustment_Amount__c'] + bl['billing']['AcctSeed__Credit_Memo_Applied_Amount__c'] }"
+                    />
+                  </apex:outputText>
+                </td>
+                <td class="num">
+                  <apex:outputText value="{0, Number, Currency}">
+                    <apex:param value="{! bl['billing']['AcctSeed__Balance__c'] }" />
+                  </apex:outputText>
+                </td>
+              </tr>
+            </apex:repeat>
+            <tr>
+              <td class="num" colspan="7"><strong>Current:</strong></td>
+              <td class="num">
+                <strong>
+                  <apex:outputText value="{0, Number, Currency}">
+                    <apex:param value="{! currentItems['balance'] }" />
+                  </apex:outputText>
+                </strong>
+              </td>
+            </tr>
+          </apex:outputPanel>
+          <tr>
+            <td class="num" colspan="7">
+              <strong>Due </strong>
+              <span>
+                <strong>
+                  <apex:outputText value="{0, date, MMMM d,  yyyy}">
+                    <apex:param value="{!dueDate}" />
+                  </apex:outputText>
+                </strong>
+              </span>
+            </td>
+            <td class="num">
+              <strong>
+                <apex:outputText value="{0, Number, Currency}">
+                  <apex:param value="{! currentItems['balance'] + overdueItems['balance'] }" />
+                </apex:outputText>
+              </strong>
+            </td>
+          </tr>
+        </apex:outputPanel>
+        <apex:outputPanel
+          layout="none"
+          rendered="{! and( (overdueItems['count'] <= 0), (currentItems['count'] <= 0) ) }"
+        >
+          <td>None</td>
+        </apex:outputPanel>
+      </table>
 
-
-			<apex:outputPanel layout="none" rendered="{! futureItems['count'] > 0}">
-				<table class="master">
-					<tr>
-						<th class="tableHeader" colspan="9">Due Later</th>
-					</tr>
-					<tr>
-						<th class="txt">Billing</th>
-						<th class="txt">Type</th>
-						<th class="num">Billing Date</th>
-						<th class="txt">Partner Reference</th>
-						<th class="num">Invoice #</th>
-						<th class="num">Due Date</th>
-						<th class="num">Total</th>
-						<th class="num">Paid</th>
-						<th class="num">Balance</th>
-					</tr>
-					<apex:repeat value="{!futureItems['billings']}" var="bl">
-						<tr>
-							<td class="txt">{! bl['billing']['Name'] }</td>
-							<td class="txt">{! bl['billing']['AcctSeed__Type__c'] }</td>
-							<td class="num">
-								<apex:outputText value="{0, date, MM/dd/yyyy}">
-								    <apex:param value="{! bl['billing']['AcctSeed__Date__c'] }" />
-								</apex:outputText>
-							</td>
-							<td class="txt">{! bl['erp']['Partner_External_PO_Number__c'] }</td>
-								<td class="num">
-									{! bl['erp']['AcctSeedERP__Work_Order_Number__c'] }
-								</td>
-							<td class="num">
-								<apex:outputText value="{0, date, MM/dd/yyyy}">
-								    <apex:param value="{! bl['billing']['Lgnd_Due_Date__c'] }" />
-								</apex:outputText>
-							</td>
-							<td class="num">
-								<apex:outputText value="{0, Number, Currency}">
-								    <apex:param value="{! bl['billing']['AcctSeed__Total__c'] }" />
-								</apex:outputText>
-							</td>
-							<td class="num">
-								<apex:outputText value="{0, Number, Currency}">
-								    <apex:param value="{! bl['billing']['AcctSeed__Received_Amount__c']
+      <apex:outputPanel layout="none" rendered="{! futureItems['count'] > 0}">
+        <table class="master">
+          <tr>
+            <th class="tableHeader" colspan="9">Due Later</th>
+          </tr>
+          <tr>
+            <th class="txt">Billing</th>
+            <th class="txt">Type</th>
+            <th class="num">Billing Date</th>
+            <th class="txt">Partner Reference</th>
+            <th class="num">Invoice #</th>
+            <th class="num">Due Date</th>
+            <th class="num">Total</th>
+            <th class="num">Paid</th>
+            <th class="num">Balance</th>
+          </tr>
+          <apex:repeat value="{!futureItems['billings']}" var="bl">
+            <tr>
+              <td class="txt">{! bl['billing']['Name'] }</td>
+              <td class="txt">{! bl['billing']['AcctSeed__Type__c'] }</td>
+              <td class="num">
+                <apex:outputText value="{0, date, MM/dd/yyyy}">
+                  <apex:param value="{! bl['billing']['AcctSeed__Date__c'] }" />
+                </apex:outputText>
+              </td>
+              <td class="txt">{! bl['erp']['Partner_External_PO_Number__c'] }</td>
+              <td class="num">{! bl['erp']['AcctSeedERP__Work_Order_Number__c'] }</td>
+              <td class="num">
+                <apex:outputText value="{0, date, MM/dd/yyyy}">
+                  <apex:param value="{! bl['billing']['Lgnd_Due_Date__c'] }" />
+                </apex:outputText>
+              </td>
+              <td class="num">
+                <apex:outputText value="{0, Number, Currency}">
+                  <apex:param value="{! bl['billing']['AcctSeed__Total__c'] }" />
+                </apex:outputText>
+              </td>
+              <td class="num">
+                <apex:outputText value="{0, Number, Currency}">
+                  <apex:param
+                    value="{! bl['billing']['AcctSeed__Received_Amount__c']
 								    											+ bl['billing']['AcctSeed__Cash_Application_Adjustment_Amount__c']
-								    											+ bl['billing']['AcctSeed__Credit_Memo_Applied_Amount__c'] }" />
-								</apex:outputText>
-							</td>
-							<td class="num">
-								<apex:outputText value="{0, Number, Currency}">
-								    <apex:param value="{! bl['billing']['AcctSeed__Balance__c'] }" />
-								</apex:outputText>
-							</td>
-						</tr>
-					</apex:repeat>
-					<tr>
-						<td class="num" colspan="8"><strong>Due Later:</strong></td>
-						<td class="num">
-							<strong>
-								<apex:outputText value="{0, Number, Currency}">
-								    <apex:param value="{! futureItems['balance'] }" />
-								</apex:outputText>
-							</strong>
-						</td>
-					</tr>
-				</table>
-			</apex:outputPanel>
-		</div>
-	</body>
+								    											+ bl['billing']['AcctSeed__Credit_Memo_Applied_Amount__c'] }"
+                  />
+                </apex:outputText>
+              </td>
+              <td class="num">
+                <apex:outputText value="{0, Number, Currency}">
+                  <apex:param value="{! bl['billing']['AcctSeed__Balance__c'] }" />
+                </apex:outputText>
+              </td>
+            </tr>
+          </apex:repeat>
+          <tr>
+            <td class="num" colspan="8"><strong>Due Later:</strong></td>
+            <td class="num">
+              <strong>
+                <apex:outputText value="{0, Number, Currency}">
+                  <apex:param value="{! futureItems['balance'] }" />
+                </apex:outputText>
+              </strong>
+            </td>
+          </tr>
+        </table>
+      </apex:outputPanel>
+    </div>
+  </body>
 </apex:page>

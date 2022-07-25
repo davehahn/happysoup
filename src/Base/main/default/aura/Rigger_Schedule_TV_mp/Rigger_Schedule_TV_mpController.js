@@ -1,22 +1,22 @@
 ({
-	doInit : function(component, event, helper) {
-		console.log('+++ doInit +++');
-		helper.init(component);
-	},
+  doInit: function (component, event, helper) {
+    console.log("+++ doInit +++");
+    helper.init(component);
+  },
 
-	setTeamAll : function(component) {
-		component.set('v.team', null);
-	},
+  setTeamAll: function (component) {
+    component.set("v.team", null);
+  },
 
-	setTeamProduction : function(component) {
-		component.set('v.team', 'Production');
-	},
+  setTeamProduction: function (component) {
+    component.set("v.team", "Production");
+  },
 
-	setTeamService : function(component) {
-		component.set('v.team', 'Service');
-	},
+  setTeamService: function (component) {
+    component.set("v.team", "Service");
+  },
 
-	teamChange : function(component, event, helper) {
-		helper.refresh(component);
-	}
-})
+  teamChange: function (component, event, helper) {
+    helper.refresh(component);
+  }
+});

@@ -5,11 +5,7 @@
 <!-- System Issue Percentage Complete -->
 <template>
   <div class="slds-card">
-    <lightning-layout
-      vertical-align="stretch"
-      multiple-rows="true"
-      horizontal-align="center"
-    >
+    <lightning-layout vertical-align="stretch" multiple-rows="true" horizontal-align="center">
       <lightning-layout-item
         size="6"
         small-device-size="12"
@@ -36,7 +32,7 @@
           <div class="value">{complete}%</div>
           <div class="label">Completed</div>
         </div>
-        <canvas class="gauge" height="300" width="250" lwc:dom="manual" ></canvas>
+        <canvas class="gauge" height="300" width="250" lwc:dom="manual"></canvas>
       </lightning-layout-item>
     </lightning-layout>
   </div>

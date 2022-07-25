@@ -3,7 +3,6 @@
  */
 
 public without sharing class ContentVersion_TriggerHandler extends TriggerHandler {
-
   protected override void beforeInsert() {
     setPrivacy((List<ContentVersion>) Trigger.new);
   }
@@ -14,7 +13,7 @@ public without sharing class ContentVersion_TriggerHandler extends TriggerHandle
 
   private static void setPrivacy(List<ContentVersion> newList) {
     for (ContentVersion cv : newList) {
-      if( cv.Visibility__c == null ){
+      if (cv.Visibility__c == null) {
         cv.Visibility__c = 'Public';
       }
       if (cv.Visibility__c == 'Private') {

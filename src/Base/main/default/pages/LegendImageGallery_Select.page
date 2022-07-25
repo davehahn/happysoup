@@ -1,21 +1,22 @@
-<apex:page showHeader="true"
-           sidebar="false"
-           tabStyle="Product2"
-           docType="html-5.0"
-           controller="LegendImageGalleryController">
-
+<apex:page
+  showHeader="true"
+  sidebar="false"
+  tabStyle="Product2"
+  docType="html-5.0"
+  controller="LegendImageGalleryController"
+>
   <c:LegendGalleryResources />
 
   <c:LegendMainAjaxIndicator id="ajaxInd" />
   <div class="headerNav">
     <span class="title"> Select Images For {!lgndGallery.currentObject.Name}</span>
-    <apex:outputLink value="/apex/LegendImageGallery?id={!lgndGallery.currentObject.Id}"
-                     styleClass="fd_button small invert cancelLink">
+    <apex:outputLink
+      value="/apex/LegendImageGallery?id={!lgndGallery.currentObject.Id}"
+      styleClass="fd_button small invert cancelLink"
+    >
       Cancel
     </apex:outputLink>
-    <a href="#"
-       class="fd_button small success invert addSelectedButton"
-       id="addSelectedButton">
+    <a href="#" class="fd_button small success invert addSelectedButton" id="addSelectedButton">
       Add <span>0</span> Selected
     </a>
   </div>
@@ -27,45 +28,44 @@
     $j = jQuery.noConflict();
 
     var selectedImages = [],
-        currentUIEnv = determineUI("{!$User.UITheme}"),
-        containerHeight = ( $j(window).height() - 110 );
+      currentUIEnv = determineUI("{!$User.UITheme}"),
+      containerHeight = $j(window).height() - 110;
 
-    if( currentUIEnv === 'classic' )
-    {
+    if (currentUIEnv === "classic") {
       containerHeight -= 160;
     }
 
     //setup click handler for adding selected button
-    $j('.headerNav').on('click', '#addSelectedButton', function(e){
+    $j(".headerNav").on("click", "#addSelectedButton", function (e) {
       e.preventDefault();
       var origin = window.location.origin;
-      $j('#ajaxInd').show();
-      LegendGalleryRemoter.createAssociations( "{!lgndGallery.currentObject.Id}", selectedImages, function(events, result){
-        if( result.statusCode === 200 ){
-          origin += result.result;
-          if( currentUIEnv === 'classic' )
-          {
-            window.top.location.href = origin;
-          }
-          else
-          {
-            sforce.one.navigateToURL(origin);
+      $j("#ajaxInd").show();
+      LegendGalleryRemoter.createAssociations(
+        "{!lgndGallery.currentObject.Id}",
+        selectedImages,
+        function (events, result) {
+          if (result.statusCode === 200) {
+            origin += result.result;
+            if (currentUIEnv === "classic") {
+              window.top.location.href = origin;
+            } else {
+              sforce.one.navigateToURL(origin);
+            }
+          } else {
+            $j("#ajaxInd").hide();
+            alert(result.message);
           }
         }
-        else {
-          $j('#ajaxInd').hide();
-          alert(result.message);
-        }
-      });
+      );
     });
 
     LegendGallery.init({
       selectable: true,
-      SF_parentId: '{!lgndGallery.currentObject.Id}',
+      SF_parentId: "{!lgndGallery.currentObject.Id}",
       images_per_page: parseInt("{!imageLimit}"),
-      indicator: '#ajaxInd',
-      header: '.headerNav:first',
-      container: '.photo_container:first',
+      indicator: "#ajaxInd",
+      header: ".headerNav:first",
+      container: ".photo_container:first",
       containerHeight: containerHeight,
       row_grid_options: {
         minMargin: 10,
@@ -73,37 +73,40 @@
         itemSelector: ".gallery_image",
         resize: true
       },
-      retrieveImages: function() {
+      retrieveImages: function () {
         console.log(this);
         var dfd = new $j.Deferred();
-        LegendGalleryRemoter.fetchAvailableImages(this.pagination_offset, this.images_per_page, "{!lgndGallery.currentObject.Id}", function( events, result ) {
-          if( result.statusCode == 200 ){
-            dfd.resolve(result.result);
-          } else {
-            dfd.resolve();
+        LegendGalleryRemoter.fetchAvailableImages(
+          this.pagination_offset,
+          this.images_per_page,
+          "{!lgndGallery.currentObject.Id}",
+          function (events, result) {
+            if (result.statusCode == 200) {
+              dfd.resolve(result.result);
+            } else {
+              dfd.resolve();
+            }
           }
-        });
+        );
         return dfd.promise();
       },
-      onSelected: function(imageId) {
-        selectedImages.push( imageId );
+      onSelected: function (imageId) {
+        selectedImages.push(imageId);
         updateAddButton();
       },
-      onUnSelected: function(imageId) {
-        selectedImages.splice( selectedImages.indexOf(imageId), 1 );
+      onUnSelected: function (imageId) {
+        selectedImages.splice(selectedImages.indexOf(imageId), 1);
         updateAddButton();
       }
     });
 
     function updateAddButton() {
-      var $link = $j('#addSelectedButton')
-      if( selectedImages.length > 0 ){
-        $link.addClass('active').children('span').html(selectedImages.length);
+      var $link = $j("#addSelectedButton");
+      if (selectedImages.length > 0) {
+        $link.addClass("active").children("span").html(selectedImages.length);
       } else {
-        $link.removeClass('active');
+        $link.removeClass("active");
       }
     }
-
   </script>
-
 </apex:page>

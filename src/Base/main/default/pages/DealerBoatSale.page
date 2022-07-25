@@ -1,15 +1,10 @@
-<apex:page controller="RetailSalesToolController"
-           docType="html-5.0"
-           showHeader="true"
-           sidebar="true">
-
+<apex:page controller="RetailSalesToolController" docType="html-5.0" showHeader="true" sidebar="true">
   <apex:stylesheet value="{!URLFOR($Resource.OpportunityResources, 'css/RetailSalesTool.min.css')}" />
   <apex:stylesheet value="{!URLFOR($Resource.OpportunityResources, 'css/CounterSale.min.css')}" />
   <apex:stylesheet value="{!URLFOR($Resource.SLDS202, 'assets/styles/salesforce-lightning-design-system.min.css')}" />
   <c:LegendFormResources includeFontAwesome="true" includeComboBox="true" />
 
   <style type="text/css">
-
     .detail-fields {
       padding: 1.5rem;
       padding-top: 1rem;
@@ -27,73 +22,67 @@
     #continueBtn {
       display: none;
     }
-
   </style>
 
   <c:LegendMainAjaxIndicator id="ajaxInd" />
 
   <div class="legendStyled">
-
     <h1 class="lgnd">Wholesale Boat Sale</h1>
 
     <div class="row">
       <div class="large-8 large-offset-2 columns" id="errorContainer">
-        <apex:messages styleClass="alert-box alert"/>
+        <apex:messages styleClass="alert-box alert" />
       </div>
     </div>
 
     <apex:form id="dealerSaleForm">
-
       <sffd:row styleClass="custFields">
+        <input type="hidden" id="cust_Id" class="customer_field" />
 
-        <input type="hidden" id="cust_Id" class='customer_field'></input>
+        <sffd:column cols="large-6"
+          ><!-- ++++++++++++++ ACCOUNT LEFT COLUMN ++++++++++++++ -->
 
-        <sffd:column cols="large-6"><!-- ++++++++++++++ ACCOUNT LEFT COLUMN ++++++++++++++ -->
-
-          <sffd:row >
+          <sffd:row>
             <sffd:column cols="large-4">
               <label class="large-only-right">Account Name: </label>
             </sffd:column>
             <sffd:column cols="large-8">
-
               <sffd:row styleClass="collapse">
-
                 <sffd:column cols="large-11">
-                  <span id="searchInd">
-                    Searching ....  <i class=" fa fa-spinner fa-spin"></i>
-                  </span>
-                  <input type="text" id="acct_Name" data-required="true" class="has-postfix comboBox" placeholder="Search / Account Name" />
+                  <span id="searchInd"> Searching .... <i class="fa fa-spinner fa-spin"></i> </span>
+                  <input
+                    type="text"
+                    id="acct_Name"
+                    data-required="true"
+                    class="has-postfix comboBox"
+                    placeholder="Search / Account Name"
+                  />
                 </sffd:column>
 
                 <sffd:column cols="large-1">
-                  <span class="postfix transparent"><i class="fa fa-search "></i></span>
+                  <span class="postfix transparent"><i class="fa fa-search"></i></span>
                 </sffd:column>
-
               </sffd:row>
-
             </sffd:column>
           </sffd:row>
-
         </sffd:column>
 
         <sffd:column cols="large-6">
-
-            <div id="detailsContainer" class="slds-card slds-card--narrow" style="display:none">
-              <div class="slds-card__header slds-grid">
-                <div class="slds-media slds-media--center slds-has-flexi-truncate">
-                  <div class="slds-media__figure">
-                    <span class="slds-avatar slds-avatar--small" style="background:#7F8DE1">
-                      <img src="{!URLFOR( $Resource.SLDS202, '/assets/icons/standard/account_120.png')}" />
-                    </span>
-
-                  </div>
-                  <div class="slds-media__body slds-truncate" data-field-name="Name">
-                    <a href="javascript:void(0);" class="slds-text-link--reset">
-                      <span class="slds-text-heading--small"></span>
-                    </a>
-                  </div>
+          <div id="detailsContainer" class="slds-card slds-card--narrow" style="display: none">
+            <div class="slds-card__header slds-grid">
+              <div class="slds-media slds-media--center slds-has-flexi-truncate">
+                <div class="slds-media__figure">
+                  <span class="slds-avatar slds-avatar--small" style="background: #7f8de1">
+                    <img src="{!URLFOR( $Resource.SLDS202, '/assets/icons/standard/account_120.png')}" />
+                  </span>
                 </div>
-                <!-- <div class="slds-no-flex">
+                <div class="slds-media__body slds-truncate" data-field-name="Name">
+                  <a href="javascript:void(0);" class="slds-text-link--reset">
+                    <span class="slds-text-heading--small"></span>
+                  </a>
+                </div>
+              </div>
+              <!-- <div class="slds-no-flex">
                   <button class="slds-button slds-button--icon-border-filled slds-button--icon-x-small">
                     <svg aria-hidden="true" class="slds-button__icon">
                       <use xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#down"></use>
@@ -101,21 +90,21 @@
                     <span class="slds-assistive-text">More Options</span>
                   </button>
                 </div>-->
-              </div>
-              <div class="slds-card__body">
-                <sffd:row >
-                  <sffd:column cols="large-6">
-                    <div class="detail-fields">
-                      <div data-field-name="AddressLine1">
-                        <span></span>
-                      </div>
-                       <div data-field-name="AddressLine2">
-                        <span></span>
-                      </div>
-                       <div data-field-name="AddressLine3">
-                        <span></span>
-                      </div>
+            </div>
+            <div class="slds-card__body">
+              <sffd:row>
+                <sffd:column cols="large-6">
+                  <div class="detail-fields">
+                    <div data-field-name="AddressLine1">
+                      <span></span>
                     </div>
+                    <div data-field-name="AddressLine2">
+                      <span></span>
+                    </div>
+                    <div data-field-name="AddressLine3">
+                      <span></span>
+                    </div>
+                  </div>
                 </sffd:column>
 
                 <sffd:column cols="large-6">
@@ -124,7 +113,7 @@
                       <label>Phone:</label>
                       <span></span>
                     </div>
-                     <div data-field-name="Fax">
+                    <div data-field-name="Fax">
                       <label>Fax:</label>
                       <span></span>
                     </div>
@@ -132,19 +121,17 @@
                 </sffd:column>
               </sffd:row>
 
-             <!--  <div class="slds-card__footer">Card Footer</div> -->
+              <!--  <div class="slds-card__footer">Card Footer</div> -->
             </div>
           </div>
         </sffd:column>
-
       </sffd:row>
 
       <h3 class="lgnd lead">Opportunity Information</h3>
 
-      <sffd:row >
+      <sffd:row>
         <sffd:column cols="large-6">
-
-          <sffd:row >
+          <sffd:row>
             <sffd:column cols="large-4">
               <label class="large-only-right">Price Book</label>
             </sffd:column>
@@ -154,169 +141,136 @@
               </apex:selectList>
             </sffd:column>
           </sffd:row>
-
         </sffd:column>
         <sffd:column cols="large-6">
-
-          <sffd:row >
+          <sffd:row>
             <sffd:column cols="large-4">
               <label class="large-only-right">Close Date</label>
             </sffd:column>
             <sffd:column cols="large-8">
-              <apex:inputField value="{!opp.CloseDate}"
-                              id="closeDate"
-                              required="true"
-                              showDatePicker="true" />
+              <apex:inputField value="{!opp.CloseDate}" id="closeDate" required="true" showDatePicker="true" />
             </sffd:column>
           </sffd:row>
-
         </sffd:column>
       </sffd:row>
 
-            <!-- +++++++++++++++++++++ BUTTON ROW ++++++++++++++++++++++++++++++++++++++ -->
+      <!-- +++++++++++++++++++++ BUTTON ROW ++++++++++++++++++++++++++++++++++++++ -->
       <sffd:row styleClass="button_row">
-
         <sffd:column cols="large-12">
-          <a href="" id="continueBtn" class="fd_button small success invert right">
-            Continue
-          </a>
-          <a href="" id="cancelBtn" class="fd_button small invert right">
-            Cancel
-          </a>
+          <a href="" id="continueBtn" class="fd_button small success invert right"> Continue </a>
+          <a href="" id="cancelBtn" class="fd_button small invert right"> Cancel </a>
         </sffd:column>
-
       </sffd:row>
       <!-- ======================= /BUTTON ROW =================================== -->
-
     </apex:form>
-
   </div>
   <apex:includeScript value="{!URLFOR($Resource.UtilJS)}" />
   <script type="text/javascript">
-
-    (function($, window, document, undefined) {
+    (function ($, window, document, undefined) {
       var selectedAccountId,
-          currentUIEnv = determineUI("{!$User.UITheme}"),
-          $continueBtn = $('#continueBtn');
+        currentUIEnv = determineUI("{!$User.UITheme}"),
+        $continueBtn = $("#continueBtn");
 
-//CANCEL BUTTON HANDLER
-      $('#cancelBtn').on('click', function(e) {
+      //CANCEL BUTTON HANDLER
+      $("#cancelBtn").on("click", function (e) {
         e.preventDefault();
-        if( currentUIEnv === 'classic' )
-        {
+        if (currentUIEnv === "classic") {
           window.history.back();
-        }
-        else
-        {
+        } else {
           sforce.one.back();
         }
       });
 
-//CONTINUE BUTTON HANDLER
-      $continueBtn.on('click', function(e) {
+      //CONTINUE BUTTON HANDLER
+      $continueBtn.on("click", function (e) {
         e.preventDefault();
         var origin = window.location.origin,
-            errorMessages = [],
-            oppData = {};
+          errorMessages = [],
+          oppData = {};
 
-        oppData.oppCloseDate = $('[id*=closeDate]').val();
+        oppData.oppCloseDate = $("[id*=closeDate]").val();
         oppData.oppPricebook = $j('[id*="priceBook"]').val();
-console.log(oppData);
-        if( selectedAccountId && oppData.oppCloseDate )
-        {
-          $j('#ajaxInd').show();
-          RetailSalesToolController.createDealerSale( selectedAccountId, JSON.stringify(oppData), function( events, results )
-          {
-            if( results.statusCode === 200 )
-            {
-              origin += results.result;
-              if( currentUIEnv === 'classic' )
-              {
-                window.top.location.href = origin;
-              }
-              else
-              {
-                sforce.one.navigateToURL(origin);
+        console.log(oppData);
+        if (selectedAccountId && oppData.oppCloseDate) {
+          $j("#ajaxInd").show();
+          RetailSalesToolController.createDealerSale(
+            selectedAccountId,
+            JSON.stringify(oppData),
+            function (events, results) {
+              if (results.statusCode === 200) {
+                origin += results.result;
+                if (currentUIEnv === "classic") {
+                  window.top.location.href = origin;
+                } else {
+                  sforce.one.navigateToURL(origin);
+                }
+              } else {
+                $("#ajaxInd").hide();
+                alert(results.message);
               }
             }
-            else
-            {
-              $('#ajaxInd').hide();
-              alert(results.message);
-            }
-          });
-        }
-        else
-        {
-          if( !oppData.oppCloseDate )
-          {
-            errorMessages.push('Close Date is required');
+          );
+        } else {
+          if (!oppData.oppCloseDate) {
+            errorMessages.push("Close Date is required");
           }
-          if( errorMessages.length > 0 )
-          {
-            var $error = $('<div></div>').addClass('alert-box alert');
-                $ul = $('<ul></ul>').css('margin-bottom', 0);
-            $.each( errorMessages, function(idx, msg) {
-              $ul.append( $('<li></li>').html(msg) );
+          if (errorMessages.length > 0) {
+            var $error = $("<div></div>").addClass("alert-box alert");
+            $ul = $("<ul></ul>").css("margin-bottom", 0);
+            $.each(errorMessages, function (idx, msg) {
+              $ul.append($("<li></li>").html(msg));
             });
-            $('#errorContainer').append( $error.append($ul) );
+            $("#errorContainer").append($error.append($ul));
           }
         }
       });
 
-      $('.comboBox').legendForceComboBox({
-        idFieldName: 'Id',
-        textFieldName: 'Name',
-        searchFunction: function( queryString ) {
+      $(".comboBox").legendForceComboBox({
+        idFieldName: "Id",
+        textFieldName: "Name",
+        searchFunction: function (queryString) {
           return accountSearch(queryString);
         },
-        quickSelectHandler: function( result ) {
+        quickSelectHandler: function (result) {
           populateDetails(result);
         },
-        selectHandler: function(id, text) {
+        selectHandler: function (id, text) {
           $(this).val(text);
           $continueBtn.show();
           selectedAccountId = id;
         },
-        clearFormFields: function() {
-          $('#detailsContainer').hide();
+        clearFormFields: function () {
+          $("#detailsContainer").hide();
           $continueBtn.hide();
           selectedAccountId = null;
           return false;
         }
       });
 
-      function accountSearch(queryString)
-      {
+      function accountSearch(queryString) {
         var self,
-            $indc = $('#searchIndicator');
+          $indc = $("#searchIndicator");
 
         $indc.show();
-        return $.Deferred( function() {
+        return $.Deferred(function () {
           self = this;
-          RetailSalesToolController.dealerSearch( queryString, function( events, result ){
+          RetailSalesToolController.dealerSearch(queryString, function (events, result) {
             $indc.hide();
-            if( result.statusCode === 200 )
-            {
+            if (result.statusCode === 200) {
               self.resolve(result.result);
             }
           });
         });
       }
 
-      function populateDetails(result)
-      {
-        var $container = $('#detailsContainer');
+      function populateDetails(result) {
+        var $container = $("#detailsContainer");
 
-        $.each(result, function(k,v) {
-          $container.find("div[data-field-name='"+k+"'] span").html(v);
-        })
-         $container.show();
+        $.each(result, function (k, v) {
+          $container.find("div[data-field-name='" + k + "'] span").html(v);
+        });
+        $container.show();
       }
-
-
-    })( jQuery.noConflict(), window, document);
-
-
+    })(jQuery.noConflict(), window, document);
   </script>
 </apex:page>

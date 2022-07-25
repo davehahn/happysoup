@@ -27,7 +27,7 @@ private class TA_Case_HandleSubletLines_T {
     buildERP();
   }
 
-  private static void initForUpdate( String newCompany, Integer newPrice){
+  private static void initForUpdate(String newCompany, Integer newPrice) {
     createSubletMaterial();
     Case c = Factory_Case.buildWarrantyCase(dealer);
     c.Warranty_ERP__c = erp.Id;
@@ -35,8 +35,8 @@ private class TA_Case_HandleSubletLines_T {
     c.Sublet_Price__c = SUBLET_PRICE;
     c.Id = TestUtility.getFakeId(Case.SObjectType);
 
-    Case oldC = c.clone(true,true,true,true);
-    oldList = new List<Case>{oldC};
+    Case oldC = c.clone(true, true, true, true);
+    oldList = new List<Case>{ oldC };
 
     c.Sublet_Company__c = newCompany;
     c.Sublet_Price__c = newPrice;
@@ -55,13 +55,13 @@ private class TA_Case_HandleSubletLines_T {
     insert erp;
     TriggerBase.clearBypass('AcctSeed__Project__c');
     String tn = '%' + ProjectTask_Service.warrantyPayableTaskName + '%';
-    task = Factory_ERPOrderTask.buildProjectTask( erp.Id, tn );
+    task = Factory_ERPOrderTask.buildProjectTask(erp.Id, tn);
     TriggerBase.bypass('AcctSeed__Project_Task__c');
     insert task;
     TriggerBase.clearBypass('AcctSeed__Project_Task__c');
   }
 
-  private static void createSubletMaterial(){
+  private static void createSubletMaterial() {
     material = new AcctSeedERP__Material__c(
       AcctSeedERP__Product__c = Utility_Products__c.getOrgDefaults().Sublet__c,
       AcctSeedERP__Quantity_Per_Unit__c = 1,
@@ -101,12 +101,12 @@ private class TA_Case_HandleSubletLines_T {
   }
 
   @IsTest
-  static void TA_afterUpdate_change(){
+  static void TA_afterUpdate_change() {
     init();
-    initForUpdate( 'BadAssBrewing', 800 );
+    initForUpdate('BadAssBrewing', 800);
 
     Test.startTest();
-    new TA_Case_HandleSubletLines().afterUpdate( cases, oldList );
+    new TA_Case_HandleSubletLines().afterUpdate(cases, oldList);
     Test.stopTest();
 
     material = [
@@ -120,8 +120,7 @@ private class TA_Case_HandleSubletLines_T {
   }
 
   @IsTest
-  static void TA_afterUpdate_remove()
-  {
+  static void TA_afterUpdate_remove() {
     init();
     initForUpdate(null, null);
 
@@ -129,8 +128,11 @@ private class TA_Case_HandleSubletLines_T {
     new TA_Case_HandleSubletLines().afterUpdate(cases, oldList);
     Test.stopTest();
 
-    List<AcctSeedERP__Material__c> mats = [SELECT Id FROM AcctSeedERP__Material__c WHERE AcctSeedERP__Project__c = :erp.Id];
-    System.assertEquals( 0, mats.size() );
+    List<AcctSeedERP__Material__c> mats = [
+      SELECT Id
+      FROM AcctSeedERP__Material__c
+      WHERE AcctSeedERP__Project__c = :erp.Id
+    ];
+    System.assertEquals(0, mats.size());
   }
-
-  }
+}

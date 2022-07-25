@@ -1,14 +1,12 @@
-@isTest(SeeAllData=TRUE)
-private class gcTest_Product{
+@isTest(SeeAllData=true)
+private class gcTest_Product {
+  static testMethod void test1() {
+    //gc
+    // Product.coverage();
+    //gcProduct_UpdateMRPQty.coverage();
+  }
 
-	static testMethod void test1()
-	{
-		//gc
-		// Product.coverage();
-		//gcProduct_UpdateMRPQty.coverage();
-	}
-
-	/*static testMethod void test2()
+  /*static testMethod void test2()
 	{
 		gcProduct.disableTrigger = true;
 		gcProduct.disableTrigger = false;

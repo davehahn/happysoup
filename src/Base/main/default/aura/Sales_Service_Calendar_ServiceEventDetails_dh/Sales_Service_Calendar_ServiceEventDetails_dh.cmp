@@ -1,5 +1,4 @@
 <aura:component controller="SalesAndServiceCalendar_Controller">
-
   <aura:attribute name="recordId" type="String" />
   <aura:attribute name="scheduleStartDate" type="String" />
   <aura:attribute name="scheduleEndDate" type="String" />
@@ -12,80 +11,76 @@
   <aura:attribute name="riggerId" type="String" />
   <aura:attribute name="parkingSpotOptions" type="List" />
 
-
-  <ltng:require scripts="{!join(',', $Resource.Libraries + '/js/LightningApex.js',
+  <ltng:require
+    scripts="{!join(',', $Resource.Libraries + '/js/LightningApex.js',
                                      $Resource.Libraries + '/js/LightningUtils.js') }"
-                afterScriptsLoaded="{!c.afterScripts}" />
+    afterScriptsLoaded="{!c.afterScripts}"
+  />
 
   <aura:handler name="change" value="{!v.eventData.warehouseId}" action="{!c.warehouseChanged}" />
 
-  <aura:registerEvent name="CloseModal" type="c:SalesServiceCalendar_CloseEventDetails_Event_dh"/>
-  <aura:registerEvent name="ModalLoaded" type="c:SalesServiceCalendar_ModalLoaded_Event_dh"/>
-  <aura:registerEvent name="UpdateSuccess" type="c:SalesServiceCalendar_UpdateSuccess_Event_dh"/>
+  <aura:registerEvent name="CloseModal" type="c:SalesServiceCalendar_CloseEventDetails_Event_dh" />
+  <aura:registerEvent name="ModalLoaded" type="c:SalesServiceCalendar_ModalLoaded_Event_dh" />
+  <aura:registerEvent name="UpdateSuccess" type="c:SalesServiceCalendar_UpdateSuccess_Event_dh" />
 
-  <lightning:spinner variant="brand"
-                      size="large"
-                      class="slds-is-fixed slds-hide"
-                      aura:id="spinner" />
+  <lightning:spinner variant="brand" size="large" class="slds-is-fixed slds-hide" aura:id="spinner" />
 
   <aura:if isTrue="{! not(empty(v.eventData))}">
-    <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+    <section
+      role="dialog"
+      tabindex="-1"
+      aria-labelledby="modal-heading-01"
+      aria-modal="true"
+      aria-describedby="modal-content-id-1"
+      class="slds-modal slds-fade-in-open"
+    >
       <div class="slds-modal__container">
         <header class="slds-modal__header">
-          <lightning:buttonIcon iconName="utility:close"
-                                class="slds-modal__close slds-button_icon-inverse"
-                                alternativeText="Close"
-                                onclick="{!c.handleCancel}" />
+          <lightning:buttonIcon
+            iconName="utility:close"
+            class="slds-modal__close slds-button_icon-inverse"
+            alternativeText="Close"
+            onclick="{!c.handleCancel}"
+          />
           <h2 class="slds-text-heading_medium slds-hyphenate">
-            <lightning:icon iconName="{!v.eventData.iconName}"
-                            class="slds-float_left" />
-            <a href="javscript:void()"
-               data-record-id="{!v.eventData.Id}"
-               onclick="{!c.handleNavToRecord}">
+            <lightning:icon iconName="{!v.eventData.iconName}" class="slds-float_left" />
+            <a href="javscript:void()" data-record-id="{!v.eventData.Id}" onclick="{!c.handleNavToRecord}">
               {! v.eventData.accountName} - {! v.eventData.woNumber }
             </a>
           </h2>
         </header>
-        <div class="slds-modal__content" >
-
+        <div class="slds-modal__content">
           <div class="slds-p-around_medium">
-            <lightning:tabset >
-
+            <lightning:tabset>
               <!-- EVENT DETAILS -->
               <lightning:tab label="Event Details">
-                <lightning:layout >
-                  <lightning:layoutItem size="12"
-                                        padding="around-small">
-
+                <lightning:layout>
+                  <lightning:layoutItem size="12" padding="around-small">
                     <aura:if isTrue="{! !empty(v.selectedSerial)}">
-                      <div class="slds-border_left
-                                  slds-border_right
-                                  slds-border_top
-                                  slds-border_bottom">
-                        <lightning:card title="{! join(' - ',
+                      <div class="slds-border_left slds-border_right slds-border_top slds-border_bottom">
+                        <lightning:card
+                          title="{! join(' - ',
                                                         v.selectedSerial.GMBLASERP__Lot__r.Name,
                                                         v.selectedSerial.GMBLASERP__Product__r.Name,
                                                         v.selectedSerial.Name)}"
-                                    iconName="custom:custom55">
-
+                          iconName="custom:custom55"
+                        >
                           <aura:if isTrue="{! not(empty( v.selectedSerial.Nested_Serial_Numbers__r )) }">
                             <div class="slds-card__body slds-card__body_inner no-overflow">
                               <div class="slds-car__header slds-grid">
                                 <div class="slds-media__figure">
-                                  <lightning:icon iconName="standard:product" size="small"/>
+                                  <lightning:icon iconName="standard:product" size="small" />
                                 </div>
                                 <div class="slds-media__body">
-                                  <h2 class="slds-text-heading_small">
-                                    Nested Items
-                                  </h2>
+                                  <h2 class="slds-text-heading_small">Nested Items</h2>
                                 </div>
                               </div>
 
                               <div class="slds-m-left_medium slds-m-top_small">
                                 <aura:iteration items="{!v.selectedSerial.Nested_Serial_Numbers__r}" var="nest">
-                                  <lightning:layout >
+                                  <lightning:layout>
                                     <lightning:layoutItem padding="horizontal-small">
-                                      <p style="font-weight:bold">{!nest.GMBLASERP__Product__r.Name}</p>
+                                      <p style="font-weight: bold">{!nest.GMBLASERP__Product__r.Name}</p>
                                     </lightning:layoutItem>
                                     <lightning:layoutItem padding="horizontal-small">
                                       <p>{!nest.Name}</p>
@@ -95,77 +90,77 @@
                               </div>
                             </div>
                           </aura:if>
-
                         </lightning:card>
                       </div>
                     </aura:if>
-
                   </lightning:layoutItem>
                 </lightning:layout>
-                <lightning:layout >
+                <lightning:layout>
                   <lightning:layoutItem size="6" padding="around-small">
-                    <lightning:input type="datetime-local"
-                                     label="Service Date"
-                                     value="{!v.eventData.startDateTime}"
-                                     disabled="{! not(v.perms.canEditServiceDate)}" />
+                    <lightning:input
+                      type="datetime-local"
+                      label="Service Date"
+                      value="{!v.eventData.startDateTime}"
+                      disabled="{! not(v.perms.canEditServiceDate)}"
+                    />
                     <lightning:layout class="slds-m-top_large">
                       <lightning:layoutItem size="6">
-                        <p class="slds-text-heading_small slds-p-left_medium">
-                          Estimated Duration:
-                        </p>
+                        <p class="slds-text-heading_small slds-p-left_medium">Estimated Duration:</p>
                       </lightning:layoutItem>
                       <lightning:layoutItem size="6">
-                        <span class="estimation">
-                          {!v.eventData.estimatedDuration}
-                        </span>
+                        <span class="estimation"> {!v.eventData.estimatedDuration} </span>
                         <span class="slds-m-left_x-small">(hrs)</span>
                       </lightning:layoutItem>
                     </lightning:layout>
                   </lightning:layoutItem>
                   <lightning:layoutItem size="6" padding="around-small">
-                    <lightning:select label="Location"
-                                      class="slds-m-bottom_small"
-                                      value="{!v.eventData.warehouseId}"
-                                      disabled="{! not(v.perms.canEditWarehouse)}">
+                    <lightning:select
+                      label="Location"
+                      class="slds-m-bottom_small"
+                      value="{!v.eventData.warehouseId}"
+                      disabled="{! not(v.perms.canEditWarehouse)}"
+                    >
                       <aura:iteration items="{!v.warehouseOptions}" var="wh">
-                        <option value="{!wh.Id}"
-                                text="{!wh.Name}"
-                                selected="{! equals( wh.Id, v.eventData.warehouseId )}"></option>
+                        <option
+                          value="{!wh.Id}"
+                          text="{!wh.Name}"
+                          selected="{! equals( wh.Id, v.eventData.warehouseId )}"
+                        ></option>
                       </aura:iteration>
                     </lightning:select>
 
-                    <lightning:select label="Rigger"
-                                      class="slds-m-bottom_small"
-                                      value="{!v.riggerId}">
+                    <lightning:select label="Rigger" class="slds-m-bottom_small" value="{!v.riggerId}">
                       <option value="" text="-- None --"></option>
                       <aura:iteration items="{!v.riggers}" var="rigger">
-                        <option value="{!rigger.Id}"
-                                text="{!rigger.Name}"
-                                selected="{! equals( rigger.Id, v.riggerId )}"></option>
+                        <option
+                          value="{!rigger.Id}"
+                          text="{!rigger.Name}"
+                          selected="{! equals( rigger.Id, v.riggerId )}"
+                        ></option>
                       </aura:iteration>
                     </lightning:select>
 
-                    <lightning:select label="Parking Spot"
-                                      class="slds-m-bottom_small"
-                                      value="{!v.eventData.parkingSpot}">
+                    <lightning:select
+                      label="Parking Spot"
+                      class="slds-m-bottom_small"
+                      value="{!v.eventData.parkingSpot}"
+                    >
                       <option value="" text="-- None --"></option>
                       <aura:iteration items="{!v.parkingSpotOptions}" var="spot">
-                        <option value="{!spot}"
-                                text="{!spot}"
-                                selected="{! equals( spot, v.eventData.parkingSpot )}"></option>
+                        <option
+                          value="{!spot}"
+                          text="{!spot}"
+                          selected="{! equals( spot, v.eventData.parkingSpot )}"
+                        ></option>
                       </aura:iteration>
                     </lightning:select>
-
-
                   </lightning:layoutItem>
                 </lightning:layout>
               </lightning:tab>
 
-
               <!-- RECORD DETAILS -->
               <lightning:tab label="Record Details">
-                <lightning:recordViewForm recordId="{!v.recordId}"
-                                          objectApiName="AcctSeed__Project__c">
+                <lightning:recordViewForm recordId="{!v.recordId}" objectApiName="AcctSeed__Project__c">
                   <lightning:layout horizontalAlign="center">
                     <lightning:layoutItem size="6" padding="around-small">
                       <lightning:outputField fieldName="AcctSeed__Account__c" />
@@ -193,25 +188,29 @@
                 <forceChatter:publisher context="RECORD" recordId="{!v.recordId}" />
                 <forceChatter:feed subjectId="{!v.recordId}" type="Record" />
               </lightning:tab>
-
             </lightning:tabset>
           </div>
-
         </div>
 
         <footer class="slds-modal__footer">
-          <button class="slds-button slds-button_neutral slds-float_left"
-                  onclick="{!c.handleUnschedule}"
-                  disabled="{! not(v.perms.canEditServiceDate)}">Unschedule</button>
-          <button class="slds-button slds-button_neutral"
-                  onclick="{!c.handleCancel}">Cancel</button>
-          <button class="slds-button slds-button_brand"
-                  onclick="{!c.handleUpdate}"
-                  disabled="{! empty(v.eventData.warehouseId)}">Update</button>
+          <button
+            class="slds-button slds-button_neutral slds-float_left"
+            onclick="{!c.handleUnschedule}"
+            disabled="{! not(v.perms.canEditServiceDate)}"
+          >
+            Unschedule
+          </button>
+          <button class="slds-button slds-button_neutral" onclick="{!c.handleCancel}">Cancel</button>
+          <button
+            class="slds-button slds-button_brand"
+            onclick="{!c.handleUpdate}"
+            disabled="{! empty(v.eventData.warehouseId)}"
+          >
+            Update
+          </button>
         </footer>
       </div>
     </section>
     <div class="slds-backdrop slds-backdrop_open"></div>
   </aura:if>
-
 </aura:component>

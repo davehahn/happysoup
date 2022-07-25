@@ -1,8 +1,11 @@
-<aura:component controller="PurchaseOrderLines_MultipleClone"
-                implements="force:lightningQuickActionWithoutHeader,force:hasRecordId">
-
-  <ltng:require scripts="{!join(',', $Resource.Libraries +'/js/LightningApex.js',
-                                     $Resource.Libraries +'/js/LightningUtils.js') }" />
+<aura:component
+  controller="PurchaseOrderLines_MultipleClone"
+  implements="force:lightningQuickActionWithoutHeader,force:hasRecordId"
+>
+  <ltng:require
+    scripts="{!join(',', $Resource.Libraries +'/js/LightningApex.js',
+                                     $Resource.Libraries +'/js/LightningUtils.js') }"
+  />
 
   <aura:attribute name="recordId" type="String" />
   <aura:attribute name="lineCount" type="Integer" default="1" />
@@ -15,10 +18,7 @@
 
     <lightning:layout horizontalAlign="center" verticalAlign="center" class="content">
       <lightning:layoutItem size="4" class="slds-col-bump-left">
-        <lightning:input type="number"
-                         value="{!v.lineCount}"
-                         step="1"
-                         variant="label-hidden" />
+        <lightning:input type="number" value="{!v.lineCount}" step="1" variant="label-hidden" />
       </lightning:layoutItem>
     </lightning:layout>
 

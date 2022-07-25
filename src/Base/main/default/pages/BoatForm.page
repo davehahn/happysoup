@@ -26,37 +26,20 @@
 
       <apex:pageBlockSection columns="2" title="Product Information">
         <apex:outputText label="Record Type" value="Boat" />
-        <apex:repeat
-          value="{!$ObjectType.Product2.FieldSets['Boat_Standard_Fields']}"
-          var="f"
-        >
-          <apex:inputField
-            label="{!f.Label}"
-            value="{!Product2[f]}"
-            rendered="{!f.Label != 'Boat Type'}"
-          />
+        <apex:repeat value="{!$ObjectType.Product2.FieldSets['Boat_Standard_Fields']}" var="f">
+          <apex:inputField label="{!f.Label}" value="{!Product2[f]}" rendered="{!f.Label != 'Boat Type'}" />
         </apex:repeat>
       </apex:pageBlockSection>
 
       <apex:pageBlockSection columns="2" title="Standard Equipment">
-        <apex:repeat
-          value="{!$ObjectType.Product2.FieldSets['Boat_Standard_Equipment_Fields']}"
-          var="f"
-        >
+        <apex:repeat value="{!$ObjectType.Product2.FieldSets['Boat_Standard_Equipment_Fields']}" var="f">
           <apex:inputField label="{!f.Label}" value="{!Product2[f]}" />
         </apex:repeat>
       </apex:pageBlockSection>
 
       <apex:outputPanel id="specs" layout="none">
-        <apex:pageBlockSection
-          rendered="{!Product2.Family!= null}"
-          columns="1"
-          collapsible="false"
-        >
-          <apex:pageBlockSection
-            title="{!Product2.Family} Specifications"
-            collapsible="false"
-          >
+        <apex:pageBlockSection rendered="{!Product2.Family!= null}" columns="1" collapsible="false">
+          <apex:pageBlockSection title="{!Product2.Family} Specifications" collapsible="false">
             <apex:repeat
               value="{!$ObjectType.Product2.FieldSets[SUBSTITUTE(Product2.Family, ' ', '_')+'_Specifications']}"
               var="f"
@@ -68,37 +51,25 @@
       </apex:outputPanel>
 
       <apex:pageBlockSection columns="2" title="Accounting Information">
-        <apex:repeat
-          value="{!$ObjectType.Product2.FieldSets['Accounting_Fields']}"
-          var="f"
-        >
+        <apex:repeat value="{!$ObjectType.Product2.FieldSets['Accounting_Fields']}" var="f">
           <apex:inputField label="{!f.Label}" value="{!Product2[f]}" />
         </apex:repeat>
       </apex:pageBlockSection>
 
       <apex:pageBlockSection columns="2" title="Insurance Information">
-        <apex:repeat
-          value="{!$ObjectType.Product2.FieldSets['Boat_Insurance_Information_Fields']}"
-          var="f"
-        >
+        <apex:repeat value="{!$ObjectType.Product2.FieldSets['Boat_Insurance_Information_Fields']}" var="f">
           <apex:inputField label="{!f.Label}" value="{!Product2[f]}" />
         </apex:repeat>
       </apex:pageBlockSection>
 
       <apex:pageBlockSection columns="2" title="NMMA Information">
-        <apex:repeat
-          value="{!$ObjectType.Product2.FieldSets['Boat_NMMA_Fields']}"
-          var="f"
-        >
+        <apex:repeat value="{!$ObjectType.Product2.FieldSets['Boat_NMMA_Fields']}" var="f">
           <apex:inputField label="{!f.Label}" value="{!Product2[f]}" />
         </apex:repeat>
       </apex:pageBlockSection>
 
       <apex:pageBlockSection columns="2" title="Rigging Information">
-        <apex:repeat
-          value="{!$ObjectType.Product2.FieldSets['Boat_Rigging_Fields']}"
-          var="f"
-        >
+        <apex:repeat value="{!$ObjectType.Product2.FieldSets['Boat_Rigging_Fields']}" var="f">
           <apex:inputField label="{!f.Label}" value="{!Product2[f]}" />
         </apex:repeat>
       </apex:pageBlockSection>

@@ -1,9 +1,7 @@
-<apex:page Controller="ERPInvoiceDocumentBuilder"
-           docType="html-5.0"
-           showHeader="true"
-           sidebar="true">
-
-  <apex:stylesheet value="{!URLFOR($Resource.LGND_SLDS_214, 'assets/styles/salesforce-lightning-design-system-vf.min.css')}" />
+<apex:page Controller="ERPInvoiceDocumentBuilder" docType="html-5.0" showHeader="true" sidebar="true">
+  <apex:stylesheet
+    value="{!URLFOR($Resource.LGND_SLDS_214, 'assets/styles/salesforce-lightning-design-system-vf.min.css')}"
+  />
 
   <style type="text/css">
     .lgnd {
@@ -22,11 +20,11 @@
 
     #newMenu .slds-select_container {
       width: 125px;
-      margin:auto;
+      margin: auto;
     }
 
     #newMenu .slds-button-group {
-      float:right;
+      float: right;
       padding-right: 1rem;
       margin-top: 15px;
     }
@@ -54,7 +52,7 @@
     }
 
     .serial-search.busy .slds-spinner_container {
-      display:block;
+      display: block;
     }
 
     .serial-search.busy span {
@@ -62,7 +60,7 @@
     }
 
     #page-indicator {
-      display:none;
+      display: none;
     }
 
     .slds-dropdown-trigger > button > img {
@@ -80,7 +78,7 @@
       display: none;
     }
 
-/*    .slds-modal label {
+    /*    .slds-modal label {
       line-height: 2rem !important;
       text-align: right;
       width: 100%;
@@ -89,13 +87,13 @@
     }*/
 
     #serial-filter {
-      border-radius: .25rem .25rem 0 0;
+      border-radius: 0.25rem 0.25rem 0 0;
       border-bottom: none;
     }
 
     .serial-list {
       width: 100%;
-      border: 1px solid #CCC;
+      border: 1px solid #ccc;
       min-height: 6rem;
       max-height: 12rem;
       overflow-y: auto;
@@ -112,7 +110,7 @@
 
     .serial-list a.selected {
       background: green;
-      color: #FFF;
+      color: #fff;
       text-decoration: none;
     }
 
@@ -125,17 +123,15 @@
     }
 
     .serial-list a:not(.selected):hover {
-      color: #FFF;
-      background: #00AAF9;
+      color: #fff;
+      background: #00aaf9;
     }
     #viewerIframe.temp_hidden {
-      opacity:0;
+      opacity: 0;
     }
-
   </style>
 
-  <div class="lgnd"
-       xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <div class="lgnd" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
     <div class="slds-backdrop"></div>
     <div id="page-indicator" class="slds-spinner_container">
       <div class="slds-spinner--brand slds-spinner slds-spinner--large" role="alert">
@@ -146,10 +142,8 @@
     </div>
 
     <apex:outputPanel id="thePage">
-
-      <div id="newMenu" style="display:none">
+      <div id="newMenu" style="display: none">
         <div class="slds-grid slds-wrap">
-
           <div class="slds-p-horizontal--small slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--4-of-12">
             <div class="slds-form-element">
               <label class="slds-form-element__label" for="language-select">Language</label>
@@ -180,32 +174,24 @@
 
           <div class="slds-p-horizontal--small slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--4-of-12">
             <div class="slds-button-group" role="group">
-              <a href="#" class="slds-button slds-button--neutral page-action"
-                            data-action="cancel">Cancel</a>
-              <a href="#" class="slds-button slds-button--neutral page-action"
-                          data-action="saveNew">Save</a>
-              <a href="#" class="slds-button slds-button--neutral page-action"
-                          data-action="createNewAndEmail">Save &amp; Email</a>
+              <a href="#" class="slds-button slds-button--neutral page-action" data-action="cancel">Cancel</a>
+              <a href="#" class="slds-button slds-button--neutral page-action" data-action="saveNew">Save</a>
+              <a href="#" class="slds-button slds-button--neutral page-action" data-action="createNewAndEmail"
+                >Save &amp; Email</a
+              >
             </div>
           </div>
-
         </div>
       </div>
 
-      <div style="width: 100%; text-align: center;">
-
-        <div style="width: 850px !important; display:inline-block;">
-          <div style="width: 100% !important;" >
-            <iframe height="800px"
-                    id="pdfIframe"
-                    name="InvoicePDF"
-                    width="100%"
-                    X-Frame-Options="SAMEORIGIN">
-            </iframe>
+      <div style="width: 100%; text-align: center">
+        <div style="width: 850px !important; display: inline-block">
+          <div style="width: 100% !important">
+            <iframe height="800px" id="pdfIframe" name="InvoicePDF" width="100%" X-Frame-Options="SAMEORIGIN"> </iframe>
           </div>
         </div>
 
-        <div id="docsContainer" style="display:none"></div>
+        <div id="docsContainer" style="display: none"></div>
 
         <!-- <div id="newMenu" style="display:none">
 
@@ -250,10 +236,8 @@
             </div>
           </div>
         </div> -->
-
       </div>
     </apex:outputPanel>
-
   </div>
 
   <script id="docArch" type="text/x-handlebars-template">
@@ -263,15 +247,11 @@
           <h2 style="font-size: 1.25rem">Document Archive</h2>
         </div>
         <div class="slds-col">
-          <div class="slds-button-group"
-               role="group"
-               style="margin-bottom:10px;float:right; ">
-                <apex:outputText rendered="{!showCreateNew}">
-                  <a href="#" class="slds-button slds-button--neutral page-action"
-                          data-action="createNew">Create New</a>
-                </apex:outputText>
-              <a href="#" class="slds-button slds-button--neutral page-action"
-                          data-action="emailExisting">Email</a>
+          <div class="slds-button-group" role="group" style="margin-bottom:10px;float:right; ">
+            <apex:outputText rendered="{!showCreateNew}">
+              <a href="#" class="slds-button slds-button--neutral page-action" data-action="createNew">Create New</a>
+            </apex:outputText>
+            <a href="#" class="slds-button slds-button--neutral page-action" data-action="emailExisting">Email</a>
           </div>
         </div>
       </div>
@@ -300,15 +280,17 @@
 
   <script id="toast" type="text/x-handlebars-template">
     <div class="slds-notify_container" style="top:-100px;">
-      <div class="slds-notify slds-notify--toast slds-theme--{{{ toastTheme }}}" role="alert">
+      <div class="slds-notify slds-notify--toast slds-theme--{{{toastTheme}}}" role="alert">
         <button class="slds-button slds-notify__close slds-button--icon-inverse" title="Close">
           <svg class="slds-button__icon slds-button__icon--large" aria-hidden="true">
-            <use xlink:href="{!URLFOR($Resource.LGND_SLDS_214, '/assets/icons/utility-sprite/svg/symbols.svg#close')}"></use>
+            <use
+              xlink:href="{!URLFOR($Resource.LGND_SLDS_214, '/assets/icons/utility-sprite/svg/symbols.svg#close')}"
+            ></use>
           </svg>
           <span class="slds-assistive-text">Close</span>
         </button>
         <div class="slds-notify__content">
-          <h2 class="slds-text-heading--small">{{{ message }}}</h2>
+          <h2 class="slds-text-heading--small">{{{message}}}</h2>
         </div>
       </div>
     </div>
@@ -320,7 +302,9 @@
         <div class="slds-modal__header">
           <button class="slds-button slds-modal__close slds-button--icon-inverse" title="Close">
             <svg class="slds-button__icon slds-button__icon--large" aria-hidden="true">
-              <use xlink:href="{!URLFOR($Resource.LGND_SLDS_214, '/assets/icons/utility-sprite/svg/symbols.svg#close')}"></use>
+              <use
+                xlink:href="{!URLFOR($Resource.LGND_SLDS_214, '/assets/icons/utility-sprite/svg/symbols.svg#close')}"
+              ></use>
             </svg>
           </button>
           <h2 id="header43" class="slds-text-heading--medium">Send Email</h2>
@@ -328,24 +312,38 @@
         <div class="slds-modal__content slds-p-around--medium">
 
           <div class="slds-form-element">
-            <label class="slds-form-element__label" for="toAddresses">To:<span style="font-size: 9px;">( comma seperated )</span></label>
+            <label class="slds-form-element__label" for="toAddresses">To:<span style="font-size: 9px;">( comma seperated
+                )</span></label>
             <div class="slds-form-element__control">
-              <input type="text" id="toAddresses" class="slds-input" data-field-name="toAddresses" value="{{{ toAddresses }}}"/>
+              <input
+                type="text"
+                id="toAddresses"
+                class="slds-input"
+                data-field-name="toAddresses"
+                value="{{{toAddresses}}}"
+              />
             </div>
           </div>
 
           <div class="slds-form-element" style="margin-top: 15px;">
-            <label class="slds-form-element__label" for="ccAddresses">CC:<span style="font-size: 9px;">( comma seperated )</span></label>
+            <label class="slds-form-element__label" for="ccAddresses">CC:<span style="font-size: 9px;">( comma seperated
+                )</span></label>
             <div class="slds-form-element__control">
-              <input type="text" id="ccAddresses" class="slds-input" data-field-name="ccAddresses"/>
+              <input type="text" id="ccAddresses" class="slds-input" data-field-name="ccAddresses" />
             </div>
           </div>
 
           <div class="slds-form-element" style="margin-top: 15px;">
             <label class="slds-form-element__label" for="subject">Subject:</label>
             <div class="slds-form-element__control">
-              <input type="text" id="subject" class="slds-input" data-field-name="subject" value="Legend Boats Invoice
-              "/>
+              <input
+                type="text"
+                id="subject"
+                class="slds-input"
+                data-field-name="subject"
+                value="Legend Boats Invoice
+              "
+              />
             </div>
           </div>
 
@@ -364,7 +362,6 @@
       </div>
     </div>
   </script>
-
 
   <apex:includeScript value="{!URLFOR($Resource.Libraries, 'js/jquery-3.1.1.min.js')}" />
   <apex:includeScript value="{!URLFOR($Resource.Libraries, 'js/handlebars.min-latest.js')}" />

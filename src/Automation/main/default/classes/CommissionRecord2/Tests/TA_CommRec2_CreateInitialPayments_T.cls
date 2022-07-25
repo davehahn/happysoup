@@ -3,17 +3,14 @@
  */
 
 @IsTest
-private class TA_CommRec2_CreateInitialPayments_T
-{
-
+private class TA_CommRec2_CreateInitialPayments_T {
   @testSetup
   static void dataSetup() {
     TA_CommRec2_TestHelper.testDataSetup();
   }
 
   @IsTest
-  static void TA_afterInsert()
-  {
+  static void TA_afterInsert() {
     TA_CommRec2_TestHelper helper = new TA_CommRec2_TestHelper();
     CommissionRecord2__c record = new CommissionRecord2__c(
       Project_Task__c = helper.tasks[0].Id,
@@ -27,16 +24,17 @@ private class TA_CommRec2_CreateInitialPayments_T
     insert record;
     TriggerBase.clearBypass('CommissionRecord2__c');
 
-    List<CommissionRecord2__c> newList = new List<CommissionRecord2__c>
-    {
-      record
-    };
+    List<CommissionRecord2__c> newList = new List<CommissionRecord2__c>{ record };
 
     Test.startTest();
     new TA_CommRec2_CreateInitialPayments().afterInsert(newList);
     Test.stopTest();
 
-    List<CommissionPayment2__c> payments = [SELECT Id FROM CommissionPayment2__c WHERE Commission_Record2__c = :record.Id];
+    List<CommissionPayment2__c> payments = [
+      SELECT Id
+      FROM CommissionPayment2__c
+      WHERE Commission_Record2__c = :record.Id
+    ];
 
     System.assert(payments.size() > 0);
   }

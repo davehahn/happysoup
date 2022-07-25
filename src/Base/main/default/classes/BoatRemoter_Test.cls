@@ -1,9 +1,8 @@
-@isTest( seeAllData=true)
+@isTest(seeAllData=true)
 private class BoatRemoter_Test {
-
   static {
-     /* disable the Gimbal Trigger handler gtProduct.trigger
-       until Gimbals code gets deployed, this needs to be commented out for production */
+    /* disable the Gimbal Trigger handler gtProduct.trigger
+     until Gimbals code gets deployed, this needs to be commented out for production */
     //gcProduct.disableTrigger = true;
   }
 
@@ -24,7 +23,6 @@ private class BoatRemoter_Test {
   }
 
   testMethod static void newProductUpgradeTest() {
-
     InventoryTestFactory factory = new InventoryTestFactory();
     List<Product2> motors = factory.buildTestProducts(2, 'Motor');
     Boolean orig = gcProduct.disableTrigger;
@@ -41,7 +39,6 @@ private class BoatRemoter_Test {
     System.assertEquals(fromMotor.Id, upgradeObject.From_Product__c);
     System.assertEquals(toMotor.Id, upgradeObject.To_Product__c);
     System.assertEquals(null, upgradeObject.Id);
-
   }
 
   testMethod static void createProductUpgradeTest() {
@@ -86,35 +83,31 @@ private class BoatRemoter_Test {
     System.assertEquals(null, failed_edited);
   }
 
-  testMethod static void newProductUpgradeCostTest()
-  {
+  testMethod static void newProductUpgradeCostTest() {
     Test.startTest();
     InventoryTestFactory factory = new InventoryTestFactory();
     Product_Upgrade__c pu = factory.buildProductUpgrade();
     insert pu;
-    Pricebook2 stdPB = [SELECT Id FROM Pricebook2 WHERE isStandard = true];
+    Pricebook2 stdPB = [SELECT Id FROM Pricebook2 WHERE isStandard = TRUE];
     Product_Upgrade_Cost__c holder = new Product_Upgrade_Cost__c(
       Product_Upgrade__c = pu.Id,
       Price_Book__c = stdPB.Id,
       Cost__c = 300
     );
-    Product_Upgrade_Cost__c returned = BoatRemoter.newProductUpgradeCost(JSON.serialize(holder) );
+    Product_Upgrade_Cost__c returned = BoatRemoter.newProductUpgradeCost(JSON.serialize(holder));
     Test.stopTest();
 
     System.assert(holder.Product_Upgrade__c == returned.Product_Upgrade__c);
   }
 
-  testMethod static void updateCostTest()
-  {
+  testMethod static void updateCostTest() {
     InventoryTestFactory factory = new InventoryTestFactory();
     Product_Upgrade_Cost__c puc = factory.buildUpgradeAndCostForStdPB();
     insert puc;
     System.assertEquals(100, puc.Cost__c);
     puc.Cost__c = 200;
-    Product_Upgrade_Cost__c returned = BoatRemoter.updateCost( JSON.serialize(puc) );
-    Product_Upgrade_Cost__c updated = [SELECT Id, Cost__c
-                                       FROM Product_Upgrade_Cost__c
-                                       WHERE Id = : puc.Id];
+    Product_Upgrade_Cost__c returned = BoatRemoter.updateCost(JSON.serialize(puc));
+    Product_Upgrade_Cost__c updated = [SELECT Id, Cost__c FROM Product_Upgrade_Cost__c WHERE Id = :puc.Id];
     System.assertEquals(200, returned.Cost__c);
     System.assertEquals(200, updated.Cost__c);
   }
@@ -138,10 +131,9 @@ private class BoatRemoter_Test {
 
     System.assertEquals(remote_po.Id, po.Id);
     System.assertEquals(null, failed_remote_po);
-
   }
 
-  testmethod static void updateOptionDetailsTest() {
+  testMethod static void updateOptionDetailsTest() {
     InventoryTestFactory factory = new InventoryTestFactory();
     Product2 boat = factory.buildTestBoat();
     Boolean orig = gcProduct.disableTrigger;
@@ -158,7 +150,6 @@ private class BoatRemoter_Test {
     System.assertNotEquals(null, po2);
     System.assertEquals(2, po2.Standard__c);
     System.assertEquals(7, po2.Maximum__c);
-
   }
 
   @isTest
@@ -166,34 +157,37 @@ private class BoatRemoter_Test {
     BoatTestFactory factory = new BoatTestFactory();
     Test.startTest();
     Product2 boat = factory.insertFullTestBoats(1, 'Pontoon')[0];
-    Product_Option__c origMaxMotor = [SELECT Id
-                                      FROM Product_Option__c
-                                      WHERE isBiggestMotor__c = true
-                                      AND To_Product__c = :boat.Id];
-    List<Product_Option__c> motorOptions = [ SELECT Id
-                                             FROM Product_Option__c
-                                             WHERE To_Product__c = :boat.Id
-                                             AND From_Product_Record_Type__c = 'Motor'
-                                             AND isBiggestMotor__c = false];
+    Product_Option__c origMaxMotor = [
+      SELECT Id
+      FROM Product_Option__c
+      WHERE isBiggestMotor__c = TRUE AND To_Product__c = :boat.Id
+    ];
+    List<Product_Option__c> motorOptions = [
+      SELECT Id
+      FROM Product_Option__c
+      WHERE To_Product__c = :boat.Id AND From_Product_Record_Type__c = 'Motor' AND isBiggestMotor__c = FALSE
+    ];
 
     System.debug('&&&&&&&&&&&&&&&&&&&&&&&& ' + origMaxMotor);
     System.debug('&&&&&&&&&&&&&&&&&&&&&&&& ' + motorOptions);
 
-    Product_Option__c newMaxMotor = BoatRemoter.setMaximumMotor( motorOptions[0].Id );
-    Product_Option__c afterMotor = [SELECT Id FROM Product_Option__c WHERE isBiggestMotor__c = true AND To_Product__c = :boat.Id];
+    Product_Option__c newMaxMotor = BoatRemoter.setMaximumMotor(motorOptions[0].Id);
+    Product_Option__c afterMotor = [
+      SELECT Id
+      FROM Product_Option__c
+      WHERE isBiggestMotor__c = TRUE AND To_Product__c = :boat.Id
+    ];
     Test.stopTest();
     System.assertEquals(newMaxMotor.id, afterMotor.Id);
-
   }
 
   //*************** Test for Features *****************//
 
-	testMethod static void featureCreateTest() {
+  testMethod static void featureCreateTest() {
     Test.startTest();
-      Feature__c feature = BoatRemoter.createNewFeature('Test Feature');
+    Feature__c feature = BoatRemoter.createNewFeature('Test Feature');
     Test.stopTest();
 
     System.assertEquals([SELECT Id, description__c FROM Feature__c WHERE Id = :feature.Id], feature);
-	}
-
+  }
 }

@@ -1,1 +1,2 @@
-public without sharing class gcException extends Exception {}
+public without sharing class gcException extends Exception {
+}

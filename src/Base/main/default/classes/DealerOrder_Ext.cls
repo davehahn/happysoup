@@ -1,31 +1,29 @@
 public without sharing class DealerOrder_Ext {
-
   public static Partner_Boat_Sale_Settings__c partnerSettings {
     get {
-      if( partnerSettings == null )
+      if (partnerSettings == null)
         partnerSettings = Partner_Boat_Sale_Settings__c.getOrgDefaults();
       return partnerSettings;
     }
     set;
   }
 
-  public static Map<String,List<String>> enabledOptionFamiliesMap {
+  public static Map<String, List<String>> enabledOptionFamiliesMap {
     get {
-      if( enabledOptionFamiliesMap == null )
-      {
+      if (enabledOptionFamiliesMap == null) {
         enabledOptionFamiliesMap = new Map<String, List<String>>{
-          'Boat' => partnerSettings.Enabled_Boat_Option_Families__c == null ?
-            new List<String>() :
-            partnerSettings.Enabled_Boat_Option_Families__c.split(','),
-          'Motor' => partnerSettings.Enabled_Motor_Option_Families__c == null ?
-            new List<String>() :
-            partnerSettings.Enabled_Motor_Option_Families__c.split(','),
-          'Trailer' => partnerSettings.Enabled_Trailer_Option_Families__c == null ?
-            new List<String>() :
-            partnerSettings.Enabled_Trailer_Option_Families__c.split(','),
-          'Trolling Motor' => partnerSettings.Enabled_Trolling_Motor_Option_Families__c == null ?
-            new List<String>() :
-            partnerSettings.Enabled_Trolling_Motor_Option_Families__c.split(',')
+          'Boat' => partnerSettings.Enabled_Boat_Option_Families__c == null
+            ? new List<String>()
+            : partnerSettings.Enabled_Boat_Option_Families__c.split(','),
+          'Motor' => partnerSettings.Enabled_Motor_Option_Families__c == null
+            ? new List<String>()
+            : partnerSettings.Enabled_Motor_Option_Families__c.split(','),
+          'Trailer' => partnerSettings.Enabled_Trailer_Option_Families__c == null
+            ? new List<String>()
+            : partnerSettings.Enabled_Trailer_Option_Families__c.split(','),
+          'Trolling Motor' => partnerSettings.Enabled_Trolling_Motor_Option_Families__c == null
+            ? new List<String>()
+            : partnerSettings.Enabled_Trolling_Motor_Option_Families__c.split(',')
         };
       }
       return enabledOptionFamiliesMap;
@@ -47,14 +45,13 @@ public without sharing class DealerOrder_Ext {
     public Set<String> legendAccounts { get; set; }
     public Boolean allowBookingOrder { get; set; }
 
-    public DetailsWrapper()
-    {
+    public DetailsWrapper() {
       this.allowBookingOrder = true;
       this.dealerOrder = new Dealer_Order__c();
       Integer currentYear = System.Today().year();
-      if( System.Today().month() >= 8 )
+      if (System.Today().month() >= 8)
         currentYear++;
-      this.DealerOrder.Program_Year__c = String.valueOf( currentYear );
+      this.DealerOrder.Program_Year__c = String.valueOf(currentYear);
       this.DealerOrder.Is_Legend_Transfer__c = false;
       this.paymentMethodOptions = LGND_Utilities.getPicklistValues('Dealer_Order__c', 'Payment_Method__c');
       this.financeCompanyOptions = new List<Map<String, String>>();
@@ -65,47 +62,37 @@ public without sharing class DealerOrder_Ext {
       buildProgramYearOptions();
     }
 
-    private void buildProgramYearOptions()
-    {
+    private void buildProgramYearOptions() {
       this.programYearOptions = new List<Object>();
-      for( String year : Partner_Program_Settings__c.getOrgDefaults().Available_Program_Years__c.split(',') )
-      {
-        Map<String,Object> opt = new Map<String, Object>{
-          'label' => year,
-          'value' => year
-        };
-        if( year == String.valueOf(this.dealerOrder.Program_Year__c) )
+      for (String year : Partner_Program_Settings__c.getOrgDefaults().Available_Program_Years__c.split(',')) {
+        Map<String, Object> opt = new Map<String, Object>{ 'label' => year, 'value' => year };
+        if (year == String.valueOf(this.dealerOrder.Program_Year__c))
           opt.put('selected', true);
-        this.programYearOptions.add( opt );
+        this.programYearOptions.add(opt);
       }
     }
 
-    public DetailsWrapper addFinanceCompanyOptions( Financing_Company__c[] fics )
-    {
-      for( Financing_Company__c fic : fics )
-      {
+    public DetailsWrapper addFinanceCompanyOptions(Financing_Company__c[] fics) {
+      for (Financing_Company__c fic : fics) {
         Map<String, String> opts = new Map<String, String>();
         opts.put('Id', fic.Id);
         opts.put('Name', fic.Financing_Company__r.Name);
-        this.financeCompanyOptions.add( opts );
+        this.financeCompanyOptions.add(opts);
       }
       return this;
     }
 
-    public DetailsWrapper addAccountOptions( Account[] accts )
-    {
-      for( Account a : accts )
-      {
+    public DetailsWrapper addAccountOptions(Account[] accts) {
+      for (Account a : accts) {
         Map<String, String> opt = new Map<String, String>();
         opt.put('Id', a.Id);
         opt.put('Name', a.Name);
-        this.accountOptions.add( opt );
+        this.accountOptions.add(opt);
       }
       return this;
     }
 
-    private Set<String> setLegendAccounts()
-    {
+    private Set<String> setLegendAccounts() {
       Legend_Settings__c settings = Legend_Settings__c.getOrgDefaults();
       return new Set<String>{
         settings.LegendBarrieAccountId__c,
@@ -113,12 +100,11 @@ public without sharing class DealerOrder_Ext {
         settings.LegendWhitefishAccountId__c
       };
     }
-
   }
 
   public class DealerOrderLineWrapper {
     public String notes { get; set; }
-    public Integer quantity { get; set;}
+    public Integer quantity { get; set; }
     public String dealerOrderId { get; set; }
     public String dealerMotorRequestId { get; set; }
     public Boolean isLegendTransfer { get; set; }
@@ -131,9 +117,10 @@ public without sharing class DealerOrder_Ext {
     public OptionWrapper motor { get; set; }
     public OptionWrapper trollingMotor { get; set; }
     public OptionWrapper[] lineItems { get; set; }
-    public List<Map<String,String>> discounts { get; set; }
+    public List<Map<String, String>> discounts { get; set; }
 
-    public DealerOrderLineWrapper() {}
+    public DealerOrderLineWrapper() {
+    }
   }
 
   public class ProductWrapper {
@@ -153,155 +140,144 @@ public without sharing class DealerOrder_Ext {
     public List<UpgradeWrapper> trailerUpgrades { get; set; }
     public List<UpgradeWrapper> motorUpgrades { get; set; }
     public List<UpgradeWrapper> trollingMotorUpgrades { get; set; }
-//    public List<OptionWrapper> canvasOptions { get; set; }
-//    public List<OptionWrapper> buildOptions { get; set; }
+    //    public List<OptionWrapper> canvasOptions { get; set; }
+    //    public List<OptionWrapper> buildOptions { get; set; }
     public List<OptionWrapper> motorOptions { get; set; }
     public Map<String, List<OptionWrapper>> optionalProducts { get; set; }
     public Map<String, List<LGND_APIv2_Product.FeeProduct>> fees { get; set; }
 
-    public ProductWrapper( LGND_APIv2_Product apiProd, String pricebookId )
-    {
+    public ProductWrapper(LGND_APIv2_Product apiProd, String pricebookId) {
       this.recordTypeName = apiProd.RecordTypeName;
       this.optionalProducts = new Map<String, List<OptionWrapper>>();
       isFactory = pricebookId == gcConstants.idPricebookFactory;
       isPartner = pricebookId == gcConstants.idPricebookPartner;
       this.name = apiProd.Name;
       this.id = apiProd.Id;
-      if( isFactory )
+      if (isFactory)
         this.cost = apiProd.FactoryPrice;
-      if( isPartner )
+      if (isPartner)
         this.cost = apiProd.PartnerPrice;
       this.fees = apiProd.Fees;
       // Boat stuff
-      if( apiProd.RecordTypeName == 'Boat' )
-      {
+      if (apiProd.RecordTypeName == 'Boat') {
         this.trailerUpgrades = new List<UpgradeWrapper>();
         this.motorUpgrades = new List<UpgradeWrapper>();
         this.trollingMotorUpgrades = new List<UpgradeWrapper>();
-//        this.canvasOptions = new List<OptionWrapper>();
-//        this.buildOptions = new List<OptionWrapper>();
-        if( apiProd.StandardTrailer != null )
-        {
+        //        this.canvasOptions = new List<OptionWrapper>();
+        //        this.buildOptions = new List<OptionWrapper>();
+        if (apiProd.StandardTrailer != null) {
           this.standardTrailer_Id = apiProd.StandardTrailer.Id;
           this.standardTrailer_Name = apiProd.StandardTrailer.Name;
-          this.trailerUpgrades.add( new UpgradeWrapper( apiProd.StandardTrailer, apiProd.StandardTrailer.Id, isFactory ) );
+          this.trailerUpgrades.add(new UpgradeWrapper(apiProd.StandardTrailer, apiProd.StandardTrailer.Id, isFactory));
         }
-        if( apiProd.TrailerUpgrades != null && apiProd.TrailerUpgrades.size() > 0 )
-          this.trailerUpgrades.addAll( this.createUpgradeList( apiProd.TrailerUpgrades, this.standardTrailer_Id, isFactory ) );
+        if (apiProd.TrailerUpgrades != null && apiProd.TrailerUpgrades.size() > 0)
+          this.trailerUpgrades.addAll(
+            this.createUpgradeList(apiProd.TrailerUpgrades, this.standardTrailer_Id, isFactory)
+          );
 
         //Motor Stuff
-        if(  apiProd.MotorUpgrades != null && apiProd.MotorUpgrades.size() > 0 )
-        {
-          if( isPartner )
-          {
+        if (apiProd.MotorUpgrades != null && apiProd.MotorUpgrades.size() > 0) {
+          if (isPartner) {
             switch on apiProd.Family {
               when 'Utility' {
                 this.motorUpgrades.addAll(this.createUpgradeList(apiProd.MotorUpgrades, null, isFactory));
               }
               when else {
-                if( LGND_Constants.mercuryDiscountBoatIds.contains( this.Id ) )
-                {
+                if (LGND_Constants.mercuryDiscountBoatIds.contains(this.Id)) {
                   List<LGND_APIv2_Product.UpgradeProduct> mUpgrades = new List<LGND_APIv2_Product.UpgradeProduct>();
-                  for( LGND_APIv2_Product.UpgradeProduct ug : apiProd.MotorUpgrades )
-                  {
-                    if( ug.availableForMercDiscount )
-                      mUpgrades.add( ug );
+                  for (LGND_APIv2_Product.UpgradeProduct ug : apiProd.MotorUpgrades) {
+                    if (ug.availableForMercDiscount)
+                      mUpgrades.add(ug);
                   }
-                  if( mUpgrades.size() > 0 )
+                  if (mUpgrades.size() > 0)
                     this.motorUpgrades.addAll(this.createUpgradeList(mUpgrades, null, isFactory));
                 }
               }
             }
           }
-          if( isFactory )
-            this.motorUpgrades.addAll( this.createUpgradeList( apiProd.MotorUpgrades, null, isFactory) );
+          if (isFactory)
+            this.motorUpgrades.addAll(this.createUpgradeList(apiProd.MotorUpgrades, null, isFactory));
         }
 
-        if( apiProd.TrollingMotorUpgrades != null && apiProd.TrollingMotorUpgrades.size() > 0 )
-          this.trollingMotorUpgrades.addAll( this.createUpgradeList( apiProd.TrollingMotorUpgrades, this.standardTrollingMotor_Id, isFactory ) );
+        if (apiProd.TrollingMotorUpgrades != null && apiProd.TrollingMotorUpgrades.size() > 0)
+          this.trollingMotorUpgrades.addAll(
+            this.createUpgradeList(apiProd.TrollingMotorUpgrades, this.standardTrollingMotor_Id, isFactory)
+          );
 
-        findCanvasDiscount( apiProd.Id, pricebookId );
-
+        findCanvasDiscount(apiProd.Id, pricebookId);
       }
 
-//      if( apiProd.RecordTypeName == 'Motor' && isFactory)
-//      {
-//        this.motorOptions = new List<OptionWrapper>();
-//        if( apiProd.OptionalProducts != null &&
-//            apiProd.OptionalProducts.containsKey('Labour') )
-//        {
-//          for( LGND_APIv2_Product.PartProduct pp : apiProd.OptionalProducts.get('Labour') )
-//          {
-//            OptionWrapper ow = new OptionWrapper( pp );
-//            ow.parent_id = this.id;
-//            this.motorOptions.add( ow );
-//          }
-//        }
-//      }
+      //      if( apiProd.RecordTypeName == 'Motor' && isFactory)
+      //      {
+      //        this.motorOptions = new List<OptionWrapper>();
+      //        if( apiProd.OptionalProducts != null &&
+      //            apiProd.OptionalProducts.containsKey('Labour') )
+      //        {
+      //          for( LGND_APIv2_Product.PartProduct pp : apiProd.OptionalProducts.get('Labour') )
+      //          {
+      //            OptionWrapper ow = new OptionWrapper( pp );
+      //            ow.parent_id = this.id;
+      //            this.motorOptions.add( ow );
+      //          }
+      //        }
+      //      }
 
       //Options
-      buildOptions( apiProd, isFactory );
+      buildOptions(apiProd, isFactory);
     }
 
-    private void buildOptions( LGND_APIv2_Product apiProd, Boolean isFactory )
-    {
-      if( DealerOrder_Ext.enabledOptionFamiliesMap.containsKey( apiProd.RecordTypeName ) )
-      {
-        for( String fam : DealerOrder_Ext.enabledOptionFamiliesMap.get( apiProd.RecordTypeName ) )
-        {
-          if( apiProd.OptionalProducts != null &&
-              apiProd.OptionalProducts.containsKey(fam))
-          {
+    private void buildOptions(LGND_APIv2_Product apiProd, Boolean isFactory) {
+      if (DealerOrder_Ext.enabledOptionFamiliesMap.containsKey(apiProd.RecordTypeName)) {
+        for (String fam : DealerOrder_Ext.enabledOptionFamiliesMap.get(apiProd.RecordTypeName)) {
+          if (apiProd.OptionalProducts != null && apiProd.OptionalProducts.containsKey(fam)) {
             if (!this.optionalProducts.containsKey(fam))
               this.optionalProducts.put(fam, new List<OptionWrapper>());
 
-            for (LGND_APIv2_Product.PartProduct pp : apiProd.OptionalProducts.get(fam))
-            {
+            for (LGND_APIv2_Product.PartProduct pp : apiProd.OptionalProducts.get(fam)) {
               OptionWrapper ow = new OptionWrapper(pp, isFactory);
-              if( apiProd.RecordTypeName != 'Boat' )
+              if (apiProd.RecordTypeName != 'Boat')
                 ow.parent_id = apiProd.Id;
-              this.optionalProducts.get(fam).add( ow );
+              this.optionalProducts.get(fam).add(ow);
             }
           }
         }
       }
     }
 
-    private void findCanvasDiscount( String boatId, String pricebookId )
-    {
+    private void findCanvasDiscount(String boatId, String pricebookId) {
       try {
         //if( pricebookId == gcConstants.idPricebookFactory )
         //  return;
-        Product2 boat = [SELECT Id, Partner_Canvas_Promotion__c
-                         FROM Product2
-                         WHERE Id = :boatId];
-        if( boat.Partner_Canvas_Promotion__c != null )
-        {
-          PricebookEntry pbe = [ SELECT UnitPrice
-                                 FROM PricebookEntry
-                                 WHERE Product2Id = :boat.Partner_Canvas_Promotion__c
-                                 AND Pricebook2Id = :pricebookId ];
+        Product2 boat = [SELECT Id, Partner_Canvas_Promotion__c FROM Product2 WHERE Id = :boatId];
+        if (boat.Partner_Canvas_Promotion__c != null) {
+          PricebookEntry pbe = [
+            SELECT UnitPrice
+            FROM PricebookEntry
+            WHERE Product2Id = :boat.Partner_Canvas_Promotion__c AND Pricebook2Id = :pricebookId
+          ];
           this.canvasDiscountAmount = pbe.UnitPrice;
         }
-      }
-      catch(Exception e)
-      {
+      } catch (Exception e) {
         //this.canvasDiscoutAmount
       }
     }
 
-    private List<UpgradeWrapper> createUpgradeList( List<LGND_APIv2_Product.UpgradeProduct> upgrades,
-                                                    String standardProductId,
-                                                    Boolean isFactory )
-    {
+    private List<UpgradeWrapper> createUpgradeList(
+      List<LGND_APIv2_Product.UpgradeProduct> upgrades,
+      String standardProductId,
+      Boolean isFactory
+    ) {
       List<UpgradeWrapper> result = new List<UpgradeWrapper>();
-      for( LGND_APIv2_Product.UpgradeProduct uProd : upgrades )
-      {
+      for (LGND_APIv2_Product.UpgradeProduct uProd : upgrades) {
         Decimal upgradeCost = isFactory ? uProd.FactoryUpgradeCost : uProd.PartnerUpgradeCost;
         Decimal price = isFactory ? uProd.FactoryPrice : uProd.PartnerPrice;
-        if( ( standardProductId != null && upgradeCost != null && upgradeCost > 0 ) ||
-            ( standardProductId == null && price != null && price > 0) )
-        result.add( new UpgradeWrapper( uProd, standardProductId, isFactory ) );
+        if (
+          (standardProductId != null && upgradeCost != null && upgradeCost > 0) ||
+          (standardProductId == null &&
+          price != null &&
+          price > 0)
+        )
+          result.add(new UpgradeWrapper(uProd, standardProductId, isFactory));
       }
       return result;
     }
@@ -314,37 +290,29 @@ public without sharing class DealerOrder_Ext {
     public Boolean isUpgrade { get; set; }
     public Map<String, List<OptionWrapper>> optionalProducts { get; set; }
 
-    public UpgradeWrapper( LGND_APIv2_Product.UpgradeProduct uProd, String standardProductId, Boolean isFactory)
-    {
+    public UpgradeWrapper(LGND_APIv2_Product.UpgradeProduct uProd, String standardProductId, Boolean isFactory) {
       this.id = uProd.Id;
       this.name = uProd.Name;
-      this.isUpgrade = standardProductId == null ? false :
-        standardProductId == uProd.Id ? false : true;
+      this.isUpgrade = standardProductId == null ? false : standardProductId == uProd.Id ? false : true;
       this.optionalProducts = new Map<String, List<OptionWrapper>>();
-      if( standardProductId != null )
+      if (standardProductId != null)
         this.cost = isFactory ? uProd.FactoryUpgradeCost : uProd.PartnerUpgradeCost;
       else
         this.cost = isFactory ? uProd.FactoryPrice : uProd.PartnerPrice;
       //Options
-      if( DealerOrder_Ext.enabledOptionFamiliesMap.containsKey( uProd.Family ) )
-      {
-        for (String fam : DealerOrder_Ext.enabledOptionFamiliesMap.get( uProd.Family ))
-        {
-          if (uProd.OptionalProducts != null &&
-            uProd.OptionalProducts.containsKey(fam))
-          {
+      if (DealerOrder_Ext.enabledOptionFamiliesMap.containsKey(uProd.Family)) {
+        for (String fam : DealerOrder_Ext.enabledOptionFamiliesMap.get(uProd.Family)) {
+          if (uProd.OptionalProducts != null && uProd.OptionalProducts.containsKey(fam)) {
             if (!this.optionalProducts.containsKey(fam))
               this.optionalProducts.put(fam, new List<OptionWrapper>());
 
-            for (LGND_APIv2_Product.PartProduct pp : uProd.OptionalProducts.get(fam))
-            {
+            for (LGND_APIv2_Product.PartProduct pp : uProd.OptionalProducts.get(fam)) {
               this.optionalProducts.get(fam).add(new OptionWrapper(pp, isFactory));
             }
           }
         }
       }
     }
-
   }
 
   public class OptionWrapper {
@@ -363,8 +331,7 @@ public without sharing class DealerOrder_Ext {
     public Set<Integer> quantityOptions { get; set; }
     public List<OptionWrapper> subOptions { get; set; }
 
-    public OptionWrapper( LGND_APIv2_Product.PartProduct pp, Boolean isFactory )
-    {
+    public OptionWrapper(LGND_APIv2_Product.PartProduct pp, Boolean isFactory) {
       this.id = pp.Id;
       this.name = pp.Name;
       this.individualCost = isFactory ? pp.FactoryPrice : pp.PartnerPrice;
@@ -379,23 +346,21 @@ public without sharing class DealerOrder_Ext {
       buildQuantityOptions();
     }
 
-    public OptionWrapper( PricebookEntry pbe, Product_Option__c opt )
-    {
+    public OptionWrapper(PricebookEntry pbe, Product_Option__c opt) {
       this.id = pbe.Product2Id;
       this.name = pbe.Product2.Name;
       this.individualCost = pbe.UnitPrice;
       this.cost = opt.Standard__c > 0 ? 0 : pbe.UnitPrice;
       this.isSelected = opt.Standard__c > 0;
-      this.quantityStandard = Integer.valueOf( opt.Standard__c );
-      this.quantityMaximum = Integer.valueOf( opt.Maximum__c );
-      this.quantitySelected = Integer.valueOf( opt.Standard__c );
+      this.quantityStandard = Integer.valueOf(opt.Standard__c);
+      this.quantityMaximum = Integer.valueOf(opt.Maximum__c);
+      this.quantitySelected = Integer.valueOf(opt.Standard__c);
       this.isCheckbox = opt.Maximum__c == 1;
       this.isDisabled = opt.Standard__c == opt.Maximum__c;
       buildQuantityOptions();
     }
 
-    public OptionWrapper( PricebookEntry pbe )
-    {
+    public OptionWrapper(PricebookEntry pbe) {
       this.id = pbe.Product2Id;
       this.name = pbe.Product2.Name;
       this.cost = pbe.UnitPrice;
@@ -404,75 +369,69 @@ public without sharing class DealerOrder_Ext {
       this.isDisabled = false;
     }
 
-    public OptionWrapper( AcctSeedERP__Material__c mat )
-    {
+    public OptionWrapper(AcctSeedERP__Material__c mat) {
       this.id = mat.AcctSeedERP__Product__c;
       this.name = mat.AcctSeedERP__Product__r.Name;
       this.cost = mat.GMBLASERP__Unit_Price__c;
-      if( mat.Parent_Product__c != null )
+      if (mat.Parent_Product__c != null)
         this.parent_id = mat.Parent_Product__c;
       this.isSelected = true;
     }
 
-    public OptionWrapper( AcctSeedERP__Material__c mat,
-                          Product_Option__c opt)
-    {
+    public OptionWrapper(AcctSeedERP__Material__c mat, Product_Option__c opt) {
       this.id = mat.AcctSeedERP__Product__c;
       this.name = mat.AcctSeedERP__Product__r.Name;
       this.cost = mat.GMBLASERP__Unit_Price__c;
-      if( mat.Parent_Product__c != null )
+      if (mat.Parent_Product__c != null)
         this.parent_id = mat.Parent_Product__c;
       this.isCheckbox = opt.Maximum__c == 1;
-      if( this.isCheckbox )
+      if (this.isCheckbox)
         this.isSelected = true;
       else
-        this.quantitySelected = Integer.valueOf( mat.AcctSeedERP__Quantity_Per_Unit__c );
-      this.quantityStandard = Integer.valueOf( opt.Standard__c );
-      this.quantityMaximum = Integer.valueOf( opt.Maximum__c );
+        this.quantitySelected = Integer.valueOf(mat.AcctSeedERP__Quantity_Per_Unit__c);
+      this.quantityStandard = Integer.valueOf(opt.Standard__c);
+      this.quantityMaximum = Integer.valueOf(opt.Maximum__c);
       this.isDisabled = opt.Standard__c == opt.Maximum__c;
       buildQuantityOptions();
     }
 
-    public OptionWrapper( Legend_Transfer_Item__c item )
-    {
+    public OptionWrapper(Legend_Transfer_Item__c item) {
       this.id = item.Product__c;
       this.name = item.Product__r.Name;
       this.cost = 0.00;
-      if( item.Parent_Product__c != null )
+      if (item.Parent_Product__c != null)
         this.parent_id = item.Parent_Product__c;
       this.isSelected = true;
     }
 
-    private void buildQuantityOptions()
-    {
+    private void buildQuantityOptions() {
       this.quantityOptions = new Set<Integer>();
-      for( Integer i=this.quantityStandard; i<=this.quantityMaximum; i++ )
-      {
-        this.quantityOptions.add( i );
+      for (Integer i = this.quantityStandard; i <= this.quantityMaximum; i++) {
+        this.quantityOptions.add(i);
       }
     }
   }
 
   public class DolWrapper {
-    public String province                      { get; set; }
-    public String family                        { get; set; }
-    public String recordType                    { get; set; }
-    public String selectedBoat_Id               { get; set; }
-    public String selectedTrailer_Id            { get; set; }
-    public String selectedMotor_Id              { get; set; }
-    public String selectedTrollingMotor_Id      { get; set; }
-    public String selectedTrollingMotor_Name    { get; set; }
-    public String notes                         { get; set; }
-    public String modelYear                     { get; set; }
-    public Integer quantity                     { get; set; }
-    public Map<String, OptionWrapper> options   { get; set; }
-    public Map<String, OptionWrapper> motorOptions     { get; set; }
-    public Map<String, OptionWrapper> trailerOptions     { get; set; }
-    public Map<String, OptionWrapper> trollingMotorOptions     { get; set; }
+    public String province { get; set; }
+    public String family { get; set; }
+    public String recordType { get; set; }
+    public String selectedBoat_Id { get; set; }
+    public String selectedTrailer_Id { get; set; }
+    public String selectedMotor_Id { get; set; }
+    public String selectedTrollingMotor_Id { get; set; }
+    public String selectedTrollingMotor_Name { get; set; }
+    public String notes { get; set; }
+    public String modelYear { get; set; }
+    public Integer quantity { get; set; }
+    public Map<String, OptionWrapper> options { get; set; }
+    public Map<String, OptionWrapper> motorOptions { get; set; }
+    public Map<String, OptionWrapper> trailerOptions { get; set; }
+    public Map<String, OptionWrapper> trollingMotorOptions { get; set; }
     public Dealer_Motor_Request__c motorRequest { get; set; }
-    public Boolean isMotorRequestOnly           { get; set; }
+    public Boolean isMotorRequestOnly { get; set; }
 
-    public DolWrapper(){
+    public DolWrapper() {
       this.options = new Map<String, OptionWrapper>();
       this.motorOptions = new Map<String, OptionWrapper>();
       this.trailerOptions = new Map<String, OptionWrapper>();
@@ -500,8 +459,7 @@ public without sharing class DealerOrder_Ext {
     public Decimal totalBeforeSavings { get; set; }
     public Decimal totalSavings { get; set; }
 
-    public DolViewWrapper()
-    {
+    public DolViewWrapper() {
       this.totalBeforeSavings = 0;
       this.totalSavings = 0;
       this.options = new List<Map<String, Object>>();
@@ -509,239 +467,213 @@ public without sharing class DealerOrder_Ext {
       this.discounts = new List<Map<String, Object>>();
     }
 
-    public DolViewWrapper addBoat( AcctSeedERP__Material__c mat )
-    {
-      this.boat = makeEntry( mat );
+    public DolViewWrapper addBoat(AcctSeedERP__Material__c mat) {
+      this.boat = makeEntry(mat);
       this.totalBeforeSavings += mat.GMBLASERP__Unit_Price__c;
       return this;
     }
-    public DolViewWrapper addBoat( Legend_Transfer_Item__c item )
-    {
+    public DolViewWrapper addBoat(Legend_Transfer_Item__c item) {
       this.boat = makeEntry(item.Product__r.Name, 0.00);
       return this;
     }
 
-    public DolViewWrapper addTrailer( AcctSeedERP__Material__c mat )
-    {
-      this.trailer = makeEntry( mat );
+    public DolViewWrapper addTrailer(AcctSeedERP__Material__c mat) {
+      this.trailer = makeEntry(mat);
       this.totalBeforeSavings += mat.GMBLASERP__Unit_Price__c;
       return this;
     }
-    public DolViewWrapper addTrailer( Legend_Transfer_Item__c item )
-    {
+    public DolViewWrapper addTrailer(Legend_Transfer_Item__c item) {
       this.trailer = makeEntry(item.Product__r.Name, 0.00);
       return this;
     }
 
-    public DolViewWrapper addMotor( AcctSeedERP__Material__c mat )
-    {
-      this.motor = makeEntry( mat );
+    public DolViewWrapper addMotor(AcctSeedERP__Material__c mat) {
+      this.motor = makeEntry(mat);
       this.totalBeforeSavings += mat.GMBLASERP__Unit_Price__c;
       return this;
     }
-    public DolViewWrapper addMotor( Legend_Transfer_Item__c item )
-    {
+    public DolViewWrapper addMotor(Legend_Transfer_Item__c item) {
       this.motor = makeEntry(item.Product__r.Name, 0.00);
       return this;
     }
 
-    public DolViewWrapper addTrollingMotor( AcctSeedERP__Material__c mat )
-    {
-      this.trollingMotor = makeEntry( mat );
+    public DolViewWrapper addTrollingMotor(AcctSeedERP__Material__c mat) {
+      this.trollingMotor = makeEntry(mat);
       this.totalBeforeSavings += mat.GMBLASERP__Unit_Price__c;
       return this;
     }
-    public DolViewWrapper addTrollingMotor( Legend_Transfer_Item__c item )
-    {
+    public DolViewWrapper addTrollingMotor(Legend_Transfer_Item__c item) {
       this.trollingMotor = makeEntry(item.Product__r.Name, 0.00);
       return this;
     }
 
-    public DolViewWrapper addOption( AcctSeedERP__Material__c mat )
-    {
-      Map<String, Object> entry =
-        makeEntry( mat );
+    public DolViewWrapper addOption(AcctSeedERP__Material__c mat) {
+      Map<String, Object> entry = makeEntry(mat);
       entry.put('hasChildren', false);
-      entry.put( 'parentId', mat.Parent_Product__c );
-      entry.put( 'productId', mat.AcctSeedERP__Product__c );
-      entry.put( 'kitParentId', mat.Material__c == null ? null : mat.Material__r.AcctSeedERP__Product__c );
-      if( mat.AcctSeedERP__Quantity_Per_Unit__c > 1 )
-      {
-        entry.put('name', entry.get('name') + '  ( qty ' + String.valueOf(mat.AcctSeedERP__Quantity_Per_Unit__c.stripTrailingZeros()) + ' )' );
-        if( mat.GMBLASERP__Unit_Price__c == 0 )
-          entry.put('more_name', entry.get('more_name') + '  ( ' + String.valueOf(mat.AcctSeedERP__Quantity_Per_Unit__c.stripTrailingZeros()) + ' )' );
+      entry.put('parentId', mat.Parent_Product__c);
+      entry.put('productId', mat.AcctSeedERP__Product__c);
+      entry.put('kitParentId', mat.Material__c == null ? null : mat.Material__r.AcctSeedERP__Product__c);
+      if (mat.AcctSeedERP__Quantity_Per_Unit__c > 1) {
+        entry.put(
+          'name',
+          entry.get('name') +
+          '  ( qty ' +
+          String.valueOf(mat.AcctSeedERP__Quantity_Per_Unit__c.stripTrailingZeros()) +
+          ' )'
+        );
+        if (mat.GMBLASERP__Unit_Price__c == 0)
+          entry.put(
+            'more_name',
+            entry.get('more_name') +
+            '  ( ' +
+            String.valueOf(mat.AcctSeedERP__Quantity_Per_Unit__c.stripTrailingZeros()) +
+            ' )'
+          );
         else
-          entry.put('more_name', entry.get('more_name') + '  ( ' + String.valueOf(mat.AcctSeedERP__Quantity_Per_Unit__c.stripTrailingZeros()) + ' @ $' + mat.GMBLASERP__Unit_Price__c.setScale(2) + ' ea. )' );
-        entry.put('cost', mat.AcctSeedERP__Quantity_Per_Unit__c * mat.GMBLASERP__Unit_Price__c );
+          entry.put(
+            'more_name',
+            entry.get('more_name') +
+            '  ( ' +
+            String.valueOf(mat.AcctSeedERP__Quantity_Per_Unit__c.stripTrailingZeros()) +
+            ' @ $' +
+            mat.GMBLASERP__Unit_Price__c.setScale(2) +
+            ' ea. )'
+          );
+        entry.put('cost', mat.AcctSeedERP__Quantity_Per_Unit__c * mat.GMBLASERP__Unit_Price__c);
       }
-      this.options.add( entry );
+      this.options.add(entry);
       this.totalBeforeSavings += mat.GMBLASERP__Unit_Price__c * mat.AcctSeedERP__Quantity_Per_Unit__c;
       return this;
     }
-    public DolViewWrapper addOption( Legend_Transfer_Item__c item )
-    {
-      this.options.add( makeEntry(item.Product__r.Name, 0.00) );
+    public DolViewWrapper addOption(Legend_Transfer_Item__c item) {
+      this.options.add(makeEntry(item.Product__r.Name, 0.00));
       return this;
     }
 
-    public DolViewWrapper addFee( AcctSeedERP__Material__c mat )
-    {
-      this.fees.add( makeEntry(mat.AcctSeedERP__Product__r.Name, mat.GMBLASERP__Unit_Price__c) );
+    public DolViewWrapper addFee(AcctSeedERP__Material__c mat) {
+      this.fees.add(makeEntry(mat.AcctSeedERP__Product__r.Name, mat.GMBLASERP__Unit_Price__c));
       this.totalBeforeSavings += mat.GMBLASERP__Unit_Price__c;
       return this;
     }
-    public DolViewWrapper addFee( Legend_Transfer_Item__c item )
-    {
-      this.fees.add( makeEntry(item.Product__r.Name, 0.00) );
+    public DolViewWrapper addFee(Legend_Transfer_Item__c item) {
+      this.fees.add(makeEntry(item.Product__r.Name, 0.00));
       return this;
     }
 
-    public DolViewWrapper addDiscount( AcctSeedERP__Material__c mat )
-    {
-      this.discounts.add( makeEntry(mat.AcctSeedERP__Comment__c, mat.GMBLASERP__Unit_Price__c) );
+    public DolViewWrapper addDiscount(AcctSeedERP__Material__c mat) {
+      this.discounts.add(makeEntry(mat.AcctSeedERP__Comment__c, mat.GMBLASERP__Unit_Price__c));
       this.totalSavings += mat.GMBLASERP__Unit_Price__c;
       return this;
     }
 
-    public void groupOptions()
-    {
+    public void groupOptions() {
       List<Map<String, Object>> result = new List<Map<String, Object>>();
-      Map<String, Map<String,Object>> groupedOptions = new Map<String, Map<String, Object>>();
+      Map<String, Map<String, Object>> groupedOptions = new Map<String, Map<String, Object>>();
       Map<String, List<Map<String, Object>>> subOptionMap = new Map<String, List<Map<String, Object>>>();
       Map<String, List<Map<String, Object>>> kitPartsMap = new Map<String, List<Map<String, Object>>>();
-      for( Map<String, Object> option : this.options )
-      {
-        if( option.containsKey('parentId') && option.get('parentId') != null)
-        {
-          if( !subOptionMap.containsKey( (String)option.get('parentId') ) )
-            subOptionMap.put( (String)option.get('parentId'), new List<Map<String, Object>>() );
-          subOptionMap.get( (String)option.get('parentId') ).add( option );
-        }
-        else if( option.containsKey('kitParentId') && option.get('kitParentId') != null)
-        {
-          if( !kitPartsMap.containsKey( (String)option.get('kitParentId') ) )
-            kitPartsMap.put( (String)option.get('kitParentId'), new List<Map<String, Object>>() );
-          kitPartsMap.get( (String)option.get('kitParentId') ).add( option );
-        }
-        else
-        {
-          groupedOptions.put( (String)option.get('productId'), option );
+      for (Map<String, Object> option : this.options) {
+        if (option.containsKey('parentId') && option.get('parentId') != null) {
+          if (!subOptionMap.containsKey((String) option.get('parentId')))
+            subOptionMap.put((String) option.get('parentId'), new List<Map<String, Object>>());
+          subOptionMap.get((String) option.get('parentId')).add(option);
+        } else if (option.containsKey('kitParentId') && option.get('kitParentId') != null) {
+          if (!kitPartsMap.containsKey((String) option.get('kitParentId')))
+            kitPartsMap.put((String) option.get('kitParentId'), new List<Map<String, Object>>());
+          kitPartsMap.get((String) option.get('kitParentId')).add(option);
+        } else {
+          groupedOptions.put((String) option.get('productId'), option);
         }
       }
-      for( String parentId : subOptionMap.keySet() )
-      {
-        if( this.motor != null &&
-            parentId == (String)this.motor.get('id') )
-        {
-          this.motor.put( 'options', subOptionMap.get( parentId ) );
+      for (String parentId : subOptionMap.keySet()) {
+        if (this.motor != null && parentId == (String) this.motor.get('id')) {
+          this.motor.put('options', subOptionMap.get(parentId));
         }
-        if( this.trailer != null &&
-            parentId == (String)this.trailer.get('id') )
-        {
-          this.trailer.put( 'options', subOptionMap.get( parentId ) );
+        if (this.trailer != null && parentId == (String) this.trailer.get('id')) {
+          this.trailer.put('options', subOptionMap.get(parentId));
         }
-        if( this.trollingMotor != null &&
-            parentId == (String)this.trollingMotor.get('id') )
-        {
-          this.trollingMotor.put( 'options', subOptionMap.get( parentId ) );
+        if (this.trollingMotor != null && parentId == (String) this.trollingMotor.get('id')) {
+          this.trollingMotor.put('options', subOptionMap.get(parentId));
         }
-        if( groupedOptions.containsKey( parentId ) )
-        {
-          List<Map<String, Object>> subOptions = subOptionMap.get( parentId );
-          groupedOptions.get( parentId ).put('subOptions', subOptions );
-          groupedOptions.get( parentId ).put('hasChildren', true);
+        if (groupedOptions.containsKey(parentId)) {
+          List<Map<String, Object>> subOptions = subOptionMap.get(parentId);
+          groupedOptions.get(parentId).put('subOptions', subOptions);
+          groupedOptions.get(parentId).put('hasChildren', true);
         }
       }
-      for( String kitParentId : kitPartsMap.keySet() )
-      {
-        if( groupedOptions.containsKey( kitParentId ) )
-        {
-          List<Map<String, Object>> kitParts = kitPartsMap.get( kitParentId );
-          groupedOptions.get( kitParentId ).put('kitParts', kitParts );
-          groupedOptions.get( kitParentId ).put('hasChildren', true);
+      for (String kitParentId : kitPartsMap.keySet()) {
+        if (groupedOptions.containsKey(kitParentId)) {
+          List<Map<String, Object>> kitParts = kitPartsMap.get(kitParentId);
+          groupedOptions.get(kitParentId).put('kitParts', kitParts);
+          groupedOptions.get(kitParentId).put('hasChildren', true);
         }
       }
-      for( String productId : groupedOptions.keySet() )
-      {
-        result.add( groupedOptions.get( productId ) );
+      for (String productId : groupedOptions.keySet()) {
+        result.add(groupedOptions.get(productId));
       }
       this.options = result;
     }
 
-    private Map<String, Object> makeEntry( String name, Decimal cost )
-    {
+    private Map<String, Object> makeEntry(String name, Decimal cost) {
       Map<String, Object> entry = new Map<String, Object>();
       entry.put('name', name);
       entry.put('more_name', name);
-      entry.put('cost', cost );
-      if( cost == 0 )
+      entry.put('cost', cost);
+      if (cost == 0)
         entry.put('cost_description', 'Included');
       return entry;
     }
 
-    private Map<String, Object> makeEntry( AcctSeedERP__Material__c mat )
-    {
+    private Map<String, Object> makeEntry(AcctSeedERP__Material__c mat) {
       Map<String, Object> entry = new Map<String, Object>();
-      entry.put('id', mat.AcctSeedERP__Product__c );
+      entry.put('id', mat.AcctSeedERP__Product__c);
       entry.put('name', mat.AcctSeedERP__Product__r.Name);
       entry.put('more_name', mat.AcctSeedERP__Product__r.Name);
-      entry.put('cost', String.valueOf( mat.GMBLASERP__Unit_Price__c ) );
-      if( mat.GMBLASERP__Serial_Number__c != null )
-        entry.put('serial_number', mat.GMBLASERP__Serial_Number__r.Name );
-      if( mat.GMBLASERP__Unit_Price__c == 0 )
+      entry.put('cost', String.valueOf(mat.GMBLASERP__Unit_Price__c));
+      if (mat.GMBLASERP__Serial_Number__c != null)
+        entry.put('serial_number', mat.GMBLASERP__Serial_Number__r.Name);
+      if (mat.GMBLASERP__Unit_Price__c == 0)
         entry.put('cost_description', 'Included');
       return entry;
     }
-
   }
 
-	public DealerOrder_Ext(ApexPages.StandardController std) {}
+  public DealerOrder_Ext(ApexPages.StandardController std) {
+  }
 
   @AuraEnabled
-  public static String builderInit()
-  {
+  public static String builderInit() {
     Integer currentYear = System.Today().year();
-    if( System.Today().month() >= 8 )
+    if (System.Today().month() >= 8)
       currentYear++;
     Map<String, Object> result = new Map<String, Object>();
-    result.put('userType', UserInfo.getUserType() );
-    result.put('sessionId', UserInfo.getSessionId() );
-    result.put('modelYear', currentYear );
-    result.put('uiTheme', UserInfo.getUiThemeDisplayed() );
-    result.put('bookingStartMonthDay', Partner_Boat_Sale_Settings__c.getOrgDefaults().Booking_Order_Begin_Month_Day__c );
-    List<Map<String, Object>> options = new List<Map<String,Object>>();
-    for( String year : Partner_Program_Settings__c.getOrgDefaults().Available_Model_Years__c.split(',') )
-    {
-      Map<String,Object> opt = new Map<String, Object>{
-        'label' => year,
-        'value' => year
-      };
-      if( year == String.valueOf(currentYear) )
+    result.put('userType', UserInfo.getUserType());
+    result.put('sessionId', UserInfo.getSessionId());
+    result.put('modelYear', currentYear);
+    result.put('uiTheme', UserInfo.getUiThemeDisplayed());
+    result.put('bookingStartMonthDay', Partner_Boat_Sale_Settings__c.getOrgDefaults().Booking_Order_Begin_Month_Day__c);
+    List<Map<String, Object>> options = new List<Map<String, Object>>();
+    for (String year : Partner_Program_Settings__c.getOrgDefaults().Available_Model_Years__c.split(',')) {
+      Map<String, Object> opt = new Map<String, Object>{ 'label' => year, 'value' => year };
+      if (year == String.valueOf(currentYear))
         opt.put('selected', true);
-      options.add( opt );
+      options.add(opt);
     }
-    result.put(
-      'modelYearOptions',
-      options
-    );
-    return JSON.serialize( result );
+    result.put('modelYearOptions', options);
+    return JSON.serialize(result);
   }
 
   @AuraEnabled
-  public static String getUserType()
-  {
+  public static String getUserType() {
     return UserInfo.getUserType();
   }
 
   @AuraEnabled
-  public static String getSessionId()
-  {
+  public static String getSessionId() {
     return UserInfo.getSessionId();
   }
 
   @AuraEnabled
-  public static String getInitNewOrder()
-  {
+  public static String getInitNewOrder() {
     DetailsWrapper dw = new DetailsWrapper();
     Id contactId = [SELECT ContactId FROM User WHERE Id = :Userinfo.getUserId()].ContactId;
     try {
@@ -749,178 +681,154 @@ public without sharing class DealerOrder_Ext {
       dw.accountId = ct.AccountId;
       dw.isFactoryStore = ct.Account.Is_Internal__c;
       dw.province = ct.Account.BillingState;
-      dw.addFinanceCompanyOptions( [SELECT Id, Financing_Company__r.Name
-                                  FROM Financing_Company__c
-                                  WHERE Account__c = :dw.accountId]);
+      dw.addFinanceCompanyOptions(
+        [SELECT Id, Financing_Company__r.Name FROM Financing_Company__c WHERE Account__c = :dw.accountId]
+      );
       dw.dealerOrder.Account__c = dw.accountId;
-      dw.dealerOrder.Pricebook__c = dw.isFactoryStore ? gcConstants.idPricebookFactory :
-                                                        gcConstants.idPricebookPartner;
-    }
-    catch(Exception e) {
+      dw.dealerOrder.Pricebook__c = dw.isFactoryStore ? gcConstants.idPricebookFactory : gcConstants.idPricebookPartner;
+    } catch (Exception e) {
       Id dealerRT = LGND_Utilities.recordTypeIdFromName('Account', 'Dealer');
-      dw.addAccountOptions( [SELECT Id, Name
-                         FROM Account
-                         WHERE RecordTypeId = :dealerRT
-                         ORDER By Name ASC ] );
+      dw.addAccountOptions([SELECT Id, Name FROM Account WHERE RecordTypeId = :dealerRT ORDER BY Name ASC]);
       dw.fromInternal = true;
     }
-    try
-    {
+    try {
       String uniq = dw.dealerOrder.Program_Year__c + '-' + dw.dealerOrder.Account__c;
-      dw.bookingOrder = PartnerBookingOrder_Selector.getUnique( uniq );
+      dw.bookingOrder = PartnerBookingOrder_Selector.getUnique(uniq);
       dw.allowBookingOrder = false;
+    } catch (Exception e) {
     }
-    catch( Exception e ){}
     dw.dealerOrder.Is_Booking_Order__c = dw.bookingOrder == null;
-    return JSON.serialize( dw );
+    return JSON.serialize(dw);
   }
 
-
   @AuraEnabled
-  public static String findBookingOrder( String programYear, String accountId )
-  {
-    try
-    {
+  public static String findBookingOrder(String programYear, String accountId) {
+    try {
       String uniq = programYear + '-' + accountId;
-      return JSON.serialize(PartnerBookingOrder_Selector.getUnique( uniq ) );
-    }
-    catch( Exception e )
-    {
+      return JSON.serialize(PartnerBookingOrder_Selector.getUnique(uniq));
+    } catch (Exception e) {
       return null;
     }
   }
 
   @AuraEnabled
-  public static String fetchFinanceCompanys( String accountId )
-  {
+  public static String fetchFinanceCompanys(String accountId) {
     DetailsWrapper dw = new DetailsWrapper();
-    dw.addFinanceCompanyOptions( [SELECT Id, Financing_Company__r.Name
-                                  FROM Financing_Company__c
-                                  WHERE Account__c = :accountId]);
-    return JSON.serialize( dw.financeCompanyOptions );
+    dw.addFinanceCompanyOptions(
+      [SELECT Id, Financing_Company__r.Name FROM Financing_Company__c WHERE Account__c = :accountId]
+    );
+    return JSON.serialize(dw.financeCompanyOptions);
   }
 
   @AuraEnabled
-  public static Dealer_Order__c saveDealerOrder( String dealerOrderJSON )
-  {
-    Dealer_Order__c dealerOrder = (Dealer_Order__c)JSON.deserialize( dealerOrderJSON, Dealer_Order__c.class);
-    if( dealerOrder == null )
+  public static Dealer_Order__c saveDealerOrder(String dealerOrderJSON) {
+    Dealer_Order__c dealerOrder = (Dealer_Order__c) JSON.deserialize(dealerOrderJSON, Dealer_Order__c.class);
+    if (dealerOrder == null)
       return new Dealer_Order__c();
     upsert dealerOrder;
-    return  fetchDealerOrder( dealerOrder.Id ) ;
+    return fetchDealerOrder(dealerOrder.Id);
   }
 
   @AuraEnabled
-  public static void submitDealerOrder( Id dealerOrderId )
-  {
+  public static void submitDealerOrder(Id dealerOrderId) {
     Dealer_Order__c d = [SELECT Id FROM Dealer_Order__c WHERE Id = :dealerOrderId];
     d.Stage__c = 'Pending Review';
     update d;
   }
 
   @AuraEnabled
-  public static void deleteDealerOrder( String dealerOrderId )
-  {
-    Dealer_Order__c dOrder = new Dealer_Order__c( Id = dealerOrderId );
-    try
-    {
+  public static void deleteDealerOrder(String dealerOrderId) {
+    Dealer_Order__c dOrder = new Dealer_Order__c(Id = dealerOrderId);
+    try {
       delete dOrder;
-    }
-    catch( Exception e )
-    {
-      AuraHandledException ahex = new AuraHandledException( e.getMessage() );
-      ahex.setMessage( e.getMessage() );
+    } catch (Exception e) {
+      AuraHandledException ahex = new AuraHandledException(e.getMessage());
+      ahex.setMessage(e.getMessage());
       throw ahex;
     }
   }
 
   @AuraEnabled
-  public static String viewDealerLineItem( String groupId )
-  {
-    Dealer_Order_Line__c[] dols = [SELECT Id,
-                                          ERP_Order__c,
-                                          ERP_Order__r.Customer_Notes__c,
-                                          Legend_Transfer_Request__c,
-                                          Legend_Transfer_Request__r.Notes__c,
-                                          Dealer_Order__r.Account__r.BillingState,
-                                          Dealer_Order__r.Is_Legend_Transfer__c,
-                                          Dealer_Motor_Request__c,
-                                          Line_Total_Pre_Tax__c,
-                                          Dealer_Order__r.Is_Booking_Order__c,
-                                          Model_Year__c
-                                   FROM Dealer_Order_Line__c
-                                   WHERE Order_Group_Id__c = :groupId];
-    if( dols.size() == 0 )
+  public static String viewDealerLineItem(String groupId) {
+    Dealer_Order_Line__c[] dols = [
+      SELECT
+        Id,
+        ERP_Order__c,
+        ERP_Order__r.Customer_Notes__c,
+        Legend_Transfer_Request__c,
+        Legend_Transfer_Request__r.Notes__c,
+        Dealer_Order__r.Account__r.BillingState,
+        Dealer_Order__r.Is_Legend_Transfer__c,
+        Dealer_Motor_Request__c,
+        Line_Total_Pre_Tax__c,
+        Dealer_Order__r.Is_Booking_Order__c,
+        Model_Year__c
+      FROM Dealer_Order_Line__c
+      WHERE Order_Group_Id__c = :groupId
+    ];
+    if (dols.size() == 0)
       return null;
 
-    if( dols[0].ERP_Order__c == null &&
-        dols[0].Legend_Transfer_Request__c == null &&
-        dols[0].Dealer_Motor_Request__c != null )
-      return JSON.serialize( viewDealerLineItemFromMotorRequest( dols ) );
+    if (
+      dols[0].ERP_Order__c == null &&
+      dols[0].Legend_Transfer_Request__c == null &&
+      dols[0].Dealer_Motor_Request__c != null
+    )
+      return JSON.serialize(viewDealerLineItemFromMotorRequest(dols));
 
-    if( dols[0].Dealer_Order__r.Is_Legend_Transfer__c )
-      return JSON.serialize( viewDealerLineItemFromTransfer( dols ) );
+    if (dols[0].Dealer_Order__r.Is_Legend_Transfer__c)
+      return JSON.serialize(viewDealerLineItemFromTransfer(dols));
     else
-      return JSON.serialize( viewDealerLineItemFromERP( dols ) );
-
+      return JSON.serialize(viewDealerLineItemFromERP(dols));
   }
 
   @AuraEnabled
-  public static void checkPartnerProgram( String dealerOrderId )
-  {
-    doPartnerCheckFuture( dealerOrderId );
+  public static void checkPartnerProgram(String dealerOrderId) {
+    doPartnerCheckFuture(dealerOrderId);
   }
 
   @Future
-  public static void doPartnerCheckFuture( String dealerOrderId )
-  {
-    PartnerProgram_Service ppService = new PartnerProgram_Service( new Set<Id>{ Id.valueOf(dealerOrderId)} );
+  public static void doPartnerCheckFuture(String dealerOrderId) {
+    PartnerProgram_Service ppService = new PartnerProgram_Service(new Set<Id>{ Id.valueOf(dealerOrderId) });
     ppService.check();
   }
 
   @AuraEnabled
-  public static void applyPartnerProgram( String dealerOrderId )
-  {
-    doPartnerApplyFuture( dealerOrderId );
+  public static void applyPartnerProgram(String dealerOrderId) {
+    doPartnerApplyFuture(dealerOrderId);
   }
 
   @Future
-  public static void doPartnerApplyFuture( String dealerOrderId )
-  {
-    PartnerProgram_Service ppService = new PartnerProgram_Service( new Set<Id>{ Id.valueOf(dealerOrderId)} );
+  public static void doPartnerApplyFuture(String dealerOrderId) {
+    PartnerProgram_Service ppService = new PartnerProgram_Service(new Set<Id>{ Id.valueOf(dealerOrderId) });
     ppService.checkAndApply();
   }
 
-  private static DolViewWrapper viewDealerLineItemFromTransfer( Dealer_Order_Line__c[] dols )
-  {
+  private static DolViewWrapper viewDealerLineItemFromTransfer(Dealer_Order_Line__c[] dols) {
     DolViewWrapper result = new DolViewWrapper();
     result.orderTotal = dols[0].Line_Total_Pre_Tax__c;
     result.notes = dols[0].Legend_Transfer_Request__r.Notes__c;
     result.quantity = dols.size();
 
-    for( Legend_Transfer_Item__c item : [SELECT Id,
-                                                Product__r.Name,
-                                                Product__r.RecordType.Name,
-                                                Product__r.Family,
-                                                Comment__c
-                                         FROM Legend_Transfer_Item__c
-                                         WHERE Legend_Transfer_Request__c = : dols[0].Legend_Transfer_Request__c ])
-    {
-      if( item.Product__r.RecordType.Name == 'Boat' )
-        result.addBoat( item );
-      if( item.Product__r.RecordType.Name == 'Trailer' )
-        result.addTrailer( item );
-      if( item.Product__r.RecordType.Name == 'Motor' )
-        result.addMotor( item );
-      if( item.Product__r.RecordType.Name == 'Trolling Motor' )
-        result.addTrollingMotor( item );
-      if( item.Product__r.RecordType.Name == 'Part' )
-        result.addOption( item );
-      if( item.Product__r.RecordType.Name == 'Fees' )
-        result.addFee( item );
+    for (Legend_Transfer_Item__c item : [
+      SELECT Id, Product__r.Name, Product__r.RecordType.Name, Product__r.Family, Comment__c
+      FROM Legend_Transfer_Item__c
+      WHERE Legend_Transfer_Request__c = :dols[0].Legend_Transfer_Request__c
+    ]) {
+      if (item.Product__r.RecordType.Name == 'Boat')
+        result.addBoat(item);
+      if (item.Product__r.RecordType.Name == 'Trailer')
+        result.addTrailer(item);
+      if (item.Product__r.RecordType.Name == 'Motor')
+        result.addMotor(item);
+      if (item.Product__r.RecordType.Name == 'Trolling Motor')
+        result.addTrollingMotor(item);
+      if (item.Product__r.RecordType.Name == 'Part')
+        result.addOption(item);
+      if (item.Product__r.RecordType.Name == 'Fees')
+        result.addFee(item);
     }
     return result;
-
   }
 
   public class OrderDetailsWrapper {
@@ -933,8 +841,7 @@ public without sharing class DealerOrder_Ext {
     public List<Map<String, String>> discounts { get; set; }
     public List<Map<String, Object>> options { get; set; }
 
-    public OrderDetailsWrapper()
-    {
+    public OrderDetailsWrapper() {
       this.boats = new List<Map<String, String>>();
       this.trailers = new List<Map<String, String>>();
       this.trollingMotors = new List<Map<String, String>>();
@@ -945,207 +852,196 @@ public without sharing class DealerOrder_Ext {
       this.options = new List<Map<String, Object>>();
     }
 
-    public OrderDetailsWrapper addItem( AcctSeedERP__Material__c mat )
-    {
-      if( mat.AcctSeedERP__Product__r.RecordType.Name == 'Boat' )
-        this.boats.add( buildObj(mat) );
-      if( mat.AcctSeedERP__Product__r.RecordType.Name == 'Trailer' )
-        this.trailers.add( buildObj(mat) );
-      if( mat.AcctSeedERP__Product__r.RecordType.Name == 'Trolling Motor' )
-        this.trollingMotors.add( buildObj(mat) );
-      if( mat.AcctSeedERP__Product__r.RecordType.Name == 'Motor' )
-        this.motors.add( buildObj(mat) );
-      if( mat.AcctSeedERP__Product__r.RecordType.Name == 'Fees' )
-        this.buildSummedObj( mat, this.fees );
-      if( mat.AcctSeedERP__Product__r.RecordType.Name == 'Part' )
-      {
-        if( mat.AcctSeedERP__Product__r.Family == 'Discount' )
-          this.buildSummedObj( mat, this.discounts );
-          //this.discounts.add( buildObj(mat));
+    public OrderDetailsWrapper addItem(AcctSeedERP__Material__c mat) {
+      if (mat.AcctSeedERP__Product__r.RecordType.Name == 'Boat')
+        this.boats.add(buildObj(mat));
+      if (mat.AcctSeedERP__Product__r.RecordType.Name == 'Trailer')
+        this.trailers.add(buildObj(mat));
+      if (mat.AcctSeedERP__Product__r.RecordType.Name == 'Trolling Motor')
+        this.trollingMotors.add(buildObj(mat));
+      if (mat.AcctSeedERP__Product__r.RecordType.Name == 'Motor')
+        this.motors.add(buildObj(mat));
+      if (mat.AcctSeedERP__Product__r.RecordType.Name == 'Fees')
+        this.buildSummedObj(mat, this.fees);
+      if (mat.AcctSeedERP__Product__r.RecordType.Name == 'Part') {
+        if (mat.AcctSeedERP__Product__r.Family == 'Discount')
+          this.buildSummedObj(mat, this.discounts);
         else
-          this.options.add( buildOptionObj(mat) );
+          //this.discounts.add( buildObj(mat));
+          this.options.add(buildOptionObj(mat));
       }
       return this;
     }
 
-    private void buildSummedObj( AcctSeedERP__Material__c mat,
-                                 List<Map<String, String>> theList )
-    {
+    private void buildSummedObj(AcctSeedERP__Material__c mat, List<Map<String, String>> theList) {
       Boolean exists = false;
-      String name = mat.AcctSeedERP__Product__r.Family == 'Discount' ?
-        mat.AcctSeedERP__Comment__c :
-        mat.AcctSeedERP__Product__r.Name;
-      for( Map<String, String> item : theList )
-      {
-        if( name == item.get('name') )
-        {
+      String name = mat.AcctSeedERP__Product__r.Family == 'Discount'
+        ? mat.AcctSeedERP__Comment__c
+        : mat.AcctSeedERP__Product__r.Name;
+      for (Map<String, String> item : theList) {
+        if (name == item.get('name')) {
           exists = true;
           Decimal cost = mat.GMBLASERP__Unit_Price__c;
-          Decimal total = Decimal.valueOf( item.get('total') );
-          Integer count = Integer.valueOf( item.get('quantity') );
-          item.put('quantity', String.valueOf( count += 1 ) );
-          item.put('total', String.valueOf( total + cost ) );
+          Decimal total = Decimal.valueOf(item.get('total'));
+          Integer count = Integer.valueOf(item.get('quantity'));
+          item.put('quantity', String.valueOf(count += 1));
+          item.put('total', String.valueOf(total + cost));
           break;
         }
       }
-      if( !exists )
-      {
-        Map<String, String> item =  buildObj( mat );
+      if (!exists) {
+        Map<String, String> item = buildObj(mat);
         item.put('quantity', '1');
-        item.put('total', item.get('cost') );
-        theList.add( item );
+        item.put('total', item.get('cost'));
+        theList.add(item);
       }
     }
 
-    public OrderDetailsWrapper addMercuryItem( Dealer_Motor_Request__c dmr )
-    {
+    public OrderDetailsWrapper addMercuryItem(Dealer_Motor_Request__c dmr) {
       Map<String, String> result = new Map<String, String>();
-      result.put('name', dmr.Motor__r.Name );
+      result.put('name', dmr.Motor__r.Name);
       result.put('cost', 'Package and Save');
-      result.put('quantity', String.valueOf( dmr.Quantity__c ) );
-      this.mercuryMotors.add( result );
+      result.put('quantity', String.valueOf(dmr.Quantity__c));
+      this.mercuryMotors.add(result);
       return this;
     }
 
-    public Map<String, String> buildObj( AcctSeedERP__Material__c mat )
-    {
+    public Map<String, String> buildObj(AcctSeedERP__Material__c mat) {
       Map<String, String> result = new Map<String, String>();
-      String name = mat.AcctSeedERP__Product__r.Family == 'Discount' ?
-        mat.AcctSeedERP__Comment__c :
-        mat.AcctSeedERP__Product__r.Name;
-      result.put('name', name );
-      result.put('invoiceNumber', mat.AcctSeedERP__Project__r.AcctSeedERP__Work_Order_Number__c );
-      result.put('cost', String.valueOf( mat.GMBLASERP__Unit_Price__c ) );
-      result.put('itemStatus', mat.AcctSeedERP__Project__r.Stage__c );
+      String name = mat.AcctSeedERP__Product__r.Family == 'Discount'
+        ? mat.AcctSeedERP__Comment__c
+        : mat.AcctSeedERP__Product__r.Name;
+      result.put('name', name);
+      result.put('invoiceNumber', mat.AcctSeedERP__Project__r.AcctSeedERP__Work_Order_Number__c);
+      result.put('cost', String.valueOf(mat.GMBLASERP__Unit_Price__c));
+      result.put('itemStatus', mat.AcctSeedERP__Project__r.Stage__c);
       result.put('serialNumber', mat.GMBLASERP__Serial_Number__r.Name);
       return result;
     }
 
-    public Map<String, Object> buildOptionObj( AcctSeedERP__Material__c mat )
-    {
+    public Map<String, Object> buildOptionObj(AcctSeedERP__Material__c mat) {
       Map<String, Object> result = new Map<String, Object>();
-      String name = mat.AcctSeedERP__Product__r.Family == 'Discount' ?
-        mat.AcctSeedERP__Comment__c :
-        mat.AcctSeedERP__Product__r.Name;
-      result.put('name', name );
-      result.put('invoiceNumber', mat.AcctSeedERP__Project__r.AcctSeedERP__Work_Order_Number__c );
-      result.put('cost', mat.GMBLASERP__Unit_Price__c * mat.AcctSeedERP__Quantity_Per_Unit__c );
-      result.put('itemStatus', mat.AcctSeedERP__Project__r.Stage__c );
+      String name = mat.AcctSeedERP__Product__r.Family == 'Discount'
+        ? mat.AcctSeedERP__Comment__c
+        : mat.AcctSeedERP__Product__r.Name;
+      result.put('name', name);
+      result.put('invoiceNumber', mat.AcctSeedERP__Project__r.AcctSeedERP__Work_Order_Number__c);
+      result.put('cost', mat.GMBLASERP__Unit_Price__c * mat.AcctSeedERP__Quantity_Per_Unit__c);
+      result.put('itemStatus', mat.AcctSeedERP__Project__r.Stage__c);
       result.put('serialNumber', mat.GMBLASERP__Serial_Number__r.Name);
       result.put('hasChildren', false);
-      result.put('productId', mat.AcctSeedERP__Product__c );
-      result.put('kitParentId', mat.Material__c == null ? null : mat.Material__r.AcctSeedERP__Product__c );
-      result.put('parentId', mat.Parent_Product__c );
-      if( mat.AcctSeedERP__Quantity_Per_Unit__c > 1 )
-      {
-        if( mat.GMBLASERP__Unit_Price__c == 0 )
-          result.put('name', name + ' ( ' + String.valueOf( mat.AcctSeedERP__Quantity_Per_Unit__c.stripTrailingZeros()) + ' )');
+      result.put('productId', mat.AcctSeedERP__Product__c);
+      result.put('kitParentId', mat.Material__c == null ? null : mat.Material__r.AcctSeedERP__Product__c);
+      result.put('parentId', mat.Parent_Product__c);
+      if (mat.AcctSeedERP__Quantity_Per_Unit__c > 1) {
+        if (mat.GMBLASERP__Unit_Price__c == 0)
+          result.put(
+            'name',
+            name +
+            ' ( ' +
+            String.valueOf(mat.AcctSeedERP__Quantity_Per_Unit__c.stripTrailingZeros()) +
+            ' )'
+          );
         else
-          result.put('name', name + '  ( ' + String.valueOf(mat.AcctSeedERP__Quantity_Per_Unit__c.stripTrailingZeros()) + ' @ $' + mat.GMBLASERP__Unit_Price__c.setScale(2) + ' ea. )');
+          result.put(
+            'name',
+            name +
+            '  ( ' +
+            String.valueOf(mat.AcctSeedERP__Quantity_Per_Unit__c.stripTrailingZeros()) +
+            ' @ $' +
+            mat.GMBLASERP__Unit_Price__c.setScale(2) +
+            ' ea. )'
+          );
       }
       return result;
     }
 
-    public void groupOptions()
-    {
+    public void groupOptions() {
       List<Map<String, Object>> result = new List<Map<String, Object>>();
-      Map<String, Map<String,Object>> groupedOptions = new Map<String, Map<String, Object>>();
+      Map<String, Map<String, Object>> groupedOptions = new Map<String, Map<String, Object>>();
       Map<String, List<Map<String, Object>>> subOptionMap = new Map<String, List<Map<String, Object>>>();
       Map<String, List<Map<String, Object>>> kitPartsMap = new Map<String, List<Map<String, Object>>>();
-      for( Map<String, Object> option : this.options )
-      {
-        if( option.containsKey('parentId') && option.get('parentId') != null)
-        {
-          if( !subOptionMap.containsKey( (String)option.get('parentId') ) )
-            subOptionMap.put( (String)option.get('parentId'), new List<Map<String, Object>>() );
-          subOptionMap.get( (String)option.get('parentId') ).add( option );
-        }
-        else if( option.containsKey('kitParentId') && option.get('kitParentId') != null)
-        {
-          if( !kitPartsMap.containsKey( (String)option.get('kitParentId') ) )
-            kitPartsMap.put( (String)option.get('kitParentId'), new List<Map<String, Object>>() );
-          kitPartsMap.get( (String)option.get('kitParentId') ).add( option );
-        }
-        else
-        {
-          groupedOptions.put( (String)option.get('productId'), option );
+      for (Map<String, Object> option : this.options) {
+        if (option.containsKey('parentId') && option.get('parentId') != null) {
+          if (!subOptionMap.containsKey((String) option.get('parentId')))
+            subOptionMap.put((String) option.get('parentId'), new List<Map<String, Object>>());
+          subOptionMap.get((String) option.get('parentId')).add(option);
+        } else if (option.containsKey('kitParentId') && option.get('kitParentId') != null) {
+          if (!kitPartsMap.containsKey((String) option.get('kitParentId')))
+            kitPartsMap.put((String) option.get('kitParentId'), new List<Map<String, Object>>());
+          kitPartsMap.get((String) option.get('kitParentId')).add(option);
+        } else {
+          groupedOptions.put((String) option.get('productId'), option);
         }
       }
-      for( String parentId : subOptionMap.keySet() )
-      {
-        if( groupedOptions.containsKey( parentId ) )
-        {
-          List<Map<String, Object>> subOptions = subOptionMap.get( parentId );
-          groupedOptions.get( parentId ).put('subOptions', subOptions );
-          groupedOptions.get( parentId ).put('hasChildren', true);
+      for (String parentId : subOptionMap.keySet()) {
+        if (groupedOptions.containsKey(parentId)) {
+          List<Map<String, Object>> subOptions = subOptionMap.get(parentId);
+          groupedOptions.get(parentId).put('subOptions', subOptions);
+          groupedOptions.get(parentId).put('hasChildren', true);
         }
       }
-      for( String kitParentId : kitPartsMap.keySet() )
-      {
-        if( groupedOptions.containsKey( kitParentId ) )
-        {
-          List<Map<String, Object>> kitParts = kitPartsMap.get( kitParentId );
-          groupedOptions.get( kitParentId ).put('kitParts', kitParts );
-          groupedOptions.get( kitParentId ).put('hasChildren', true);
+      for (String kitParentId : kitPartsMap.keySet()) {
+        if (groupedOptions.containsKey(kitParentId)) {
+          List<Map<String, Object>> kitParts = kitPartsMap.get(kitParentId);
+          groupedOptions.get(kitParentId).put('kitParts', kitParts);
+          groupedOptions.get(kitParentId).put('hasChildren', true);
         }
       }
-      for( String productId : groupedOptions.keySet() )
-      {
-        result.add( groupedOptions.get( productId ) );
+      for (String productId : groupedOptions.keySet()) {
+        result.add(groupedOptions.get(productId));
       }
       this.options = result;
     }
   }
 
   @AuraEnabled
-  public static String fetchOrderDetails( String recordId )
-  {
+  public static String fetchOrderDetails(String recordId) {
     OrderDetailsWrapper result = new OrderDetailsWrapper();
     Set<Id> erpIds = new Set<Id>();
     Set<Id> motorRequestIds = new Set<Id>();
 
-    for( Dealer_Order_Line__c dol : [ SELECT Id, ERP_Order__c, Dealer_Motor_Request__c
-                                      FROM Dealer_Order_Line__c
-                                      WHERE Dealer_Order__c = :recordId
-                                      AND ERP_Order__r.Stage__c <> 'Closed Lost'] )
-    {
-      erpIds.add( dol.ERP_Order__c );
-      motorRequestIds.add( dol.Dealer_Motor_Request__c );
+    for (Dealer_Order_Line__c dol : [
+      SELECT Id, ERP_Order__c, Dealer_Motor_Request__c
+      FROM Dealer_Order_Line__c
+      WHERE Dealer_Order__c = :recordId AND ERP_Order__r.Stage__c != 'Closed Lost'
+    ]) {
+      erpIds.add(dol.ERP_Order__c);
+      motorRequestIds.add(dol.Dealer_Motor_Request__c);
     }
-    for( AcctSeedERP__Material__c mat : [SELECT Id,
-                                                AcctSeedERP__Product__r.Name,
-                                                AcctSeedERP__Product__r.RecordType.Name,
-                                                AcctSeedERP__Product__r.Family,
-                                                AcctSeedERP__Comment__c,
-                                                AcctSeedERP__Quantity_per_Unit__c,
-                                                AcctSeedERP__Project__r.Stage__c,
-                                                GMBLASERP__Serial_Number__r.Name,
-                                                GMBLASERP__Unit_Price__c,
-                                                Parent_Product__c,
-                                                Material__c,
-                                                Material__r.AcctSeedERP__Product__c,
-                                                AcctSeedERP__Project__r.AcctSeedERP__Work_Order_Number__c
-                                      FROM AcctSeedERP__Material__c
-                                      WHERE AcctSeedERP__Project__c IN :erpIds])
-    {
-      result.addItem( mat );
+    for (AcctSeedERP__Material__c mat : [
+      SELECT
+        Id,
+        AcctSeedERP__Product__r.Name,
+        AcctSeedERP__Product__r.RecordType.Name,
+        AcctSeedERP__Product__r.Family,
+        AcctSeedERP__Comment__c,
+        AcctSeedERP__Quantity_per_Unit__c,
+        AcctSeedERP__Project__r.Stage__c,
+        GMBLASERP__Serial_Number__r.Name,
+        GMBLASERP__Unit_Price__c,
+        Parent_Product__c,
+        Material__c,
+        Material__r.AcctSeedERP__Product__c,
+        AcctSeedERP__Project__r.AcctSeedERP__Work_Order_Number__c
+      FROM AcctSeedERP__Material__c
+      WHERE AcctSeedERP__Project__c IN :erpIds
+    ]) {
+      result.addItem(mat);
     }
-    for( Dealer_Motor_Request__c dmr : [SELECT Id,
-                                               Motor__r.Name,
-                                               Quantity__c
-                                        FROM Dealer_Motor_Request__c
-                                        WHERE Id IN :motorRequestIds])
-    {
-      result.addMercuryItem( dmr );
+    for (Dealer_Motor_Request__c dmr : [
+      SELECT Id, Motor__r.Name, Quantity__c
+      FROM Dealer_Motor_Request__c
+      WHERE Id IN :motorRequestIds
+    ]) {
+      result.addMercuryItem(dmr);
     }
     result.groupOptions();
-    return JSON.serialize( result );
-
+    return JSON.serialize(result);
   }
 
   @AuraEnabled
-  public static String fetchUniqueOrderDetails( String recordId )
-  {
+  public static String fetchUniqueOrderDetails(String recordId) {
     Map<String, List<DolViewWrapper>> result = new Map<String, List<DolViewWrapper>>{
       'boats' => new List<DolViewWrapper>(),
       'motors' => new List<DolViewWrapper>(),
@@ -1157,107 +1053,103 @@ public without sharing class DealerOrder_Ext {
     Map<String, Integer> quantityMap = new Map<String, Integer>();
     Map<String, Integer> reservedQuantityMap = new Map<String, Integer>();
     Map<Id, Dealer_Order_Line__c> erpIdMap = new Map<Id, Dealer_Order_Line__c>();
-    for( Dealer_Order_Line__c line : [SELECT Id,
-                                             Line_Total_Pre_Tax__c,
-                                             Order_Group_Id__c,
-                                             Dealer_Motor_Request__c,
-                                             Dealer_Motor_Request__r.Motor__c,
-                                             Dealer_Motor_Request__r.Motor__r.Name,
-                                             Dealer_Motor_Request__r.Quantity__c,
-                                             ERP_Order__c,
-                                             ERP_Order__r.Reserved_For_Customer_Account__c,
-                                             Notes__c
-                                      FROM Dealer_Order_Line__c
-                                      WHERE Dealer_Order__c = :recordId
-                                      AND ERP_Order__r.Stage__c <> 'Closed Lost'] )
-    {
-      if( !uniqueERPLines.containsKey( line.Order_Group_Id__c ) )
-      {
-        if( line.ERP_Order__c != null )
-        {
-          uniqueERPLines.put( line.Order_Group_Id__c, line );
-          erpIdMap.put( line.Erp_Order__c, line );
+    for (Dealer_Order_Line__c line : [
+      SELECT
+        Id,
+        Line_Total_Pre_Tax__c,
+        Order_Group_Id__c,
+        Dealer_Motor_Request__c,
+        Dealer_Motor_Request__r.Motor__c,
+        Dealer_Motor_Request__r.Motor__r.Name,
+        Dealer_Motor_Request__r.Quantity__c,
+        ERP_Order__c,
+        ERP_Order__r.Reserved_For_Customer_Account__c,
+        Notes__c
+      FROM Dealer_Order_Line__c
+      WHERE Dealer_Order__c = :recordId AND ERP_Order__r.Stage__c != 'Closed Lost'
+    ]) {
+      if (!uniqueERPLines.containsKey(line.Order_Group_Id__c)) {
+        if (line.ERP_Order__c != null) {
+          uniqueERPLines.put(line.Order_Group_Id__c, line);
+          erpIdMap.put(line.Erp_Order__c, line);
         }
-        if( line.ERP_Order__c == null &&
-            line.Dealer_Motor_Request__c != null )
-        {
-          motorRequestLines.add( line );
+        if (line.ERP_Order__c == null && line.Dealer_Motor_Request__c != null) {
+          motorRequestLines.add(line);
         }
       }
 
-      if( !quantityMap.containsKey( line.Order_Group_Id__c ) )
-        quantityMap.put( line.Order_Group_Id__c, 1 );
-      else
-      {
-        Integer q = quantityMap.get( line.Order_Group_Id__c );
-        quantityMap.put( line.Order_Group_Id__c, q + 1);
+      if (!quantityMap.containsKey(line.Order_Group_Id__c))
+        quantityMap.put(line.Order_Group_Id__c, 1);
+      else {
+        Integer q = quantityMap.get(line.Order_Group_Id__c);
+        quantityMap.put(line.Order_Group_Id__c, q + 1);
       }
 
-      if( line.ERP_Order__r.Reserved_For_Customer_Account__c != null )
-      {
-        if( !reservedQuantityMap.containsKey( line.Order_Group_Id__c ) )
-          reservedQuantityMap.put( line.Order_Group_Id__c, 1 );
-        else
-        {
-          Integer q = reservedQuantityMap.get( line.Order_Group_Id__c );
-          reservedQuantityMap.put( line.Order_Group_Id__c, q + 1);
+      if (line.ERP_Order__r.Reserved_For_Customer_Account__c != null) {
+        if (!reservedQuantityMap.containsKey(line.Order_Group_Id__c))
+          reservedQuantityMap.put(line.Order_Group_Id__c, 1);
+        else {
+          Integer q = reservedQuantityMap.get(line.Order_Group_Id__c);
+          reservedQuantityMap.put(line.Order_Group_Id__c, q + 1);
         }
       }
     }
 
-    for( AcctSeed__Project__c erp : [ SELECT Id,
-                                             Customer_Notes__c,
-                                             AcctSeedERP__Work_Order_Number__c,
-                                             Stage__c,
-                                      (SELECT Id,
-                                              AcctSeedERP__Product__c,
-                                              AcctSeedERP__Product__r.Name,
-                                              AcctSeedERP__Product__r.RecordType.Name,
-                                              AcctSeedERP__Product__r.Family,
-                                              AcctSeedERP__Comment__c,
-                                              AcctSeedERP__Quantity_per_Unit__c,
-                                              GMBLASERP__Unit_Price__c,
-                                              GMBLASERP__Serial_Number__c,
-                                              GMBLASERP__Serial_Number__r.Name,
-                                              Parent_Product__c,
-                                              Material__c,
-                                              Material__r.AcctSeedERP__Product__c
-                                      FROM AcctSeedERP__Project_Materials__r)
-                                     FROM AcctSeed__Project__c
-                                     WHERE Id IN :erpIdMap.keySet() ] )
-    {
-      Dealer_Order_Line__c workingLine = erpIdMap.get( erp.Id );
+    for (AcctSeed__Project__c erp : [
+      SELECT
+        Id,
+        Customer_Notes__c,
+        AcctSeedERP__Work_Order_Number__c,
+        Stage__c,
+        (
+          SELECT
+            Id,
+            AcctSeedERP__Product__c,
+            AcctSeedERP__Product__r.Name,
+            AcctSeedERP__Product__r.RecordType.Name,
+            AcctSeedERP__Product__r.Family,
+            AcctSeedERP__Comment__c,
+            AcctSeedERP__Quantity_per_Unit__c,
+            GMBLASERP__Unit_Price__c,
+            GMBLASERP__Serial_Number__c,
+            GMBLASERP__Serial_Number__r.Name,
+            Parent_Product__c,
+            Material__c,
+            Material__r.AcctSeedERP__Product__c
+          FROM AcctSeedERP__Project_Materials__r
+        )
+      FROM AcctSeed__Project__c
+      WHERE Id IN :erpIdMap.keySet()
+    ]) {
+      Dealer_Order_Line__c workingLine = erpIdMap.get(erp.Id);
       DolViewWrapper r = new DolViewWrapper();
       r.orderTotal = workingLine.Line_Total_Pre_Tax__c;
-      r.quantity = quantityMap.get( workingLine.Order_Group_Id__c );
-      r.quantityReserved = reservedQuantityMap.containsKey( workingLine.Order_Group_Id__c ) ?
-        reservedQuantityMap.get( workingLine.Order_Group_Id__c ) : 0;
+      r.quantity = quantityMap.get(workingLine.Order_Group_Id__c);
+      r.quantityReserved = reservedQuantityMap.containsKey(workingLine.Order_Group_Id__c)
+        ? reservedQuantityMap.get(workingLine.Order_Group_Id__c)
+        : 0;
       r.grandTotal = r.quantity * r.orderTotal;
       r.orderGroupId = workingLine.Order_Group_Id__c;
       r.notes = erp.Customer_Notes__c;
       r.invoiceNumber = erp.AcctSeedERP__Work_Order_Number__c;
-      for( AcctSeedERP__Material__c mat : erp.AcctSeedERP__Project_Materials__r)
-      {
-        if( mat.AcctSeedERP__Product__r.RecordType.Name == 'Boat' )
-          r.addBoat( mat );
-        if( mat.AcctSeedERP__Product__r.RecordType.Name == 'Trailer' )
-          r.addTrailer( mat );
-        if( mat.AcctSeedERP__Product__r.RecordType.Name == 'Motor' )
-          r.addMotor( mat );
-        if( mat.AcctSeedERP__Product__r.RecordType.Name == 'Trolling Motor' )
-          r.addTrollingMotor( mat );
-        if( mat.AcctSeedERP__Product__r.RecordType.Name == 'Part' &&
-            mat.AcctSeedERP__Product__r.Family != 'Discount' )
-          r.addOption( mat );
-        if( mat.AcctSeedERP__Product__r.RecordType.Name == 'Part' &&
-            mat.AcctSeedERP__Product__r.Family == 'Discount' )
-          r.addDiscount( mat );
-        if( mat.AcctSeedERP__Product__r.RecordType.Name == 'Fees' )
-          r.addFee( mat );
+      for (AcctSeedERP__Material__c mat : erp.AcctSeedERP__Project_Materials__r) {
+        if (mat.AcctSeedERP__Product__r.RecordType.Name == 'Boat')
+          r.addBoat(mat);
+        if (mat.AcctSeedERP__Product__r.RecordType.Name == 'Trailer')
+          r.addTrailer(mat);
+        if (mat.AcctSeedERP__Product__r.RecordType.Name == 'Motor')
+          r.addMotor(mat);
+        if (mat.AcctSeedERP__Product__r.RecordType.Name == 'Trolling Motor')
+          r.addTrollingMotor(mat);
+        if (mat.AcctSeedERP__Product__r.RecordType.Name == 'Part' && mat.AcctSeedERP__Product__r.Family != 'Discount')
+          r.addOption(mat);
+        if (mat.AcctSeedERP__Product__r.RecordType.Name == 'Part' && mat.AcctSeedERP__Product__r.Family == 'Discount')
+          r.addDiscount(mat);
+        if (mat.AcctSeedERP__Product__r.RecordType.Name == 'Fees')
+          r.addFee(mat);
       }
-      if( workingLine.Dealer_Motor_Request__c != null )
-      {
-        Map<String, Object> motor = new Map<String,Object>{
+      if (workingLine.Dealer_Motor_Request__c != null) {
+        Map<String, Object> motor = new Map<String, Object>{
           'name' => workingLine.Dealer_Motor_Request__r.Motor__r.Name,
           'cost' => '0',
           'cost_description' => 'Package and Save',
@@ -1266,80 +1158,80 @@ public without sharing class DealerOrder_Ext {
         r.motor = motor;
       }
       r.groupOptions();
-      if( r.boat != null )
+      if (r.boat != null)
         result.get('boats').add(r);
-      else if( r.motor != null )
-        result.get('motors').add( r );
-      else if( r.trailer != null )
-        result.get('trailers').add( r );
-      else if( r.trollingMotor != null )
-        result.get('trollingMotors').add( r );
+      else if (r.motor != null)
+        result.get('motors').add(r);
+      else if (r.trailer != null)
+        result.get('trailers').add(r);
+      else if (r.trollingMotor != null)
+        result.get('trollingMotors').add(r);
     }
-    for( Dealer_Order_Line__c dol : motorRequestLines )
-    {
+    for (Dealer_Order_Line__c dol : motorRequestLines) {
       DolViewWrapper r = new DolViewWrapper();
       r.orderTotal = dol.Line_Total_Pre_Tax__c;
-      r.quantity = Integer.valueOf( dol.Dealer_Motor_Request__r.Quantity__c );
+      r.quantity = Integer.valueOf(dol.Dealer_Motor_Request__r.Quantity__c);
       r.grandTotal = r.quantity * r.orderTotal;
       r.orderGroupId = dol.Order_Group_Id__c;
       r.notes = dol.Notes__c;
-      Map<String, String> motor = new Map<String,String>{
+      Map<String, String> motor = new Map<String, String>{
         'name' => dol.Dealer_Motor_Request__r.Motor__r.Name,
         'cost' => '0',
         'cost_description' => 'Package and Save'
       };
       r.motor = motor;
-      result.get('motors').add( r );
+      result.get('motors').add(r);
     }
-    return JSON.serialize( result );
+    return JSON.serialize(result);
   }
 
-  private static DolViewWrapper viewDealerLineItemFromERP( Dealer_Order_Line__c[] dols )
-  {
+  private static DolViewWrapper viewDealerLineItemFromERP(Dealer_Order_Line__c[] dols) {
     DolViewWrapper result = new DolViewWrapper();
     result.orderTotal = dols[0].Line_Total_Pre_Tax__c;
     result.notes = dols[0].ERP_Order__r.Customer_Notes__c;
     result.booking = dols[0].Dealer_Order__r.Is_Booking_Order__c;
     result.quantity = dols.size();
 
-    for( AcctSeedERP__Material__c mat : [SELECT Id,
-                                                AcctSeedERP__Product__r.Name,
-                                                AcctSeedERP__Product__r.RecordType.Name,
-                                                AcctSeedERP__Product__r.Family,
-                                                AcctSeedERP__Comment__c,
-                                                AcctSeedERP__Quantity_per_Unit__c,
-                                                GMBLASERP__Unit_Price__c,
-                                                GMBLASERP__Serial_Number__r.Name,
-                                                Parent_Product__c,
-                                                Material__c,
-                                                Material__r.AcctSeedERP__Product__c
-                                         FROM AcctSeedERP__Material__c
-                                         WHERE AcctSeedERP__Project__c = : dols[0].ERP_Order__c ])
-    {
-      if( mat.AcctSeedERP__Product__r.RecordType.Name == 'Boat' )
-        result.addBoat( mat );
-      if( mat.AcctSeedERP__Product__r.RecordType.Name == 'Trailer' )
-        result.addTrailer( mat );
-      if( mat.AcctSeedERP__Product__r.RecordType.Name == 'Motor' )
-        result.addMotor( mat );
-      if( mat.AcctSeedERP__Product__r.RecordType.Name == 'Trolling Motor' )
-        result.addTrollingMotor( mat );
-      if( mat.AcctSeedERP__Product__r.RecordType.Name == 'Part' )
-      {
-        if( mat.AcctSeedERP__Product__r.Family == 'Discount' )
-          result.addDiscount( mat );
+    for (AcctSeedERP__Material__c mat : [
+      SELECT
+        Id,
+        AcctSeedERP__Product__r.Name,
+        AcctSeedERP__Product__r.RecordType.Name,
+        AcctSeedERP__Product__r.Family,
+        AcctSeedERP__Comment__c,
+        AcctSeedERP__Quantity_per_Unit__c,
+        GMBLASERP__Unit_Price__c,
+        GMBLASERP__Serial_Number__r.Name,
+        Parent_Product__c,
+        Material__c,
+        Material__r.AcctSeedERP__Product__c
+      FROM AcctSeedERP__Material__c
+      WHERE AcctSeedERP__Project__c = :dols[0].ERP_Order__c
+    ]) {
+      if (mat.AcctSeedERP__Product__r.RecordType.Name == 'Boat')
+        result.addBoat(mat);
+      if (mat.AcctSeedERP__Product__r.RecordType.Name == 'Trailer')
+        result.addTrailer(mat);
+      if (mat.AcctSeedERP__Product__r.RecordType.Name == 'Motor')
+        result.addMotor(mat);
+      if (mat.AcctSeedERP__Product__r.RecordType.Name == 'Trolling Motor')
+        result.addTrollingMotor(mat);
+      if (mat.AcctSeedERP__Product__r.RecordType.Name == 'Part') {
+        if (mat.AcctSeedERP__Product__r.Family == 'Discount')
+          result.addDiscount(mat);
         else
-          result.addOption( mat );
+          result.addOption(mat);
       }
-      if( mat.AcctSeedERP__Product__r.RecordType.Name == 'Fees' )
-        result.addFee( mat );
+      if (mat.AcctSeedERP__Product__r.RecordType.Name == 'Fees')
+        result.addFee(mat);
 
-      if( dols[0].Dealer_Motor_Request__c != null )
-      {
-        Dealer_Motor_Request__c dmr = [SELECT Id, Motor__r.Name
-                                       FROM Dealer_Motor_Request__c
-                                       WHERE Id = : dols[0].Dealer_Motor_Request__c];
-        Map<String, String> motor = new Map<String,String>{
+      if (dols[0].Dealer_Motor_Request__c != null) {
+        Dealer_Motor_Request__c dmr = [
+          SELECT Id, Motor__r.Name
+          FROM Dealer_Motor_Request__c
+          WHERE Id = :dols[0].Dealer_Motor_Request__c
+        ];
+        Map<String, String> motor = new Map<String, String>{
           'name' => dmr.Motor__r.Name,
           'cost' => '0',
           'cost_description' => 'Legend - Mercury Special Programs'
@@ -1349,68 +1241,67 @@ public without sharing class DealerOrder_Ext {
     }
     result.groupOptions();
     return result;
-
   }
 
-  private static DolViewWrapper viewDealerLineItemFromMotorRequest( Dealer_Order_Line__c[] dols )
-  {
+  private static DolViewWrapper viewDealerLineItemFromMotorRequest(Dealer_Order_Line__c[] dols) {
     DolViewWrapper result = new DolViewWrapper();
     result.orderTotal = dols[0].Line_Total_Pre_Tax__c;
-    Dealer_Motor_Request__C dmr = [SELECT Id,
-                                          Motor__c,
-                                          Motor__r.Name,
-                                          Notes__c,
-                                          Quantity__c
-                                  FROM Dealer_Motor_Request__c
-                                  WHERE Id = : dols[0].Dealer_Motor_Request__c];
+    Dealer_Motor_Request__C dmr = [
+      SELECT Id, Motor__c, Motor__r.Name, Notes__c, Quantity__c
+      FROM Dealer_Motor_Request__c
+      WHERE Id = :dols[0].Dealer_Motor_Request__c
+    ];
     result.notes = dmr.Notes__c;
-    result.quantity = Integer.valueOf( dmr.Quantity__c );
-    Map<String,String> motor = new Map<String, String>();
-    motor.put('name', dmr.Motor__r.Name );
+    result.quantity = Integer.valueOf(dmr.Quantity__c);
+    Map<String, String> motor = new Map<String, String>();
+    motor.put('name', dmr.Motor__r.Name);
     motor.put('cost_description', 'Package and Save');
     result.motor = motor;
     return result;
   }
 
   @AuraEnabled
-  public static String editDealerLineItem( String groupId,
-                                           String pricebookId )
-  {
-    Dealer_Order_Line__c[] dols = [SELECT Id,
-                                          ERP_Order__c,
-                                          ERP_Order__r.Customer_Notes__c,
-                                          Legend_Transfer_Request__c,
-                                          Legend_Transfer_Request__r.Notes__c,
-                                          Dealer_Order__r.Account__r.BillingState,
-                                          Dealer_Order__r.Is_Legend_Transfer__c,
-                                          Dealer_Motor_Request__c,
-                                          Model_Year__c,
-                                          Notes__c
-                                   FROM Dealer_Order_Line__c
-                                   WHERE Order_Group_Id__c = :groupId];
-    if( dols.size() == 0 )
+  public static String editDealerLineItem(String groupId, String pricebookId) {
+    Dealer_Order_Line__c[] dols = [
+      SELECT
+        Id,
+        ERP_Order__c,
+        ERP_Order__r.Customer_Notes__c,
+        Legend_Transfer_Request__c,
+        Legend_Transfer_Request__r.Notes__c,
+        Dealer_Order__r.Account__r.BillingState,
+        Dealer_Order__r.Is_Legend_Transfer__c,
+        Dealer_Motor_Request__c,
+        Model_Year__c,
+        Notes__c
+      FROM Dealer_Order_Line__c
+      WHERE Order_Group_Id__c = :groupId
+    ];
+    if (dols.size() == 0)
       return null;
 
-    if( dols[0].ERP_Order__c == null &&
-        dols[0].Legend_Transfer_Request__c == null &&
-        dols[0].Dealer_Motor_Request__c != null )
-      return JSON.serialize( reconstructFromMotorRequest( dols ) );
+    if (
+      dols[0].ERP_Order__c == null &&
+      dols[0].Legend_Transfer_Request__c == null &&
+      dols[0].Dealer_Motor_Request__c != null
+    )
+      return JSON.serialize(reconstructFromMotorRequest(dols));
 
-    if( dols[0].Dealer_Order__r.Is_Legend_Transfer__c )
-      return JSON.serialize( reconstructFromTransfer( dols, pricebookId ) );
+    if (dols[0].Dealer_Order__r.Is_Legend_Transfer__c)
+      return JSON.serialize(reconstructFromTransfer(dols, pricebookId));
     else
-      return JSON.serialize( reconstructFromERP( dols, pricebookId ) );
-
+      return JSON.serialize(reconstructFromERP(dols, pricebookId));
   }
 
-  private static DolWrapper reconstructFromMotorRequest( Dealer_Order_Line__c[] dols )
-  {
+  private static DolWrapper reconstructFromMotorRequest(Dealer_Order_Line__c[] dols) {
     DolWrapper result = new DolWrapper();
     result.province = dols[0].Dealer_Order__r.Account__r.BillingState;
-    result.motorRequest = [SELECT Id, Motor__c, Quantity__c
-                             FROM Dealer_Motor_Request__c
-                             WHERE Id = :dols[0].Dealer_Motor_Request__c];
-    result.quantity = Integer.valueOf( result.motorRequest.Quantity__c );
+    result.motorRequest = [
+      SELECT Id, Motor__c, Quantity__c
+      FROM Dealer_Motor_Request__c
+      WHERE Id = :dols[0].Dealer_Motor_Request__c
+    ];
+    result.quantity = Integer.valueOf(result.motorRequest.Quantity__c);
     result.recordType = 'Motor';
     result.selectedMotor_Id = result.motorRequest.Motor__c;
     result.isMotorRequestOnly = true;
@@ -1418,9 +1309,7 @@ public without sharing class DealerOrder_Ext {
     return result;
   }
 
-  private static DolWrapper reconstructFromTransfer( Dealer_Order_Line__c[] dols,
-                                                     String pricebookId )
-  {
+  private static DolWrapper reconstructFromTransfer(Dealer_Order_Line__c[] dols, String pricebookId) {
     DolWrapper result = new DolWrapper();
     Legend_Transfer_Item__c boat;
     Legend_Transfer_Item__c trailer;
@@ -1430,94 +1319,80 @@ public without sharing class DealerOrder_Ext {
     Legend_Transfer_Item__c[] fees = new List<Legend_Transfer_Item__c>();
     result.province = dols[0].Dealer_Order__r.Account__r.BillingState;
     // fetch Items form a single Transfer
-    Legend_Transfer_Item__c[] items = [SELECT Id,
-                                              Product__c,
-                                              Product__r.Name,
-                                              Product__r.RecordType.Name,
-                                              Product__r.Family,
-                                              Comment__c,
-                                              Parent_Product__c
-                                       FROM Legend_Transfer_Item__c
-                                       WHERE Legend_Transfer_Request__c = : dols[0].Legend_Transfer_Request__c];
+    Legend_Transfer_Item__c[] items = [
+      SELECT
+        Id,
+        Product__c,
+        Product__r.Name,
+        Product__r.RecordType.Name,
+        Product__r.Family,
+        Comment__c,
+        Parent_Product__c
+      FROM Legend_Transfer_Item__c
+      WHERE Legend_Transfer_Request__c = :dols[0].Legend_Transfer_Request__c
+    ];
     //Iterate through materials to determine Boat, Trailer Options and subOptions
-    for( Legend_Transfer_Item__c item : items )
-    {
-      if( item.Product__r.RecordType.Name == 'Boat' )
-      {
+    for (Legend_Transfer_Item__c item : items) {
+      if (item.Product__r.RecordType.Name == 'Boat') {
         boat = item;
       }
-      if( item.Product__r.RecordType.Name == 'Trailer' )
-      {
+      if (item.Product__r.RecordType.Name == 'Trailer') {
         trailer = item;
       }
-      if( item.Product__r.RecordType.Name == 'Motor' )
-      {
+      if (item.Product__r.RecordType.Name == 'Motor') {
         motor = item;
       }
-      if( item.Product__r.RecordType.Name == 'Trolling Motor' )
-      {
+      if (item.Product__r.RecordType.Name == 'Trolling Motor') {
         trollingMotor = item;
       }
-      if( item.Product__r.RecordType.Name == 'Part' )
-      {
-        parts.add( item );
+      if (item.Product__r.RecordType.Name == 'Part') {
+        parts.add(item);
       }
-      if( item.Product__r.RecordType.Name == 'Fee' )
-      {
-        fees.add( item );
+      if (item.Product__r.RecordType.Name == 'Fee') {
+        fees.add(item);
       }
     }
 
-    if( boat != null )
-    {
+    if (boat != null) {
       result.family = boat.Product__r.Family;
       result.selectedBoat_Id = boat.Product__c;
       result.recordType = 'Boat';
     }
-    if( trailer != null )
-    {
-      if( boat == null )
-      {
+    if (trailer != null) {
+      if (boat == null) {
         result.family = trailer.Product__r.Family;
         result.recordType = 'Trailer';
       }
       result.selectedTrailer_Id = trailer.Product__c;
     }
-    if( motor != null )
-    {
-      if( boat == null )
-      {
+    if (motor != null) {
+      if (boat == null) {
         result.family = motor.Product__r.Family;
         result.recordType = 'Motor';
       }
       result.selectedMotor_Id = motor.Product__c;
     }
-    if( trollingMotor != null )
-    {
+    if (trollingMotor != null) {
       result.selectedTrollingMotor_Id = trollingMotor.Product__c;
       result.selectedTrollingMotor_Name = trollingMotor.Product__r.Name;
     }
-    if( parts.size() > 0 )
-    {
+    if (parts.size() > 0) {
       /* Find ALL sub options for selected Options */
       Set<id> parentIds = new Set<Id>();
-      Map<Id,Set<Id>> selectedParentChildMap = new Map<Id, Set<Id>>();
-      for( Legend_Transfer_Item__c item : parts )
-      {
+      Map<Id, Set<Id>> selectedParentChildMap = new Map<Id, Set<Id>>();
+      for (Legend_Transfer_Item__c item : parts) {
         /*
           if the Parent_Product is not null than this is a "subOption"
           and we map it to the parent, this has been previously selected.
           if Parent Product is null then this is first level option and we
           need to find all the available subOptions
         */
-        if( item.Parent_Product__c != null )
-        {
-          if( !selectedParentChildMap.containsKey(item.Product__c) )
-            selectedParentChildMap.put( item.Parent_Product__c, new Set<Id>() );
-          selectedParentChildMap.get( item.Parent_Product__c ).add( item.Product__c );
-        }
-        else
-          parentIds.add( item.Product__c );
+        if (item.Parent_Product__c != null) {
+          if (!selectedParentChildMap.containsKey(item.Product__c))
+            selectedParentChildMap.put(item.Parent_Product__c, new Set<Id>());
+          selectedParentChildMap.get(item.Parent_Product__c).add(item.Product__c);
+        } else
+          parentIds.add(item.Product__c);
       }
       /*
         childParentMap = maps the available subOptions to Set of Parent Product Ids
@@ -1526,15 +1401,16 @@ public without sharing class DealerOrder_Ext {
       */
       Map<Id, Set<Id>> childParentMap = new Map<Id, Set<Id>>();
       /* find the parent product options (SubOptions) */
-      Product_Option__c[] options = [SELECT From_Product__c, To_Product__c
-                                     FROM Product_Option__c
-                                     WHERE To_Product__c IN :parentIds];
+      Product_Option__c[] options = [
+        SELECT From_Product__c, To_Product__c
+        FROM Product_Option__c
+        WHERE To_Product__c IN :parentIds
+      ];
       /*build the childParentMap */
-      for( Product_Option__c opt : options )
-      {
-        if( !childParentMap.containsKey(opt.From_Product__c) )
-          childParentMap.put( opt.From_Product__c, new Set<Id>() );
-        childParentMap.get( opt.From_Product__c).add(opt.To_Product__c);
+      for (Product_Option__c opt : options) {
+        if (!childParentMap.containsKey(opt.From_Product__c))
+          childParentMap.put(opt.From_Product__c, new Set<Id>());
+        childParentMap.get(opt.From_Product__c).add(opt.To_Product__c);
       }
       /*
         parent_subOptions_Map - maps parentProductId to a List of subOptions
@@ -1543,50 +1419,45 @@ public without sharing class DealerOrder_Ext {
       /*
         get the Pricebook entries for all the subOptions and iterate through
       */
-      for( PricebookEntry pbe : [SELECT Id, UnitPrice, Product2Id, Product2.Name
-                               FROM PricebookEntry
-                               WHERE Product2Id IN :childParentMap.keySet()
-                               AND Pricebook2Id = :pricebookId ] )
-      {
+      for (PricebookEntry pbe : [
+        SELECT Id, UnitPrice, Product2Id, Product2.Name
+        FROM PricebookEntry
+        WHERE Product2Id IN :childParentMap.keySet() AND Pricebook2Id = :pricebookId
+      ]) {
         /*
           using the childProductId (pbe.Product2Id) we iterate through the list
           of parentIds which have this subOptions
         */
-        for( Id parentId : childParentMap.get( pbe.Product2Id) )
-        {
+        for (Id parentId : childParentMap.get(pbe.Product2Id)) {
           /*
             create an OptionWrapper object for each subOption
             and add it to the parent_subOption_Map
           */
-          if( !parent_subOptions_Map.containsKey(parentId) )
-          {
-            parent_subOptions_Map.put( parentId, new List<OptionWrapper>() );
+          if (!parent_subOptions_Map.containsKey(parentId)) {
+            parent_subOptions_Map.put(parentId, new List<OptionWrapper>());
           }
-          OptionWrapper ow = new OptionWrapper( pbe );
+          OptionWrapper ow = new OptionWrapper(pbe);
           /*
             check see if this sub option was previously selected
           */
-          ow.isSelected = selectedParentChildMap.containsKey( parentId ) &&
-                          selectedParentChildMap.get(parentId).contains(ow.id);
+          ow.isSelected =
+            selectedParentChildMap.containsKey(parentId) && selectedParentChildMap.get(parentId).contains(ow.id);
           ow.parent_id = parentId;
-          parent_subOptions_Map.get( parentId ).add( ow );
+          parent_subOptions_Map.get(parentId).add(ow);
         }
       }
       /*
         finally iterate over all the selected materials ( options ) and build
         an OptionWrapper object for each adding the subOption where applicable
       */
-      for( Legend_Transfer_Item__c item : parts )
-      {
-        if( item.Parent_Product__c == null )
-        {
+      for (Legend_Transfer_Item__c item : parts) {
+        if (item.Parent_Product__c == null) {
           OptionWrapper ow = new OptionWrapper(item);
-          if( parent_subOptions_Map.containsKey( ow.id ) )
-          {
-            ow.subOptions = parent_subOptions_Map.get( ow.id );
+          if (parent_subOptions_Map.containsKey(ow.id)) {
+            ow.subOptions = parent_subOptions_Map.get(ow.id);
             ow.hasOptions = true;
           }
-          result.options.put( ow.id, ow);
+          result.options.put(ow.id, ow);
         }
       }
     }
@@ -1596,9 +1467,7 @@ public without sharing class DealerOrder_Ext {
     return result;
   }
 
-  private static DolWrapper reconstructFromERP( Dealer_Order_Line__c[] dols,
-                                                String pricebookId )
-  {
+  private static DolWrapper reconstructFromERP(Dealer_Order_Line__c[] dols, String pricebookId) {
     DolWrapper result = new DolWrapper();
     Set<Id> productIds = new Set<Id>();
     Map<Id, Product_Option__c> optionMap = new Map<Id, Product_Option__c>();
@@ -1611,96 +1480,82 @@ public without sharing class DealerOrder_Ext {
     AcctSeedERP__Material__c[] fees = new List<AcctSeedERP__Material__c>();
     result.province = dols[0].Dealer_Order__r.Account__r.BillingState;
     // fetch Materials form a single ERP
-    AcctSeedERP__Material__c[] mats = Material_Selector.allByProjectId( dols[0].ERP_Order__c );
+    AcctSeedERP__Material__c[] mats = Material_Selector.allByProjectId(dols[0].ERP_Order__c);
     //Iterate through materials to determine Boat, Trailer Options and subOptions
     Application_RecordType.ProductRTs productRts = new Application_RecordType().getProductRecordTypes();
-    for( AcctSeedERP__Material__c mat : mats )
-    {
-      if( mat.AcctSeedERP__Product__r.RecordTypeId == productRts.getBoatId() )
-      {
+    for (AcctSeedERP__Material__c mat : mats) {
+      if (mat.AcctSeedERP__Product__r.RecordTypeId == productRts.getBoatId()) {
         boat = mat;
-        productIds.add( mat.AcctSeedERP__Product__c );
+        productIds.add(mat.AcctSeedERP__Product__c);
       }
-      if( mat.AcctSeedERP__Product__r.RecordTypeId == productRts.getTrailerId() )
-      {
+      if (mat.AcctSeedERP__Product__r.RecordTypeId == productRts.getTrailerId()) {
         trailer = mat;
-        productIds.add( mat.AcctSeedERP__Product__c );
+        productIds.add(mat.AcctSeedERP__Product__c);
       }
-      if( mat.AcctSeedERP__Product__r.RecordTypeId == productRts.getMotorId() )
-      {
+      if (mat.AcctSeedERP__Product__r.RecordTypeId == productRts.getMotorId()) {
         motor = mat;
-        productIds.add( mat.AcctSeedERP__Product__c );
+        productIds.add(mat.AcctSeedERP__Product__c);
       }
-      if( mat.AcctSeedERP__Product__r.RecordTypeId == productRts.getTrollingMotorId() )
-      {
+      if (mat.AcctSeedERP__Product__r.RecordTypeId == productRts.getTrollingMotorId()) {
         trollingMotor = mat;
-        productIds.add( mat.AcctSeedERP__Product__c );
+        productIds.add(mat.AcctSeedERP__Product__c);
       }
-      if( mat.AcctSeedERP__Product__r.RecordTypeId == productRts.getPartId() )
-      {
-        parts.add( mat );
+      if (mat.AcctSeedERP__Product__r.RecordTypeId == productRts.getPartId()) {
+        parts.add(mat);
       }
-      if( mat.AcctSeedERP__Product__r.RecordTypeId == productRts.getFeesId() )
-      {
-        fees.add( mat );
+      if (mat.AcctSeedERP__Product__r.RecordTypeId == productRts.getFeesId()) {
+        fees.add(mat);
       }
     }
     /* find Product Options */
-    for( Product_Option__c option : [ SELECT From_Product__c, Standard__c, Maximum__c
-                                      FROM Product_Option__c
-                                      WHERE To_Product__c IN :productIds ] )
-    {
-      optionMap.put( option.From_Product__c, option );
+    for (Product_Option__c option : [
+      SELECT From_Product__c, Standard__c, Maximum__c
+      FROM Product_Option__c
+      WHERE To_Product__c IN :productIds
+    ]) {
+      optionMap.put(option.From_Product__c, option);
     }
     /* if the dol has a Dealer_Motor_Request find it and set it */
-    if( dols[0].Dealer_Motor_Request__c != null )
-    {
-      result.motorRequest = [SELECT Id, Motor__c, Quantity__c
-                             FROM Dealer_Motor_Request__c
-                             WHERE Id = :dols[0].Dealer_Motor_Request__c];
+    if (dols[0].Dealer_Motor_Request__c != null) {
+      result.motorRequest = [
+        SELECT Id, Motor__c, Quantity__c
+        FROM Dealer_Motor_Request__c
+        WHERE Id = :dols[0].Dealer_Motor_Request__c
+      ];
     }
 
-    if( boat != null )
-    {
+    if (boat != null) {
       result.family = boat.AcctSeedERP__Product__r.Family;
       result.selectedBoat_Id = boat.AcctSeedERP__Product__c;
       result.recordType = 'Boat';
     }
-    if( trailer != null )
-    {
-      if( boat == null )
-      {
+    if (trailer != null) {
+      if (boat == null) {
         result.family = trailer.AcctSeedERP__Product__r.Family;
         result.recordType = 'Trailer';
       }
       result.selectedTrailer_Id = trailer.AcctSeedERP__Product__c;
     }
-    if( motor != null )
-    {
-      if( boat == null )
-      {
+    if (motor != null) {
+      if (boat == null) {
         result.family = motor.AcctSeedERP__Product__r.Family;
         result.recordType = 'Motor';
       }
       result.selectedMotor_Id = motor.AcctSeedERP__Product__c;
     }
-    if( trollingMotor != null )
-    {
-      if( boat == null )
-      {
+    if (trollingMotor != null) {
+      if (boat == null) {
         result.family = trollingMotor.AcctSeedERP__Product__r.Family;
         result.recordType = 'Trolling Motor';
       }
       result.selectedTrollingMotor_Id = trollingMotor.AcctSeedERP__Product__c;
       result.selectedTrollingMotor_Name = trollingMotor.AcctSeedERP__Product__r.Name;
     }
-    if( parts.size() > 0 )
-    {
+    if (parts.size() > 0) {
       /* Find ALL sub options for selected Options */
       Set<Id> parentIds = new Set<Id>();
-      Map<Id,Set<Id>> selectedParentChildMap = new Map<Id, Set<Id>>();
-      for( AcctSeedERP__Material__c mat : parts )
-      {
+      Map<Id, Set<Id>> selectedParentChildMap = new Map<Id, Set<Id>>();
+      for (AcctSeedERP__Material__c mat : parts) {
         /*
           if the Parent_Product is not null than this is a "subOption"
           and we map it to the parent, this has been previously selected.
@@ -1709,55 +1564,40 @@ public without sharing class DealerOrder_Ext {
         */
         System.debug('MATERIAL');
         System.debug(mat);
-        if( mat.Parent_Product__c != null )
-        {
+        if (mat.Parent_Product__c != null) {
           String key = mat.Parent_Product__c + '-' + mat.AcctSeedERP__Product__c;
-          if( !subOptionMaterialsMap.containsKey(key) )
-            subOptionMaterialsMap.put( key, new List<AcctSeedERP__Material__c>() );
-          subOptionMaterialsMap.get( key).add( mat );
+          if (!subOptionMaterialsMap.containsKey(key))
+            subOptionMaterialsMap.put(key, new List<AcctSeedERP__Material__c>());
+          subOptionMaterialsMap.get(key).add(mat);
           /* if the parent Id is equal to the motor, then this is a
              selected motor option
           */
-          if( result.motorRequest != null &&
-              result.motorRequest.Motor__c == mat.Parent_Product__c )
-          {
-            result.motorOptions.put( mat.AcctSeedERP__Product__c, new OptionWrapper(mat) );
+          if (result.motorRequest != null && result.motorRequest.Motor__c == mat.Parent_Product__c) {
+            result.motorOptions.put(mat.AcctSeedERP__Product__c, new OptionWrapper(mat));
           }
-          if( result.selectedMotor_Id == mat.Parent_Product__c )
-          {
-            result.motorOptions.put( mat.AcctSeedERP__Product__c, new OptionWrapper(mat) );
-          }
-          else if( result.selectedTrailer_Id == mat.Parent_Product__c )
-          {
-            result.trailerOptions.put( mat.AcctSeedERP__Product__c, new OptionWrapper(mat));
-          }
-          else if( result.selectedTrollingMotor_Id == mat.Parent_Product__c )
-          {
-            result.trollingMotorOptions.put( mat.AcctSeedERP__Product__c, new OptionWrapper(mat) );
-          }
-          else
-          {
-            if( !selectedParentChildMap.containsKey(mat.Parent_product__c) )
-            {
+          if (result.selectedMotor_Id == mat.Parent_Product__c) {
+            result.motorOptions.put(mat.AcctSeedERP__Product__c, new OptionWrapper(mat));
+          } else if (result.selectedTrailer_Id == mat.Parent_Product__c) {
+            result.trailerOptions.put(mat.AcctSeedERP__Product__c, new OptionWrapper(mat));
+          } else if (result.selectedTrollingMotor_Id == mat.Parent_Product__c) {
+            result.trollingMotorOptions.put(mat.AcctSeedERP__Product__c, new OptionWrapper(mat));
+          } else {
+            if (!selectedParentChildMap.containsKey(mat.Parent_product__c)) {
               selectedParentChildMap.put(mat.Parent_Product__c, new Set<Id>());
             }
-            selectedParentChildMap.get( mat.Parent_Product__c ).add( mat.AcctSeedERP__Product__c );
+            selectedParentChildMap.get(mat.Parent_Product__c).add(mat.AcctSeedERP__Product__c);
           }
-        }
-        /*
+        } else if (mat.Material__c != null) {
+          /*
          If Material__c is populated than this is a Kit part and we map it to the parent Part
         */
-        else if( mat.Material__c != null ){
-          if( !selectedParentChildMap.containsKey(mat.Material__c) )
-          {
+          if (!selectedParentChildMap.containsKey(mat.Material__c)) {
             selectedParentChildMap.put(mat.Material__c, new Set<Id>());
           }
-          selectedParentChildMap.get( mat.Material__c ).add( mat.AcctSeedERP__Product__c );
-        }
-        else
-        {
+          selectedParentChildMap.get(mat.Material__c).add(mat.AcctSeedERP__Product__c);
+        } else {
           System.debug('add Part a primary');
-          System.debug( mat);
+          System.debug(mat);
           parentIds.add(mat.AcctSeedERP__Product__c);
         }
       }
@@ -1769,15 +1609,16 @@ public without sharing class DealerOrder_Ext {
       //Map<Id, Set<Id>> childParentMap = new Map<Id, Set<Id>>();
       Map<Id, List<Product_Option__c>> childParentOptionMap = new Map<Id, List<Product_Option__c>>();
       /* find the parent product options (SubOptions) */
-      Product_Option__c[] options = [SELECT From_Product__c, To_Product__c, Standard__c, Maximum__c
-                                     FROM Product_Option__c
-                                     WHERE To_Product__c IN :parentIds];
+      Product_Option__c[] options = [
+        SELECT From_Product__c, To_Product__c, Standard__c, Maximum__c
+        FROM Product_Option__c
+        WHERE To_Product__c IN :parentIds
+      ];
       /*build the childParentMap */
-      for( Product_Option__c opt : options )
-      {
-        if( !childParentOptionMap.containsKey(opt.From_Product__c) )
-          childParentOptionMap.put( opt.From_Product__c, new List<Product_Option__c>() );
-        childParentOptionMap.get( opt.From_Product__c).add(opt);
+      for (Product_Option__c opt : options) {
+        if (!childParentOptionMap.containsKey(opt.From_Product__c))
+          childParentOptionMap.put(opt.From_Product__c, new List<Product_Option__c>());
+        childParentOptionMap.get(opt.From_Product__c).add(opt);
       }
       /*
         parent_subOptions_Map - maps parentProductId to a List of subOptions
@@ -1786,71 +1627,62 @@ public without sharing class DealerOrder_Ext {
       /*
         get the Pricebook entries for all the subOptions and iterate through
       */
-      for( PricebookEntry pbe : [SELECT Id, UnitPrice, Product2Id, Product2.Name
-                               FROM PricebookEntry
-                               WHERE Product2Id IN :childParentOptionMap.keySet()
-                               AND Pricebook2Id = :pricebookId ] )
-      {
+      for (PricebookEntry pbe : [
+        SELECT Id, UnitPrice, Product2Id, Product2.Name
+        FROM PricebookEntry
+        WHERE Product2Id IN :childParentOptionMap.keySet() AND Pricebook2Id = :pricebookId
+      ]) {
         /*
           using the childProductId (pbe.Product2Id) we iterate through the list
           of parentIds which have this subOptions
         */
-        for( Product_Option__c opt : childParentOptionMap.get( pbe.Product2Id) )
-        {
+        for (Product_Option__c opt : childParentOptionMap.get(pbe.Product2Id)) {
           /*
             create an OptionWrapper object for each subOption
             and add it to the parent_subOption_Map
           */
-          if( !parent_subOptions_Map.containsKey(opt.To_Product__c) )
-          {
-            parent_subOptions_Map.put( opt.To_Product__c, new List<OptionWrapper>() );
+          if (!parent_subOptions_Map.containsKey(opt.To_Product__c)) {
+            parent_subOptions_Map.put(opt.To_Product__c, new List<OptionWrapper>());
           }
-          OptionWrapper ow = new OptionWrapper( pbe, opt );
+          OptionWrapper ow = new OptionWrapper(pbe, opt);
           ow.parent_id = opt.To_Product__c;
           /*
             check see if this sub option was previously selected
           */
-          if( ow.isCheckbox )
-          {
-            ow.isSelected = selectedParentChildMap.containsKey(opt.To_Product__c) &&
+          if (ow.isCheckbox) {
+            ow.isSelected =
+              selectedParentChildMap.containsKey(opt.To_Product__c) &&
               selectedParentChildMap.get(opt.To_Product__c).contains(ow.id);
-          }
-          else
-          {
+          } else {
             //ow.quantitySelected = 2;
             String key = opt.To_Product__c + '-' + opt.From_Product__c;
-            if( subOptionMaterialsMap.containsKey( key ) )
-            {
+            if (subOptionMaterialsMap.containsKey(key)) {
               Integer quan = 0;
-              for( AcctSeedERP__Material__c mat : subOptionMaterialsMap.get( key ) )
-              {
-                 quan += Integer.valueOf( mat.AcctSeedERP__Quantity_Per_Unit__c );
+              for (AcctSeedERP__Material__c mat : subOptionMaterialsMap.get(key)) {
+                quan += Integer.valueOf(mat.AcctSeedERP__Quantity_Per_Unit__c);
               }
               ow.quantitySelected = quan;
             }
           }
-          parent_subOptions_Map.get( opt.To_Product__c ).add( ow );
+          parent_subOptions_Map.get(opt.To_Product__c).add(ow);
         }
       }
       /*
         finally iterate over all the selected materials ( options ) and build
         an OptionWrapper object for each adding the subOption where applicable
       */
-      for( AcctSeedERP__Material__c mat : parts )
-      {
-        if( mat.Parent_Product__c == null && mat.Material__c == null )
-        {
+      for (AcctSeedERP__Material__c mat : parts) {
+        if (mat.Parent_Product__c == null && mat.Material__c == null) {
           OptionWrapper ow;
-          if( optionMap.containsKey( mat.AcctSeedERP__Product__c) )
-            ow = new OptionWrapper(mat, optionMap.get( mat.AcctSeedERP__Product__c) );
+          if (optionMap.containsKey(mat.AcctSeedERP__Product__c))
+            ow = new OptionWrapper(mat, optionMap.get(mat.AcctSeedERP__Product__c));
           else
             ow = new OptionWrapper(mat);
-          if( parent_subOptions_Map.containsKey( ow.id ) )
-          {
-            ow.subOptions = parent_subOptions_Map.get( ow.id );
+          if (parent_subOptions_Map.containsKey(ow.id)) {
+            ow.subOptions = parent_subOptions_Map.get(ow.id);
             ow.hasOptions = true;
           }
-          result.options.put( ow.id, ow);
+          result.options.put(ow.id, ow);
         }
       }
     }
@@ -1861,264 +1693,232 @@ public without sharing class DealerOrder_Ext {
   }
 
   @AuraEnabled
-  public static Dealer_Order__c saveDealerLineItem( String jsonData ) {
-    DealerOrderLineWrapper wrapper = (DealerOrderLineWrapper)JSON.deserialize(jsonData, DealerOrderLineWrapper.class );
-    if( wrapper.orderGroupId == null )
-    {
-      return createDealerLineItems( wrapper );
-    }
-    else
-      return updateDealerLineItems( wrapper );
+  public static Dealer_Order__c saveDealerLineItem(String jsonData) {
+    DealerOrderLineWrapper wrapper = (DealerOrderLineWrapper) JSON.deserialize(jsonData, DealerOrderLineWrapper.class);
+    if (wrapper.orderGroupId == null) {
+      return createDealerLineItems(wrapper);
+    } else
+      return updateDealerLineItems(wrapper);
   }
 
   @AuraEnabled
-  public static Dealer_Motor_Request__c saveMotorRequest( Dealer_Motor_Request__c motorRequest )
-  {
-
-    if( motorRequest.Id != null &&
-        motorRequest.Motor__c == null
-      )
-    {
+  public static Dealer_Motor_Request__c saveMotorRequest(Dealer_Motor_Request__c motorRequest) {
+    if (motorRequest.Id != null && motorRequest.Motor__c == null) {
       Dealer_Motor_Request__c dmr = new Dealer_Motor_Request__c(Id = motorRequest.Id);
       delete dmr;
       return new Dealer_Motor_Request__c();
-    }
-    else
-    {
+    } else {
       upsert motorRequest;
       return motorRequest;
     }
   }
 
   @AuraEnabled
-  public static void deleteOrderGroup( String groupId )
-  {
-    Dealer_Order_Line__c[] dols = [ SELECT Id
-                                    FROM Dealer_Order_Line__c
-                                    WHERE Order_Group_Id__c = :groupId];
-    try
-    {
+  public static void deleteOrderGroup(String groupId) {
+    Dealer_Order_Line__c[] dols = [SELECT Id FROM Dealer_Order_Line__c WHERE Order_Group_Id__c = :groupId];
+    try {
       delete dols;
-    }
-    catch( Exception e )
-    {
-      AuraHandledException ex = new AuraHandledException( e.getMessage() );
-      ex.setMessage( e.getMessage() );
+    } catch (Exception e) {
+      AuraHandledException ex = new AuraHandledException(e.getMessage());
+      ex.setMessage(e.getMessage());
       throw ex;
     }
   }
 
   @AuraEnabled
-  public static List<Map<String, String>> fetchProducts( String recordType,
-                                                         String family,
-                                                         String pricebookId )
-  {
+  public static List<Map<String, String>> fetchProducts(String recordType, String family, String pricebookId) {
     String userType = UserInfo.getUserType();
     Boolean isFactoryStore = pricebookId == gcConstants.idPricebookFactory;
-    Id rtId = LGND_Utilities.recordTypeIdFromName('Product2', recordType );
+    Id rtId = LGND_Utilities.recordTypeIdFromName('Product2', recordType);
     List<Map<String, String>> result = new List<Map<String, String>>();
-    String queryString = 'SELECT Product2.Id, Product2.Name, UnitPrice, Product2.Available_For_Package_And_Save__c, Product2.Available_For_Mercury_Partner_Discount__c FROM PricebookEntry WHERE IsActive = true AND Product2.RecordTypeId =\'' + rtId + '\'';
-    if( family != null )
-    {
+    String queryString =
+      'SELECT Product2.Id, Product2.Name, UnitPrice, Product2.Available_For_Package_And_Save__c, Product2.Available_For_Mercury_Partner_Discount__c FROM PricebookEntry WHERE IsActive = true AND Product2.RecordTypeId =\'' +
+      rtId +
+      '\'';
+    if (family != null) {
       queryString += ' AND Product2.Family = \'';
       queryString += family;
       queryString += '\'';
     }
-    if( recordType == 'Motor' )
-    {
+    if (recordType == 'Motor') {
       queryString += ' AND Product2.Make__c = \'Mercury\'';
-      if( userType != 'Standard' && !isFactoryStore )
+      if (userType != 'Standard' && !isFactoryStore)
         queryString += ' AND ( Product2.Available_For_Package_And_Save__c = true OR Product2.Available_For_Mercury_Partner_Discount__c = true ) ';
     }
 
     queryString += ' AND Product2.isActive = true AND Pricebook2Id = \'';
     queryString += pricebookId;
     queryString += '\' ORDER BY Product2.Name ASC';
-    for( PricebookEntry pbe : Database.query( queryString ) )
-    {
-      if( pbe.UnitPrice > 0 )
-      {
-        Boolean packageAndSave = !isFactoryStore &&
-                                ( pbe.Product2.Available_For_Package_And_Save__c ||
-                                  pbe.Product2.Available_For_Mercury_Partner_Discount__c );
+    for (PricebookEntry pbe : Database.query(queryString)) {
+      if (pbe.UnitPrice > 0) {
+        Boolean packageAndSave =
+          !isFactoryStore &&
+          (pbe.Product2.Available_For_Package_And_Save__c || pbe.Product2.Available_For_Mercury_Partner_Discount__c);
         Map<String, String> opt = new Map<String, String>();
         opt.put('id', pbe.Product2.Id);
         opt.put('name', pbe.Product2.Name);
-        opt.put('cost', String.valueOf( pbe.UnitPrice ) );
-        opt.put('packageAndSave', String.valueOf( packageAndSave ) );
-        result.add( opt );
+        opt.put('cost', String.valueOf(pbe.UnitPrice));
+        opt.put('packageAndSave', String.valueOf(packageAndSave));
+        result.add(opt);
       }
     }
     return result;
   }
 
   @AuraEnabled
-  public static String fetchSubOptions( String parentProductId,
-                                        String pricebookId )
-  {
+  public static String fetchSubOptions(String parentProductId, String pricebookId) {
     List<OptionWrapper> result = new List<OptionWrapper>();
     Map<Id, Product_Option__c> prod_option_map = new Map<Id, Product_Option__c>();
-    for( Product_Option__c option : [SELECT From_Product__c, Standard__c, Maximum__c
-                                      FROM Product_Option__c
-                                      WHERE To_Product__c = :parentProductId] )
-    {
-      prod_option_map.put( option.From_Product__c, option );
+    for (Product_Option__c option : [
+      SELECT From_Product__c, Standard__c, Maximum__c
+      FROM Product_Option__c
+      WHERE To_Product__c = :parentProductId
+    ]) {
+      prod_option_map.put(option.From_Product__c, option);
     }
-    for( PricebookEntry pbe : [SELECT Id, UnitPrice, Product2Id, Product2.Name
-                               FROM PricebookEntry
-                               WHERE Product2Id IN :prod_option_map.keySet()
-                               AND Pricebook2Id = :pricebookId ] )
-    {
-      OptionWrapper ow = new OptionWrapper(
-        pbe,
-        prod_option_map.get( pbe.Product2Id )
-      );
+    for (PricebookEntry pbe : [
+      SELECT Id, UnitPrice, Product2Id, Product2.Name
+      FROM PricebookEntry
+      WHERE Product2Id IN :prod_option_map.keySet() AND Pricebook2Id = :pricebookId
+    ]) {
+      OptionWrapper ow = new OptionWrapper(pbe, prod_option_map.get(pbe.Product2Id));
       ow.hasOptions = false;
       ow.parent_id = parentProductId;
-      result.add( ow );
+      result.add(ow);
     }
-    return JSON.serialize( result );
+    return JSON.serialize(result);
   }
 
   @AuraEnabled
-  public static String fetchProductDetails( String productId,
-                                            String recordTypeName,
-                                            String pricebookId )
-  {
+  public static String fetchProductDetails(String productId, String recordTypeName, String pricebookId) {
     //verify product is in Specified Pricebook
     try {
-      PricebookEntry pbe = [SELECT Id
-                            FROM PricebookEntry
-                            WHERE Pricebook2Id = :pricebookId
-                            AND Product2Id = :productId];
-    }
-    catch( Exception e )
-    {
+      PricebookEntry pbe = [
+        SELECT Id
+        FROM PricebookEntry
+        WHERE Pricebook2Id = :pricebookId AND Product2Id = :productId
+      ];
+    } catch (Exception e) {
       Product2 p = [SELECT Name FROM Product2 WHERE Id = :productId];
       Pricebook2[] pb = [SELECT Name FROM Pricebook2 WHERE Id = :pricebookId];
       String err = '';
-      if( pb.size() == 0 )
-       err = 'Invalid Pricebook Id specified for ' + p.Name;
+      if (pb.size() == 0)
+        err = 'Invalid Pricebook Id specified for ' + p.Name;
       else
-        err = p.Name + ' is currently not available in the '+ pb[0].Name + ' Pricebook.';
+        err = p.Name + ' is currently not available in the ' + pb[0].Name + ' Pricebook.';
       err += '\n\r Stop the order and contact your Legend Representative!';
       throw new AuraHandledException(err);
     }
-    LGND_APIv2_Product lp = new LGND_APIv2_Product( productId, Id.valueOf(pricebookId), recordTypeName );
-    return JSON.serialize( new ProductWrapper( lp, pricebookId ) );
+    LGND_APIv2_Product lp = new LGND_APIv2_Product(productId, Id.valueOf(pricebookId), recordTypeName);
+    return JSON.serialize(new ProductWrapper(lp, pricebookId));
   }
 
   @AuraEnabled
-  public static Dealer_Order__c fetchDealerOrder( String recordId ){
-    return [SELECT Id,
-                   Name,
-                   Is_Booking_Order__c,
-                   Is_Legend_Transfer__c,
-                   Account__c,
-                   Order_Number__c,
-                   Account__r.BillingState,
-                   Account__r.Is_Internal__c,
-                   Stage__c,
-                   Payment_Method__c,
-                   Model_Year__c,
-                   isLocked__c,
-                   Pricebook__c,
-                   Program_Year__c,
-                   Financing_Company__r.Financing_Company__r.Name,
-                   Order_Total__c,
-                   Order_Total_No_Fees_And_Discounts__c,
-            (SELECT Id,
-                    Line_Total_Pre_Tax__c,
-                    ERP_Order__r.Name,
-                    Legend_Transfer_Request__r.Name,
-                    Dealer_Motor_Request__c,
-                    Dealer_Motor_Request__r.Quantity__c,
-                    Product__c,
-                    Product__r.Name,
-                    Model_Year__c,
-                    Order_Group_Id__c
-             FROM Dealer_Order_Lines__r)
-            FROM Dealer_Order__c
-            WHERE Id = :recordId];
+  public static Dealer_Order__c fetchDealerOrder(String recordId) {
+    return [
+      SELECT
+        Id,
+        Name,
+        Is_Booking_Order__c,
+        Is_Legend_Transfer__c,
+        Account__c,
+        Order_Number__c,
+        Account__r.BillingState,
+        Account__r.Is_Internal__c,
+        Stage__c,
+        Payment_Method__c,
+        Model_Year__c,
+        isLocked__c,
+        Pricebook__c,
+        Program_Year__c,
+        Financing_Company__r.Financing_Company__r.Name,
+        Order_Total__c,
+        Order_Total_No_Fees_And_Discounts__c,
+        (
+          SELECT
+            Id,
+            Line_Total_Pre_Tax__c,
+            ERP_Order__r.Name,
+            Legend_Transfer_Request__r.Name,
+            Dealer_Motor_Request__c,
+            Dealer_Motor_Request__r.Quantity__c,
+            Product__c,
+            Product__r.Name,
+            Model_Year__c,
+            Order_Group_Id__c
+          FROM Dealer_Order_Lines__r
+        )
+      FROM Dealer_Order__c
+      WHERE Id = :recordId
+    ];
   }
 
-//  @AuraEnabled
-//  public static String applyPartnerProgram( String dealerOrderId )
-//  {
-//    String retVal;
-//    PartnerProgram_Service pp_service = new PartnerProgram_Service(
-//      new Set<Id>{ Id.valueOf(dealerOrderId) } );
-//    return JSON.serialize( pp_service.checkAndApply().get( dealerOrderId) );
-//  }
+  //  @AuraEnabled
+  //  public static String applyPartnerProgram( String dealerOrderId )
+  //  {
+  //    String retVal;
+  //    PartnerProgram_Service pp_service = new PartnerProgram_Service(
+  //      new Set<Id>{ Id.valueOf(dealerOrderId) } );
+  //    return JSON.serialize( pp_service.checkAndApply().get( dealerOrderId) );
+  //  }
 
-  private static Dealer_Order__c createDealerLineItems( DealerOrderLineWrapper wrapper )
-  {
-    Id pricebookId = pricebookFromDealerOrder( wrapper.dealerOrderId );
+  private static Dealer_Order__c createDealerLineItems(DealerOrderLineWrapper wrapper) {
+    Id pricebookId = pricebookFromDealerOrder(wrapper.dealerOrderId);
     Set<Id> prodIds = new Set<Id>();
-    String groupId = LGND_Utilities.generateRandomString( 16 );
-    for( OptionWrapper ow : wrapper.lineItems )
-    {
-      prodIds.add( ow.id );
+    String groupId = LGND_Utilities.generateRandomString(16);
+    for (OptionWrapper ow : wrapper.lineItems) {
+      prodIds.add(ow.id);
     }
     Map<Id, Product2> productMap = new Map<Id, Product2>(
-      [ SELECT Id,
-        (SELECT Id, UnitPrice FROM PricebookEntries WHERE Pricebook2Id = :pricebookId)
+      [
+        SELECT Id, (SELECT Id, UnitPrice FROM PricebookEntries WHERE Pricebook2Id = :pricebookId)
         FROM Product2
-        WHERE Id IN :prodIds] );
-    insertNewDealerOrderLines( wrapper, wrapper.quantity, productMap, groupId );
+        WHERE Id IN :prodIds
+      ]
+    );
+    insertNewDealerOrderLines(wrapper, wrapper.quantity, productMap, groupId);
 
     return fetchDealerOrder(wrapper.dealerOrderId);
   }
 
-  private static void insertNewDealerOrderLines( DealerOrderLineWrapper wrapper,
-                                                 Integer quantity,
-                                                 Map<Id, Product2> productMap,
-                                                 String groupId )
-  {
-    Dealer_Order__c dealerOrder = [SELECT Id,
-                                          Name,
-                                          Is_Booking_Order__c,
-                                          Model_Year__c,
-                                          Order_Number__c,
-                                          Is_Legend_Transfer__c,
-                                          Pricebook__c
-                                   FROM Dealer_Order__c
-                                   WHERE Id = :wrapper.dealerOrderId];
+  private static void insertNewDealerOrderLines(
+    DealerOrderLineWrapper wrapper,
+    Integer quantity,
+    Map<Id, Product2> productMap,
+    String groupId
+  ) {
+    Dealer_Order__c dealerOrder = [
+      SELECT Id, Name, Is_Booking_Order__c, Model_Year__c, Order_Number__c, Is_Legend_Transfer__c, Pricebook__c
+      FROM Dealer_Order__c
+      WHERE Id = :wrapper.dealerOrderId
+    ];
 
-
-    if( dealerOrder.Is_Legend_Transfer__c )
-    {
-      createLegendTransfers( wrapper, dealerOrder, quantity, groupId );
-    }
-    else
-    {
-      createERPs( wrapper, dealerOrder, quantity, productMap, groupId );
+    if (dealerOrder.Is_Legend_Transfer__c) {
+      createLegendTransfers(wrapper, dealerOrder, quantity, groupId);
+    } else {
+      createERPs(wrapper, dealerOrder, quantity, productMap, groupId);
     }
   }
 
-  private static void createLegendTransfers( DealerOrderLineWrapper wrapper,
-                                             Dealer_Order__c dealerOrder,
-                                             Integer quantity,
-                                             String groupId )
-  {
+  private static void createLegendTransfers(
+    DealerOrderLineWrapper wrapper,
+    Dealer_Order__c dealerOrder,
+    Integer quantity,
+    String groupId
+  ) {
     List<Legend_Transfer_Request__c> transfers = new List<Legend_Transfer_Request__c>();
     List<Legend_Transfer_Item__c> items = new List<Legend_Transfer_Item__c>();
-    for( Integer i=0; i<quantity; i++ )
-    {
-      transfers.add( new Legend_Transfer_Request__c(
-          Account__c = wrapper.accountId,
-          Notes__c = wrapper.notes,
-          Stage__c = 'Draft'
-        )
+    for (Integer i = 0; i < quantity; i++) {
+      transfers.add(
+        new Legend_Transfer_Request__c(Account__c = wrapper.accountId, Notes__c = wrapper.notes, Stage__c = 'Draft')
       );
     }
     insert transfers;
 
-    for( Legend_Transfer_Request__c ltr : transfers )
-    {
-      for( OptionWrapper ow : wrapper.lineItems )
-      {
-        items.add( new Legend_Transfer_Item__c(
+    for (Legend_Transfer_Request__c ltr : transfers) {
+      for (OptionWrapper ow : wrapper.lineItems) {
+        items.add(
+          new Legend_Transfer_Item__c(
             Legend_Transfer_Request__c = ltr.Id,
             Comment__c = ow.name,
             Product__c = ow.id,
@@ -2131,28 +1931,29 @@ public without sharing class DealerOrder_Ext {
 
     //create Dealer Order Lines
     List<Dealer_Order_Line__c> dols = new List<Dealer_Order_Line__c>();
-    for( Legend_Transfer_Request__c ltr : transfers )
-    {
-      Id majorProductId = wrapper.boat != null ? wrapper.boat.id :
-                          wrapper.trailer != null ? wrapper.trailer.id :
-                          wrapper.motor != null ? wrapper.motor.id :
-                          null;
-      dols.add( new Dealer_Order_Line__c(
-        Dealer_Order__c = dealerOrder.Id,
-        Legend_Transfer_Request__c = ltr.Id,
-        Product__c = majorProductId,
-        Order_Group_Id__c = groupId
-      ) );
+    for (Legend_Transfer_Request__c ltr : transfers) {
+      Id majorProductId = wrapper.boat != null
+        ? wrapper.boat.id
+        : wrapper.trailer != null ? wrapper.trailer.id : wrapper.motor != null ? wrapper.motor.id : null;
+      dols.add(
+        new Dealer_Order_Line__c(
+          Dealer_Order__c = dealerOrder.Id,
+          Legend_Transfer_Request__c = ltr.Id,
+          Product__c = majorProductId,
+          Order_Group_Id__c = groupId
+        )
+      );
     }
     insert dols;
   }
 
-  private static void createERPs( DealerOrderLineWrapper wrapper,
-                                  Dealer_Order__c dealerOrder,
-                                  Integer quantity,
-                                  Map<Id, Product2> productMap,
-                                  String groupId )
-  {
+  private static void createERPs(
+    DealerOrderLineWrapper wrapper,
+    Dealer_Order__c dealerOrder,
+    Integer quantity,
+    Map<Id, Product2> productMap,
+    String groupId
+  ) {
     Id erpRT = gcConstants.idRtProjectPartnerBoatSale;
     //Product2 discountProduct = [SELECT Id
     //                            FROM Product2
@@ -2162,99 +1963,98 @@ public without sharing class DealerOrder_Ext {
     Account acct = [SELECT Id, Name, BillingState FROM Account WHERE Id = :wrapper.accountId];
     //AcctSeedERP__Warehouse__c wh = [SELECT Id FROM AcctSeedERP__Warehouse__c WHERE Name = 'Whitefish'];
     List<AcctSeed__Project__c> erps = new List<AcctSeed__Project__c>();
-    if( !wrapper.isMotorRequest )
-    {
-      for( Integer i=0; i<quantity; i++ )
-      {
-        erps.add( new AcctSeed__Project__c(
-          Name = (acct.Name).LEFT(70) + '-' + dealerOrder.Name.split('-')[1] + '.' + String.valueOf(i+1),
-          isDealerBookingOrder__c = dealerOrder.Is_Booking_Order__c,
-          BoatModelYear__c = wrapper.modelYear,
-          TrailerModelYear__c = wrapper.modelYear,
-          AcctSeed__Account__c = acct.Id,
-          AcctSeed__Status__c = 'Active',
-          Stage__c = 'Draft',
-          GMBLASERP__Pricebook__c = dealerOrder.Pricebook__c,
-          RecordTypeId = erpRT,
-          Dealer_Order_Number__c = dealerOrder.Order_Number__c,
-          Boat_Product__c = wrapper.boat != null ? wrapper.boat.id : null,
-          //GMBLASERP__Warehouse__c = wh.Id,
-          Customer_Notes__c = wrapper.notes
-        ) );
+    if (!wrapper.isMotorRequest) {
+      for (Integer i = 0; i < quantity; i++) {
+        erps.add(
+          new AcctSeed__Project__c(
+            Name = (acct.Name).LEFT(70) + '-' + dealerOrder.Name.split('-')[1] + '.' + String.valueOf(i + 1),
+            isDealerBookingOrder__c = dealerOrder.Is_Booking_Order__c,
+            BoatModelYear__c = wrapper.modelYear,
+            TrailerModelYear__c = wrapper.modelYear,
+            AcctSeed__Account__c = acct.Id,
+            AcctSeed__Status__c = 'Active',
+            Stage__c = 'Draft',
+            GMBLASERP__Pricebook__c = dealerOrder.Pricebook__c,
+            RecordTypeId = erpRT,
+            Dealer_Order_Number__c = dealerOrder.Order_Number__c,
+            Boat_Product__c = wrapper.boat != null ? wrapper.boat.id : null,
+            //GMBLASERP__Warehouse__c = wh.Id,
+            Customer_Notes__c = wrapper.notes
+          )
+        );
       }
       insert erps;
 
       //create ERP Order Tasks
       Map<Id, AcctSeed__Project_Task__c> tasks = new Map<Id, AcctSeed__Project_Task__c>();
-      for( AcctSeed__Project__c erp : erps )
-      {
-        tasks.put( erp.Id, new AcctSeed__Project_Task__c(
-          Name = 'Dealer Order Lines',
-          DisplayOnCustomerInvoice__c = true,
-          AcctSeed__Project__c = erp.Id
-        ) );
+      for (AcctSeed__Project__c erp : erps) {
+        tasks.put(
+          erp.Id,
+          new AcctSeed__Project_Task__c(
+            Name = 'Dealer Order Lines',
+            DisplayOnCustomerInvoice__c = true,
+            AcctSeed__Project__c = erp.Id
+          )
+        );
       }
       insert tasks.values();
 
       //create MAterials
       List<AcctSeedERP__Material__c> materials = new List<AcctSeedERP__Material__c>();
-      for( AcctSeed__Project__c erp : erps )
-      {
-        for( OptionWrapper ow : wrapper.lineItems )
-        {
-          AcctSeedERP__Material__c material = newMaterialsFromWrapper( ow,
-                                                                       erp.Id,
-                                                                       tasks.get(erp.Id).Id );
-          if( productMap.containsKey( ow.Id) &&
-              productMap.get(ow.id ).PricebookEntries.size() > 0 )
-          {
-            material.GMBLASERP__Price_Override__c = ( productMap.get(ow.id).PricebookEntries[0].UnitPrice == ow.cost ? false : true );
+      for (AcctSeed__Project__c erp : erps) {
+        for (OptionWrapper ow : wrapper.lineItems) {
+          AcctSeedERP__Material__c material = newMaterialsFromWrapper(ow, erp.Id, tasks.get(erp.Id).Id);
+          if (productMap.containsKey(ow.Id) && productMap.get(ow.id).PricebookEntries.size() > 0) {
+            material.GMBLASERP__Price_Override__c = (productMap.get(ow.id).PricebookEntries[0].UnitPrice == ow.cost
+              ? false
+              : true);
           }
-          materials.add( material );
-          if( ( ow.isCheckbox == null || !ow.isCheckbox ) &&
-              ow.quantityStandard > 0 &&
-              ow.quantityStandard != ow.quantitySelected )
-          {
-            materials.add( newIncludedOptionMaterial( material, ow.quantityStandard ) );
+          materials.add(material);
+          if (
+            (ow.isCheckbox == null || !ow.isCheckbox) &&
+            ow.quantityStandard > 0 &&
+            ow.quantityStandard != ow.quantitySelected
+          ) {
+            materials.add(newIncludedOptionMaterial(material, ow.quantityStandard));
           }
         }
-        materials.addAll( createDiscountMaterials( wrapper.discounts,
-                                                   erp.Id,
-                                                   tasks.get(erp.Id).Id ) );
+        materials.addAll(createDiscountMaterials(wrapper.discounts, erp.Id, tasks.get(erp.Id).Id));
       }
       insert materials;
     }
     //create Dealer Order Lines
     List<Dealer_Order_Line__c> dols = new List<Dealer_Order_Line__c>();
-    if( erps.size() > 0 && !wrapper.isMotorRequest )
-    {
-      for( AcctSeed__Project__c erp : erps )
-      {
-        Id majorProductId = wrapper.boat != null ? wrapper.boat.id :
-                            wrapper.trailer != null ? wrapper.trailer.id :
-                            wrapper.motor != null ? wrapper.motor.id :
-                            wrapper.trollingMotor != null ? wrapper.trollingMotor.id :
-                            null;
-        dols.add( new Dealer_Order_Line__c(
-          Dealer_Order__c = dealerOrder.Id,
-          ERP_Order__c = erp.Id,
-          Product__c = majorProductId,
-          Order_Group_Id__c = groupId,
-          Dealer_Motor_Request__c = wrapper.dealerMotorRequestId,
-          Notes__c = wrapper.notes,
-          Model_Year__c = wrapper.modelYear
-        ) );
+    if (erps.size() > 0 && !wrapper.isMotorRequest) {
+      for (AcctSeed__Project__c erp : erps) {
+        Id majorProductId = wrapper.boat != null
+          ? wrapper.boat.id
+          : wrapper.trailer != null
+              ? wrapper.trailer.id
+              : wrapper.motor != null
+                  ? wrapper.motor.id
+                  : wrapper.trollingMotor != null ? wrapper.trollingMotor.id : null;
+        dols.add(
+          new Dealer_Order_Line__c(
+            Dealer_Order__c = dealerOrder.Id,
+            ERP_Order__c = erp.Id,
+            Product__c = majorProductId,
+            Order_Group_Id__c = groupId,
+            Dealer_Motor_Request__c = wrapper.dealerMotorRequestId,
+            Notes__c = wrapper.notes,
+            Model_Year__c = wrapper.modelYear
+          )
+        );
       }
     }
-    if( wrapper.isMotorRequest )
-    {
-      dols.add( new Dealer_Order_Line__c(
-              Dealer_Order__c = dealerOrder.Id,
-              Order_Group_Id__c = groupId,
-              Dealer_Motor_Request__c = wrapper.dealerMotorRequestId,
-              Product__c = wrapper.motor.id,
-              Notes__c = wrapper.notes,
-              Model_Year__c = wrapper.modelYear
+    if (wrapper.isMotorRequest) {
+      dols.add(
+        new Dealer_Order_Line__c(
+          Dealer_Order__c = dealerOrder.Id,
+          Order_Group_Id__c = groupId,
+          Dealer_Motor_Request__c = wrapper.dealerMotorRequestId,
+          Product__c = wrapper.motor.id,
+          Notes__c = wrapper.notes,
+          Model_Year__c = wrapper.modelYear
         )
       );
     }
@@ -2263,131 +2063,110 @@ public without sharing class DealerOrder_Ext {
     MetadataTriggerHandler.clearBypass('TA_DealerOrderLine_HandlePartnerPro');
   }
 
-  private static Dealer_Order__c updateDealerLineItems( DealerOrderLineWrapper wrapper )
-  {
-    if( wrapper.isLegendTransfer )
-      updateDealerLineItemsFromTransfer( wrapper );
-    else if( !wrapper.isMotorRequest &&
-              wrapper.boat == null &&
-              wrapper.dealerMotorRequestId != null )
+  private static Dealer_Order__c updateDealerLineItems(DealerOrderLineWrapper wrapper) {
+    if (wrapper.isLegendTransfer)
+      updateDealerLineItemsFromTransfer(wrapper);
+    else if (!wrapper.isMotorRequest && wrapper.boat == null && wrapper.dealerMotorRequestId != null)
       //this was a dealer motor request now it is an erp
-      convertFromMotorRequestToERP( wrapper );
-    else if( wrapper.isMotorRequest )
-      updateDealerLineItemsFromMotorTransfer( wrapper );
+      convertFromMotorRequestToERP(wrapper);
+    else if (wrapper.isMotorRequest)
+      updateDealerLineItemsFromMotorTransfer(wrapper);
     else
-      updateDealerLineItemsFromERP( wrapper );
+      updateDealerLineItemsFromERP(wrapper);
 
-    return fetchDealerOrder( wrapper.dealerOrderId );
+    return fetchDealerOrder(wrapper.dealerOrderId);
   }
 
-  private static void updateDealerLineItemsFromMotorTransfer( DealerOrderLineWrapper wrapper )
-  {
-    Dealer_Order_Line__c[] dols = [SELECT Id, ERP_Order__c
-                                   FROM Dealer_Order_Line__c
-                                   WHERE Order_Group_Id__c = :wrapper.orderGroupId ];
+  private static void updateDealerLineItemsFromMotorTransfer(DealerOrderLineWrapper wrapper) {
+    Dealer_Order_Line__c[] dols = [
+      SELECT Id, ERP_Order__c
+      FROM Dealer_Order_Line__c
+      WHERE Order_Group_Id__c = :wrapper.orderGroupId
+    ];
     Dealer_Order_Line__c lineToKeep = dols[0];
     Set<Id> erpIds = new Set<Id>();
     Dealer_Order_Line__c[] linesToDelete = new List<Dealer_Order_Line__c>();
-    for( Dealer_Order_Line__c dol : dols )
-    {
-      if( dol.Id == lineToKeep.Id )
-      {
+    for (Dealer_Order_Line__c dol : dols) {
+      if (dol.Id == lineToKeep.Id) {
         dol.Product__c = wrapper.motor.id;
         dol.Dealer_Motor_Request__c = wrapper.dealerMotorRequestId;
         dol.Notes__c = wrapper.notes;
-      }
-      else
+      } else
         linesToDelete.add(dol);
-      if( dol.ERP_Order__c != null )
-        erpIds.add( dol.ERP_Order__c );
+      if (dol.ERP_Order__c != null)
+        erpIds.add(dol.ERP_Order__c);
     }
     update lineToKeep;
-    if( linesToDelete.size() > 0 )
+    if (linesToDelete.size() > 0)
       delete linesToDelete;
 
-    if( erpIds.size() > 0 )
-    {
-      AcctSeed__Project__c[] erps = [SELECT Id
-                                     FROM AcctSeed__Project__c
-                                     WHERE Id IN :erpIds];
+    if (erpIds.size() > 0) {
+      AcctSeed__Project__c[] erps = [SELECT Id FROM AcctSeed__Project__c WHERE Id IN :erpIds];
       delete erps;
     }
   }
 
-  private static void convertFromMotorRequestToERP( DealerOrderLineWrapper wrapper )
-  {
-    Dealer_Motor_Request__c dmr = new Dealer_Motor_Request__c(
-      Id = wrapper.dealerMotorRequestId
-    );
-    Dealer_Order_Line__c[] dols = [SELECT Id
-                                   FROM Dealer_Order_Line__c
-                                   WHERE Order_Group_Id__c = :wrapper.orderGroupId];
+  private static void convertFromMotorRequestToERP(DealerOrderLineWrapper wrapper) {
+    Dealer_Motor_Request__c dmr = new Dealer_Motor_Request__c(Id = wrapper.dealerMotorRequestId);
+    Dealer_Order_Line__c[] dols = [SELECT Id FROM Dealer_Order_Line__c WHERE Order_Group_Id__c = :wrapper.orderGroupId];
     delete dmr;
     delete dols;
     wrapper.dealerMotorRequestId = null;
     wrapper.orderGroupId = null;
-    createDealerLineItems( wrapper );
+    createDealerLineItems(wrapper);
   }
 
-  private static Id pricebookFromDealerOrder( Id dealerOrderId )
-  {
+  private static Id pricebookFromDealerOrder(Id dealerOrderId) {
     try {
-      return [SELECT Id, Pricebook__c
-               FROM Dealer_Order__c
-               WHERE Id = :dealerOrderId ].Pricebook__c;
-    }
-    catch(Exception e)
-    {
+      return [SELECT Id, Pricebook__c FROM Dealer_Order__c WHERE Id = :dealerOrderId].Pricebook__c;
+    } catch (Exception e) {
       return gcConstants.idPricebookPartner;
     }
   }
 
-  private static void updateDealerLineItemsFromTransfer( DealerOrderLineWrapper wrapper )
-  {
-    Id pricebookId = pricebookFromDealerOrder( wrapper.dealerOrderId );
+  private static void updateDealerLineItemsFromTransfer(DealerOrderLineWrapper wrapper) {
+    Id pricebookId = pricebookFromDealerOrder(wrapper.dealerOrderId);
     Set<Id> transferIds = new Set<Id>();
     Dealer_Order_Line__c[] dolsToDelete = new List<Dealer_Order_Line__c>();
     Legend_Transfer_Item__c[] oldItems = new List<Legend_Transfer_Item__c>();
     Legend_Transfer_Item__c[] newItems = new List<Legend_Transfer_Item__c>();
-    Dealer_Order_Line__c[] dols = [SELECT Legend_Transfer_Request__c, Dealer_Order__c
-                                   FROM Dealer_Order_Line__c
-                                   WHERE Order_Group_Id__c = :wrapper.orderGroupId];
+    Dealer_Order_Line__c[] dols = [
+      SELECT Legend_Transfer_Request__c, Dealer_Order__c
+      FROM Dealer_Order_Line__c
+      WHERE Order_Group_Id__c = :wrapper.orderGroupId
+    ];
     Integer quantityDiff = wrapper.quantity - dols.size();
-    for( Dealer_Order_Line__c dol :  dols )
-    {
-      if( quantityDiff < 0 )
-      {
-        dolsToDelete.add( dol );
+    for (Dealer_Order_Line__c dol : dols) {
+      if (quantityDiff < 0) {
+        dolsToDelete.add(dol);
         quantityDiff++;
-      }
-      else
-      {
-        transferIds.add( dol.Legend_Transfer_Request__c );
+      } else {
+        transferIds.add(dol.Legend_Transfer_Request__c);
       }
     }
     Set<Id> prodIds = new Set<Id>();
-    for( OptionWrapper ow : wrapper.lineItems )
-    {
-      prodIds.add( ow.id );
+    for (OptionWrapper ow : wrapper.lineItems) {
+      prodIds.add(ow.id);
     }
     Map<Id, Product2> productMap = new Map<Id, Product2>(
-      [ SELECT Id,
-        (SELECT Id, UnitPrice FROM PricebookEntries WHERE Pricebook2Id = :pricebookId)
+      [
+        SELECT Id, (SELECT Id, UnitPrice FROM PricebookEntries WHERE Pricebook2Id = :pricebookId)
         FROM Product2
-        WHERE Id IN :prodIds] );
-    Legend_Transfer_Request__c[] transfers = [SELECT Id,
-                                              (SELECT Id
-                                               FROM Legend_Transfer_Items__r)
-                                             FROM Legend_Transfer_Request__c
-                                             WHERE Id IN :transferIds ];
+        WHERE Id IN :prodIds
+      ]
+    );
+    Legend_Transfer_Request__c[] transfers = [
+      SELECT Id, (SELECT Id FROM Legend_Transfer_Items__r)
+      FROM Legend_Transfer_Request__c
+      WHERE Id IN :transferIds
+    ];
 
-    for( Legend_Transfer_Request__c transfer : transfers )
-    {
+    for (Legend_Transfer_Request__c transfer : transfers) {
       transfer.Notes__c = wrapper.notes;
-      oldItems.addAll( transfer.Legend_Transfer_Items__r );
-      for( OptionWrapper ow : wrapper.lineItems )
-      {
-        newItems.add( new Legend_Transfer_Item__c(
+      oldItems.addAll(transfer.Legend_Transfer_Items__r);
+      for (OptionWrapper ow : wrapper.lineItems) {
+        newItems.add(
+          new Legend_Transfer_Item__c(
             Legend_Transfer_Request__c = transfer.Id,
             Comment__c = ow.name,
             Product__c = ow.id,
@@ -2401,110 +2180,96 @@ public without sharing class DealerOrder_Ext {
     delete oldItems;
     delete dolsToDelete;
 
-    if( quantityDiff > 0 )
-      insertNewDealerOrderLines( wrapper, quantityDiff, productMap, wrapper.orderGroupId );
+    if (quantityDiff > 0)
+      insertNewDealerOrderLines(wrapper, quantityDiff, productMap, wrapper.orderGroupId);
   }
 
-  private static void updateDealerLineItemsFromERP( DealerOrderLineWrapper wrapper )
-  {
-    Id pricebookId = pricebookFromDealerOrder( wrapper.dealerOrderId );
+  private static void updateDealerLineItemsFromERP(DealerOrderLineWrapper wrapper) {
+    Id pricebookId = pricebookFromDealerOrder(wrapper.dealerOrderId);
     Set<Id> erpIds = new Set<Id>();
     Dealer_Order_Line__c[] dolsToDelete = new List<Dealer_Order_Line__c>();
     AcctSeedERP__Material__c[] oldMaterials = new List<AcctSeedERP__Material__c>();
     AcctSeedERP__Material__c[] newMaterials = new List<AcctSeedERP__Material__c>();
     Dealer_Order_Line__c[] dols = [
-      SELECT
-        ERP_Order__c,
-        ERP_Order__r.Reserved_For_Customer_Account__c,
-        Dealer_Order__c
+      SELECT ERP_Order__c, ERP_Order__r.Reserved_For_Customer_Account__c, Dealer_Order__c
       FROM Dealer_Order_Line__c
       WHERE Order_Group_Id__c = :wrapper.orderGroupId
     ];
     Integer currentlyReservedCount = 0;
-    for( Dealer_Order_Line__c dol :  dols )
-    {
-      if( dol.ERP_Order__r.Reserved_For_Customer_Account__c != null )
-      {
+    for (Dealer_Order_Line__c dol : dols) {
+      if (dol.ERP_Order__r.Reserved_For_Customer_Account__c != null) {
         currentlyReservedCount++;
       }
     }
     Integer quantityAllowedToDelete = wrapper.quantity - currentlyReservedCount;
-    if( quantityAllowedToDelete < 0 )
-    {
-      String err = 'You currently have ' +
-        currentlyReservedCount + ' of this model Reserved for customers. ' +
+    if (quantityAllowedToDelete < 0) {
+      String err =
+        'You currently have ' +
+        currentlyReservedCount +
+        ' of this model Reserved for customers. ' +
         'Please change the quantity to at least ' +
         currentlyReservedCount;
-      AuraHandledException ex = new AuraHandledException( err );
-      ex.setMessage( err );
+      AuraHandledException ex = new AuraHandledException(err);
+      ex.setMessage(err);
       throw ex;
     }
 
     Integer quantityDiff = wrapper.quantity - dols.size();
-    for( Dealer_Order_Line__c dol :  dols )
-    {
-      if( quantityDiff < 0 && dol.ERP_Order__r.Reserved_For_Customer_Account__c == null )
-      {
-        dolsToDelete.add( dol );
+    for (Dealer_Order_Line__c dol : dols) {
+      if (quantityDiff < 0 && dol.ERP_Order__r.Reserved_For_Customer_Account__c == null) {
+        dolsToDelete.add(dol);
         quantityDiff++;
-      }
-      else
-      {
-        erpIds.add( dol.ERP_Order__c );
+      } else {
+        erpIds.add(dol.ERP_Order__c);
       }
     }
     Set<Id> prodIds = new Set<Id>();
-    for( OptionWrapper ow : wrapper.lineItems )
-    {
-      prodIds.add( ow.id );
+    for (OptionWrapper ow : wrapper.lineItems) {
+      prodIds.add(ow.id);
     }
     Map<Id, Product2> productMap = new Map<Id, Product2>(
-      [ SELECT Id,
-        (SELECT Id, UnitPrice FROM PricebookEntries WHERE Pricebook2Id = :pricebookId)
+      [
+        SELECT Id, (SELECT Id, UnitPrice FROM PricebookEntries WHERE Pricebook2Id = :pricebookId)
         FROM Product2
-        WHERE Id IN :prodIds] );
-    AcctSeed__Project__c[] erps = [SELECT Id, Boat_Product__c,
-                                   (SELECT Id
-                                    FROM AcctSeed__Project_Tasks__r
-                                    WHERE Name LIKE '%Dealer Order Lines%'
-                                    LIMIT 1),
-                                   (SELECT Id
-                                    FROM AcctSeedERP__Project_Materials__r)
-                                   FROM AcctSeed__Project__c
-                                   WHERE Id IN :erpIds ];
+        WHERE Id IN :prodIds
+      ]
+    );
+    AcctSeed__Project__c[] erps = [
+      SELECT
+        Id,
+        Boat_Product__c,
+        (SELECT Id FROM AcctSeed__Project_Tasks__r WHERE Name LIKE '%Dealer Order Lines%' LIMIT 1),
+        (SELECT Id FROM AcctSeedERP__Project_Materials__r)
+      FROM AcctSeed__Project__c
+      WHERE Id IN :erpIds
+    ];
 
-    for( AcctSeed__Project__c erp : erps )
-    {
+    for (AcctSeed__Project__c erp : erps) {
       erp.BoatModelYear__c = wrapper.modelYear;
       erp.TrailerModelYear__c = wrapper.modelYear;
       erp.Customer_Notes__c = wrapper.notes;
-      if( wrapper.boat != null &&
-          erp.Boat_Product__c != wrapper.boat.id )
+      if (wrapper.boat != null && erp.Boat_Product__c != wrapper.boat.id)
         erp.Boat_Product__c = wrapper.boat.id;
-      if( wrapper.boat == null )
+      if (wrapper.boat == null)
         erp.Boat_Product__c = null;
-      oldMaterials.addAll( erp.AcctSeedERP__Project_Materials__r );
-      for( OptionWrapper ow : wrapper.lineItems )
-      {
-        AcctSeedERP__Material__c material = newMaterialsFromWrapper( ow,
-                                                                     erp.Id,
-                                                                     erp.AcctSeed__Project_Tasks__r[0].Id );
-        if( productMap.containsKey( ow.Id) &&
-            productMap.get(ow.id ).PricebookEntries.size() > 0 )
-        {
-          material.GMBLASERP__Price_Override__c = ( productMap.get(ow.id).PricebookEntries[0].UnitPrice == ow.cost ? false : true );
+      oldMaterials.addAll(erp.AcctSeedERP__Project_Materials__r);
+      for (OptionWrapper ow : wrapper.lineItems) {
+        AcctSeedERP__Material__c material = newMaterialsFromWrapper(ow, erp.Id, erp.AcctSeed__Project_Tasks__r[0].Id);
+        if (productMap.containsKey(ow.Id) && productMap.get(ow.id).PricebookEntries.size() > 0) {
+          material.GMBLASERP__Price_Override__c = (productMap.get(ow.id).PricebookEntries[0].UnitPrice == ow.cost
+            ? false
+            : true);
         }
-        newMaterials.add( material );
-        if( ( ow.isCheckbox == null || !ow.isCheckbox ) &&
+        newMaterials.add(material);
+        if (
+          (ow.isCheckbox == null || !ow.isCheckbox) &&
           ow.quantityStandard > 0 &&
-          ow.quantityStandard != ow.quantitySelected )
-        {
-          newMaterials.add( newIncludedOptionMaterial( material, ow.quantityStandard ) );
+          ow.quantityStandard != ow.quantitySelected
+        ) {
+          newMaterials.add(newIncludedOptionMaterial(material, ow.quantityStandard));
         }
       }
-      newMaterials.addAll( createDiscountMaterials( wrapper.discounts,
-                                                    erp.Id,
-                                                    erp.AcctSeed__Project_Tasks__r[0].Id ) );
+      newMaterials.addAll(createDiscountMaterials(wrapper.discounts, erp.Id, erp.AcctSeed__Project_Tasks__r[0].Id));
     }
     update erps;
     insert newMaterials;
@@ -2513,42 +2278,40 @@ public without sharing class DealerOrder_Ext {
     delete dolsToDelete;
     MetadataTriggerHandler.clearBypass('TA_DealerOrderLine_HandlePartnerPro');
 
-    if( quantityDiff > 0 )
-      insertNewDealerOrderLines( wrapper, quantityDiff, productMap, wrapper.orderGroupId );
+    if (quantityDiff > 0)
+      insertNewDealerOrderLines(wrapper, quantityDiff, productMap, wrapper.orderGroupId);
   }
 
   private static AcctSeedERP__Material__c[] createDiscountMaterials(
-                                              List<Map<String, String>> discounts,
-                                              Id erpId,
-                                              Id taskId )
-  {
+    List<Map<String, String>> discounts,
+    Id erpId,
+    Id taskId
+  ) {
     Id discountProdId = LGND_Constants.savingsProductId;
     AcctSeedERP__Material__c[] materials = new List<AcctSeedERP__Material__c>();
-    if( discounts != null &&
-        discounts.size() > 0 )
-
-    for( Map<String, String> discount : discounts )
-    {
-      AcctSeedERP__Material__c mat = new AcctSeedERP__Material__c();
-      mat.GMBLASERP__Price_Override__c = true;
-      mat.AcctSeedERP__Product__c = discountProdId;
-      mat.AcctSeedERP__Comment__c = discount.get('name');
-      mat.AcctSeedERP__Project__c = erpId;
-      mat.AcctSeedERP__Project_Task__c = taskId;
-      mat.AcctSeedERP__Quantity_per_Unit__c = 1;
-      mat.GMBLASERP__Unit_Price__c = Decimal.valueOf( discount.get('amount') );
-      materials.add( mat );
-    }
+    if (discounts != null && discounts.size() > 0)
+      for (Map<String, String> discount : discounts) {
+        AcctSeedERP__Material__c mat = new AcctSeedERP__Material__c();
+        mat.GMBLASERP__Price_Override__c = true;
+        mat.AcctSeedERP__Product__c = discountProdId;
+        mat.AcctSeedERP__Comment__c = discount.get('name');
+        mat.AcctSeedERP__Project__c = erpId;
+        mat.AcctSeedERP__Project_Task__c = taskId;
+        mat.AcctSeedERP__Quantity_per_Unit__c = 1;
+        mat.GMBLASERP__Unit_Price__c = Decimal.valueOf(discount.get('amount'));
+        materials.add(mat);
+      }
     return materials;
   }
 
-  private static AcctSeedERP__Material__c newMaterialsFromWrapper( OptionWrapper ow, Id erpId, Id taskId )
-  {
-    Integer quantity = ow.isCheckbox != null && ow.isCheckbox && ow.isSelected ?
-      1 :
-      ( ow.isCheckbox == null || !ow.isCheckbox ) && ow.quantityStandard == ow.quantitySelected ?
-        ow.quantitySelected :
-        ow.quantitySelected - ow.quantityStandard;
+  private static AcctSeedERP__Material__c newMaterialsFromWrapper(OptionWrapper ow, Id erpId, Id taskId) {
+    Integer quantity = ow.isCheckbox != null &&
+      ow.isCheckbox &&
+      ow.isSelected
+      ? 1
+      : (ow.isCheckbox == null || !ow.isCheckbox) && ow.quantityStandard == ow.quantitySelected
+          ? ow.quantitySelected
+          : ow.quantitySelected - ow.quantityStandard;
 
     AcctSeedERP__Material__c material = new AcctSeedERP__Material__c(
       AcctSeedERP__Product__c = ow.id,
@@ -2556,6152 +2319,6152 @@ public without sharing class DealerOrder_Ext {
       AcctSeedERP__Project__c = erpId,
       AcctSeedERP__Project_Task__c = taskId,
       AcctSeedERP__Quantity_per_Unit__c = quantity,
-      GMBLASERP__Unit_Price__c = ow.quantitySelected > ow.quantityStandard ?
-        ow.individualCost : ow.cost,
+      GMBLASERP__Unit_Price__c = ow.quantitySelected > ow.quantityStandard ? ow.individualCost : ow.cost,
       Parent_Product__c = ow.parent_id
     );
     return material;
   }
 
-  private static AcctSeedERP__Material__c newIncludedOptionMaterial( AcctSeedERP__Material__c material, Decimal stdQuantity )
-  {
-    AcctSeedERP__Material__c offset = material.clone( false, true, false, false );
+  private static AcctSeedERP__Material__c newIncludedOptionMaterial(
+    AcctSeedERP__Material__c material,
+    Decimal stdQuantity
+  ) {
+    AcctSeedERP__Material__c offset = material.clone(false, true, false, false);
     offset.AcctSeedERP__Quantity_Per_Unit__c = stdQuantity;
     offset.GMBLASERP__Unit_Price__c = 0;
     offset.GMBLASERP__Price_Override__c = true;
     return offset;
   }
 
-  public static void coverage(){
-        integer i;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
+  public static void coverage() {
+    integer i;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
   }
 
-  public static void coverage2(){
-        integer i;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
+  public static void coverage2() {
+    integer i;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
   }
-
 }

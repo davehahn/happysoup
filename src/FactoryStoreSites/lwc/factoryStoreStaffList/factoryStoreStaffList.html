@@ -60,12 +60,20 @@
                     <section class="card__contact">
                       <h5 class="ro">Get in touch with {user.FirstName}</h5>
                       <p class="staff__contact">
-                        <lightning-icon icon-name="utility:email" size="x-small" alternative-text="Email"></lightning-icon>
+                        <lightning-icon
+                          icon-name="utility:email"
+                          size="x-small"
+                          alternative-text="Email"
+                        ></lightning-icon>
                         <a href={user.EmailLink}>{user.EmailTrunk}</a>
                       </p>
                       <template if:true={user.Phone}>
                         <p class="staff__contact">
-                          <lightning-icon icon-name="utility:call" size="x-small" alternative-text="Call"></lightning-icon>
+                          <lightning-icon
+                            icon-name="utility:call"
+                            size="x-small"
+                            alternative-text="Call"
+                          ></lightning-icon>
                           <a href={user.PhoneLink}>{user.Phone}</a>
                         </p>
                       </template>

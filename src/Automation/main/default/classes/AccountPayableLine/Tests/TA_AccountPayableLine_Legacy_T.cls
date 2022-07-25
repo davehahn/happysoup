@@ -28,7 +28,8 @@ public class TA_AccountPayableLine_Legacy_T {
   }
   @IsTest
   static void afterUpdateTest() {
-    List<AcctSeed__Account_Payable_Line__c> lstApLines = getData(); lstApLines = getData();
+    List<AcctSeed__Account_Payable_Line__c> lstApLines = getData();
+    lstApLines = getData();
     Test.startTest();
     AcctSeed__Account_Payable_Line__c accPayableClone = lstApLines[0].clone(true, true, true, true);
     new TA_AccountPayableLine_Legacy()

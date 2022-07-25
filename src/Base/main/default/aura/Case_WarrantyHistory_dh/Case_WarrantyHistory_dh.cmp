@@ -1,5 +1,7 @@
-<aura:component controller="CaseLexController" implements="force:appHostable,flexipage:availableForAllPageTypes,forceCommunity:availableForAllPageTypes,force:hasRecordId">
-
+<aura:component
+  controller="CaseLexController"
+  implements="force:appHostable,flexipage:availableForAllPageTypes,forceCommunity:availableForAllPageTypes,force:hasRecordId"
+>
   <!-- ATTRIBUTES -->
   <aura:attribute name="recordId" type="String" />
   <aura:attribute name="historyRecords" type="Case[]" />
@@ -15,7 +17,6 @@
 
     <aura:if isTrue="{! not( empty(v.historyRecords) ) }">
       <aura:iteration items="{!v.historyRecords}" var="rec">
-
         <article class="slds-card">
           <div class="slds-card__header slds-grid">
             <header class="slds-media slds-media_center slds-has-flexi-truncate">
@@ -26,13 +27,13 @@
                 <h2>
                   <span class="slds-text-heading_small">
                     <aura:if isTrue="{!v.allowNavToDetails}">
-                      <button class="slds-button"
-                        onclick="{!c.viewCase}"
-                        data-record-id="{!rec.Id}">{!rec.CaseNumber}</button>
-                      </aura:if>
-                      <aura:if isTrue="{! not(v.allowNavToDetails) }">
-                        <p>{!rec.CaseNumber}</p>
-                      </aura:if>
+                      <button class="slds-button" onclick="{!c.viewCase}" data-record-id="{!rec.Id}">
+                        {!rec.CaseNumber}
+                      </button>
+                    </aura:if>
+                    <aura:if isTrue="{! not(v.allowNavToDetails) }">
+                      <p>{!rec.CaseNumber}</p>
+                    </aura:if>
                   </span>
                 </h2>
               </div>
@@ -47,30 +48,37 @@
           </div>
           <div class="slds-card__body slds-card__body_inner">
             <lightning:layout pullToBoundary="small">
-
-              <lightning:layoutItem size="8"
-                                    smallDeviceSize="12"
-                                    mediumDeviceSize="6"
-                                    largeDeviceSize="8"
-                                    padding="horizontal-small">
-                <div class="slds-text-title_caps slds-m-bottom_small slds-border_bottom slds-p-bottom_x-small">Description</div>
+              <lightning:layoutItem
+                size="8"
+                smallDeviceSize="12"
+                mediumDeviceSize="6"
+                largeDeviceSize="8"
+                padding="horizontal-small"
+              >
+                <div class="slds-text-title_caps slds-m-bottom_small slds-border_bottom slds-p-bottom_x-small">
+                  Description
+                </div>
                 <lightning:formattedText value="{!rec.Description}" />
               </lightning:layoutItem>
 
-              <lightning:layoutItem size="4"
-                                    smallDeviceSize="12"
-                                    mediumDeviceSize="6"
-                                    largeDeviceSize="4"
-                                    padding="horizontal-small">
+              <lightning:layoutItem
+                size="4"
+                smallDeviceSize="12"
+                mediumDeviceSize="6"
+                largeDeviceSize="4"
+                padding="horizontal-small"
+              >
                 <div class="slds-grid">
                   <div class="slds-col slds-size_1-of-2">
                     <div class="slds-text-title_caps slds-m-bottom_small">Submitted Date</div>
                   </div>
                   <div class="slds-col slds-size_1-of-2">
-                    <lightning:formattedDateTime value="{!rec.CreatedDate}"
-                                                 year="2-digit"
-                                                 month="short"
-                                                 day="2-digit" />
+                    <lightning:formattedDateTime
+                      value="{!rec.CreatedDate}"
+                      year="2-digit"
+                      month="short"
+                      day="2-digit"
+                    />
                   </div>
                 </div>
                 <div class="slds-grid">
@@ -78,20 +86,14 @@
                     <div class="slds-text-title_caps slds-m-bottom_small">Closed Date</div>
                   </div>
                   <div class="slds-col slds-size_1-of-2">
-                    <lightning:formattedDateTime value="{!rec.ClosedDate}"
-                                                 year="2-digit"
-                                                 month="short"
-                                                 day="2-digit" />
+                    <lightning:formattedDateTime value="{!rec.ClosedDate}" year="2-digit" month="short" day="2-digit" />
                   </div>
                 </div>
               </lightning:layoutItem>
-
             </lightning:layout>
           </div>
         </article>
-
       </aura:iteration>
     </aura:if>
   </div>
-
 </aura:component>

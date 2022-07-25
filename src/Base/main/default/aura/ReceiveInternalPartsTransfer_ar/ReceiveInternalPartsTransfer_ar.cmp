@@ -1,79 +1,99 @@
-<aura:component access="global" implements="force:appHostable,forceCommunity:availableForAllPageTypes,flexipage:availableForAllPageTypes,force:hasRecordId,force:lightningQuickAction" controller="ReceiveInternalPartsTransfer_ar">
-
-    <aura:attribute name="recordId" type="String" />
-    <aura:attribute name="currentErpId" type="String" />
-    <aura:attribute name="listDataNew" type="sObject[]" />   
-    <aura:attribute name="isInternalPartsOrder" type="boolean" default="true"/>
-    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
-    <aura:if isTrue="{!v.isInternalPartsOrder}">
+<aura:component
+  access="global"
+  implements="force:appHostable,forceCommunity:availableForAllPageTypes,flexipage:availableForAllPageTypes,force:hasRecordId,force:lightningQuickAction"
+  controller="ReceiveInternalPartsTransfer_ar"
+>
+  <aura:attribute name="recordId" type="String" />
+  <aura:attribute name="currentErpId" type="String" />
+  <aura:attribute name="listDataNew" type="sObject[]" />
+  <aura:attribute name="isInternalPartsOrder" type="boolean" default="true" />
+  <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+  <aura:if isTrue="{!v.isInternalPartsOrder}">
     <table class="slds-table slds-table_bordered slds-table_cell-buffer">
-       <thead>
-          <tr class="slds-text-title_caps">
-             <th scope="col" class="slds-text-align_left">
-                <div class="slds-truncate" title="Warehouse From">Warehouse From</div>
-             </th>
-             <th scope="col" class="slds-text-align_left">
-                <div class="slds-truncate" title="Outbound Date">Outbound Date</div>
-             </th>
-             <th scope="col" class="slds-text-align_left">
-                <div class="slds-truncate" title="Inbound Date">Inbound Date</div>
-             </th>
-             <th scope="col" class="slds-text-align_left">
-                <div class="slds-truncate" title="Inbound Date">&nbsp;</div>
-             </th>
-          </tr>
-       </thead>
-       <tbody>
-       	<aura:iteration items="{!v.listDataNew}" var="tnsf" indexVar="ind">
+      <thead>
+        <tr class="slds-text-title_caps">
+          <th scope="col" class="slds-text-align_left">
+            <div class="slds-truncate" title="Warehouse From">Warehouse From</div>
+          </th>
+          <th scope="col" class="slds-text-align_left">
+            <div class="slds-truncate" title="Outbound Date">Outbound Date</div>
+          </th>
+          <th scope="col" class="slds-text-align_left">
+            <div class="slds-truncate" title="Inbound Date">Inbound Date</div>
+          </th>
+          <th scope="col" class="slds-text-align_left">
+            <div class="slds-truncate" title="Inbound Date">&nbsp;</div>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <aura:iteration items="{!v.listDataNew}" var="tnsf" indexVar="ind">
           <tr>
-             <td scope="row">
-                <div class="slds-truncate" title="Warehouse Name">{!tnsf.warehouseFrom}</div>
-             </td>
-             <td scope="row">
-                <div class="slds-truncate" title="Outbound Date">{!tnsf.outboundDate}</div>
-             </td>
-             <td scope="row">
-             	<ui:inputDate aura:id="datePickers" class="{!tnsf.transferId}" value="{!tnsf.inboundDate}" displayDatePicker="true" /> 
-             </td>
-             <td scope="row" class="slds-text-align_right">
-             	<lightning:button class="{!tnsf.transferId}" name="{!ind}" variant="success" label="Receive" title="Receive" onclick="{! c.receiveTransferInventory}"/>
-             </td>
-          </tr>
-          <tr>
-          	<td colspan="5">
-          		<table class="slds-table slds-table_cell-buffer">
-	              <tr class="slds-text-title_caps">
-	                 <th scope="col">
-	                    <div class="slds-truncate" title="Product Name">Product Name</div>
-	                 </th>
-	                 <th scope="col" class="slds-text-align_right">
-	                    <div class="slds-truncate" title="Quantity">Quantity To Receive</div>
-	                 </th>
-	              </tr>      
-		           	<aura:iteration items="{!tnsf.lines}" var="line">
-		              <tr>
-		                 <td width="80%" scope="row" data-label="Product Name">
-		                    <div class="slds-truncate" title="Transfer Name">{!line.productName}</div>
-		                 </td>
-		                 <td scope="row" class="slds-text-align_center receive-td">
-                        <lightning:input type="number" name="number" label="" value="{!line.quantity}" max="{!line.quantityOriginal}" min="0"/>
-		                 </td>
-	    				</tr>                  			
-	    			</aura:iteration>
-          		</table>
-          	</td>
+            <td scope="row">
+              <div class="slds-truncate" title="Warehouse Name">{!tnsf.warehouseFrom}</div>
+            </td>
+            <td scope="row">
+              <div class="slds-truncate" title="Outbound Date">{!tnsf.outboundDate}</div>
+            </td>
+            <td scope="row">
+              <ui:inputDate
+                aura:id="datePickers"
+                class="{!tnsf.transferId}"
+                value="{!tnsf.inboundDate}"
+                displayDatePicker="true"
+              />
+            </td>
+            <td scope="row" class="slds-text-align_right">
+              <lightning:button
+                class="{!tnsf.transferId}"
+                name="{!ind}"
+                variant="success"
+                label="Receive"
+                title="Receive"
+                onclick="{! c.receiveTransferInventory}"
+              />
+            </td>
           </tr>
           <tr>
-          	<td colspan="5">&nbsp;</td>
+            <td colspan="5">
+              <table class="slds-table slds-table_cell-buffer">
+                <tr class="slds-text-title_caps">
+                  <th scope="col">
+                    <div class="slds-truncate" title="Product Name">Product Name</div>
+                  </th>
+                  <th scope="col" class="slds-text-align_right">
+                    <div class="slds-truncate" title="Quantity">Quantity To Receive</div>
+                  </th>
+                </tr>
+                <aura:iteration items="{!tnsf.lines}" var="line">
+                  <tr>
+                    <td width="80%" scope="row" data-label="Product Name">
+                      <div class="slds-truncate" title="Transfer Name">{!line.productName}</div>
+                    </td>
+                    <td scope="row" class="slds-text-align_center receive-td">
+                      <lightning:input
+                        type="number"
+                        name="number"
+                        label=""
+                        value="{!line.quantity}"
+                        max="{!line.quantityOriginal}"
+                        min="0"
+                      />
+                    </td>
+                  </tr>
+                </aura:iteration>
+              </table>
+            </td>
           </tr>
-      </aura:iteration>
-     </tbody>
+          <tr>
+            <td colspan="5">&nbsp;</td>
+          </tr>
+        </aura:iteration>
+      </tbody>
     </table>
-	<aura:set attribute="else">
-		Only Available to Internal ERP Orders
-	</aura:set>
-    </aura:if>
-    <lightning:spinner class="slds-hide" aura:id="spinnerw" />
-    
-    <br /><br />
+    <aura:set attribute="else"> Only Available to Internal ERP Orders </aura:set>
+  </aura:if>
+  <lightning:spinner class="slds-hide" aura:id="spinnerw" />
+
+  <br /><br />
 </aura:component>

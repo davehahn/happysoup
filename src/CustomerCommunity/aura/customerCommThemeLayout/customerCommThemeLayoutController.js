@@ -3,11 +3,11 @@
  */
 
 ({
-  doInit : function(component, event, helper) {
+  doInit: function (component, event, helper) {
     const locale = $A.get("$Locale.langLocale");
     component.set("v.currentLocale", locale);
-    if(locale === 'fr'){
+    if (locale === "fr") {
       component.set("v.isEN.active", false);
     }
-  },
+  }
 });

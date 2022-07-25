@@ -1,25 +1,27 @@
-<apex:page standardController="Account"
-           showQuickActionVfHeader="true"
-           extensions="Account_Ext"
-           docType="html-5.0"
-           standardStylesheets="false"
-           showheader="false"
-           sidebar="false">
+<apex:page
+  standardController="Account"
+  showQuickActionVfHeader="true"
+  extensions="Account_Ext"
+  docType="html-5.0"
+  standardStylesheets="false"
+  showheader="false"
+  sidebar="false"
+>
   <apex:stylesheet value="{!URLFOR($Resource.AccountResources, 'css/image_capture.min.css')}" />
   <apex:stylesheet value="{!URLFOR($Resource.AccountResources, 'css/circle-upload-indicator.min.css')}" />
   <apex:stylesheet value="{!URLFOR($Resource.FontAwesome420, 'font-awesome-4.2.0/css/font-awesome.min.css')}" />
   <apex:stylesheet value="{!URLFOR($Resource.Foundation, 'css/foundation.min.css')}" />
 
-  <input id="image" name="image" type="file" accept="image/*"   />
+  <input id="image" name="image" type="file" accept="image/*" />
   <!-- <input id="image" name="image" type="file" accept="image/*,video/*" capture="camera"  /> -->
 
   <div class="detailFields">
     <label for="fileName">File Name</label>
-    <input type="text" id="fileName"></input>
+    <input type="text" id="fileName" />
   </div>
 
   <div class="image-container">
-    <div class="busy-indicator">Reading Image .... </div>
+    <div class="busy-indicator">Reading Image ....</div>
     <a href="#" class="image" id="getPhoto">
       <i class="fa fa-camera"></i>
     </a>
@@ -38,13 +40,15 @@
   <!-- <div class="btn-row" id="btn-row">
     <a href="#"><i class="fa fa-save"></i></a>
   </div> -->
-<!--
+  <!--
   <a href="#" id="testModal">open</a> -->
 
-  <div class="reveal-modal complete-modal"
-       id="completeModal"
-       data-reveal="true"
-       data-options="close_on_background_click:false;">
+  <div
+    class="reveal-modal complete-modal"
+    id="completeModal"
+    data-reveal="true"
+    data-options="close_on_background_click:false;"
+  >
     <h2>Success!</h2>
     <p>Would you like to send this image to {!Account.Name} ?</p>
     <div>
@@ -54,74 +58,65 @@
   </div>
 
   <apex:includeScript value="/canvas/sdk/js/publisher.js" />
-  <apex:includeScript value="{!URLFOR($Resource.jQuery)}"  />
+  <apex:includeScript value="{!URLFOR($Resource.jQuery)}" />
   <apex:includeScript value="{!URLFOR($Resource.Foundation, 'js/foundation.min.js')}" />
   <apex:includeScript value="{!URLFOR($Resource.AccountResources, 'js/aws-uploader.js')}" />
   <apex:includeScript value="{!URLFOR($Resource.AccountResources, 'js/image_capture.js')}" />
 
   <script type="text/javascript">
     var $j = jQuery.noConflict(),
-         awsS3ObjectId,
-         awsSettings = {
-          aws_FileKey: '{!gallery.s3Policy.FileKey}',
-          aws_Bucket: "{!gallery.s3Policy.Bucket}",
-          aws_Acl: '{!gallery.s3Policy.Acl}',
-          aws_AccessKey: '{!gallery.s3Policy.AuthKey}',
-          aws_Policy: '{!gallery.s3Policy.Policy}',
-          aws_Signature: '{!gallery.s3Policy.Signature}',
-          fileTypeOnly: 'image',
-          uploadUrl: 'https://{!gallery.s3Policy.Bucket}.s3.amazonaws.com/'
-        },
-        ic = new ImageCapture(awsSettings, "{!accountId}");
+      awsS3ObjectId,
+      awsSettings = {
+        aws_FileKey: "{!gallery.s3Policy.FileKey}",
+        aws_Bucket: "{!gallery.s3Policy.Bucket}",
+        aws_Acl: "{!gallery.s3Policy.Acl}",
+        aws_AccessKey: "{!gallery.s3Policy.AuthKey}",
+        aws_Policy: "{!gallery.s3Policy.Policy}",
+        aws_Signature: "{!gallery.s3Policy.Signature}",
+        fileTypeOnly: "image",
+        uploadUrl: "https://{!gallery.s3Policy.Bucket}.s3.amazonaws.com/"
+      },
+      ic = new ImageCapture(awsSettings, "{!accountId}");
 
-    ic.onComplete = function()
-    {
+    ic.onComplete = function () {
       var self = this;
-      console.log('the entire process is complete');
+      console.log("the entire process is complete");
       console.log(self);
       awsS3ObjectId = self.Id;
-      $j('#completeModal').foundation('reveal', 'open');
-    }
+      $j("#completeModal").foundation("reveal", "open");
+    };
 
-    $j(document).ready( function() {
+    $j(document).ready(function () {
       $j(document).foundation();
 
-      $j('#testModal').on('click', function(e) {
+      $j("#testModal").on("click", function (e) {
         e.preventDefault();
-        $j('#completeModal').foundation('reveal', 'open');
+        $j("#completeModal").foundation("reveal", "open");
       });
 
-      $j('#completeModal a').on('click', function(e) {
+      $j("#completeModal a").on("click", function (e) {
         e.preventDefault();
-        console.log('click')
+        console.log("click");
         var $this = $j(this);
-        if( $this.data('response') === true )
-        {
-          console.log('we want to send an email');
-          $j('#completeModal').foundation('reveal', 'close');
-          if(sforce.one)
-          {
-            var url = '/apex/LGND_Mailer?id={!Account.Id}';
-            if( typeof(awsS3ObjectId) != 'undefined' && awsS3ObjectId != null )
-            {
-              url += '&aws_s3_object_id=' + awsS3ObjectId;
+        if ($this.data("response") === true) {
+          console.log("we want to send an email");
+          $j("#completeModal").foundation("reveal", "close");
+          if (sforce.one) {
+            var url = "/apex/LGND_Mailer?id={!Account.Id}";
+            if (typeof awsS3ObjectId != "undefined" && awsS3ObjectId != null) {
+              url += "&aws_s3_object_id=" + awsS3ObjectId;
             }
             console.log(awsS3ObjectId);
             console.log(url);
             sforce.one.navigateToURL(url);
           }
         }
-        if( $this.data('response') === false )
-        {
-          console.log('we are done here');
-          $j('#completeModal').foundation('reveal', 'close');
-          Sfdc.canvas.publisher.publish({name: "publisher.close", payload:{ refresh:"false"}});
+        if ($this.data("response") === false) {
+          console.log("we are done here");
+          $j("#completeModal").foundation("reveal", "close");
+          Sfdc.canvas.publisher.publish({ name: "publisher.close", payload: { refresh: "false" } });
         }
       });
     });
-
-
-
   </script>
-
 </apex:page>

@@ -3,18 +3,15 @@
  */
 
 @IsTest
-private class TA_Project_RetailBoatSaleFunded_T
-{
-
-  @testSetup static void dataSetup()
-  {
+private class TA_Project_RetailBoatSaleFunded_T {
+  @testSetup
+  static void dataSetup() {
     new Factory_TestData();
     Factory_CustomSettings.setupInventorySettings();
   }
 
   @IsTest
-  static void afterUpdate()
-  {
+  static void afterUpdate() {
     Id boatSaleId = RetailBoatSaleFunded_TestHelper.testDataCreate();
 
     List<Task> tasks = [SELECT Id FROM Task WHERE WhatId = :boatSaleId];
@@ -34,10 +31,10 @@ private class TA_Project_RetailBoatSaleFunded_T
 
     tasks = [SELECT Id, CreatedDate, ActivityDate FROM Task WHERE WhatId = :boatSaleId];
     System.debug(tasks);
-    DateTime created = tasks[1].CreatedDate.addDays( Task_Service.DUEDATE_OFFSET );
-    Date expected = Date.newInstance( created.year(), created.month(), created.day() );
+    DateTime created = tasks[1].CreatedDate.addDays(Task_Service.DUEDATE_OFFSET);
+    Date expected = Date.newInstance(created.year(), created.month(), created.day());
 
-    System.assertEquals( 2, tasks.size() - beforeTaskCount );
-    System.assertEquals( expected, tasks[1].ActivityDate );
+    System.assertEquals(2, tasks.size() - beforeTaskCount);
+    System.assertEquals(expected, tasks[1].ActivityDate);
   }
 }

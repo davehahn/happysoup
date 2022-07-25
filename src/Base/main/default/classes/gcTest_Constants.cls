@@ -1,11 +1,9 @@
 @isTest
-private class gcTest_Constants{
-
-    static testMethod void test1()
-    {
-        gcConstants.coverage();
-        gcConstants.coverage1();
-    }
+private class gcTest_Constants {
+  static testMethod void test1() {
+    gcConstants.coverage();
+    gcConstants.coverage1();
+  }
 }
 /*
 	static testMethod void test1()

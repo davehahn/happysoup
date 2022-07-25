@@ -104,20 +104,33 @@ private class TA_CommLI2_ChatterAboutChanges_T {
       FROM CommissionLineItem2__c
       WHERE Id = :recordId
     ];
-    Map<Id, CommissionLineItem2__c> oldMap = new Map<Id, CommissionLineItem2__c>( new List<CommissionLineItem2__c>{ oldRecord } );
+    Map<Id, CommissionLineItem2__c> oldMap = new Map<Id, CommissionLineItem2__c>(
+      new List<CommissionLineItem2__c>{ oldRecord }
+    );
 
-    CommissionLineItem2__c newRecord = oldRecord.clone( true, true, true, true );
+    CommissionLineItem2__c newRecord = oldRecord.clone(true, true, true, true);
     newRecord.Quantity__c = 3;
     newRecord.Sale_Price__c = 30000;
-    List<CommissionLineItem2__c> newList = new List<CommissionLineItem2__c>{newRecord};
-
+    List<CommissionLineItem2__c> newList = new List<CommissionLineItem2__c>{ newRecord };
 
     Test.startTest();
     Map<Id, List<String>> changeMap = new TA_CommLI2_ChatterAboutChanges().buildChangeMap(newLIst, oldMap, 'update');
     Test.stopTest();
 
-    String message1 = 'Quantity of ' + oldRecord.Descriptor__c + ' has changed from ' + String.valueOf(oldRecord.Quantity__c) + ' to ' + String.valueOf( newRecord.Quantity__c);
-    String message2 = 'The Sale Price on ' + oldRecord.Descriptor__c + ' has changed from $' + String.valueOf(oldRecord.Sale_Price__c) + ' to $' + String.valueOf( newRecord.Sale_Price__c);
+    String message1 =
+      'Quantity of ' +
+      oldRecord.Descriptor__c +
+      ' has changed from ' +
+      String.valueOf(oldRecord.Quantity__c) +
+      ' to ' +
+      String.valueOf(newRecord.Quantity__c);
+    String message2 =
+      'The Sale Price on ' +
+      oldRecord.Descriptor__c +
+      ' has changed from $' +
+      String.valueOf(oldRecord.Sale_Price__c) +
+      ' to $' +
+      String.valueOf(newRecord.Sale_Price__c);
     System.assert(changeMap.containsKey(oldRecord.CommissionRecord2__c));
     System.assertEquals(2, changeMap.get(oldRecord.CommissionRecord2__c).size());
     System.assertEquals(message1, changeMap.get(oldRecord.CommissionRecord2__c)[0]);

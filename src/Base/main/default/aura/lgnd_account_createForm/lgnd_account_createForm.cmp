@@ -1,110 +1,121 @@
-<aura:component controller="lgnd_account_createForm"
-								implements="force:appHostable"
-								access="global">
+<aura:component controller="lgnd_account_createForm" implements="force:appHostable" access="global">
+  <aura:attribute name="FirstName" type="String" />
+  <aura:attribute name="LastName" type="String" />
+  <aura:attribute name="PersonEmail" type="String" />
+  <aura:attribute name="Phone" type="String" />
+  <aura:attribute name="PersonMobilePhone" type="String" />
+  <aura:attribute name="BillingAddressStreet" type="String" />
+  <aura:attribute name="BillingAddressCity" type="String" />
+  <aura:attribute name="BillingAddressState" type="String" />
+  <aura:attribute name="BillingAddressStateCode" type="String" />
+  <aura:attribute name="BillingAddressCountry" type="String" />
+  <aura:attribute name="BillingAddressCountryCode" type="String" />
+  <aura:attribute name="BillingAddressPostalCode" type="String" />
+  <aura:attribute name="accountId" type="Id" />
+  <aura:attribute name="searchQuery" type="String" />
+  <aura:attribute name="selectionMade" type="Boolean" />
+  <aura:attribute name="errorMessage" type="String" />
+  <aura:attribute name="showAccountCard" type="Boolean" default="false" />
+  <aura:attribute name="createLead" type="Boolean" default="true" />
+  <aura:attribute name="formValid" type="Boolean" default="false" />
 
-	<aura:attribute name="FirstName" 									type="String" />
-	<aura:attribute name="LastName" 									type="String" />
-	<aura:attribute name="PersonEmail" 								type="String" />
-	<aura:attribute name="Phone" 											type="String" />
-	<aura:attribute name="PersonMobilePhone" 					type="String" />
-	<aura:attribute name="BillingAddressStreet" 			type="String" />
-	<aura:attribute name="BillingAddressCity" 				type="String" />
-	<aura:attribute name="BillingAddressState" 				type="String" />
-	<aura:attribute name="BillingAddressStateCode" 		type="String" />
-	<aura:attribute name="BillingAddressCountry" 			type="String" />
-	<aura:attribute name="BillingAddressCountryCode" 	type="String" />
-	<aura:attribute name="BillingAddressPostalCode" 	type="String" />
-	<aura:attribute name="accountId" 									type="Id" />
-	<aura:attribute name="searchQuery" 								type="String" />
-	<aura:attribute name="selectionMade" 							type="Boolean" />
-	<aura:attribute name="errorMessage"								type="String" />
-	<aura:attribute name="showAccountCard"						type="Boolean" default="false" />
-	<aura:attribute name="createLead"									type="Boolean" default="true" />
-	<aura:attribute name="formValid" type="Boolean" default="false" />
+  <aura:registerEvent name="lgnd_account_created" type="c:lgnd_account_created" />
+  <aura:registerEvent name="lgnd_registration_event" type="c:lgnd_registration_event" />
 
-	<aura:registerEvent name="lgnd_account_created" type="c:lgnd_account_created"/>
-	<aura:registerEvent name="lgnd_registration_event" type="c:lgnd_registration_event"/>
+  <br />
 
-	<br/>
+  <div class="slds-is-relative">
+    <lightning:spinner aura:id="accountSpinner" class="slds-hide" />
 
-	<div class="slds-is-relative">
-		<lightning:spinner aura:id="accountSpinner" class="slds-hide" />
+    <div class="header">
+      <h2 class="title">Create New Account</h2>
+    </div>
 
-		<div class="header">
-			<h2 class="title">Create New Account</h2>
-		</div>
+    <div
+      class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_error slds-hide"
+      aura:id="alert"
+      role="alert"
+    >
+      <span class="slds-assistive-text">error</span>
+      <h2>{!v.errorMessage}</h2>
+    </div>
 
-		<div class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_error slds-hide" aura:id="alert" role="alert">
-		  <span class="slds-assistive-text">error</span>
-		  <h2>{!v.errorMessage}</h2>
-		</div>
+    <div class="slds-form-element slds-grid">
+      <div class="slds-col slds-size--3-of-6">
+        <div class="slds-p-horizontal_medium">
+          <lightning:input
+            label="First Name"
+            name="FirstName"
+            value="{!v.FirstName}"
+            required="true"
+            aura:id="requiredField"
+            onchange="{!c.checkValidity}"
+          />
+        </div>
+      </div>
+      <div class="slds-col slds-size--3-of-6">
+        <div class="slds-p-horizontal_medium">
+          <lightning:input
+            label="Last Name"
+            name="LastName"
+            value="{!v.LastName}"
+            required="true"
+            aura:id="requiredField"
+            onchange="{!c.checkValidity}"
+          />
+        </div>
+      </div>
+    </div>
 
-		<div class="slds-form-element slds-grid">
-			<div class="slds-col slds-size--3-of-6">
-				<div class="slds-p-horizontal_medium">
-					<lightning:input label="First Name"
-													 name="FirstName"
-													 value="{!v.FirstName}"
-													 required="true"
-													 aura:id="requiredField"
-													 onchange="{!c.checkValidity}" />
-				</div>
-			</div>
-			<div class="slds-col slds-size--3-of-6">
-				<div class="slds-p-horizontal_medium">
-					<lightning:input label="Last Name"
-													 name="LastName"
-													 value="{!v.LastName}"
-													 required="true"
-													 aura:id="requiredField"
-													 onchange="{!c.checkValidity}" />
-				</div>
-			</div>
-		</div>
+    <div class="slds-form-element slds-grid">
+      <div class="slds-col slds-size--2-of-6">
+        <div class="slds-p-horizontal_medium">
+          <lightning:input
+            label="Email"
+            name="Email"
+            value="{!v.PersonEmail}"
+            required="true"
+            aura:id="requiredField"
+            onchange="{!c.checkValidity}"
+          />
+        </div>
+      </div>
+      <div class="slds-col slds-size--2-of-6">
+        <div class="slds-p-horizontal_medium">
+          <lightning:input label="Phone" name="Phone" value="{!v.Phone}" />
+        </div>
+      </div>
+      <div class="slds-col slds-size--2-of-6">
+        <div class="slds-p-horizontal_medium">
+          <lightning:input label="Mobile Phone" name="PersonMobilePhone" value="{!v.PersonMobilePhone}" />
+        </div>
+      </div>
+    </div>
 
-		<div class="slds-form-element slds-grid">
-			<div class="slds-col slds-size--2-of-6">
-				<div class="slds-p-horizontal_medium">
-					<lightning:input label="Email"
-													 name="Email"
-													 value="{!v.PersonEmail}"
-													 required="true"
-													 aura:id="requiredField"
-													 onchange="{!c.checkValidity}" />
-				</div>
-			</div>
-			<div class="slds-col slds-size--2-of-6">
-				<div class="slds-p-horizontal_medium">
-					<lightning:input label="Phone" name="Phone" value="{!v.Phone}" />
-				</div>
-			</div>
-			<div class="slds-col slds-size--2-of-6">
-				<div class="slds-p-horizontal_medium">
-					<lightning:input label="Mobile Phone" name="PersonMobilePhone" value="{!v.PersonMobilePhone}" />
-				</div>
-			</div>
-		</div>
+    <c:lgnd_form_address
+      street="{!v.BillingAddressStreet}"
+      city="{!v.BillingAddressCity}"
+      province="{!v.BillingAddressState}"
+      province_code="{!v.BillingAddressStateCode}"
+      country="{!v.BillingAddressCountry}"
+      country_code="{!v.BillingAddressCountryCode}"
+      zip="{!v.BillingAddressPostalCode}"
+    />
 
-		<c:lgnd_form_address street="{!v.BillingAddressStreet}"
-												 city="{!v.BillingAddressCity}"
-												 province="{!v.BillingAddressState}"
-												 province_code="{!v.BillingAddressStateCode}"
-											   country="{!v.BillingAddressCountry}"
-											   country_code="{!v.BillingAddressCountryCode}"
-												 zip="{!v.BillingAddressPostalCode}" />
-
-		<div class="slds-clearfix slds-m-around_large">
-			<lightning:button variant="brand"
-												label="Create Account"
-												onclick="{!c.clickCreateAccount}"
-												class="slds-float_right slds-m-left_x-small"
-												disabled="{!!v.formValid}" />
-		  	<lightning:button variant="neutral"
-		  										label="Cancel"
-		  										onclick="{!c.cancelCreateAccount}"
-		  										class="slds-float_right slds-m-right-small" />
-		</div>
-
-	</div>
-
+    <div class="slds-clearfix slds-m-around_large">
+      <lightning:button
+        variant="brand"
+        label="Create Account"
+        onclick="{!c.clickCreateAccount}"
+        class="slds-float_right slds-m-left_x-small"
+        disabled="{!!v.formValid}"
+      />
+      <lightning:button
+        variant="neutral"
+        label="Cancel"
+        onclick="{!c.cancelCreateAccount}"
+        class="slds-float_right slds-m-right-small"
+      />
+    </div>
+  </div>
 </aura:component>

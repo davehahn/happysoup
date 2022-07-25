@@ -1,19 +1,16 @@
 @isTest
-private class gcTest_JournalEntryLine{
-
-  @testSetup static void dataSetup()
-  {
+private class gcTest_JournalEntryLine {
+  @testSetup
+  static void dataSetup() {
     new Factory_TestData();
     Factory_CustomSettings.setupInventorySettings();
   }
 
-  static testMethod void coverageTest()
-  {
+  static testMethod void coverageTest() {
     gcJournalEntryLine.coverage();
   }
 
-  static testMethod void trigger_Test()
-  {
+  static testMethod void trigger_Test() {
     AcctSeed__Accounting_Period__c period = [SELECT Id FROM AcctSeed__Accounting_Period__c LIMIT 1];
     AcctSeed__Ledger__c ledger = [SELECT Id FROM AcctSeed__Ledger__c LIMIT 1];
     AcctSeed__GL_Account__c glAccount = [SELECT Id FROM AcctSeed__GL_Account__c LIMIT 1];
@@ -29,5 +26,4 @@ private class gcTest_JournalEntryLine{
     );
     insert jel;
   }
-
 }

@@ -4,15 +4,14 @@
 
 @IsTest
 private class Batch_GeoHack_Test {
-
-  @testSetup static void dataSetup() {
+  @testSetup
+  static void dataSetup() {
     new Factory_TestData();
     Factory_CustomSettings.setupInventorySettings();
   }
 
   @IsTest
-  static void theTest()
-  {
+  static void theTest() {
     Id rtId = LGND_Utilities.recordTypeIdFromName('Account', 'Person Account');
     Account a = new Account(
       RecordTypeId = rtId,
@@ -29,10 +28,10 @@ private class Batch_GeoHack_Test {
     insert a;
     gcAccount.disableTrigger = orig;
     Test.startTest();
-    Database.executeBatch( new Batch_GeoHack() );
+    Database.executeBatch(new Batch_GeoHack());
     Test.stopTest();
     Id geoHackRtId = LGND_Utilities.recordTypeIdFromName('Account', 'Geo Hack');
-    Account[] geoAccounts = [SELECT Id FROM Account WHERE RecordTypeId = : geoHackRtId];
-    System.assertEquals( 1, geoAccounts.size() );
+    Account[] geoAccounts = [SELECT Id FROM Account WHERE RecordTypeId = :geoHackRtId];
+    System.assertEquals(1, geoAccounts.size());
   }
 }

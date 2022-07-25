@@ -2,11 +2,8 @@
  * Created by dave on 2021-01-13.
  */
 
-public virtual class OpportunityLineItem_Selector extends Application_Selector
-{
-
-  private final List<String> defaultFields = new List<String>
-  {
+public virtual class OpportunityLineItem_Selector extends Application_Selector {
+  private final List<String> defaultFields = new List<String>{
     'Id',
     'Description',
     'ListPrice',
@@ -24,16 +21,12 @@ public virtual class OpportunityLineItem_Selector extends Application_Selector
     'UnitPrice'
   };
 
-  public OpportunityLineItem_Selector()
-  {
+  public OpportunityLineItem_Selector() {
     this.sObjectName = 'OpportunityLineItem';
     this.fields = defaultFields;
   }
 
-  public static List<OpportunityLineItem> selectAllByOpportunityId( Id oppId )
-  {
-    return new OpportunityLineItem_Selector()
-      .addWhere( 'OpportunityId = \'' + oppId + '\'' )
-      .query();
+  public static List<OpportunityLineItem> selectAllByOpportunityId(Id oppId) {
+    return new OpportunityLineItem_Selector().addWhere('OpportunityId = \'' + oppId + '\'').query();
   }
 }

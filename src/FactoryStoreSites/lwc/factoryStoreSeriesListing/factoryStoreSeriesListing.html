@@ -4,7 +4,6 @@
 
 <!-- Factory Store Series Listing -->
 <template>
-
   <div class={outerWrapperClass}>
     <article class={wrapperClass}>
       <h2 class="series__seriesName heading heading--special" data-series-class={seriesClass}>{fullSeriesName}</h2>
@@ -14,11 +13,16 @@
           <a href={seriesButtonLinkRewrite} class="btn btn--primary">{seriesButtonText}</a>
         </div>
         <div class="series__profile">
-          <img src={profileImageSrc} alt={profileImageAlt}/>
+          <img src={profileImageSrc} alt={profileImageAlt} />
         </div>
       </div>
       <div class={seriesImageryClass}>
-        <span class={seriesImageryBgClass} style="background-image: url('https://mk0inventorylegv1t7j.kinstacdn.com/wp-content/uploads/2020/07/LegendLandscape-28.jpg')"></span>
+        <span
+          class={seriesImageryBgClass}
+          style="
+            background-image: url('https://mk0inventorylegv1t7j.kinstacdn.com/wp-content/uploads/2020/07/LegendLandscape-28.jpg');
+          "
+        ></span>
       </div>
     </article>
   </div>

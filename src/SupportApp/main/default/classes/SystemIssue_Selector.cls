@@ -2,8 +2,7 @@
  * Created by dave on 2021-10-26.
  */
 
-public inherited sharing class SystemIssue_Selector extends Application_Selector
-{
+public inherited sharing class SystemIssue_Selector extends Application_Selector {
   private final List<String> defaultFields = new List<String>{
     'Department__c',
     'Description__c',
@@ -24,15 +23,12 @@ public inherited sharing class SystemIssue_Selector extends Application_Selector
     'Type__c'
   };
 
-  public SystemIssue_Selector(){
+  public SystemIssue_Selector() {
     this.sObjectName = 'System_Issue__c';
     this.fields = defaultFields;
   }
 
-  public static List<System_Issue__c> allChildrenByParentId( Set<Id> ids ){
-    return new SystemIssue_Selector()
-      .addWhereIdInField( ids, 'Parent_System_Issue__c' )
-      .query();
+  public static List<System_Issue__c> allChildrenByParentId(Set<Id> ids) {
+    return new SystemIssue_Selector().addWhereIdInField(ids, 'Parent_System_Issue__c').query();
   }
-
 }

@@ -2,11 +2,8 @@
  * Created by dave on 2020-11-18.
  */
 
-public virtual class ProductRequest_Selector extends Application_Selector
-{
-
-  private final List<String> defaultFields = new List<String>
-  {
+public virtual class ProductRequest_Selector extends Application_Selector {
+  private final List<String> defaultFields = new List<String>{
     'Id',
     'DestinationLocationId',
     'ShipmentType',
@@ -16,8 +13,7 @@ public virtual class ProductRequest_Selector extends Application_Selector
     'WorkOrderId'
   };
 
-  public ProductRequest_Selector()
-  {
+  public ProductRequest_Selector() {
     this.sObjectName = 'ProductRequest';
     this.fields = defaultFields;
   }
@@ -26,13 +22,12 @@ public virtual class ProductRequest_Selector extends Application_Selector
     Id workOrderId,
     Id sourceLocationId,
     Id destinationLocationId
-  )
-  {
+  ) {
     ProductRequest_Selector selector = new ProductRequest_Selector();
-    selector.addWhere( 'WorkOrderId \'' + workOrderId + '\'')
-      .addWhere( 'SourceLocationId = \'' + sourceLocationId + '\'', 'AND' )
-      .addWHere( 'DestinationLocationId = \'' + destinationLocationId + '\'')
-      .addChildQuery( new ProductRequestLineItem_Selector() );
+    selector.addWhere('WorkOrderId \'' + workOrderId + '\'')
+      .addWhere('SourceLocationId = \'' + sourceLocationId + '\'', 'AND')
+      .addWHere('DestinationLocationId = \'' + destinationLocationId + '\'')
+      .addChildQuery(new ProductRequestLineItem_Selector());
     return selector.query();
   }
 }

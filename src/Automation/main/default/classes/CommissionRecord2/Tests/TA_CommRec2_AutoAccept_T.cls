@@ -3,8 +3,7 @@
  */
 
 @IsTest
-private class TA_CommRec2_AutoAccept_T
-{
+private class TA_CommRec2_AutoAccept_T {
   @testSetup
   static void dataSetup() {
     TA_CommRec2_TestHelper.testDataSetup();
@@ -31,9 +30,8 @@ private class TA_CommRec2_AutoAccept_T
     insert payment;
 
     payment = [SELECT Id, Status__c, Auto_Accepted__c FROM CommissionPayment2__c WHERE Id = :payment.Id];
-    System.assert( payment.Status__c != 'Accepted' );
-    System.assert( !payment.Auto_Accepted__c );
-
+    System.assert(payment.Status__c != 'Accepted');
+    System.assert(!payment.Auto_Accepted__c);
 
     List<CommissionRecord2__c> newList = helper.getNewList();
     List<CommissionRecord2__c> oldList = helper.getOldList();
@@ -41,11 +39,11 @@ private class TA_CommRec2_AutoAccept_T
     newList[0].Sales_Acceptable_Expired__c = true;
 
     Test.startTest();
-    new TA_CommRec2_AutoAccept().afterUpdate( newList, oldList );
+    new TA_CommRec2_AutoAccept().afterUpdate(newList, oldList);
     Test.stopTest();
 
     payment = [SELECT Id, Status__c, Auto_Accepted__c FROM CommissionPayment2__c WHERE Id = :payment.Id];
-    System.assert( payment.Status__c == 'Accepted' );
-    System.assert( payment.Auto_Accepted__c );
+    System.assert(payment.Status__c == 'Accepted');
+    System.assert(payment.Auto_Accepted__c);
   }
 }

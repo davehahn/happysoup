@@ -1,84 +1,91 @@
-<aura:component controller="Promotion_mp"
-								implements="forceCommunity:availableForAllPageTypes">
+<aura:component controller="Promotion_mp" implements="forceCommunity:availableForAllPageTypes">
+  <aura:attribute type="Object[]" name="products" />
+  <aura:attribute type="Object[]" name="promotions" />
+  <aura:attribute type="Object" name="promotion" />
+  <aura:attribute type="String[]" name="requirements" />
+  <aura:attribute type="Id" name="caseId" />
+  <aura:attribute type="Id" name="customerId" />
+  <aura:attribute type="Id" name="productId" />
+  <aura:attribute type="Id" name="promoItemId" />
+  <aura:attribute type="Integer" name="stage" default="1" />
 
-	<aura:attribute type="Object[]" name="products" />
-	<aura:attribute type="Object[]" name="promotions" />
-	<aura:attribute type="Object" 	name="promotion" />
-	<aura:attribute type="String[]" name="requirements" />
-	<aura:attribute type="Id" 			name="caseId" />
-	<aura:attribute type="Id" 			name="customerId" />
-	<aura:attribute type="Id" 			name="productId" />
-	<aura:attribute type="Id" 			name="promoItemId" />
-	<aura:attribute type="Integer" 	name="stage" default="1"/>
-
-	<ltng:require scripts="{!join(',', $Resource.Libraries +'/js/LightningApex.js',
+  <ltng:require
+    scripts="{!join(',', $Resource.Libraries +'/js/LightningApex.js',
                          						 $Resource.Libraries +'/js/LightningUtils.js') }"
-    						afterScriptsLoaded="{!c.doInit}" />
+    afterScriptsLoaded="{!c.doInit}"
+  />
 
   <aura:handler name="lgnd_registration_event" event="c:lgnd_registration_event" action="{!c.lgndRegistrationEvent}" />
   <aura:handler name="lgnd_account_created" event="c:lgnd_account_created" action="{!c.accountCreated}" />
 
-	<div class="slds-scope">
-		<c:Lgnd_Spinner_dh aura:id="spinner" />
-		<aura:if isTrue="{!v.stage == 1}">
-			<br/>
-			<lightning:combobox aura:id="productSelect" 
-													name="productSelect" 
-													label="Product"
-	                      	placeholder="Pick a Product..."
-	                      	value="this"
-	                      	onchange="{!c.handleProductSelection}"
-	                      	options="{!v.products}"/>
+  <div class="slds-scope">
+    <c:Lgnd_Spinner_dh aura:id="spinner" />
+    <aura:if isTrue="{!v.stage == 1}">
+      <br />
+      <lightning:combobox
+        aura:id="productSelect"
+        name="productSelect"
+        label="Product"
+        placeholder="Pick a Product..."
+        value="this"
+        onchange="{!c.handleProductSelection}"
+        options="{!v.products}"
+      />
 
-	    <aura:if isTrue="{! v.productId != null }">
-	    	<aura:if isTrue="{! v.promotions.length gt 0 }">
-		    	<br/>
-		    	<lightning:combobox aura:id="promoItemsSelect" 
-															name="promoItemsSelect" 
-															label="Promotion"
-			                      	placeholder="Pick a promotion..."
-			                      	value="this"
-			                      	onchange="{!c.handlepromoItemsSelection}"
-			                      	options="{!v.promotions}"/>
-			  </aura:if>
-			  <aura:if isTrue="{! v.promotions.length lt 1 }">
-			  	<br/>
-			  	<p>No current promotions available for this product.</p>
-			  </aura:if>
-	    </aura:if>
+      <aura:if isTrue="{! v.productId != null }">
+        <aura:if isTrue="{! v.promotions.length gt 0 }">
+          <br />
+          <lightning:combobox
+            aura:id="promoItemsSelect"
+            name="promoItemsSelect"
+            label="Promotion"
+            placeholder="Pick a promotion..."
+            value="this"
+            onchange="{!c.handlepromoItemsSelection}"
+            options="{!v.promotions}"
+          />
+        </aura:if>
+        <aura:if isTrue="{! v.promotions.length lt 1 }">
+          <br />
+          <p>No current promotions available for this product.</p>
+        </aura:if>
+      </aura:if>
 
-	    <aura:if isTrue="{! v.promoItemId != null }">
-	    	<br/>
-	    	<c:lgnd_account_search accountId="{!v.customerId}" scope="customer" aura:id="lgnd_account_search" />
-	    </aura:if>
+      <aura:if isTrue="{! v.promoItemId != null }">
+        <br />
+        <c:lgnd_account_search accountId="{!v.customerId}" scope="customer" aura:id="lgnd_account_search" />
+      </aura:if>
 
-	    <aura:if isTrue="{! and(and(and(v.productId != null, v.promoItemId != null), v.customerId != null), v.caseId == null) }">
-	      <br/>
-	    	<lightning:button variant="brand" label="Next" onclick="{! c.submit }" />
-	    </aura:if>
-	  </aura:if>
-	  <aura:if isTrue="{!v.stage == 2}">
-			<br/>
-			<aura:if isTrue="{!v.requirements.length > 0}">
-				<h3>Required Documentation:</h3>
-				<ul class="slds-p-vertical_medium">
-					<aura:iteration items="{! v.requirements }" var="item">
-		        <li>{!item}</li>
-		    	</aura:iteration>
-		    </ul>
-	    </aura:if>
-    	<lightning:fileUpload label="Attach receipt"
-										        name="fileUploader"
-										        multiple="true"
-										        accept=".pdf, .png, .jpg"
-										        recordId="{!v.caseId}" />
-      <br/>
-    	<lightning:button variant="brand" label="Done" onclick="{! c.done }" />
-	  </aura:if>
+      <aura:if
+        isTrue="{! and(and(and(v.productId != null, v.promoItemId != null), v.customerId != null), v.caseId == null) }"
+      >
+        <br />
+        <lightning:button variant="brand" label="Next" onclick="{! c.submit }" />
+      </aura:if>
+    </aura:if>
+    <aura:if isTrue="{!v.stage == 2}">
+      <br />
+      <aura:if isTrue="{!v.requirements.length > 0}">
+        <h3>Required Documentation:</h3>
+        <ul class="slds-p-vertical_medium">
+          <aura:iteration items="{! v.requirements }" var="item">
+            <li>{!item}</li>
+          </aura:iteration>
+        </ul>
+      </aura:if>
+      <lightning:fileUpload
+        label="Attach receipt"
+        name="fileUploader"
+        multiple="true"
+        accept=".pdf, .png, .jpg"
+        recordId="{!v.caseId}"
+      />
+      <br />
+      <lightning:button variant="brand" label="Done" onclick="{! c.done }" />
+    </aura:if>
 
-		<div class="slds-hide" aura:id="accountCreationForm">
-			<c:lgnd_account_createForm accountId="{!v.customerId}" />
-		</div>
-
-	</div>
+    <div class="slds-hide" aura:id="accountCreationForm">
+      <c:lgnd_account_createForm accountId="{!v.customerId}" />
+    </div>
+  </div>
 </aura:component>

@@ -1,83 +1,88 @@
-<apex:page title="{!AcctSeed__Journal_Entry__c.Name}" standardController="AcctSeed__Journal_Entry__c" extensions="gcJournalEntry_Override" showHeader="true" sidebar="true" cache="false" readOnly="true">
+<apex:page
+  title="{!AcctSeed__Journal_Entry__c.Name}"
+  standardController="AcctSeed__Journal_Entry__c"
+  extensions="gcJournalEntry_Override"
+  showHeader="true"
+  sidebar="true"
+  cache="false"
+  readOnly="true"
+>
+  <head>
+    <style>
+      .link {
+        cursor: pointer;
+        text-decoration: underline;
+      }
+      tr.pq-row-select td {
+        background-color: yellow;
+      }
+      tr.total td {
+        font-weight: bold;
+      }
+      div.pq-grid-footer {
+        display: none;
+      }
+      input.autoComplete {
+        width: 90%;
+        border: 1px solid #000;
+      }
+    </style>
 
-<head>
-<style>
-.link{
-    cursor:pointer;
-    text-decoration:underline;
-}
-tr.pq-row-select td{
-    background-color:yellow;
-}
-tr.total td{
-    font-weight: bold;
-}
-div.pq-grid-footer{
-    display:none;
-}
-input.autoComplete
-{
-    width: 90%;
-    border: 1px solid #000;
-}
-
-</style>
-
-<apex:stylesheet value="{!URLFOR($Resource.GMBLJS__jQueryUI,'/jquery-ui/jquery-ui.min.css')}"/>
-<apex:stylesheet value="{!URLFOR($Resource.GMBLJS__pqGridPro241,'/pqgrid.min.css')}"/>
-
-</head>
-<body>
-    <div style="width:98%; margin:0 auto">
-       <!-- SFISSUES-669 [Start] --> 
-       <!-- <apex:outputPanel id="theDetail">
+    <apex:stylesheet value="{!URLFOR($Resource.GMBLJS__jQueryUI,'/jquery-ui/jquery-ui.min.css')}" />
+    <apex:stylesheet value="{!URLFOR($Resource.GMBLJS__pqGridPro241,'/pqgrid.min.css')}" />
+  </head>
+  <body>
+    <div style="width: 98%; margin: 0 auto">
+      <!-- SFISSUES-669 [Start] -->
+      <!-- <apex:outputPanel id="theDetail">
             <apex:detail subject="{!Id}" relatedList="false"></apex:detail>
         </apex:outputPanel> -->
-        <!-- SFISSUES-669 [End] -->         
-        <apex:pageBlock mode="edit" title="Journal Entry Lines">
-            <table width="100%">
-                <tr>
-                    <td><div id="journalEntryLines"></div></td>
-                </tr>
-                <tr>
-                    
-                </tr>
-                <tr>
-                    <td style="text-align:left;">
-                        <apex:outputText rendered="{!IF(!AcctSeed__Journal_Entry__c.GMBLASG__Posted__c,true,false)}">
-                            <button type="button" class="btn" id="btnAddNewRow" onclick="addNewBlankRow();">New Journal Entry Line</button>
-                            <button type="button" class="btn" id="changes" onclick="saveChanges();" >Save Changes</button>
-                        </apex:outputText>
-                        <span id="journal-date" style="display: none;">
-                            <apex:outputField value="{!AcctSeed__Journal_Entry__c.AcctSeed__Journal_Date__c}"></apex:outputField>                        
-                        </span>
-                    </td>
-                </tr>
-            </table>
-        </apex:pageBlock>
+      <!-- SFISSUES-669 [End] -->
+      <apex:pageBlock mode="edit" title="Journal Entry Lines">
+        <table width="100%">
+          <tr>
+            <td><div id="journalEntryLines"></div></td>
+          </tr>
+          <tr></tr>
+          <tr>
+            <td style="text-align: left">
+              <apex:outputText rendered="{!IF(!AcctSeed__Journal_Entry__c.GMBLASG__Posted__c,true,false)}">
+                <button type="button" class="btn" id="btnAddNewRow" onclick="addNewBlankRow();">
+                  New Journal Entry Line
+                </button>
+                <button type="button" class="btn" id="changes" onclick="saveChanges();">Save Changes</button>
+              </apex:outputText>
+              <span id="journal-date" style="display: none">
+                <apex:outputField value="{!AcctSeed__Journal_Entry__c.AcctSeed__Journal_Date__c}"></apex:outputField>
+              </span>
+            </td>
+          </tr>
+        </table>
+      </apex:pageBlock>
     </div>
-    <apex:form >
-        <apex:actionFunction name="rerenderDetail" reRender="theDetail"/>
-        <apex:actionFunction name="rerenderRelated" reRender="relatedListJournalEntryLines"/>
+    <apex:form>
+      <apex:actionFunction name="rerenderDetail" reRender="theDetail" />
+      <apex:actionFunction name="rerenderRelated" reRender="relatedListJournalEntryLines" />
     </apex:form>
     <!--apex:relatedList id="relatedListJournalEntryLines" subject="{!Id}" list="AcctSeed__Journal_Entry_Lines__r"/-->
-</body>
+  </body>
 
-<apex:includeScript value="{!$Resource.GMBLJS__jQuery}"/>
-<apex:includeScript value="{!URLFOR($Resource.GMBLJS__jQueryUI,'/jquery-ui/jquery-ui.min.js')}"/>
-<apex:includeScript value="{!$Resource.GMBLJS__accountingJS}"/>
-<apex:includeScript value="{!$Resource.GMBLJS__ExcellentExport}"/>
+  <apex:includeScript value="{!$Resource.GMBLJS__jQuery}" />
+  <apex:includeScript value="{!URLFOR($Resource.GMBLJS__jQueryUI,'/jquery-ui/jquery-ui.min.js')}" />
+  <apex:includeScript value="{!$Resource.GMBLJS__accountingJS}" />
+  <apex:includeScript value="{!$Resource.GMBLJS__ExcellentExport}" />
 
-<apex:includeScript value="{!URLFOR($Resource.GMBLJS__pqGridPro241,'/pqgrid.min.js')}"/>
+  <apex:includeScript value="{!URLFOR($Resource.GMBLJS__pqGridPro241,'/pqgrid.min.js')}" />
 
-<apex:includeScript value="{!$Resource.GMBLJS__gsrSpinner}"/>
-<apex:includeScript value="{!$Resource.GMBLJS__gsrGrid2}"/>
+  <apex:includeScript value="{!$Resource.GMBLJS__gsrSpinner}" />
+  <apex:includeScript value="{!$Resource.GMBLJS__gsrGrid2}" />
+
+  <script>
+    function setFocusOnLoad() {}
+  </script>
+  <script type="text/javascript">
 
 
-<script>function setFocusOnLoad() {}</script>
-<script type="text/javascript">
-
-    
     var glAccounts = {!allGlAccounts};
     var glVariables = {!allGlVariables};
     $j = jQuery.noConflict();
@@ -130,7 +135,7 @@ input.autoComplete
                                         result[k].label = item.Name;
                                     if(item.value == undefined)
                                         result[k].value = item.Id;
-                                })  
+                                })
                                 response(result);
                             } else {
                                 alert(event.message);
@@ -180,7 +185,7 @@ input.autoComplete
                                         result[k].label = item.Name;
                                     if(item.value == undefined)
                                         result[k].value = item.Id;
-                                })  
+                                })
                                 response(result);
                             } else {
                                 alert(event.message);
@@ -241,7 +246,7 @@ input.autoComplete
                                         result[k].label = item.Name;
                                     if(item.value == undefined)
                                         result[k].value = item.Id;
-                                })  
+                                })
                                 response(result);
                             } else {
                                 alert(event.message);
@@ -295,7 +300,7 @@ input.autoComplete
         $inp.datepicker({
             changeMonth: true,
             changeYear: true,
-            dateFormat: dpFormat, 
+            dateFormat: dpFormat,
             showAnim: '',
             onSelect: function () {
                 this.firstOpen = true;
@@ -327,7 +332,7 @@ input.autoComplete
         var gridObj = {title:"",
                         collapsible:{on:false,collapsed:false,toggle:false},
                         columnTemplate: {minWidth:10, sortable:true},
-                        dataModel:{data:[], sorting:'local', location:'local', recIndx: "idLine"}, 
+                        dataModel:{data:[], sorting:'local', location:'local', recIndx: "idLine"},
                         detailModel:{cache:false},
                         dragColumns:{enabled:false},
                         editable:true,
@@ -369,11 +374,11 @@ input.autoComplete
                         },
                         toolbar: {
                             items: [
-                                { type: 'button', icon: 'ui-icon-plus', label: 'New Journal Entry Line', 
+                                { type: 'button', icon: 'ui-icon-plus', label: 'New Journal Entry Line',
                                     listener:{'click': function(){addNewBlankRow();}}
                                 },
                                 { type: 'separator' },
-                                { type: 'button', icon: 'ui-icon-disk', label: 'Save Changes', cls: 'changes', 
+                                { type: 'button', icon: 'ui-icon-disk', label: 'Save Changes', cls: 'changes',
                                     listener:{'click': function(){saveChanges();}},
                                     options: { disabled: true }
                                 }
@@ -381,7 +386,7 @@ input.autoComplete
                         }
                     };
 
-        gridObj.colModel=[{dataIndx:"idLine",   hidden:true,            editable:false},                       
+        gridObj.colModel=[{dataIndx:"idLine",   hidden:true,            editable:false},
                         {dataIndx:"action",         title:"",           editable:false, maxWidth:60, minWidth:60},
                         {dataIndx:"lineName",       title:"Line#",      editable:false, maxWidth:90, hidden:true},
                         {dataIndx:"productName",    title:"Product",    align:'left', editable:function(ui){return (ui.rowData != undefined && ui.rowData.jePosted == 'true')?false:true;}, editor:{ type: 'textbox', cls: 'autoComplete3', select: true}},
@@ -398,7 +403,7 @@ input.autoComplete
                                 type: 'select',
                                 //init:autoCompleteGlv1,
                                 valueIndx: "value",
-                                labelIndx: "text",                                      
+                                labelIndx: "text",
                                 mapIndices: {"text": "cfcName", "value": "idCFC"},
                                 options: glVariables.cfcList
                             }, editable:function(ui){return (ui.rowData != undefined && ui.rowData.jePosted == 'true')?false:true;}
@@ -419,7 +424,7 @@ input.autoComplete
                             editor: {
                                 type: 'select',
                                 valueIndx: "value",
-                                labelIndx: "text",                                      
+                                labelIndx: "text",
                                 mapIndices: {"text": "gLV2Name", "value": "idGLV2"},
                                 options: glVariables.glv2List
                             }, editable:function(ui){return (ui.rowData != undefined && ui.rowData.jePosted == 'true')?false:true;}
@@ -429,7 +434,7 @@ input.autoComplete
                             editor: {
                                 type: 'select',
                                 valueIndx: "value",
-                                labelIndx: "text",                                      
+                                labelIndx: "text",
                                 mapIndices: {"text": "gLV3Name", "value": "idGLV3"},
                                 options: glVariables.glv3List
                             }, editable:function(ui){return (ui.rowData != undefined && ui.rowData.jePosted == 'true')?false:true;}
@@ -439,14 +444,14 @@ input.autoComplete
                             editor: {
                                 type: 'select',
                                 valueIndx: "value",
-                                labelIndx: "text",                                      
+                                labelIndx: "text",
                                 mapIndices: {"text": "gLV4Name", "value": "idGLV4"},
                                 options: glVariables.glv4List
                             }, editable:function(ui){return (ui.rowData != undefined && ui.rowData.jePosted == 'true')?false:true;}
                         },
-                        {dataIndx:"jelDate",        title:"Date",   dataType:"string",    align:"center", maxWidth:90, 
+                        {dataIndx:"jelDate",        title:"Date",   dataType:"string",    align:"center", maxWidth:90,
                             editable:function(ui){return (ui.rowData != undefined && ui.rowData.jePosted == 'true')?false:true;},
-                            editor: {type:'textbox', init: dateEditor}, 
+                            editor: {type:'textbox', init: dateEditor},
                             sortType: function (rowData1, rowData2, dataIndx) {return sortDateTime(rowData1, rowData2,'jelDate');}
                         },
                         {dataIndx:"units",          title: "Quantity",  dataType:"number",  align:"right",  gFormat:'number',   gTotal:true, maxWidth:60, editable:function(ui){return (ui.rowData != undefined && ui.rowData.jePosted == 'true')?false:true;},hidden:true},
@@ -486,7 +491,7 @@ input.autoComplete
                     {
                         if(ui.rowData.isTotal || ui.rowData.idProject == undefined) return;
                         var myHTML = ui.rowData.projectName;
-                        
+
                         if({!$ObjectType.AcctSeed__Project__c.accessible})
                             return '<a href=\"/'+ui.rowData.idProject+'\" target=\"_blank\">'+myHTML+'</a>';
 
@@ -501,7 +506,7 @@ input.autoComplete
                     {
                         if(ui.rowData.isTotal || ui.rowData.idTask == undefined) return;
                         var myHTML = ui.rowData.taskName;
-                        
+
                         if({!$ObjectType.AcctSeed__Project_Task__c.accessible})
                             return '<a href=\"/'+ui.rowData.idTask+'\" target=\"_blank\">'+myHTML+'</a>';
 
@@ -515,20 +520,20 @@ input.autoComplete
                     render:function(ui)
                     {
                         if(ui.rowData.isTotal || ui.rowData.jelDateYMD == undefined) return;
-                        
+
                         return $j.datepicker.formatDate( dpFormat, new Date(ui.rowData.jelDateYMD) );
                     }
                 });
             }
-            else if(col.dataIndx == 'debitAmount' 
-                || col.dataIndx == 'creditAmount' 
+            else if(col.dataIndx == 'debitAmount'
+                || col.dataIndx == 'creditAmount'
                 || col.dataIndx == 'units')
             {
                 $j.extend(col,{
                     render:function(ui)
                     {
                         if(ui.rowData[col.dataIndx] == undefined || parseFloat(ui.rowData[col.dataIndx]) == 0) return '';
-                        else 
+                        else
                         {
                             if(col.dataIndx == 'units')
                                 return accounting.formatNumber(ui.rowData[col.dataIndx]);
@@ -546,9 +551,9 @@ input.autoComplete
         $gridDiv.on( "pqgrideditorbegin", function( event, ui ) {
             if(ui.dataIndx == 'taskName')
             {
-                if(ui.rowData.idProject == undefined 
-                    || ui.rowData.idProject == null 
-                    || ui.rowData.projectName == null 
+                if(ui.rowData.idProject == undefined
+                    || ui.rowData.idProject == null
+                    || ui.rowData.projectName == null
                     || ui.rowData.projectName == '')
                 {
                     ui.rowData.idTask = null;
@@ -578,8 +583,8 @@ input.autoComplete
 
             //only respond to grid changes that have all of the following attributes
             if(row.type == 'update' &&
-               ui.source != 'xyz' &&    
-               ui.rowList && 
+               ui.source != 'xyz' &&
+               ui.rowList &&
                ui.rowList.length == 1 &&
                row.newRow)
             {
@@ -610,7 +615,7 @@ input.autoComplete
                 }
                 else if(newRow.projectName !== undefined)
                 {
-                    if(rowData.projectName == null 
+                    if(rowData.projectName == null
                         || rowData.projectName == '')
                     {
                         rowData.idProject = null;
@@ -625,7 +630,7 @@ input.autoComplete
                 }
                 else if(newRow.taskName !== undefined)
                 {
-                    if(rowData.taskName == null 
+                    if(rowData.taskName == null
                         || rowData.taskName == '')
                     {
                         rowData.idTask = null;
@@ -665,7 +670,7 @@ input.autoComplete
         {
             $gridDiv.pqGrid('deleteRow',{rowIndx:rowIndx});
             $gridDiv.pqGrid('refresh');
-            
+
         }
         else
         {
@@ -679,7 +684,7 @@ input.autoComplete
                         $gridDiv.pqGrid('refresh');
                     }
                     else{
-                        alert(event.message); 
+                        alert(event.message);
                     }
                     $gridDiv.pqGrid('hideLoading');
                     rerenderRelated();
@@ -700,7 +705,7 @@ input.autoComplete
                     gGrid.refreshGrid_callback($gridDiv,result);
                 }
                 else{
-                    alert(event.message); 
+                    alert(event.message);
                 }
                 $gridDiv.pqGrid('hideLoading');
                 rerenderRelated();
@@ -717,12 +722,12 @@ input.autoComplete
         $gridDiv.pqGrid( "addRow",{rowData: rowData});
         $gridDiv.pqGrid( "goToPage", { rowIndx: rowIndx} );
         $gridDiv.pqGrid( "editFirstCellInRow", { rowIndx: rowIndx } );
-        
+
     }
 
     function saveChanges()
     {
-        
+
         var changes = $j('#journalEntryLines').pqGrid("getChanges");
         //console.log(changes);
         if(changes.addList.length == 0 && changes.updateList.length == 0) return;
@@ -738,7 +743,7 @@ input.autoComplete
                     rerenderDetail();
                 }
                 else{
-                    alert(event.message); 
+                    alert(event.message);
                     //refreshGrid_jeLines();
                 }
                 $gridDiv.pqGrid('hideLoading');
@@ -796,6 +801,5 @@ input.autoComplete
             return 0;
         }
     }
-</script>
-
+  </script>
 </apex:page>

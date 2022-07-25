@@ -3,21 +3,22 @@
  */
 
 @IsTest
-private class RunSquarePaymentFlow_T
-{
-
-  @testSetup static void dataSetup()
-  {
+private class RunSquarePaymentFlow_T {
+  @testSetup
+  static void dataSetup() {
     new Factory_TestData();
     Factory_CustomSettings.setupInventorySettings();
   }
 
   @IsTest
-  static void finalizeSquarePayment_Test()
-  {
+  static void finalizeSquarePayment_Test() {
     User u = Factory_User.buildUser('public', 'helpcenter', 'Legend Help Center Profile');
     insert u;
-    AcctSeed__Accounting_Period__c period = [SELECT Id, AcctSeed__Start_Date__c FROM AcctSeed__Accounting_Period__c LIMIT 1];
+    AcctSeed__Accounting_Period__c period = [
+      SELECT Id, AcctSeed__Start_Date__c
+      FROM AcctSeed__Accounting_Period__c
+      LIMIT 1
+    ];
     DateTime receiveDate = DateTime.newInstance(
       period.AcctSeed__Start_Date__c.addDays(5),
       Time.newInstance(0, 0, 0, 0)
@@ -30,8 +31,7 @@ private class RunSquarePaymentFlow_T
       Email__c = 'test@test.com'
     );
     insert trans;
-    System.runAs( u )
-    {
+    System.runAs(u) {
       Test.startTest();
       RunSquarePaymentFlow.finalizeSquarePayment(
         trans.Id,
@@ -46,11 +46,11 @@ private class RunSquarePaymentFlow_T
     Square_Transaction__c trx = [SELECT Id, sqStatus__c FROM Square_Transaction__c WHERE Id = :trans.Id];
     System.assertEquals('COMPLETED', trx.sqStatus__c);
 
-    AcctSeed__Cash_Receipt__c[] cashReceipts =
-    [ SELECT Id
+    AcctSeed__Cash_Receipt__c[] cashReceipts = [
+      SELECT Id
       FROM AcctSeed__Cash_Receipt__c
       WHERE AcctSeed__Payment_Reference__c = :'6aVfIp7gEaxzracrrrZPexample'
     ];
-    System.assertEquals( 1, cashReceipts.size() );
+    System.assertEquals(1, cashReceipts.size());
   }
 }

@@ -13,7 +13,8 @@ export default class OpportunityOutdatedNotice extends LightningElement {
   oppStage;
   iconName = "utility:alert";
   title = "The Pricing used to construct this Opportunity and related Quotes is now outdated";
-  message = "You are now unable to edit or add any Quotes to this Opportunity.  Please Closed-Lost this opportunity and create a new Quote/Opportunity."
+  message =
+    "You are now unable to edit or add any Quotes to this Opportunity.  Please Closed-Lost this opportunity and create a new Quote/Opportunity.";
 
   @wire(getRecord, { recordId: "$recordId", fields: FIELDS })
   wiredRecord({ error, data }) {
@@ -25,8 +26,8 @@ export default class OpportunityOutdatedNotice extends LightningElement {
     }
   }
 
-  get isOpenAndOutdated(){
+  get isOpenAndOutdated() {
     let stage = String(this.oppStage);
-    return !stage.includes('Closed') && !this.isPricebookCurrent;
+    return !stage.includes("Closed") && !this.isPricebookCurrent;
   }
 }

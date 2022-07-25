@@ -1,24 +1,23 @@
-import { LightningElement, api, wire, track } from 'lwc';
-import { updateRecord } from 'lightning/uiRecordApi';
-import { refreshApex } from '@salesforce/apex';
-import { ShowToastEvent } from 'lightning/platformShowToastEvent';
-import { CurrentPageReference } from 'lightning/navigation';
-import { fireEvent } from 'c/pubsub';
+import { LightningElement, api, wire, track } from "lwc";
+import { updateRecord } from "lightning/uiRecordApi";
+import { refreshApex } from "@salesforce/apex";
+import { ShowToastEvent } from "lightning/platformShowToastEvent";
+import { CurrentPageReference } from "lightning/navigation";
+import { fireEvent } from "c/pubsub";
 import { getRecord, getFieldValue } from "lightning/uiRecordApi";
-import { errorToast, successToast, warningToast, reduceErrors } from 'c/utils';
-import { CloseActionScreenEvent } from 'lightning/actions';
-import fetchERPRecord from '@salesforce/apex/AccrualTool_Controller.fetchERPData';
-import fetchCommissionLineItems from '@salesforce/apex/AccrualTool_Controller.fetchCommissionRecords';
-import fetchSerializedProductsData from '@salesforce/apex/AccrualTool_Controller.fetchSerializedProducts';
-import loadExpenseAndRevenue from '@salesforce/apex/AccrualTool_Controller.fetchOrderLines';
-import createJournalEntries from '@salesforce/apex/AccrualTool_Controller.createJournalEntry';
-import fetchDateRanges from '@salesforce/apex/AccrualTool_Controller.dateRanges';
+import { errorToast, successToast, warningToast, reduceErrors } from "c/utils";
+import { CloseActionScreenEvent } from "lightning/actions";
+import fetchERPRecord from "@salesforce/apex/AccrualTool_Controller.fetchERPData";
+import fetchCommissionLineItems from "@salesforce/apex/AccrualTool_Controller.fetchCommissionRecords";
+import fetchSerializedProductsData from "@salesforce/apex/AccrualTool_Controller.fetchSerializedProducts";
+import loadExpenseAndRevenue from "@salesforce/apex/AccrualTool_Controller.fetchOrderLines";
+import createJournalEntries from "@salesforce/apex/AccrualTool_Controller.createJournalEntry";
+import fetchDateRanges from "@salesforce/apex/AccrualTool_Controller.dateRanges";
 
 import NAME_FIELD from "@salesforce/schema/AcctSeed__Project__c.Name";
 
 const fields = [NAME_FIELD]; //comma separated
 export default class AccrualTool extends LightningElement {
-
   @api recordId;
   maxDate;
   minDate;
@@ -47,7 +46,6 @@ export default class AccrualTool extends LightningElement {
   @track showPost = true;
   @track erpStageAllowed = true;
 
-
   @track step1;
   @track step2;
   @track step3;
@@ -69,7 +67,7 @@ export default class AccrualTool extends LightningElement {
     if (progStepNum == 1 && !this.erpStageAllowed) {
       this.showNext = false;
     }
-    if(progStepNum == 2 && this.usedStatus) {
+    if (progStepNum == 2 && this.usedStatus) {
       this.showNext = false;
       this.usedStatusBlock = true;
     } else {
@@ -84,10 +82,8 @@ export default class AccrualTool extends LightningElement {
     this.showPrevious = true;
     this.getcurrentStep();
     if (this.erpStageAllowed && progStepNum == 4) {
-
-       this.getCommissionLineItems(progStepNum);// need to invoke this at specific step
+      this.getCommissionLineItems(progStepNum); // need to invoke this at specific step
     }
-
   }
   previousClick() {
     debugger;
@@ -106,60 +102,81 @@ export default class AccrualTool extends LightningElement {
   dateChange(event) {
     debugger;
     var jeDateSelected = event.target.value;
-    console.log('Compare');
+    console.log("Compare");
     console.log(this.jedate);
     console.log(this.maxDate);
-    if(jeDateSelected > this.maxDate){
-        this.showNext = false;
-        errorToast(this, 'Journal Entry Date must be less than Today.', 'Error');
-    }
-    else if(jeDateSelected < this.minDate){
-        this.showNext = false;
-        errorToast(this, 'Journal Entry Date must be greater than the last open Period Date.', 'Error');
-    } else{
-        this.showNext = true;
-        this.jedate = jeDateSelected;
-        this.setVisibleDate(false);
+    if (jeDateSelected > this.maxDate) {
+      this.showNext = false;
+      errorToast(this, "Journal Entry Date must be less than Today.", "Error");
+    } else if (jeDateSelected < this.minDate) {
+      this.showNext = false;
+      errorToast(this, "Journal Entry Date must be greater than the last open Period Date.", "Error");
+    } else {
+      this.showNext = true;
+      this.jedate = jeDateSelected;
+      this.setVisibleDate(false);
     }
   }
 
-  setVisibleDate (onLoad) {
+  setVisibleDate(onLoad) {
     debugger;
     var date;
     var month;
     var year;
-    if(onLoad) {
+    if (onLoad) {
       var today = new Date();
-     date = today.getDate();
-     month = today.getMonth() + 1;
-     year = today.getFullYear();
-    } else{
-       if(this.jedate != undefined){
-      year = this.jedate.substring(0,4);
-     month = parseInt(this.jedate.substring(5,7));
-     date = this.jedate.substring(8);
-    }
+      date = today.getDate();
+      month = today.getMonth() + 1;
+      year = today.getFullYear();
+    } else {
+      if (this.jedate != undefined) {
+        year = this.jedate.substring(0, 4);
+        month = parseInt(this.jedate.substring(5, 7));
+        date = this.jedate.substring(8);
+      }
     }
 
     //this.jedate = today.getDate() +"-" + (today.getMonth() + 1) +"-" + today.getFullYear() ;
 
     var monthStr;
-    switch(month) {
-      case 1: monthStr = 'Jan'; break;
-      case 2: monthStr = 'Feb'; break;
-      case 3: monthStr = 'Mar'; break;
-      case 4: monthStr = 'Apr'; break;
-      case 5: monthStr = 'May'; break;
-      case 6: monthStr = 'Jun'; break;
-      case 7: monthStr = 'Jul'; break;
-      case 8: monthStr = 'Aug'; break;
-      case 9: monthStr = 'Sep'; break;
-      case 10: monthStr = 'Oct'; break;
-      case 11: monthStr = 'Nov'; break;
-      case 12: monthStr = 'Dec';
+    switch (month) {
+      case 1:
+        monthStr = "Jan";
+        break;
+      case 2:
+        monthStr = "Feb";
+        break;
+      case 3:
+        monthStr = "Mar";
+        break;
+      case 4:
+        monthStr = "Apr";
+        break;
+      case 5:
+        monthStr = "May";
+        break;
+      case 6:
+        monthStr = "Jun";
+        break;
+      case 7:
+        monthStr = "Jul";
+        break;
+      case 8:
+        monthStr = "Aug";
+        break;
+      case 9:
+        monthStr = "Sep";
+        break;
+      case 10:
+        monthStr = "Oct";
+        break;
+      case 11:
+        monthStr = "Nov";
+        break;
+      case 12:
+        monthStr = "Dec";
     }
-  this.jedate2 = date +"-"+ monthStr+"-"+year;
-
+    this.jedate2 = date + "-" + monthStr + "-" + year;
   }
 
   closeQuickAction() {
@@ -184,7 +201,7 @@ export default class AccrualTool extends LightningElement {
         this.step2 = true;
         this.step3 = false;
         this.step4 = false;
-        this.step5 = false
+        this.step5 = false;
         this.step6 = false;
         this.step7 = false;
         this.step8 = false;
@@ -264,21 +281,20 @@ export default class AccrualTool extends LightningElement {
 
   //@wire(fetchERPRecord, { erpId: '$recordId' })
   //erprecord;
-  @wire( fetchDateRanges, {} )
-    wiredDateRanges(result){
-      console.log('this data: ', result);
-      if( result != undefined && result.data != undefined)
-      {
-          console.log('mxd');
-          console.log(result.data.maxDate);
-        this.maxDate = result.data.maxDate;
-        this.minDate = result.data.minDate;
-      }
+  @wire(fetchDateRanges, {})
+  wiredDateRanges(result) {
+    console.log("this data: ", result);
+    if (result != undefined && result.data != undefined) {
+      console.log("mxd");
+      console.log(result.data.maxDate);
+      this.maxDate = result.data.maxDate;
+      this.minDate = result.data.minDate;
     }
+  }
 
-  @wire(fetchERPRecord, { erpId: '$recordId' })
+  @wire(fetchERPRecord, { erpId: "$recordId" })
   wiredGetErpRecord(result) {
-    console.log('calling method - $recordId');
+    console.log("calling method - $recordId");
     debugger;
     if (result.data) {
       this.erprecord = result.data;
@@ -289,18 +305,22 @@ export default class AccrualTool extends LightningElement {
         this.getCommissionLineItems();
         this.getSerializedProducts();
       }
-    };
+    }
   }
 
   checkERPStage() {
     debugger;
-    if(this.erprecord.Journal_Entries__r != null && this.erprecord.Journal_Entries__r.length != 0) {
+    if (this.erprecord.Journal_Entries__r != null && this.erprecord.Journal_Entries__r.length != 0) {
       this.closeQuickAction();
-      errorToast(this, 'Journal Entry for this ERP is already created.', ' Warning!');
-    }else if (this.erprecord.Stage__c == "Tagging Pending" || this.erprecord.Stage__c == "Delivered" || this.erprecord.Stage__c == "Closed Lost") {
+      errorToast(this, "Journal Entry for this ERP is already created.", " Warning!");
+    } else if (
+      this.erprecord.Stage__c == "Tagging Pending" ||
+      this.erprecord.Stage__c == "Delivered" ||
+      this.erprecord.Stage__c == "Closed Lost"
+    ) {
       this.erpStageAllowed = false;
       this.closeQuickAction();
-      errorToast(this, 'This function is not available for current stage', ' Warning!');
+      errorToast(this, "This function is not available for current stage", " Warning!");
     } else {
       this.erpStageAllowed = true;
     }
@@ -311,20 +331,20 @@ export default class AccrualTool extends LightningElement {
     let spinner = this.template.querySelector("c-legend-spinner");
     spinner.toggle();
     createJournalEntries({ erpId: this.recordId, jounralEntryDate: this.jedate })
-      .then(result => {
+      .then((result) => {
         debugger;
         console.log(result);
-        if(result.indexOf('Error') != -1) {
-          errorToast(this, result, ' Error!');
+        if (result.indexOf("Error") != -1) {
+          errorToast(this, result, " Error!");
         } else {
-          successToast(this, result, 'Journal Entry Creation Status!', );
+          successToast(this, result, "Journal Entry Creation Status!");
         }
         this.closeQuickAction();
       })
-      .catch(error => {
+      .catch((error) => {
         debugger;
         console.log(error);
-        errorToast(this, error, ' Error!');
+        errorToast(this, error, " Error!");
       })
       .finally(function () {
         spinner.toggle();
@@ -338,7 +358,7 @@ export default class AccrualTool extends LightningElement {
     let spinner = this.template.querySelector("c-legend-spinner");
     spinner.toggle();
     loadExpenseAndRevenue({ erpId: this.recordId })
-      .then(result => {
+      .then((result) => {
         debugger;
         console.log(result);
 
@@ -357,17 +377,19 @@ export default class AccrualTool extends LightningElement {
         }
 
         this.totalExpense = parseFloat(this.expenseData.totalAmount) + parseFloat(this.insuranceData.totalAmount);
-        for(var commAmt in commissionData) {
-          this.totalExpense = parseFloat(this.totalExpense) + parseFloat(commissionData[commAmt].commPayments[0].Amount);
+        for (var commAmt in commissionData) {
+          this.totalExpense =
+            parseFloat(this.totalExpense) + parseFloat(commissionData[commAmt].commPayments[0].Amount);
         }
-        this.totalRevenue = this.revenueData.totalAmount;// + this.journalLineData.totalAmount;
+        this.totalRevenue = this.revenueData.totalAmount; // + this.journalLineData.totalAmount;
         if (this.totalRevenue == this.totalExpense) {
           this.grossMargin = 0;
         } else {
-          this.grossMargin = ((parseFloat(this.totalRevenue) - parseFloat(this.totalExpense)) / parseFloat(this.totalRevenue)) * 100;
+          this.grossMargin =
+            ((parseFloat(this.totalRevenue) - parseFloat(this.totalExpense)) / parseFloat(this.totalRevenue)) * 100;
         }
       })
-      .catch(error => {
+      .catch((error) => {
         debugger;
         console.log(error);
       })
@@ -380,7 +402,7 @@ export default class AccrualTool extends LightningElement {
     debugger;
 
     fetchCommissionLineItems({ erpId: this.recordId })
-      .then(result => {
+      .then((result) => {
         console.log(JSON.parse(JSON.stringify(result)));
         var commissionData = result;
         this.allCommissionReviewed = commissionData.isReviewed;
@@ -391,39 +413,35 @@ export default class AccrualTool extends LightningElement {
         if (!this.allCommissionReviewed) {
           this.showNext = false;
         }
-        if (this.erpStageAllowed && progStepNum == 4){
-        this.fetchRevenueandExpenses(commissionData.commPaymentWrapper);
+        if (this.erpStageAllowed && progStepNum == 4) {
+          this.fetchRevenueandExpenses(commissionData.commPaymentWrapper);
         }
       })
-      .catch(error => {
+      .catch((error) => {
         debugger;
         console.log(error);
-        errorToast(this, 'Contact your Salesforce Administrator', ' Error!');
+        errorToast(this, "Contact your Salesforce Administrator", " Error!");
       })
-      .finally(function () {
-      });
+      .finally(function () {});
   }
   getSerializedProducts() {
     debugger;
     fetchSerializedProductsData({ erpId: this.recordId })
-      .then(result => {
+      .then((result) => {
         console.log(JSON.parse(JSON.stringify(result)));
         this.serializedProducts = [...result];
 
-        for(var i= 0 ; i< result.length;i++ ){
+        for (var i = 0; i < result.length; i++) {
           console.log(result[i].Status);
-          if(result[i].Status == 'Used'){
-          this.usedStatus = true;
+          if (result[i].Status == "Used") {
+            this.usedStatus = true;
           }
         }
-
       })
-      .catch(error => {
+      .catch((error) => {
         debugger;
-        errorToast(this, 'Contact your Salesforce Administrator', ' Error!');
+        errorToast(this, "Contact your Salesforce Administrator", " Error!");
       })
-      .finally(function () {
-      });
+      .finally(function () {});
   }
-
 }

@@ -1,79 +1,78 @@
-<apex:page showHeader="true"
-           standardController="Opportunity"
-           extensions="OpportunityExt_RetailCounterSale"
-           docType="html-5.0" >
-<sffd:Resources />
-<apex:stylesheet value="{!URLFOR($Resource.LegendStyles)}" />
-<apex:stylesheet value="{!URLFOR($Resource.LegendInvoice,'stylesheets/style.min.css')}" />
-<apex:stylesheet value="{!URLFOR($Resource.FontAwesome, 'font-awesome-4.0.3/css/font-awesome.min.css')}" />
+<apex:page
+  showHeader="true"
+  standardController="Opportunity"
+  extensions="OpportunityExt_RetailCounterSale"
+  docType="html-5.0"
+>
+  <sffd:Resources />
+  <apex:stylesheet value="{!URLFOR($Resource.LegendStyles)}" />
+  <apex:stylesheet value="{!URLFOR($Resource.LegendInvoice,'stylesheets/style.min.css')}" />
+  <apex:stylesheet value="{!URLFOR($Resource.FontAwesome, 'font-awesome-4.0.3/css/font-awesome.min.css')}" />
 
+  <style type="text/css">
+    .legendInvoice {
+      -webkit-transition: all 0.2s ease-in-out;
+      -moz-transition: all 0.2s ease-in-out;
+      -o-transition: all 0.2s ease-in-out;
+      transition: all 0.2s ease-in-out;
+    }
 
-<style type="text/css">
+    .changing-lang {
+      -webkit-filter: grayscale(100%) blur(1px);
+      filter: grayscale(100%) blur(1px);
+      opacity: 0.5;
+    }
 
-  .legendInvoice {
-    -webkit-transition:all 0.2s ease-in-out;
-    -moz-transition:all 0.2s ease-in-out;
-    -o-transition:all 0.2s ease-in-out;
-    transition:all 0.2s ease-in-out;
-  }
+    select {
+      display: inline-block;
+      width: 130px;
+      line-height: 1rem;
+      float: right;
+    }
 
-  .changing-lang {
-    -webkit-filter: grayscale(100%) blur(1px);
-    filter: grayscale(100%) blur(1px);
-    opacity: 0.5;
-  }
+    .button-row {
+      max-width: 98%;
+    }
 
-  select {
-    display: inline-block;
-    width: 130px;
-    line-height: 1rem;
-    float:right;
-  }
+    .button-row a {
+      float: right;
+      margin-bottom: 5px;
+      margin-right: 1.25rem;
+    }
 
-  .button-row {
-    max-width:98%;
-  }
+    .legendInvoice {
+      margin: auto;
+      width: 95%;
+    }
 
-  .button-row a {
-    float:right;
-    margin-bottom:5px;
-    margin-right:1.25rem;
-  }
+    .tabs-content > .content {
+      margin-top: 25px;
+    }
 
-  .legendInvoice {
-    margin:auto;
-    width:95%;
-  }
+    .header-bottom .invoice-header table .circle {
+      background: none;
+    }
 
-  .tabs-content > .content {
-    margin-top: 25px;
-  }
+    .headerLogo.print-only {
+      display: none;
+    }
 
-  .header-bottom .invoice-header table .circle {
-    background: none;
-  }
+    .legendInvoice i {
+      color: #1ba3e2;
+    }
 
-  .headerLogo.print-only {
-    display:none;
-  }
+    .email i {
+      font-size: 16px !important;
+    }
 
-  .legendInvoice i {
-    color:#1BA3E2;;
-  }
-
-  .email i {
-    font-size:16px !important;
-  }
-
-  #bcTarget {
-    width:100%;
-    text-align:right;
-  }
-</style>
+    #bcTarget {
+      width: 100%;
+      text-align: right;
+    }
+  </style>
 
   <div class="row">
     <div class="column large-12">
-
       <dl class="tabs" data-tab="true">
         <dd class="tab-title active">
           <a href="#details">Details</a>
@@ -84,27 +83,31 @@
       </dl>
 
       <div class="tabs-content">
-
         <div class="content active" id="details">
           <div class="row button-row">
-            <apex:form >
+            <apex:form>
               <apex:actionFunction name="changeLanguage" rerender="invoice" />
               <div class="large-12 columns">
-                  <apex:selectList value="{!displaylanguage}" onchange="changeLang()" size="1">
-                    <apex:selectOptions value="{!languageOptions}" />
-                  </apex:selectList>
-                  <a href="#" id="printInvoice" class="fd_button icon-left small invert success">
-                    <i class="fa fa-print"></i>Print
-                  </a>
-                  <a href="{!$Page.RetailCounterSalesTool}?id={!Opportunity.Id}" id="edit" class="fd_button icon-left small invert">
-                    <i class="fa fa-edit"></i>Edit
-                  </a>
-                  <apex:commandLink action="{!delete}"
-                                    styleClass="fd_button icon-left small alert invert"
-                                    onclick="return confirm('Are you sure?');">
-                    <i class="fa fa-times"></i>Delete
-                  </apex:commandLink>
-
+                <apex:selectList value="{!displaylanguage}" onchange="changeLang()" size="1">
+                  <apex:selectOptions value="{!languageOptions}" />
+                </apex:selectList>
+                <a href="#" id="printInvoice" class="fd_button icon-left small invert success">
+                  <i class="fa fa-print"></i>Print
+                </a>
+                <a
+                  href="{!$Page.RetailCounterSalesTool}?id={!Opportunity.Id}"
+                  id="edit"
+                  class="fd_button icon-left small invert"
+                >
+                  <i class="fa fa-edit"></i>Edit
+                </a>
+                <apex:commandLink
+                  action="{!delete}"
+                  styleClass="fd_button icon-left small alert invert"
+                  onclick="return confirm('Are you sure?');"
+                >
+                  <i class="fa fa-times"></i>Delete
+                </apex:commandLink>
               </div>
             </apex:form>
           </div>
@@ -117,87 +120,82 @@
               <c:RetailCounterSale_French opportunityId="{!Opportunity.Id}" />
             </apex:outputPanel>
           </apex:outputPanel>
-          
-          <apex:outputPanel rendered="{!AND($ObjectType.AcctSeed__Project__c.accessible,$ObjectType.AcctSeed__Project__c.fields.AcctSeed__Opportunity__c.accessible,OR($User.Alias='Gimbal',$User.Alias='Jamie',$User.Alias='dhahn'))}">
-            <br/>
-            <br/>
+
+          <apex:outputPanel
+            rendered="{!AND($ObjectType.AcctSeed__Project__c.accessible,$ObjectType.AcctSeed__Project__c.fields.AcctSeed__Opportunity__c.accessible,OR($User.Alias='Gimbal',$User.Alias='Jamie',$User.Alias='dhahn'))}"
+          >
+            <br />
+            <br />
             Only Michael, Dave, and Jamie will see this message and the related list below.
-            <br/>
-            <apex:relatedList subject="{!Id}" list="AcctSeed__Projects__r"/>
+            <br />
+            <apex:relatedList subject="{!Id}" list="AcctSeed__Projects__r" />
           </apex:outputPanel>
         </div>
 
         <div class="content" id="chatter">
           <chatter:feedWithFollowers entityId="{!Opportunity.Id}" showHeader="false" />
         </div>
-
       </div>
-
     </div>
   </div>
- 
+
   <apex:includeScript value="https://code.jquery.com/jquery-migrate-1.2.1.min.js" />
-  <apex:includeScript value="{!URLFOR($Resource.jQueryPrintElement)}"/>
-  <apex:includeScript value="{!URLFOR($Resource.jQuery_Barcode)}"/>
-  <script type='text/javascript' src='/canvas/sdk/js/publisher.js'/>
+  <apex:includeScript value="{!URLFOR($Resource.jQueryPrintElement)}" />
+  <apex:includeScript value="{!URLFOR($Resource.jQuery_Barcode)}" />
+  <script type="text/javascript" src="/canvas/sdk/js/publisher.js" />
 
   <script type="text/javascript">
-
     function refreshFeed() {
-      console.log('refresh feed');
-      Sfdc.canvas.publisher.publish({name : 'publisher.refresh', payload :{feed:true}});
+      console.log("refresh feed");
+      Sfdc.canvas.publisher.publish({ name: "publisher.refresh", payload: { feed: true } });
     }
 
     $j = jQuery.noConflict();
 
-    var $barCodeTarget = $j('#bcTarget'),
-      barCodeValue = $barCodeTarget.data('code');
+    var $barCodeTarget = $j("#bcTarget"),
+      barCodeValue = $barCodeTarget.data("code");
 
-    $barCodeTarget.barcode( barCodeValue, "code39", {
-      color: '#000',
+    $barCodeTarget.barcode(barCodeValue, "code39", {
+      color: "#000",
       showHRI: false
     });
 
-    $j('#printInvoice').on('click', function(e){
+    $j("#printInvoice").on("click", function (e) {
       e.preventDefault();
 
       $j('[id*="invoice"]').printElement({
-        pageTitle: 'Invoice',
-        leaveOpen:true,
-        printMode:'popup',
-        printBodyOptions:
-        {
-        styleToAdd:'padding:0;margin:0;'
-
+        pageTitle: "Invoice",
+        leaveOpen: true,
+        printMode: "popup",
+        printBodyOptions: {
+          styleToAdd: "padding:0;margin:0;"
         },
-        overrideElementCSS:[
-          {href: "{!URLFOR($Resource.FontAwesome, 'font-awesome-4.0.3/css/font-awesome.min.css')}", media: 'all'},
-          { href:"{!URLFOR($Resource.LegendInvoice, 'stylesheets/style.min.css')}", media:'all'},
-          { href:"{!URLFOR($Resource.LegendInvoice, 'stylesheets/print.min.css')}", media:'all'}]
+        overrideElementCSS: [
+          { href: "{!URLFOR($Resource.FontAwesome, 'font-awesome-4.0.3/css/font-awesome.min.css')}", media: "all" },
+          { href: "{!URLFOR($Resource.LegendInvoice, 'stylesheets/style.min.css')}", media: "all" },
+          { href: "{!URLFOR($Resource.LegendInvoice, 'stylesheets/print.min.css')}", media: "all" }
+        ]
       });
     });
 
-    $j('.deleteRecord').on('click', function(e) {
-      console.log("DELETE THE RECORD")
+    $j(".deleteRecord").on("click", function (e) {
+      console.log("DELETE THE RECORD");
       e.preventDefault();
       var del = confirm("Are you sure?");
-      console.log(del)
+      console.log(del);
       // if( del ){
       //   return;
       // }
       // return false;
     });
 
-    function changeLang()
-    {
-      $j('[id*="invoice"]').addClass('changing-lang');
+    function changeLang() {
+      $j('[id*="invoice"]').addClass("changing-lang");
       changeLanguage();
     }
 
-    function languageChanged()
-    {
-      $j('[id*="invoice"]').removeClass('changing-lang');
+    function languageChanged() {
+      $j('[id*="invoice"]').removeClass("changing-lang");
     }
-
   </script>
 </apex:page>

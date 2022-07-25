@@ -1,6 +1,5 @@
 @isTest
 public class Factory_AccountingSettings {
-
   public AcctSeed__Ledger__c defaultLedger;
   public AcctSeed__GL_Account__c defaultBankAccount;
   public AcctSeed__GL_Account__c currentYearEarningGL;
@@ -17,16 +16,14 @@ public class Factory_AccountingSettings {
   public AcctSeed__GL_Account__c inventoryVarianceGL;
   public AcctSeed__GL_Account__c workInProgressGL;
   public AcctSeed__GL_Account__c salesTaxCollected;
-  public AcctSeed__GL_Account__c  salesTaxPaid;
+  public AcctSeed__GL_Account__c salesTaxPaid;
   public AcctSeed__Billing_Format__c defaultBillingFormat;
   public AcctSeed__Billing_Format__c billingActivityStatementFormat;
   public AcctSeed__Billing_Format__c billingOutstandingStatementFormat;
   public AcctSeed__Billing_Format__c purchaseOrderStatementFormat;
   public AcctSeed__Billing_Format__c packingSlipStatementFormat;
 
-
-  public Factory_AccountingSettings()
-  {
+  public Factory_AccountingSettings() {
     setGlAccounts();
     setPDFFormats();
     defaultLedger = buildLedger();
@@ -34,58 +31,54 @@ public class Factory_AccountingSettings {
     buildCurrentPeriod();
   }
 
-  private void setGlAccounts()
-  {
-    List<sObject> glAccts = Test.loadData( AcctSeed__GL_Account__c.sObjectType, 'TestData_GL_Accounts' );
-    for( sObject o : glAccts )
-    {
-      AcctSeed__GL_Account__c glAcct = (AcctSeed__GL_Account__c)o;
-      if( glAcct.Name.contains( '1050') )
+  private void setGlAccounts() {
+    List<sObject> glAccts = Test.loadData(AcctSeed__GL_Account__c.sObjectType, 'TestData_GL_Accounts');
+    for (sObject o : glAccts) {
+      AcctSeed__GL_Account__c glAcct = (AcctSeed__GL_Account__c) o;
+      if (glAcct.Name.contains('1050'))
         defaultBankAccount = glAcct;
-      if( glAcct.Name.contains( '3525' ) )
+      if (glAcct.Name.contains('3525'))
         currentYearEarningGL = glAcct;
-      if( glAcct.Name.contains( '3500' ) )
+      if (glAcct.Name.contains('3500'))
         retainedEarningGL = glAcct;
-      if( glAcct.Name.contains( '4000' ) )
+      if (glAcct.Name.contains('4000'))
         defaultRevenueGL = glAcct;
-      if( glAcct.Name.contains( '1100' ) )
+      if (glAcct.Name.contains('1100'))
         arControlGL = glAcct;
-      if( glAcct.Name.contains( '1101' ) )
+      if (glAcct.Name.contains('1101'))
         unappliedCashGL = glAcct;
-      if( glAcct.Name.contains( '4900' ) )
+      if (glAcct.Name.contains('4900'))
         customerPaymentAdjGL = glAcct;
-      if( glAcct.Name.contains( '2100' ) )
+      if (glAcct.Name.contains('2100'))
         apControlGL = glAcct;
-      if( glAcct.Name.contains( '5185' ) )
+      if (glAcct.Name.contains('5185'))
         vendorPaymentDiscountGL = glAcct;
-      if( glAcct.Name.contains( '5882' ) )
+      if (glAcct.Name.contains('5882'))
         laborClearingGL = glAcct;
-      if( glAcct.Name.contains( '5883' ) )
+      if (glAcct.Name.contains('5883'))
         defaultProjectTaskLaborGL = glAcct;
-      if( glAcct.Name.contains( '2105' ) )
+      if (glAcct.Name.contains('2105'))
         vouchersPayableGL = glAcct;
-      if( glAcct.Name.contains( '5195' ) )
+      if (glAcct.Name.contains('5195'))
         inventoryVarianceGL = glAcct;
-      if( glAcct.Name.contains( '1300' ) )
+      if (glAcct.Name.contains('1300'))
         workInProgressGL = glAcct;
-      if( glAcct.Name.contains( '2280' ) )
+      if (glAcct.Name.contains('2280'))
         salesTaxCollected = glAcct;
-      if( glAcct.Name.contains( '2281' ) )
+      if (glAcct.Name.contains('2281'))
         salesTaxPaid = glAcct;
     }
   }
 
-  private void setPDFFormats()
-  {
-    List<sObject> pdfFormats = Test.loadData( AcctSeed__Billing_Format__c.sObjectType, 'TestData_PDF_Formats' );
-    for( sObject obj : pdfFormats )
-    {
-      AcctSeed__Billing_Format__c f = (AcctSeed__Billing_Format__c)obj;
-      if( f.Name == 'Billing PDF Format' )
+  private void setPDFFormats() {
+    List<sObject> pdfFormats = Test.loadData(AcctSeed__Billing_Format__c.sObjectType, 'TestData_PDF_Formats');
+    for (sObject obj : pdfFormats) {
+      AcctSeed__Billing_Format__c f = (AcctSeed__Billing_Format__c) obj;
+      if (f.Name == 'Billing PDF Format')
         defaultBillingFormat = f;
-      if( f.Name == 'Billing Activity Statement' )
+      if (f.Name == 'Billing Activity Statement')
         billingActivityStatementFormat = f;
-      if( f.Name == 'Billing Outstanding Statement' )
+      if (f.Name == 'Billing Outstanding Statement')
         billingOutstandingStatementFormat = f;
       if (f.Name == 'Purchase Order PDF Format')
         purchaseOrderStatementFormat = f;
@@ -94,8 +87,7 @@ public class Factory_AccountingSettings {
     }
   }
 
-  private AcctSeed__Ledger__c buildLedger()
-  {
+  private AcctSeed__Ledger__c buildLedger() {
     AcctSeed__Ledger__c l = new AcctSeed__Ledger__c(
       Name = 'Actual',
       AcctSeed__Type__c = 'Transactional',
@@ -110,8 +102,7 @@ public class Factory_AccountingSettings {
     return l;
   }
 
-  private void buildCurrentPeriod()
-  {
+  private void buildCurrentPeriod() {
     Date d = Date.Today().addMonths(-1);
     AcctSeed__Accounting_Period__c period = new AcctSeed__Accounting_Period__c(
       AcctSeed__End_Date__c = d.addMonths(3).toStartOfMonth().addDays(-1),
@@ -122,8 +113,7 @@ public class Factory_AccountingSettings {
     insert period;
   }
 
-  private void buildRecord()
-  {
+  private void buildRecord() {
     AcctSeed__Accounting_Settings__c rec = new AcctSeed__Accounting_Settings__c(
       AcctSeed__Default_Bank_Account__c = defaultBankAccount.Id,
       AcctSeed__Current_Year_Earnings_GL_Account__c = currentYearEarningGL.Id,

@@ -4,10 +4,13 @@
 
 <aura:component implements="force:lightningQuickAction,force:hasRecordId">
   <aura:if isTrue="{!or($Browser.isPhone, $Browser.isTablet)}">
-    <meta name="viewport" content="width=device-width, viewport-fit=cover, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+    <meta
+      name="viewport"
+      content="width=device-width, viewport-fit=cover, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
+    />
   </aura:if>
   <aura:attribute name="displayMobile" type="Boolean" default="{!or($Browser.isPhone, $Browser.isTablet)}" />
   <aura:attribute name="recordId" type="String" />
-<!--  <c:productTransferTool recordId="{!v.recordId}" inMobileDevice="{!v.displayMobile}" />-->
+  <!--  <c:productTransferTool recordId="{!v.recordId}" inMobileDevice="{!v.displayMobile}" />-->
   <c:productTransferTool recordId="{!v.recordId}" inMobileDevice="{!v.displayMobile}" />
 </aura:component>

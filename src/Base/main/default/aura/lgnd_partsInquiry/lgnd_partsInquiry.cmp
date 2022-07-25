@@ -1,175 +1,181 @@
-<aura:component controller="lgnd_partsInquiryController" implements="forceCommunity:availableForAllPageTypes,flexipage:availableForAllPageTypes,force:hasRecordId">
+<aura:component
+  controller="lgnd_partsInquiryController"
+  implements="forceCommunity:availableForAllPageTypes,flexipage:availableForAllPageTypes,force:hasRecordId"
+>
+  <aura:attribute type="sObject" name="caseId" />
+  <aura:attribute type="Integer" name="onStep" default="0" />
+  <aura:attribute type="Id" name="parentId" />
+  <aura:attribute type="String" name="error" default="" />
+  <aura:attribute type="String" name="serno" />
+  <aura:attribute type="String" name="sernoName" />
+  <aura:attribute type="String" name="sernoId" />
+  <aura:attribute type="String" name="ProductName" />
+  <aura:attribute type="String" name="ProductDescription" />
+  <aura:attribute type="String" name="ProductType" />
+  <aura:attribute type="String" name="ProductLocation" />
+  <aura:attribute type="String" name="accountName" />
+  <aura:attribute type="Integer" name="lot" default="2017" />
+  <aura:attribute type="String" name="description" />
+  <aura:attribute type="String" name="partnerReference" />
+  <aura:attribute name="stepOneValid" type="Boolean" default="true" />
 
-	<aura:attribute type="sObject"	name="caseId" />
-	<aura:attribute type="Integer" 	name="onStep" default="0" />
-	<aura:attribute type="Id" 			name="parentId" />
-	<aura:attribute type="String" 	name="error" default=""/>
-	<aura:attribute type="String" 	name="serno" />
-	<aura:attribute type="String" 	name="sernoName" />
-	<aura:attribute type="String" 	name="sernoId" />
-	<aura:attribute type="String" 	name="ProductName" />
-	<aura:attribute type="String" 	name="ProductDescription" />
-	<aura:attribute type="String" 	name="ProductType" />
-	<aura:attribute type="String" 	name="ProductLocation" />
-	<aura:attribute type="String" 	name="accountName" />
-	<aura:attribute type="Integer"	name="lot" default="2017"/>
-	<aura:attribute type="String"		name="description"/>
-	<aura:attribute type="String"		name="partnerReference"/>
-	<aura:attribute name="stepOneValid" type="Boolean" default="true" />
-
-	<aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+  <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
 
   <aura:handler event="c:lgnd_FileUpload_AWS_Complete_Event" action="{!c.imagesUploaded}" />
 
   <div class="slds-scope">
-  	<lightning:spinner variant="brand" size="large" class="slds-hide" aura:id="inquirySpinner" />
+    <lightning:spinner variant="brand" size="large" class="slds-hide" aura:id="inquirySpinner" />
 
-  	<div class="slds-path-coach">
-		  <div class="slds-grid">
-		    <div class="slds-tabs_path" role="application">
-		      <ul class="slds-tabs_path__nav" role="listbox" aria-orientation="horizontal">
-		        <li class="{!v.onStep == 0 ? 'slds-tabs_path__item slds-is-current' : 'slds-tabs_path__item slds-is-complete'}" role="presentation">
-		          <a aria-selected="false" class="slds-tabs_path__link" href="javascript:void(0);" id="path-1" role="option" tabindex="-1">
-		            <span class="slds-tabs_path__stage">
-		            	<lightning:icon iconName="utility:check" size="xx-small" variant="inverse" />
-		            </span>
-		            <span class="slds-tabs_path__title">Details</span>
-		          </a>
-		        </li>
-		        <li class="{!v.onStep == 1 ? 'slds-tabs_path__item slds-is-current' : 'slds-tabs_path__item slds-is-incomplete'}" role="presentation">
-		          <a aria-selected="false" class="slds-tabs_path__link" href="javascript:void(0);" id="path-5" role="option" tabindex="-1">
-		            <span class="slds-tabs_path__stage">
+    <div class="slds-path-coach">
+      <div class="slds-grid">
+        <div class="slds-tabs_path" role="application">
+          <ul class="slds-tabs_path__nav" role="listbox" aria-orientation="horizontal">
+            <li
+              class="{!v.onStep == 0 ? 'slds-tabs_path__item slds-is-current' : 'slds-tabs_path__item slds-is-complete'}"
+              role="presentation"
+            >
+              <a
+                aria-selected="false"
+                class="slds-tabs_path__link"
+                href="javascript:void(0);"
+                id="path-1"
+                role="option"
+                tabindex="-1"
+              >
+                <span class="slds-tabs_path__stage">
+                  <lightning:icon iconName="utility:check" size="xx-small" variant="inverse" />
+                </span>
+                <span class="slds-tabs_path__title">Details</span>
+              </a>
+            </li>
+            <li
+              class="{!v.onStep == 1 ? 'slds-tabs_path__item slds-is-current' : 'slds-tabs_path__item slds-is-incomplete'}"
+              role="presentation"
+            >
+              <a
+                aria-selected="false"
+                class="slds-tabs_path__link"
+                href="javascript:void(0);"
+                id="path-5"
+                role="option"
+                tabindex="-1"
+              >
+                <span class="slds-tabs_path__stage"> </span>
+                <span class="slds-tabs_path__title">Images</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
 
-		            </span>
-		            <span class="slds-tabs_path__title">Images</span>
-		          </a>
-		        </li>
-		      </ul>
-		    </div>
-		  </div>
-		</div>
-
-    <br/>
+    <br />
 
     <div aura:id="details">
-    	<article aura:id="step-0" class="{!v.onStep == 0 ? 'slds-card' : 'slds-hide'}">
-	      <div class="slds-card__header slds-grid">
-	        <header class="slds-media slds-media_center slds-has-flexi-truncate">
-	          <div class="slds-media__body">
-	            <h2>
-	    					Details
-	    				</h2>
-	          </div>
-	        </header>
-	      </div>
-	      <aura:if isTrue="{!v.error != ''}">
-	        <div class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_error">
-	          {!v.error}
-	        </div>
-	      </aura:if>
-	      <div class="slds-card__body">
-	      	<div class="slds-p-around_small">
-	      		<c:lgnd_serno_search serno="{!v.serno}"
-		      											 sernoName="{!v.sernoName}"
-		      											 sernoId="{!v.sernoId}"
-		      											 nestId="{!v.nestId}"
-		      											 showProductCard="false"
-		      											 ProductName="{!v.ProductName}"
-		      											 ProductDescription="{!v.ProductDescription}"
-		      											 ProductType="{!v.ProductType}"
-		      											 ProductLocation="{!v.ProductLocation}"
-		      											 selectionMade="{!v.sernoSelected}"
-		      											 canBeNest="false"
-		      											 errorMessage="{!v.error}"
-		      											 context="unlimited"
-		      											 sernoLabel="Search by serial number"
-		      											 accountName="{!v.accountName}"
-		      											 aura:id="sernoSearch"
-		      											 lot="{!v.lot}" />
-		      	<br/>
-		      	<lightning:input label="Partner Reference" value="{!v.partnerReference}" />
-		      </div>
+      <article aura:id="step-0" class="{!v.onStep == 0 ? 'slds-card' : 'slds-hide'}">
+        <div class="slds-card__header slds-grid">
+          <header class="slds-media slds-media_center slds-has-flexi-truncate">
+            <div class="slds-media__body">
+              <h2>Details</h2>
+            </div>
+          </header>
+        </div>
+        <aura:if isTrue="{!v.error != ''}">
+          <div class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_error">{!v.error}</div>
+        </aura:if>
+        <div class="slds-card__body">
+          <div class="slds-p-around_small">
+            <c:lgnd_serno_search
+              serno="{!v.serno}"
+              sernoName="{!v.sernoName}"
+              sernoId="{!v.sernoId}"
+              nestId="{!v.nestId}"
+              showProductCard="false"
+              ProductName="{!v.ProductName}"
+              ProductDescription="{!v.ProductDescription}"
+              ProductType="{!v.ProductType}"
+              ProductLocation="{!v.ProductLocation}"
+              selectionMade="{!v.sernoSelected}"
+              canBeNest="false"
+              errorMessage="{!v.error}"
+              context="unlimited"
+              sernoLabel="Search by serial number"
+              accountName="{!v.accountName}"
+              aura:id="sernoSearch"
+              lot="{!v.lot}"
+            />
+            <br />
+            <lightning:input label="Partner Reference" value="{!v.partnerReference}" />
+          </div>
 
           <div class="slds-grid slds-wrap">
+            <div class="slds-p-around_small slds-size_12-of-12 slds-medium-size_12-of-12 slds-large-size_1-of-2">
+              <div class="slds-card">
+                <div class="slds-p-around--small">
+                  <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                    <div class="slds-media__body">
+                      <h3>Boat</h3>
+                    </div>
+                  </header>
+                </div>
+                <div class="slds-p-around--small">
+                  <!--    		      			<ui:inputText required="true" blur="{! c.handleBlur }" aura:id="boatSerialNumberId" label="Boat serial number" value="{!v.sernoName}" />-->
 
-              <div class="slds-p-around_small
-                          slds-size_12-of-12
-                          slds-medium-size_12-of-12
-                          slds-large-size_1-of-2">
-    		      	<div class="slds-card">
-    		      		<div class="slds-p-around--small">
-    				        <header class="slds-media slds-media_center slds-has-flexi-truncate">
-    				          <div class="slds-media__body">
-    			      				<h3>Boat</h3>
-    			      			</div>
-    			      		</header>
-    			      	</div>
-    		      		<div class="slds-p-around--small">
-<!--    		      			<ui:inputText required="true" blur="{! c.handleBlur }" aura:id="boatSerialNumberId" label="Boat serial number" value="{!v.sernoName}" />-->
-
-							<lightning:input type="text"
-											 value="{!v.sernoName}"
-											 name="boatSerialNumberId"
-
-											 label="Boat serial number"
-											 onblur="{! c.validateSerialNo }"
-											 required="true"
-											 messageWhenValueMissing="You must specify Boat serial number"
-											 aura:id="boatSerialNumberId"
-											 step="0.01" />
-
-						</div>
-    		      		<div class="slds-p-around--small">
-    		      			<ui:inputText   label="Model" value="{!v.ProductName}" />
-    		      		</div>
-    		      		<div class="slds-p-around--small">
-    		      			<lightning:input name="lot" label="Model Year" value="{!v.lot}"/>
-    		      		</div>
-    		      	</div>
+                  <lightning:input
+                    type="text"
+                    value="{!v.sernoName}"
+                    name="boatSerialNumberId"
+                    label="Boat serial number"
+                    onblur="{! c.validateSerialNo }"
+                    required="true"
+                    messageWhenValueMissing="You must specify Boat serial number"
+                    aura:id="boatSerialNumberId"
+                    step="0.01"
+                  />
+                </div>
+                <div class="slds-p-around--small">
+                  <ui:inputText label="Model" value="{!v.ProductName}" />
+                </div>
+                <div class="slds-p-around--small">
+                  <lightning:input name="lot" label="Model Year" value="{!v.lot}" />
+                </div>
               </div>
-
-              <div class="slds-p-around_small
-                          slds-size_12-of-12
-                          slds-medium-size_12-of-12
-                          slds-large-size_1-of-2">
-    		      	<div class="slds-card">
-    		      		<div class="slds-p-around--small">
-    				        <header class="slds-media slds-media_center slds-has-flexi-truncate">
-    				          <div class="slds-media__body">
-    			      				<h3>Part</h3>
-    			      			</div>
-    			      		</header>
-    			      	</div>
-    		      		<div class="slds-p-around--small">
-    		      			<lightning:textarea name="description" label="Describe the part" value="{!v.description}"/>
-    		      		</div>
-    		      	</div>
-              </div>
-
             </div>
-	    	</div>
-	    </article>
 
-    	<article aura:id="step-1" class="{!v.onStep == 1 ? 'slds-card' : 'slds-hide'}">
-	      <div class="slds-card__header slds-grid">
-	        <header class="slds-media slds-media_center slds-has-flexi-truncate">
-	          <div class="slds-media__body">
-	            <h2>
-	    					Attach Images <small>(Optional, but helpful)</small>
-	    				</h2>
-	          </div>
-	        </header>
-	      </div>
-	      <aura:if isTrue="{!v.error != ''}">
-	        <div class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_error">
-	          {!v.error}
-	        </div>
-	      </aura:if>
-	      <div class="slds-card__body slds-card__body_inner">
-	      	<c:lgnd_FileUpload_AWS aura:id="imageUploader" />
-	    	</div>
-	    </article>
-	  </div>
+            <div class="slds-p-around_small slds-size_12-of-12 slds-medium-size_12-of-12 slds-large-size_1-of-2">
+              <div class="slds-card">
+                <div class="slds-p-around--small">
+                  <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                    <div class="slds-media__body">
+                      <h3>Part</h3>
+                    </div>
+                  </header>
+                </div>
+                <div class="slds-p-around--small">
+                  <lightning:textarea name="description" label="Describe the part" value="{!v.description}" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article aura:id="step-1" class="{!v.onStep == 1 ? 'slds-card' : 'slds-hide'}">
+        <div class="slds-card__header slds-grid">
+          <header class="slds-media slds-media_center slds-has-flexi-truncate">
+            <div class="slds-media__body">
+              <h2>Attach Images <small>(Optional, but helpful)</small></h2>
+            </div>
+          </header>
+        </div>
+        <aura:if isTrue="{!v.error != ''}">
+          <div class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_error">{!v.error}</div>
+        </aura:if>
+        <div class="slds-card__body slds-card__body_inner">
+          <c:lgnd_FileUpload_AWS aura:id="imageUploader" />
+        </div>
+      </article>
+    </div>
 
     <div class="slds-p-around--medium slds-text-align_right">
       <aura:if isTrue="{!v.onStep lt 1}">
@@ -179,6 +185,6 @@
         <button class="slds-button slds-button--brand" onclick="{!c.done}">Done</button>
       </aura:if>
     </div>
-
-  </div><!-- ./slds-scope -->
+  </div>
+  <!-- ./slds-scope -->
 </aura:component>

@@ -4,20 +4,18 @@
 
 <!-- ERP Pricing Update -->
 <template>
-    <div class="slds-grid slds-grid_vertical-align-center container">
-        <c-legend-spinner variant="contained"></c-legend-spinner>
-        <template if:true={ready}>
-            <lightning-card title="ERP Order Items">
-                <lightning-button slot="actions" label="Save" onclick={updateRecords}></lightning-button>
-                <div class="slds-box">
-                    <lightning-datatable
-                            data={materialList} columns={cols} key-field="idMaterial">
-                    </lightning-datatable>
-                </div>
-            </lightning-card>
-        </template>
-        <template if:true={error}>
-            <p class="slds-text-align_center slds-theme_error slds-size_full slds-box">{error}</p>
-        </template>
-    </div>
+  <div class="slds-grid slds-grid_vertical-align-center container">
+    <c-legend-spinner variant="contained"></c-legend-spinner>
+    <template if:true={ready}>
+      <lightning-card title="ERP Order Items">
+        <lightning-button slot="actions" label="Save" onclick={updateRecords}></lightning-button>
+        <div class="slds-box">
+          <lightning-datatable data={materialList} columns={cols} key-field="idMaterial"> </lightning-datatable>
+        </div>
+      </lightning-card>
+    </template>
+    <template if:true={error}>
+      <p class="slds-text-align_center slds-theme_error slds-size_full slds-box">{error}</p>
+    </template>
+  </div>
 </template>

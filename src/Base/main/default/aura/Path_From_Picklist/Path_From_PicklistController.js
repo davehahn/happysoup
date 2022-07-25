@@ -31,10 +31,7 @@
     let selectedStatus = component.get("v.selectedStatus");
     let currentStatus = component.get("v.currentValue");
     let options = component.get("v.dependentOptions");
-    let value =
-      selectedStatus == currentStatus
-        ? options[options.indexOf(selectedStatus) + 1]
-        : selectedStatus;
+    let value = selectedStatus == currentStatus ? options[options.indexOf(selectedStatus) + 1] : selectedStatus;
     helper.saveRecord(component, value);
   },
 

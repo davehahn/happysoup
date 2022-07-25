@@ -10,20 +10,34 @@
         <template if:true={isEN}><h3 class="newsletter__heading heading heading--l">Stay in Touch</h3></template>
         <template if:true={isFR}><h3 class="newsletter__heading heading heading--l">Restez en contact</h3></template>
 
-        <template if:true={isEN}><h4 class="newsletter__deck">Sign up and be the first to learn about promotions and news from Legend Boats.</h4></template>
-        <template if:true={isFR}><h4 class="newsletter__deck">Inscrivez-vous et soyez le premier informé des promotions et des nouvelles de Bateaux Legend.</h4></template>
+        <template if:true={isEN}
+          ><h4 class="newsletter__deck">
+            Sign up and be the first to learn about promotions and news from Legend Boats.
+          </h4></template
+        >
+        <template if:true={isFR}
+          ><h4 class="newsletter__deck">
+            Inscrivez-vous et soyez le premier informé des promotions et des nouvelles de Bateaux Legend.
+          </h4></template
+        >
       </header>
       <form class="newsletter__form" action="" method="post">
         <fieldset>
           <template if:true={isEN}><legend class="ro">Complete and submit the form to sign up</legend></template>
-          <template if:true={isFR}><legend class="ro">Remplissez et soumettez le formulaire pour vous inscrire</legend></template>
+          <template if:true={isFR}
+            ><legend class="ro">Remplissez et soumettez le formulaire pour vous inscrire</legend></template
+          >
           <div>
-            <template if:true={isEN}><label for="newsEmail" class="ro">Please enter your email address</label></template>
-            <template if:true={isFR}><label for="newsEmail" class="ro">Veuillez SVP entrer votre adresse courriel</label></template>
+            <template if:true={isEN}
+              ><label for="newsEmail" class="ro">Please enter your email address</label></template
+            >
+            <template if:true={isFR}
+              ><label for="newsEmail" class="ro">Veuillez SVP entrer votre adresse courriel</label></template
+            >
 
-            <input type="email" name="newsEmail" data-id="newsEmail" id="newsEmail" placeholder={placeholder}>
+            <input type="email" name="newsEmail" data-id="newsEmail" id="newsEmail" placeholder={placeholder} />
 
-            <input type="submit" name="newsSubmit" id="newsSubmit" value={submitButton} onclick={clickHandler}>
+            <input type="submit" name="newsSubmit" id="newsSubmit" value={submitButton} onclick={clickHandler} />
           </div>
         </fieldset>
       </form>

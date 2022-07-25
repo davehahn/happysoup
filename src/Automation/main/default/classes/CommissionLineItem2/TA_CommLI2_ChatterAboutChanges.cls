@@ -39,8 +39,8 @@ public without sharing class TA_CommLI2_ChatterAboutChanges implements TriggerAc
       }
       changeMap.get(cli.CommissionRecord2__c).addAll(changes);
     }
-    CommissionLineItem2_Service.makeChatterPostsAboutChanges( changeMap );
-    CommissionRecord2_Service.openIfClosed( changeMap.keySet() );
+    CommissionLineItem2_Service.makeChatterPostsAboutChanges(changeMap);
+    CommissionRecord2_Service.openIfClosed(changeMap.keySet());
     return changeMap;
   }
 

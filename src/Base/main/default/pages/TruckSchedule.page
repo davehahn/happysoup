@@ -1,18 +1,20 @@
-<apex:page standardController="Truck_Trip__c"
-           extensions="TruckSchedule,TripBuilderController"
-           showHeader="false"
-           applyHtmlTag="false"
-           applyBodyTag="false"
-           docType="html-5.0"
-           sidebar="false">
-
+<apex:page
+  standardController="Truck_Trip__c"
+  extensions="TruckSchedule,TripBuilderController"
+  showHeader="false"
+  applyHtmlTag="false"
+  applyBodyTag="false"
+  docType="html-5.0"
+  sidebar="false"
+>
   <html xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-
     <head>
       <title>Truck Schedule</title>
-      <apex:stylesheet value="{!URLFOR($Resource.LGND_SLDS_214, 'assets/styles/salesforce-lightning-design-system-vf.css')}" />
+      <apex:stylesheet
+        value="{!URLFOR($Resource.LGND_SLDS_214, 'assets/styles/salesforce-lightning-design-system-vf.css')}"
+      />
       <c:lgnd_slds_resources />
-     <apex:stylesheet value="{!URLFOR($Resource.Libraries, 'css/lgnd-toggle-checkbox.min.css')}" />
+      <apex:stylesheet value="{!URLFOR($Resource.Libraries, 'css/lgnd-toggle-checkbox.min.css')}" />
       <apex:stylesheet value="{!URLFOR($Resource.pickupCalendar, 'css/fullcalendar.min.css')}" />
       <apex:stylesheet value="{!URLFOR($Resource.pickupCalendar, 'css/pickup_calendar.min.css')}" />
       <apex:stylesheet value="{!URLFOR($Resource.truckSchedule, 'css/truck-schedule.min.css')}" />
@@ -22,18 +24,18 @@
     </head>
 
     <body class="lgnd">
-
       <div class="slds">
-
         <div id="notifications"></div>
 
         <div class="slds-page-header" role="banner">
           <p class="slds-text-heading--label custom">Truck Schedule</p>
           <div class="slds-grid slds-align-middle">
             <div class="slds-col slds-no-flex">
-              <a href="#" id="returnBtn" class="slds-button slds-button--neutral" style="display:none;">
+              <a href="#" id="returnBtn" class="slds-button slds-button--neutral" style="display: none">
                 <svg aria-hidden="true" class="slds-button__icon slds-button__icon--small">
-                  <use xlink:href="{!URLFOR($Resource.LDS_12_2, '/assets/icons/utility-sprite/svg/symbols.svg#chevronleft')}"></use>
+                  <use
+                    xlink:href="{!URLFOR($Resource.LDS_12_2, '/assets/icons/utility-sprite/svg/symbols.svg#chevronleft')}"
+                  ></use>
                 </svg>
                 Return
               </a>
@@ -45,12 +47,16 @@
               <div class="slds-button-group prev-next" role="group">
                 <button class="slds-button slds-button--icon-border-filled" data-cal-control="prev">
                   <svg aria-hidden="true" class="slds-button__icon slds-button__icon--small">
-                    <use xlink:href="{!URLFOR($Resource.LDS_12_2, '/assets/icons/utility-sprite/svg/symbols.svg#chevronleft')}"></use>
+                    <use
+                      xlink:href="{!URLFOR($Resource.LDS_12_2, '/assets/icons/utility-sprite/svg/symbols.svg#chevronleft')}"
+                    ></use>
                   </svg>
                 </button>
                 <button class="slds-button slds-button--icon-border-filled" data-cal-control="next">
                   <svg aria-hidden="true" class="slds-button__icon slds-button__icon--small">
-                    <use xlink:href="{!URLFOR($Resource.LDS_12_2, '/assets/icons/utility-sprite/svg/symbols.svg#chevronright')}"></use>
+                    <use
+                      xlink:href="{!URLFOR($Resource.LDS_12_2, '/assets/icons/utility-sprite/svg/symbols.svg#chevronright')}"
+                    ></use>
                   </svg>
                 </button>
               </div>
@@ -61,18 +67,20 @@
             </div>
 
             <div class="slds-col slds-no-flex slds-container--right">
-
               <div class="slds-grid">
-
                 <div class="slds-col slds-no-flex">
                   <a href="{!URLFOR($Page.TruckTripBuilder)}" class="slds-button slds-button--neutral">New Trip</a>
                   <div class="slds-dropdown-trigger">
                     <button class="slds-button slds-button--icon-border-filled viewSelector" aria-haspopup="true">
                       <svg aria-hidden="true" class="slds-button__icon slds-button__icon--large">
-                        <use xlink:href="{!URLFOR($Resource.LDS_12_2, '/assets/icons/standard-sprite/svg/symbols.svg#event')}"></use>
+                        <use
+                          xlink:href="{!URLFOR($Resource.LDS_12_2, '/assets/icons/standard-sprite/svg/symbols.svg#event')}"
+                        ></use>
                       </svg>
-                      <svg aria-hidden="true" class="slds-button__icon slds-button__icon--x-small ">
-                        <use xlink:href="{!URLFOR($Resource.LDS_12_2, '/assets/icons/utility-sprite/svg/symbols.svg#down')}"></use>
+                      <svg aria-hidden="true" class="slds-button__icon slds-button__icon--x-small">
+                        <use
+                          xlink:href="{!URLFOR($Resource.LDS_12_2, '/assets/icons/utility-sprite/svg/symbols.svg#down')}"
+                        ></use>
                       </svg>
                       <span class="slds-assistive-text">Show More</span>
                     </button>
@@ -97,19 +105,14 @@
                     </div>
                   </div>
                 </div>
-
               </div>
-
             </div>
-
           </div>
-
         </div>
 
         <div class="cal-container">
-
           <div class="column">
-            <div id='calendar'></div>
+            <div id="calendar"></div>
           </div>
 
           <div class="column">
@@ -117,18 +120,22 @@
             <div class="toggles">
               <apex:repeat value="{!truckDrivers}" var="driverId">
                 <div>
-                  <label style="background-color: {!truckDrivers[driverId].BgColor};
+                  <label
+                    style="background-color: {!truckDrivers[driverId].BgColor};
                                 border-color: {!truckDrivers[driverId].BorderColor};
-                                color: {!truckDrivers[driverId].TextColor}">
+                                color: {!truckDrivers[driverId].TextColor}"
+                  >
                     {!truckDrivers[driverId].Name}
                   </label>
                   <div class="legend_switch">
-                    <input id="lg-toggle-{!driverId}"
-                           class="lg-toggle lg-toggle-round cal-toggle small"
-                           type="checkbox"
-                           data-state="active"
-                           data-driver="{!truckDrivers[driverId].Name}"
-                           data-driver-id="{!driverId}" />
+                    <input
+                      id="lg-toggle-{!driverId}"
+                      class="lg-toggle lg-toggle-round cal-toggle small"
+                      type="checkbox"
+                      data-state="active"
+                      data-driver="{!truckDrivers[driverId].Name}"
+                      data-driver-id="{!driverId}"
+                    />
                     <label for="lg-toggle-{!driverId}">
                       <i class="fa fa-spin fa-circle-o-notch"></i>
                     </label>
@@ -139,27 +146,24 @@
             <h1>Truck Trips</h1>
             <div id="scheduables">
               <apex:repeat value="{!scheduables}" var="sched">
-                <div class="schedulable"
-                     data-event-id='{!sched.Id}'>
+                <div class="schedulable" data-event-id="{!sched.Id}">
                   <div>
                     <a href="#" class="trip-lookup" data-trip-id="{!sched.Id}">
                       <span class="slds-icon__container slds-icon-custom-legend">
-                        <svg aria-hidden="true" class="slds-icon  slds-icon--medium">
-                          <use xlink:href="{!URLFOR($Resource.LDS_12_2,'/assets/icons/custom-sprite/svg/symbols.svg#custom98')}"></use>
+                        <svg aria-hidden="true" class="slds-icon slds-icon--medium">
+                          <use
+                            xlink:href="{!URLFOR($Resource.LDS_12_2,'/assets/icons/custom-sprite/svg/symbols.svg#custom98')}"
+                          ></use>
                         </svg>
                       </span>
                     </a>
                   </div>
-                  <p class="slds-truncate">
-                    {!sched.Name}
-                  </p>
+                  <p class="slds-truncate">{!sched.Name}</p>
                 </div>
               </apex:repeat>
             </div>
           </div>
-
         </div>
-
 
         <div aria-hidden="false" role="dialog" class="slds-modal">
           <div class="slds-modal__container" id="modalContent"></div>
@@ -171,7 +175,9 @@
             <div class="slds-modal__header">
               <button class="slds-button slds-modal__close slds-button--icon-inverse" title="Close">
                 <svg aria-hidden="true" class="slds-button__icon slds-button__icon--large">
-                  <use xlink:href="{!URLFOR($Resource.LGND_SLDS_214, '/assets/icons/utility-sprite/svg/symbols.svg#close')}"></use>
+                  <use
+                    xlink:href="{!URLFOR($Resource.LGND_SLDS_214, '/assets/icons/utility-sprite/svg/symbols.svg#close')}"
+                  ></use>
                 </svg>
                 <span class="slds-assistive-text">Close</span>
               </button>
@@ -185,10 +191,9 @@
         </div>
 
         <div class="slds-backdrop"></div>
-
       </div>
 
-      <apex:includeScript value="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0/handlebars.min.js"/>
+      <apex:includeScript value="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0/handlebars.min.js" />
       <apex:includeScript value="{!URLFOR($Resource.pickupCalendar, 'js/lib/jquery.min.js')}" />
       <apex:includeScript value="{!URLFOR($Resource.pickupCalendar, 'js/lib/jquery-ui.min.js')}" />
       <apex:includeScript value="{!URLFOR($Resource.pickupCalendar, 'js/lib/moment.min.js')}" />
@@ -294,11 +299,7 @@
           }
 
         })(jQuery.noConflict());
-
       </script>
-
     </body>
-
   </html>
-
 </apex:page>

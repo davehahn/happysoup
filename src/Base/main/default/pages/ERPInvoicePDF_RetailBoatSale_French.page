@@ -1,62 +1,51 @@
 <apex:page controller="ERPInvoicePDF" showHeader="false" sidebar="false" standardStylesheets="false" renderAs="pdf">
+  <apex:stylesheet value="{!URLFOR($Resource.LegendPDF,'css/invoicePDF.min.css')}" />
+  <apex:stylesheet value="{!URLFOR($Resource.LegendPDF,'css/invoice_page.css')}" />
 
-<apex:stylesheet value="{!URLFOR($Resource.LegendPDF,'css/invoicePDF.min.css')}" />
-<apex:stylesheet value="{!URLFOR($Resource.LegendPDF,'css/invoice_page.css')}" />
-
-
-  <div class="invoicePageOne" style="position:relative">
+  <div class="invoicePageOne" style="position: relative">
     <!-- +++++++++++++++++++++++++++++++++++++++ HEADER 1 ++++++++++++++++++++++++ -->
     <div class="row header1">
-
-      <div class="left" >
+      <div class="left">
         <img src="{!URLFOR($Resource.LegendPDF,'image/LegendLogoFR-250x30.png')}" />
       </div>
 
       <div class="right">
-
         <div>
           <img src="{!URLFOR($Resource.LegendPDF,'Icons/Email.png')}" />
           <p>info@legendboats.com</p>
         </div>
 
         <div>
-            <img src="{!URLFOR($Resource.LegendPDF,'Icons/Phone.png')}" />
-            <p>
-              Tél
-              <span style="float:right;padding-right:25px;">
-                {!warehouse.Phone__c}
-              </span>
-            </p>
-             <p>
-              Sans Frais
-              <span style="float:right;padding-right:25px;">
-                {!warehouse.Toll_Free__c}
-              </span>
-            </p>
-            <p>
-              Télécopieur
-              <span style="float:right;padding-right:25px;">
-                {!warehouse.Fax__c}
-              </span>
-            </p>
+          <img src="{!URLFOR($Resource.LegendPDF,'Icons/Phone.png')}" />
+          <p>
+            Tél
+            <span style="float: right; padding-right: 25px"> {!warehouse.Phone__c} </span>
+          </p>
+          <p>
+            Sans Frais
+            <span style="float: right; padding-right: 25px"> {!warehouse.Toll_Free__c} </span>
+          </p>
+          <p>
+            Télécopieur
+            <span style="float: right; padding-right: 25px"> {!warehouse.Fax__c} </span>
+          </p>
         </div>
 
-        <div style="position:relative">
+        <div style="position: relative">
           <img src="{!URLFOR($Resource.LegendPDF,'Icons/WorldWideWeb.png')}" />
           <p>www.legendboats.com</p>
           <p class="invoice_number">{!invoiceName}</p>
         </div>
-
-      </div><!--header right close -->
+      </div>
+      <!--header right close -->
     </div>
     <!-- ==================================== /HEADER 1 ============================  -->
 
     <!-- +++++++++++++++++++++++++++++++++++ HEADER 2 ++++++++++++++++++++++++++++++ -->
     <div class="row header2">
-
       <apex:outputPanel layout="none" rendered="{!!soldToBusiness}">
         <div>
-          <p >
+          <p>
             <img src="{!URLFOR($Resource.LegendPDF,'Icons/Invoice.png')}" />
             FACTURE Á:
           </p>
@@ -69,15 +58,10 @@
             <img src="{!URLFOR($Resource.LegendPDF,'Icons/Invoice.png')}" />
             Sales Agreement:
           </p>
-          <p class="company_name">
-            {!UPPER(projectAccount.Name)}
-          </p>
+          <p class="company_name">{!UPPER(projectAccount.Name)}</p>
           <p class="company_address">
-            {!projectAccount.BillingStreet}<br />
-            {!projectAccount.BillingCity},
-            {!projectAccount.BillingState}
-            {!projectAccount.BillingPostalCode},
-            {!projectAccount.BillingCountry}<br />
+            {!projectAccount.BillingStreet}<br /> {!projectAccount.BillingCity}, {!projectAccount.BillingState}
+            {!projectAccount.BillingPostalCode}, {!projectAccount.BillingCountry}<br />
             <img src="{!URLFOR($Resource.LegendPDF,'Icons/Cell.png')}" />{!projectAccount.Phone}
           </p>
         </div>
@@ -98,94 +82,76 @@
                   <img src="{!URLFOR($Resource.LegendPDF,'image/invoice2_trans.png')}" width="25" height="25" />
                 </td>
               </tr>
-
             </table>
 
             <div style="">
               <table>
-                  <tr>
-                      <td>
-                          <p>Total:</p>
-                          <apex:outputText value="${0, number, ###,###,###,##0.00}">
-                            <apex:param value="{!erpOrder.Grand_Total__c - IF(ISNULL(erpOrder.Deposit__c), 0, erpOrder.Deposit__c)}"/>
-                          </apex:outputText>
-                      </td>
-                      <td>
-                          <p>Date de Facture:</p>
-                          <p>{!invoiceDate}</p>
-                      </td>
-                      <td>
-                          <p>{!erpOrder.Pickup_Location__c}</p>
-                          <p>
-                            <apex:outputText value="{0, date, MMMM dd, yyyy}">
-                                <apex:param value="{!erpOrder.Delivery_Date__c}" />
-                            </apex:outputText>
-                          </p>
-                      </td>
-                  </tr>
+                <tr>
+                  <td>
+                    <p>Total:</p>
+                    <apex:outputText value="${0, number, ###,###,###,##0.00}">
+                      <apex:param
+                        value="{!erpOrder.Grand_Total__c - IF(ISNULL(erpOrder.Deposit__c), 0, erpOrder.Deposit__c)}"
+                      />
+                    </apex:outputText>
+                  </td>
+                  <td>
+                    <p>Date de Facture:</p>
+                    <p>{!invoiceDate}</p>
+                  </td>
+                  <td>
+                    <p>{!erpOrder.Pickup_Location__c}</p>
+                    <p>
+                      <apex:outputText value="{0, date, MMMM dd, yyyy}">
+                        <apex:param value="{!erpOrder.Delivery_Date__c}" />
+                      </apex:outputText>
+                    </p>
+                  </td>
+                </tr>
               </table>
             </div>
-
           </div>
-
         </div>
       </div>
-
     </div>
     <!-- ================================= /HEADER 2 =================================== -->
 
-
     <!-- +++++++++++++++++++++++++++++++++ CUSTOMER INFO +++++++++++++++++++++++++++++++++ -->
     <div class="row customer_info">
-
       <!-- +++++++++++++++++ BUYER INFO +++++++++++++++++++++ -->
       <!-- +++++ Person Account +++++ -->
       <apex:outputPanel layout="none" rendered="{!!soldToBusiness}">
-        <div class="col col40" style="margin-bottom:10px;">
-          <p class="buyer_name">
-            {!UPPER(projectAccount.Name)}
-          </p>
-          <p class="buyer_address">
-            {!address}
-          </p>
+        <div class="col col40" style="margin-bottom: 10px">
+          <p class="buyer_name">{!UPPER(projectAccount.Name)}</p>
+          <p class="buyer_address">{!address}</p>
           <div class="buyer_details">
             <table>
               <tr>
                 <td class="icon">
                   <img src="{!URLFOR($Resource.LegendPDF,'Icons/Email.png')}" />
                 </td>
-                <td>
-                  {!projectAccount.personEmail}
-                </td>
+                <td>{!projectAccount.personEmail}</td>
                 <td class="icon">
                   <img src="{!URLFOR($Resource.LegendPDF,'Icons/Birthday.png')}" />
                 </td>
-                <td>
-                  {!birthday}
-                </td>
+                <td>{!birthday}</td>
               </tr>
               <tr>
                 <td class="icon">
                   <img src="{!URLFOR($Resource.LegendPDF,'Icons/Cell.png')}" />
                 </td>
-                <td>
-                  {!projectAccount.Phone}
-                </td>
+                <td>{!projectAccount.Phone}</td>
                 <td class="icon">
                   <img src="{!URLFOR($Resource.LegendPDF,'Icons/DriverLicense.png')}" />
                 </td>
-                <td>
-                  {!projectAccount.Drivers_License__c}
-                </td>
+                <td>{!projectAccount.Drivers_License__c}</td>
               </tr>
             </table>
             <apex:outputPanel layout="none" rendered="{! buyer.Contact.Tax_Exempt_Status_Card_Number__c != null}">
               <table>
                 <tr>
-                  <td style="width: 20%;font-size:10px;color:#777; font-weight: bold;">
-                    Tax Ex. #
-                  </td>
-                  <td style="width:80%;font-size:10px;color:#777;">
+                  <td style="width: 20%; font-size: 10px; color: #777; font-weight: bold">Tax Ex. #</td>
+                  <td style="width: 80%; font-size: 10px; color: #777">
                     {! buyer.Contact.Tax_Exempt_Status_Card_Number__c }
                   </td>
                 </tr>
@@ -197,20 +163,16 @@
       <!-- +++++ Business Account +++++ -->
       <apex:outputPanel layout="none" rendered="{!soldToBusiness}">
         <div class="col col40">
-          <p class="buyer_name">
-            {!UPPER(buyer.Contact.Name)}
-          </p>
+          <p class="buyer_name">{!UPPER(buyer.Contact.Name)}</p>
           <div class="buyer_details">
             <table>
               <tr>
                 <td class="icon">
                   <img src="{!URLFOR($Resource.LegendPDF,'Icons/Email.png')}" />
                 </td>
-                <td>
-                  {!buyer.Contact.Email}
-                </td>
+                <td>{!buyer.Contact.Email}</td>
                 <td class="icon">
-                   <img src="{!URLFOR($Resource.LegendPDF,'Icons/Birthday.png')}" />
+                  <img src="{!URLFOR($Resource.LegendPDF,'Icons/Birthday.png')}" />
                 </td>
                 <td>
                   <apex:outputText value="{0, date, MMMM dd yyyy}">
@@ -222,24 +184,18 @@
                 <td class="icon">
                   <img src="{!URLFOR($Resource.LegendPDF,'Icons/Cell.png')}" />
                 </td>
-                <td>
-                  {!buyer.Contact.Phone}
-                </td>
+                <td>{!buyer.Contact.Phone}</td>
                 <td class="icon">
                   <img src="{!URLFOR($Resource.LegendPDF,'Icons/DriverLicense.png')}" />
                 </td>
-                <td>
-
-                </td>
+                <td></td>
               </tr>
             </table>
             <apex:outputPanel layout="none" rendered="{! buyer.Contact.Tax_Exempt_Status_Card_Number__c != null}">
               <table>
                 <tr>
-                  <td style="width: 20%;font-size:10px;color:#777; font-weight: bold;">
-                    Tax Ex. #
-                  </td>
-                  <td style="width:80%;font-size:10px;color:#777;">
+                  <td style="width: 20%; font-size: 10px; color: #777; font-weight: bold">Tax Ex. #</td>
+                  <td style="width: 80%; font-size: 10px; color: #777">
                     {! buyer.Contact.Tax_Exempt_Status_Card_Number__c }
                   </td>
                 </tr>
@@ -251,17 +207,12 @@
       <!-- ================== /BUYER INFO ================== -->
 
       <!-- ++++++++++++++++++ CO-BUYER INFO ++++++++++++++++ -->
-      <div class="col col40" >
+      <div class="col col40">
         <apex:outputPanel layout="none" rendered="{!cobuyer != null}">
-          <p class="buyer_name">
-            {!UPPER(cobuyer.Contact.Name)}
-          </p>
+          <p class="buyer_name">{!UPPER(cobuyer.Contact.Name)}</p>
           <p class="buyer_address">
-            {!cobuyer.Contact.MailingStreet},
-            {!cobuyer.Contact.MailingCity},
-            {!cobuyer.Contact.MailingState}
-            {!cobuyer.Contact.MailingPostalCode},
-            {!cobuyer.Contact.MailingCountry}
+            {!cobuyer.Contact.MailingStreet}, {!cobuyer.Contact.MailingCity}, {!cobuyer.Contact.MailingState}
+            {!cobuyer.Contact.MailingPostalCode}, {!cobuyer.Contact.MailingCountry}
           </p>
           <div class="buyer_details">
             <table>
@@ -269,9 +220,7 @@
                 <td class="icon">
                   <img src="{!URLFOR($Resource.LegendPDF,'Icons/Email.png')}" />
                 </td>
-                <td>
-                  {!cobuyer.Contact.Email}
-                </td>
+                <td>{!cobuyer.Contact.Email}</td>
                 <td class="icon">
                   <img src="{!URLFOR($Resource.LegendPDF,'Icons/Birthday.png')}" />
                 </td>
@@ -285,24 +234,18 @@
                 <td class="icon">
                   <img src="{!URLFOR($Resource.LegendPDF,'Icons/Cell.png')}" />
                 </td>
-                <td>
-                  {!cobuyer.Contact.Phone}
-                </td>
+                <td>{!cobuyer.Contact.Phone}</td>
                 <td class="icon">
                   <img src="{!URLFOR($Resource.LegendPDF,'Icons/DriverLicense.png')}" />
                 </td>
-                <td>
-                   {!cobuyer.Contact.Drivers_License__c}
-                </td>
+                <td>{!cobuyer.Contact.Drivers_License__c}</td>
               </tr>
             </table>
             <apex:outputPanel layout="none" rendered="{! cobuyer.Contact.Tax_Exempt_Status_Card_Number__c != null}">
               <table>
                 <tr>
-                  <td style="width: 20%;font-size:10px;color:#777; font-weight: bold;">
-                    Tax Ex. #
-                  </td>
-                  <td style="width:80%;font-size:10px;color:#777;">
+                  <td style="width: 20%; font-size: 10px; color: #777; font-weight: bold">Tax Ex. #</td>
+                  <td style="width: 80%; font-size: 10px; color: #777">
                     {! cobuyer.Contact.Tax_Exempt_Status_Card_Number__c }
                   </td>
                 </tr>
@@ -310,120 +253,112 @@
             </apex:outputPanel>
           </div>
         </apex:outputPanel>
-        <apex:outputPanel layout="none" rendered="{!cobuyer == null}">
-          &nbsp;
-        </apex:outputPanel>
+        <apex:outputPanel layout="none" rendered="{!cobuyer == null}"> &nbsp; </apex:outputPanel>
       </div>
       <!-- ================= /CO-BUYER INFO ================= -->
 
       <!-- ++++++++++++++++ MEMORY MAKER ++++++++++++++++++++ -->
-      <div class="col memory_maker" style="border-left:1px solid #CCC; width:19.8%;">
-        <p>
-          Votre Créateur de souvenirs
-        </p>
-        <p>
-          {!UPPER(erpOrder.Salesperson__r.Name)}
-        </p>
+      <div class="col memory_maker" style="border-left: 1px solid #ccc; width: 19.8%">
+        <p>Votre Créateur de souvenirs</p>
+        <p>{!UPPER(erpOrder.Salesperson__r.Name)}</p>
       </div>
       <!-- ================ /MEMORY MAKER =================== -->
-
     </div>
     <!-- ================================== /CUSTOMER INFO =============================== -->
 
-
     <!-- +++++++++++++++++++++++++++++++++++ MAJOR ITEMS TABLE +++++++++++++++++++++++++++++++ -->
     <div class="major_items">
-
       <table class="itemsTable">
-          <thead>
-            <tr>
-              <td colspan="3">Description</td>
-              <td>Numéro de série</td>
+        <thead>
+          <tr>
+            <td colspan="3">Description</td>
+            <td>Numéro de série</td>
+          </tr>
+        </thead>
+        <apex:variable value="{!1}" var="rowCount" />
+        <tbody>
+          <apex:outputPanel layout="none" rendered="{!boat.AcctSeedERP__Product__r.Name_FR__c != null}">
+            <tr class="{!IF(MOD(rowCount,2)=0,'even','odd')}">
+              <td class="w5">{!boat.GMBLASERP__Serial_Number__r.GMBLASERP__Lot__r.Name}</td>
+              <td class="10">{!boat.AcctSeedERP__Product__r.Make__c}</td>
+              <td class="w44">{!boat.AcctSeedERP__Product__r.Name_FR__c}</td>
+              <td class="w25">{!boat.GMBLASERP__Serial_Number__r.name}</td>
+              <td class="w15 right">
+                <apex:outputText value="${0, number, ###,###,###,##0.00}">
+                  <apex:param value="{!boat.GMBLASERP__Total_Price__c}" />
+                </apex:outputText>
+              </td>
             </tr>
-          </thead>
-          <apex:variable value="{!1}" var="rowCount" />
-          <tbody>
-            <apex:outputPanel layout="none" rendered="{!boat.AcctSeedERP__Product__r.Name_FR__c != null}">
+            <apex:variable var="rowCount" value="{!rowCount+1}" />
+          </apex:outputPanel>
+
+          <apex:outputPanel layout="none" rendered="{!motors.size > 0}">
+            <apex:repeat value="{!motors}" var="motor">
               <tr class="{!IF(MOD(rowCount,2)=0,'even','odd')}">
-                <td class="w5">{!boat.GMBLASERP__Serial_Number__r.GMBLASERP__Lot__r.Name}</td>
-                <td class="10">{!boat.AcctSeedERP__Product__r.Make__c}</td>
-                <td class="w44">{!boat.AcctSeedERP__Product__r.Name_FR__c}</td>
-                <td class="w25">{!boat.GMBLASERP__Serial_Number__r.name}</td>
+                <td class="w5">{!motor.GMBLASERP__Serial_Number__r.GMBLASERP__Lot__r.Name}</td>
+                <td class="10">{!motor.AcctSeedERP__Product__r.Make__c}</td>
+                <td class="w44">{!motor.AcctSeedERP__Product__r.Name_FR__c}</td>
+                <td class="w25">{!motor.GMBLASERP__Serial_Number__r.name}</td>
                 <td class="w15 right">
                   <apex:outputText value="${0, number, ###,###,###,##0.00}">
-                    <apex:param value="{!boat.GMBLASERP__Total_Price__c}"/>
+                    <apex:param value="{!motor.GMBLASERP__Total_Price__c}" />
                   </apex:outputText>
                 </td>
               </tr>
               <apex:variable var="rowCount" value="{!rowCount+1}" />
-            </apex:outputPanel>
+            </apex:repeat>
+          </apex:outputPanel>
 
-           <apex:outputPanel layout="none" rendered="{!motors.size > 0}">
-             <apex:repeat value="{!motors}" var="motor">
+          <apex:outputPanel
+            layout="none"
+            rendered="{!AND(trailer.AcctSeedERP__Product__r.Name_FR__c != null, trailer.GMBLASERP__Serial_Number__c != null)}"
+          >
+            <tr class="{!IF(MOD(rowCount,2)=0,'even','odd')}">
+              <td class="w5">{!trailer.GMBLASERP__Serial_Number__r.GMBLASERP__Lot__r.Name}</td>
+              <td class="10">{!trailer.AcctSeedERP__Product__r.Make__c}</td>
+              <td class="w44">{!trailer.AcctSeedERP__Product__r.Name_FR__c}</td>
+              <td class="w25">{!trailer.GMBLASERP__Serial_Number__r.name}</td>
+              <td class="w15 right">
+                <apex:outputText value="${0, number, ###,###,###,##0.00}">
+                  <apex:param value="{!trailer.GMBLASERP__Total_Price__c}" />
+                </apex:outputText>
+              </td>
+            </tr>
+            <apex:variable var="rowCount" value="{!rowCount+1}" />
+          </apex:outputPanel>
+
+          <apex:outputPanel layout="none" rendered="{!trollingMotors.size > 0}">
+            <apex:repeat value="{!trollingMotors}" var="trollingMotor">
+              <apex:outputPanel layout="none" rendered="{!trollingMotor.GMBLASERP__Serial_Number__c != null}">
                 <tr class="{!IF(MOD(rowCount,2)=0,'even','odd')}">
-                  <td class="w5">{!motor.GMBLASERP__Serial_Number__r.GMBLASERP__Lot__r.Name}</td>
-                  <td class="10">{!motor.AcctSeedERP__Product__r.Make__c}</td>
-                  <td class="w44">{!motor.AcctSeedERP__Product__r.Name_FR__c}</td>
-                  <td class="w25">{!motor.GMBLASERP__Serial_Number__r.name}</td>
+                  <td class="w5">{!trollingMotor.GMBLASERP__Serial_Number__r.GMBLASERP__Lot__r.Name}</td>
+                  <td class="10">{!trollingMotor.AcctSeedERP__Product__r.Make__c}</td>
+                  <td class="w44">{!trollingMotor.AcctSeedERP__Product__r.Name_FR__c}</td>
+                  <td class="w25">{!trollingMotor.GMBLASERP__Serial_Number__r.name}</td>
                   <td class="w15 right">
                     <apex:outputText value="${0, number, ###,###,###,##0.00}">
-                      <apex:param value="{!motor.GMBLASERP__Total_Price__c}"/>
+                      <apex:param value="{!trollingMotor.GMBLASERP__Total_Price__c}" />
                     </apex:outputText>
                   </td>
                 </tr>
-                <apex:variable var="rowCount" value="{!rowCount+1}" />
-              </apex:repeat>
-            </apex:outputPanel>
-
-            <apex:outputPanel layout="none" rendered="{!AND(trailer.AcctSeedERP__Product__r.Name_FR__c != null, trailer.GMBLASERP__Serial_Number__c != null)}">
-              <tr class="{!IF(MOD(rowCount,2)=0,'even','odd')}">
-                <td class="w5">{!trailer.GMBLASERP__Serial_Number__r.GMBLASERP__Lot__r.Name}</td>
-                <td class="10">{!trailer.AcctSeedERP__Product__r.Make__c}</td>
-                <td class="w44">{!trailer.AcctSeedERP__Product__r.Name_FR__c}</td>
-                <td class="w25">{!trailer.GMBLASERP__Serial_Number__r.name}</td>
-                <td class="w15 right">
-                  <apex:outputText value="${0, number, ###,###,###,##0.00}">
-                    <apex:param value="{!trailer.GMBLASERP__Total_Price__c}"/>
-                  </apex:outputText>
-                </td>
-              </tr>
-              <apex:variable var="rowCount" value="{!rowCount+1}" />
-            </apex:outputPanel>
-
-            <apex:outputPanel layout="none" rendered="{!trollingMotors.size > 0}">
-              <apex:repeat value="{!trollingMotors}" var="trollingMotor">
-                <apex:outputPanel layout="none" rendered="{!trollingMotor.GMBLASERP__Serial_Number__c != null}">
-                  <tr class="{!IF(MOD(rowCount,2)=0,'even','odd')}">
-                    <td class="w5">{!trollingMotor.GMBLASERP__Serial_Number__r.GMBLASERP__Lot__r.Name}</td>
-                    <td class="10">{!trollingMotor.AcctSeedERP__Product__r.Make__c}</td>
-                    <td class="w44">{!trollingMotor.AcctSeedERP__Product__r.Name_FR__c}</td>
-                    <td class="w25">{!trollingMotor.GMBLASERP__Serial_Number__r.name}</td>
-                    <td class="w15 right">
-                      <apex:outputText value="${0, number, ###,###,###,##0.00}">
-                        <apex:param value="{!trollingMotor.GMBLASERP__Total_Price__c}"/>
-                      </apex:outputText>
-                    </td>
-                  </tr>
-                </apex:outputPanel>
-              </apex:repeat>
-            </apex:outputPanel>
-          </tbody>
-        </table>
+              </apex:outputPanel>
+            </apex:repeat>
+          </apex:outputPanel>
+        </tbody>
+      </table>
     </div>
     <!-- ================================== /MAJOR ITEMS TABLE ================================== -->
 
     <!-- +++++++++++++++++++++++++++++++++ INVOICE BODY ++++++++++++++++++++++++++++++++++++++++ -->
     <div class="row invoice_body">
-
       <!-- ++++++++++++++++++++++++++++++ LEFT COLUMN ++++++++++++++++++++++ -->
       <div class="col col60 summary_table invoice">
-
         <apex:outputPanel layout="none">
           <table class="itemsTable">
             <thead>
-            <tr>
-              <td colspan="3">Options &amp; Accessoires</td>
-            </tr>
+              <tr>
+                <td colspan="3">Options &amp; Accessoires</td>
+              </tr>
             </thead>
           </table>
           <apex:variable value="{!1}" var="rowCount" />
@@ -433,23 +368,25 @@
           <apex:outputPanel layout="none" rendered="{!trailer.GMBLASERP__Serial_Number__c == null}">
             <table class="itemsTable">
               <tbody>
-              <tr class="{!IF(MOD(rowCount,2)=0,'even','odd')}">
-                <td class="w5">
-                  <apex:outputText value="{0, number, 0.00}">
-                    <apex:param value="{!trailer.AcctSeedERP__Quantity_per_Unit__c}" />
-                  </apex:outputText>
-                </td>
-                <td class="w70">
-                  <apex:outputText value="{!trailer.AcctSeedERP__Product__r.Name_FR__c}"/>
-                </td>
-                <td class="w20 right">
-                  <apex:outputText value="{!IF(trailer.GMBLASERP__Total_Price__c != 0,' ${0, number, ###,###,###,##0.00}','Included')} ">
-                    <apex:param value="{!trailer.GMBLASERP__Total_Price__c}"/>
-                  </apex:outputText>
-                </td>
-              </tr>
-              <apex:variable value="{!rowCount+1}" var="rowCount" />
-              <apex:variable value="{!OptionsAcc + trailer.GMBLASERP__Total_Price__c}" var="OptionsAcc" />
+                <tr class="{!IF(MOD(rowCount,2)=0,'even','odd')}">
+                  <td class="w5">
+                    <apex:outputText value="{0, number, 0.00}">
+                      <apex:param value="{!trailer.AcctSeedERP__Quantity_per_Unit__c}" />
+                    </apex:outputText>
+                  </td>
+                  <td class="w70">
+                    <apex:outputText value="{!trailer.AcctSeedERP__Product__r.Name_FR__c}" />
+                  </td>
+                  <td class="w20 right">
+                    <apex:outputText
+                      value="{!IF(trailer.GMBLASERP__Total_Price__c != 0,' ${0, number, ###,###,###,##0.00}','Included')} "
+                    >
+                      <apex:param value="{!trailer.GMBLASERP__Total_Price__c}" />
+                    </apex:outputText>
+                  </td>
+                </tr>
+                <apex:variable value="{!rowCount+1}" var="rowCount" />
+                <apex:variable value="{!OptionsAcc + trailer.GMBLASERP__Total_Price__c}" var="OptionsAcc" />
               </tbody>
             </table>
           </apex:outputPanel>
@@ -458,27 +395,29 @@
           <apex:outputPanel layout="none" rendered="{!trollingMotors.size > 0}">
             <table class="itemsTable">
               <tbody>
-              <apex:repeat value="{!trollingMotors}" var="trollingMotor">
-                <apex:outputPanel layout="none" rendered="{!trollingMotor.GMBLASERP__Serial_Number__c == null}">
-                  <tr class="{!IF(MOD(rowCount,2)=0,'even','odd')}">
-                    <td class="w5">
-                      <apex:outputText value="{0, number, 0.00}">
-                        <apex:param value="{!trollingMotor.AcctSeedERP__Quantity_per_Unit__c}" />
-                      </apex:outputText>
-                    </td>
-                    <td class="w70">
-                      <apex:outputText value="{!trollingMotor.AcctSeedERP__Product__r.Name_FR__c}"/>
-                    </td>
-                    <td class="w20 right">
-                      <apex:outputText value="{!IF(trollingMotor.GMBLASERP__Total_Price__c != 0,' ${0, number, ###,###,###,##0.00}','Included')} ">
-                        <apex:param value="{!trollingMotor.GMBLASERP__Total_Price__c}"/>
-                      </apex:outputText>
-                    </td>
-                  </tr>
-                  <apex:variable value="{!rowCount+1}" var="rowCount" />
-                  <apex:variable value="{!OptionsAcc + trollingMotor.GMBLASERP__Total_Price__c}" var="OptionsAcc" />
-                </apex:outputPanel>
-              </apex:repeat>
+                <apex:repeat value="{!trollingMotors}" var="trollingMotor">
+                  <apex:outputPanel layout="none" rendered="{!trollingMotor.GMBLASERP__Serial_Number__c == null}">
+                    <tr class="{!IF(MOD(rowCount,2)=0,'even','odd')}">
+                      <td class="w5">
+                        <apex:outputText value="{0, number, 0.00}">
+                          <apex:param value="{!trollingMotor.AcctSeedERP__Quantity_per_Unit__c}" />
+                        </apex:outputText>
+                      </td>
+                      <td class="w70">
+                        <apex:outputText value="{!trollingMotor.AcctSeedERP__Product__r.Name_FR__c}" />
+                      </td>
+                      <td class="w20 right">
+                        <apex:outputText
+                          value="{!IF(trollingMotor.GMBLASERP__Total_Price__c != 0,' ${0, number, ###,###,###,##0.00}','Included')} "
+                        >
+                          <apex:param value="{!trollingMotor.GMBLASERP__Total_Price__c}" />
+                        </apex:outputText>
+                      </td>
+                    </tr>
+                    <apex:variable value="{!rowCount+1}" var="rowCount" />
+                    <apex:variable value="{!OptionsAcc + trollingMotor.GMBLASERP__Total_Price__c}" var="OptionsAcc" />
+                  </apex:outputPanel>
+                </apex:repeat>
               </tbody>
             </table>
           </apex:outputPanel>
@@ -486,117 +425,109 @@
           <!-- Now the rest of the Options -->
           <table class="itemsTable">
             <tbody>
-            <apex:repeat value="{!oppAccList}" var="oppAcc">
-              <tr class="{!IF(oppAcc.includedFeatures.size > 0, 'has-features', '')}">
-                <td class="w5">
-                  <apex:outputText value="{!oppAcc.quantity}"/>
-                </td>
-                <td class="w70">
-                  <apex:outputText value="{!oppAcc.descriptionFR}"/>
-                </td>
-                <td class="w20 right">
-                  <apex:outputText value="{!IF(oppAcc.price != 0,' ${0, number, ###,###,###,##0.00}','Included')} ">
-                    <apex:param value="{!oppAcc.price}"/>
+              <apex:repeat value="{!oppAccList}" var="oppAcc">
+                <tr class="{!IF(oppAcc.includedFeatures.size > 0, 'has-features', '')}">
+                  <td class="w5">
+                    <apex:outputText value="{!oppAcc.quantity}" />
+                  </td>
+                  <td class="w70">
+                    <apex:outputText value="{!oppAcc.descriptionFR}" />
+                  </td>
+                  <td class="w20 right">
+                    <apex:outputText value="{!IF(oppAcc.price != 0,' ${0, number, ###,###,###,##0.00}','Included')} ">
+                      <apex:param value="{!oppAcc.price}" />
+                    </apex:outputText>
+                  </td>
+                </tr>
+                <apex:variable value="{!rowCount+1}" var="rowCount" />
+                <apex:variable value="{!OptionsAcc + oppAcc.price}" var="OptionsAcc" />
+                <apex:outputPanel layout="none" rendered="{!oppAcc.includedFeatures.size > 0}">
+                  <apex:repeat value="{!oppAcc.includedFeatures}" var="feature">
+                    <tr class="feature-row">
+                      <td class="w5"></td>
+                      <td class="w70">
+                        <div style="display: inline-block; padding: 0 5px 0 10px">-</div>
+                        <apex:outputText value="{!feature.descriptionFR}" />
+                      </td>
+                      <td class="w20 right">
+                        <apex:outputText
+                          value="{!IF(feature.price != 0,' ${0, number, ###,###,###,##0.00}','Included')} "
+                        >
+                          <apex:param value="{!feature.price}" />
+                        </apex:outputText>
+                      </td>
+                    </tr>
+                    <apex:variable value="{!rowCount+1}" var="rowCount" />
+                  </apex:repeat>
+                </apex:outputPanel>
+              </apex:repeat>
+
+              <tr class="subTotal">
+                <td colspan="2">Sous-Total</td>
+                <td class="w35 right">
+                  <apex:outputText value="${0, number, ###,###,###,##0.00}">
+                    <apex:param value="{!OptionsAcc}" />
                   </apex:outputText>
                 </td>
               </tr>
               <apex:variable value="{!rowCount+1}" var="rowCount" />
-              <apex:variable value="{!OptionsAcc + oppAcc.price}" var="OptionsAcc" />
-              <apex:outputPanel layout="none" rendered="{!oppAcc.includedFeatures.size > 0}">
-                <apex:repeat value="{!oppAcc.includedFeatures}" var="feature">
-                  <tr class="feature-row">
-                    <td class="w5">
-
-                    </td>
-                    <td class="w70">
-                      <div style="display:inline-block; padding: 0 5px 0 10px;">
-                        -
-                      </div>
-                      <apex:outputText value="{!feature.descriptionFR}"/>
-                    </td>
-                    <td class="w20 right">
-                      <apex:outputText value="{!IF(feature.price != 0,' ${0, number, ###,###,###,##0.00}','Included')} ">
-                        <apex:param value="{!feature.price}"/>
-                      </apex:outputText>
-                    </td>
-                  </tr>
-                  <apex:variable value="{!rowCount+1}" var="rowCount" />
-                </apex:repeat>
-              </apex:outputPanel>
-            </apex:repeat>
-
-            <tr class="subTotal">
-              <td colspan="2">
-                Sous-Total
-              </td>
-              <td class="w35 right">
-                <apex:outputText value="${0, number, ###,###,###,##0.00}">
-                  <apex:param value="{!OptionsAcc}"/>
-                </apex:outputText>
-              </td>
-            </tr>
-            <apex:variable value="{!rowCount+1}" var="rowCount" />
             </tbody>
-          </table>
-        </apex:outputPanel><!-- /Additional Fees -->
-
+          </table> </apex:outputPanel
+        ><!-- /Additional Fees -->
       </div>
       <!-- ================================ LEFT COLUMN ======================= -->
 
       <!-- ++++++++++++++++++++++++++++++++ RIGHT COLUMN ++++++++++++++++++ -->
-      <div style="width:39.8%; display:inline-block; float:right; border-left:1px solid #DDD">
-
+      <div style="width: 39.8%; display: inline-block; float: right; border-left: 1px solid #ddd">
         <!-- ++++++++++++++++++++++++++++ ADDITIONAL FEES ++++++++++++++++++++++ -->
 
         <apex:outputPanel layout="none">
           <table class="itemsTable">
             <thead>
               <tr>
-                <td colspan="3" style="padding-left:20px;">Frais Supplémentaires</td>
+                <td colspan="3" style="padding-left: 20px">Frais Supplémentaires</td>
               </tr>
             </thead>
             <tbody>
               <apex:variable value="{!1}" var="rowCount" />
               <apex:variable value="{!0}" var="feeTotal" />
-                  <apex:outputPanel layout="none">
-                    <apex:repeat value="{!feesList}" var="fees">
-                      <tr class="{!IF(MOD(rowCount,2)=0,'even','odd')}">
-                        <td class="w5">
-
-                        </td>
-                        <td class="w60">
-                          <apex:outputText value="{!fees.AcctSeedERP__Product__r.Name_FR__c}"/>
-                        </td>
-                        <td class="w35 right">
-                          <apex:outputText value="{!IF(fees.GMBLASERP__Total_Price__c != 0,' ${0, number, ###,###,###,##0.00}','$Included')} ">
-                            <apex:param value="{!fees.GMBLASERP__Total_Price__c}"/>
-                        </apex:outputText>
-                        </td>
-                      </tr>
-                      <apex:variable value="{!rowCount+1}" var="rowCount" />
-                      <apex:variable value="{!feeTotal + fees.GMBLASERP__Total_Price__c}" var="feeTotal" />
-                    </apex:repeat>
-                  </apex:outputPanel>
+              <apex:outputPanel layout="none">
+                <apex:repeat value="{!feesList}" var="fees">
+                  <tr class="{!IF(MOD(rowCount,2)=0,'even','odd')}">
+                    <td class="w5"></td>
+                    <td class="w60">
+                      <apex:outputText value="{!fees.AcctSeedERP__Product__r.Name_FR__c}" />
+                    </td>
+                    <td class="w35 right">
+                      <apex:outputText
+                        value="{!IF(fees.GMBLASERP__Total_Price__c != 0,' ${0, number, ###,###,###,##0.00}','$Included')} "
+                      >
+                        <apex:param value="{!fees.GMBLASERP__Total_Price__c}" />
+                      </apex:outputText>
+                    </td>
+                  </tr>
+                  <apex:variable value="{!rowCount+1}" var="rowCount" />
+                  <apex:variable value="{!feeTotal + fees.GMBLASERP__Total_Price__c}" var="feeTotal" />
+                </apex:repeat>
+              </apex:outputPanel>
               <tr class="subTotal">
-                <td colspan="2">
-                  Sous-Total
-                </td>
+                <td colspan="2">Sous-Total</td>
                 <td class="w35 right">
                   <apex:outputText value="${0, number, ###,###,###,##0.00}">
-                    <apex:param value="{!feeTotal}"/>
+                    <apex:param value="{!feeTotal}" />
                   </apex:outputText>
                 </td>
               </tr>
               <apex:variable value="{!rowCount+1}" var="rowCount" />
             </tbody>
-          </table>
-        </apex:outputPanel><!-- /Additional Fees -->
+          </table> </apex:outputPanel
+        ><!-- /Additional Fees -->
 
         <!-- =========================== ADDITIONAL FEES ======================= -->
 
         <!-- +++++++++++++++++++++++++++ PROTECTION PRODUCTS AND SERVICES ++++++ -->
         <apex:outputPanel layout="none" rendered="{!OR(protectionServicesList.size > 0, insuranceList.size > 0)}">
-          <table class="itemsTable" style="margin-top:10px;">
+          <table class="itemsTable" style="margin-top: 10px">
             <thead>
               <tr>
                 <td colspan="3">Produits et Services de Protection</td>
@@ -605,49 +536,47 @@
             <tbody>
               <apex:variable value="{!1}" var="rowCount" />
               <apex:variable value="{!0}" var="protectProd" />
-                  <apex:outputPanel layout="none">
-                    <apex:repeat value="{!protectionServicesList}" var="protect">
-                      <tr class="{!IF(MOD(rowCount,2)=0,'even','odd')}">
-                        <td class="w5">
-
-                        </td>
-                        <td class="w60">
-                          <apex:outputText value="{!protect.AcctSeedERP__Product__r.Name_FR__c}"/>
-                        </td>
-                        <td class="w35 right">
-                          <apex:outputText value="{!IF(protect.GMBLASERP__Total_Price__c != 0,' ${0, number, ###,###,###,##0.00}','$Included')} ">
-                            <apex:param value="{!protect.GMBLASERP__Total_Price__c}"/>
-                        </apex:outputText>
-                        </td>
-                      </tr>
-                      <apex:variable value="{!rowCount+1}" var="rowCount" />
-                      <apex:variable value="{!protectProd + protect.GMBLASERP__Total_Price__c}" var="protectProd" />
-                    </apex:repeat>
-                    <apex:repeat value="{!insuranceList}" var="insurance">
-                      <tr class="{!IF(MOD(rowCount,2)=0,'even','odd')}">
-                        <td class="w5">
-
-                        </td>
-                        <td class="w60">
-                          <apex:outputText value="{!insurance.AcctSeedERP__Product__r.Name_FR__c}"/>
-                        </td>
-                        <td class="w35 right">
-                          <apex:outputText value="{!IF(insurance.GMBLASERP__Total_Price__c != 0,' ${0, number, ###,###,###,##0.00}','$Included')} ">
-                            <apex:param value="{!insurance.GMBLASERP__Total_Price__c}"/>
-                        </apex:outputText>
-                        </td>
-                      </tr>
-                      <apex:variable value="{!rowCount+1}" var="rowCount" />
-                      <apex:variable value="{!protectProd + insurance.GMBLASERP__Total_Price__c}" var="protectProd" />
-                    </apex:repeat>
-                  </apex:outputPanel>
+              <apex:outputPanel layout="none">
+                <apex:repeat value="{!protectionServicesList}" var="protect">
+                  <tr class="{!IF(MOD(rowCount,2)=0,'even','odd')}">
+                    <td class="w5"></td>
+                    <td class="w60">
+                      <apex:outputText value="{!protect.AcctSeedERP__Product__r.Name_FR__c}" />
+                    </td>
+                    <td class="w35 right">
+                      <apex:outputText
+                        value="{!IF(protect.GMBLASERP__Total_Price__c != 0,' ${0, number, ###,###,###,##0.00}','$Included')} "
+                      >
+                        <apex:param value="{!protect.GMBLASERP__Total_Price__c}" />
+                      </apex:outputText>
+                    </td>
+                  </tr>
+                  <apex:variable value="{!rowCount+1}" var="rowCount" />
+                  <apex:variable value="{!protectProd + protect.GMBLASERP__Total_Price__c}" var="protectProd" />
+                </apex:repeat>
+                <apex:repeat value="{!insuranceList}" var="insurance">
+                  <tr class="{!IF(MOD(rowCount,2)=0,'even','odd')}">
+                    <td class="w5"></td>
+                    <td class="w60">
+                      <apex:outputText value="{!insurance.AcctSeedERP__Product__r.Name_FR__c}" />
+                    </td>
+                    <td class="w35 right">
+                      <apex:outputText
+                        value="{!IF(insurance.GMBLASERP__Total_Price__c != 0,' ${0, number, ###,###,###,##0.00}','$Included')} "
+                      >
+                        <apex:param value="{!insurance.GMBLASERP__Total_Price__c}" />
+                      </apex:outputText>
+                    </td>
+                  </tr>
+                  <apex:variable value="{!rowCount+1}" var="rowCount" />
+                  <apex:variable value="{!protectProd + insurance.GMBLASERP__Total_Price__c}" var="protectProd" />
+                </apex:repeat>
+              </apex:outputPanel>
               <tr class="subTotal">
-                <td colspan="2">
-                  Sous-Total
-                </td>
+                <td colspan="2">Sous-Total</td>
                 <td class="w35 right">
                   <apex:outputText value="${0, number, ###,###,###,##0.00}">
-                    <apex:param value="{!protectProd}"/>
+                    <apex:param value="{!protectProd}" />
                   </apex:outputText>
                 </td>
               </tr>
@@ -660,7 +589,7 @@
 
         <!-- +++++++++++++++++++++++++++ BUNDLES ++++++ -->
         <apex:outputPanel layout="none" rendered="{! bundlesList.size > 0 }">
-          <table class="itemsTable" style="margin-top:10px;">
+          <table class="itemsTable" style="margin-top: 10px">
             <thead>
               <tr>
                 <td colspan="3">Forfaits</td>
@@ -672,16 +601,16 @@
               <apex:outputPanel layout="none">
                 <apex:repeat value="{!bundlesList}" var="protect">
                   <tr class="{!IF(MOD(rowCount,2)=0,'even','odd')}">
-                    <td class="w5">
-
-                    </td>
+                    <td class="w5"></td>
                     <td class="w60">
-                      <apex:outputText value="{!protect.Product_Name__c}"/>
+                      <apex:outputText value="{!protect.Product_Name__c}" />
                     </td>
                     <td class="w35 right">
-                      <apex:outputText value="{!IF(protect.GMBLASERP__Total_Price__c != 0,' ${0, number, ###,###,###,##0.00}','$Included')} ">
-                        <apex:param value="{!protect.GMBLASERP__Total_Price__c}"/>
-                    </apex:outputText>
+                      <apex:outputText
+                        value="{!IF(protect.GMBLASERP__Total_Price__c != 0,' ${0, number, ###,###,###,##0.00}','$Included')} "
+                      >
+                        <apex:param value="{!protect.GMBLASERP__Total_Price__c}" />
+                      </apex:outputText>
                     </td>
                   </tr>
                   <apex:variable value="{!rowCount+1}" var="rowCount" />
@@ -689,12 +618,10 @@
                 </apex:repeat>
               </apex:outputPanel>
               <tr class="subTotal">
-                <td colspan="2">
-                  Sous-Total
-                </td>
+                <td colspan="2">Sous-Total</td>
                 <td class="w35 right">
                   <apex:outputText value="${0, number, ###,###,###,##0.00}">
-                    <apex:param value="{!bundleTotal}"/>
+                    <apex:param value="{!bundleTotal}" />
                   </apex:outputText>
                 </td>
               </tr>
@@ -707,53 +634,45 @@
 
         <!-- +++++++++++++++++++++++++++  SPECIAL SAVINGS ++++++++++++++++++++++ -->
         <apex:outputPanel layout="none">
-       <!--  <table class="itemsTable" style="margin-top:{!10 + (13*(31 - 4 - rowCount - discountItems.size))}px;"> -->
-         <table class="itemsTable" style="margin-top:10px;">
-          <thead>
-            <tr>
-              <td colspan="2">Rabais spéciaux</td>
-            </tr>
-          </thead>
-          <tbody>
-            <!-- <apex:variable value="{!1}" var="rowCount" /> -->
-            <apex:repeat value="{!discountList}" var="part">
-              <tr class="{!IF(MOD(rowCount,2)=0,'even','odd')}">
-                <td class="w70">
-                  {!part.AcctSeedERP__Comment__c}
-                </td>
-                <td class="w30 right">
-                  <apex:outputText value="${0, number, ###,###,###,##0.00}">
-                      <apex:param value="{!part.GMBLASERP__Total_Price__c}"/>
+          <!--  <table class="itemsTable" style="margin-top:{!10 + (13*(31 - 4 - rowCount - discountItems.size))}px;"> -->
+          <table class="itemsTable" style="margin-top: 10px">
+            <thead>
+              <tr>
+                <td colspan="2">Rabais spéciaux</td>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- <apex:variable value="{!1}" var="rowCount" /> -->
+              <apex:repeat value="{!discountList}" var="part">
+                <tr class="{!IF(MOD(rowCount,2)=0,'even','odd')}">
+                  <td class="w70">{!part.AcctSeedERP__Comment__c}</td>
+                  <td class="w30 right">
+                    <apex:outputText value="${0, number, ###,###,###,##0.00}">
+                      <apex:param value="{!part.GMBLASERP__Total_Price__c}" />
                     </apex:outputText>
+                  </td>
+                </tr>
+                <apex:variable value="{!rowCount+1}" var="rowCount" />
+              </apex:repeat>
+              <tr class="total_savings">
+                <td class="w70">Total des économies</td>
+                <td class="w30 right">
+                  <apex:outputText value="${0, number, ###,###,###,##0.00}" rendered="{!totalSaving != null}">
+                    <apex:param value="{!totalSaving}" />
+                  </apex:outputText>
                 </td>
               </tr>
-              <apex:variable value="{!rowCount+1}" var="rowCount" />
-            </apex:repeat>
-            <tr class="total_savings">
-              <td class="w70">
-                Total des économies
-              </td>
-              <td class="w30 right">
-                <apex:outputText value="${0, number, ###,###,###,##0.00}"
-                                 rendered="{!totalSaving != null}">
-                  <apex:param value="{!totalSaving}"/>
-                </apex:outputText>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+            </tbody>
+          </table>
         </apex:outputPanel>
         <!-- ========================== SPECIAL SAVINGS =========================== -->
-
       </div>
       <!-- ================================ /RIGHT COLUMN ==================== -->
-
     </div>
     <!-- ============================= INVOICE BODY ============================= -->
 
     <!-- +++++++++++++++++++++++++++++ TRADE-IN INFORMATION +++++++++++++++++++++ -->
     <div class="row tradin_info">
-
       <div class="col col60">
         <table class="itemsTable">
           <thead>
@@ -825,18 +744,16 @@
             <tr class="odd">
               <td class="w75">Valeur de l'échange *</td>
               <td class="w25 right">
-                <apex:outputText value="-${0, number, ###,###,###,##0.00}"
-                                 rendered="{!tradeInValue != null}">
-                  <apex:param value="{!tradeInValue}"/>
+                <apex:outputText value="-${0, number, ###,###,###,##0.00}" rendered="{!tradeInValue != null}">
+                  <apex:param value="{!tradeInValue}" />
                 </apex:outputText>
               </td>
             </tr>
             <tr class="even">
               <td class="w75">Lien sur l'échange</td>
               <td class="w25 right">
-                <apex:outputText value="${0, number, ###,###,###,##0.00}"
-                                 rendered="{!tradeInLien != null}">
-                  <apex:param value="{!tradeInLien}"/>
+                <apex:outputText value="${0, number, ###,###,###,##0.00}" rendered="{!tradeInLien != null}">
+                  <apex:param value="{!tradeInLien}" />
                 </apex:outputText>
               </td>
             </tr>
@@ -846,9 +763,8 @@
             <tr class="subTotal">
               <td class="w75">Total net de l'échange</td>
               <td class="w25 right">
-                <apex:outputText value="${0, number, ###,###,###,##0.00}"
-                                 rendered="{!totalTrade != null}">
-                  <apex:param value="{!totalTrade}"/>
+                <apex:outputText value="${0, number, ###,###,###,##0.00}" rendered="{!totalTrade != null}">
+                  <apex:param value="{!totalTrade}" />
                 </apex:outputText>
               </td>
             </tr>
@@ -859,13 +775,15 @@
           </tbody>
         </table>
       </div>
-
     </div>
     <div class="row tradein_fine_print">
       <div class="large-12 column">
         <p>
-          Le titre ci dessous décrit le produit qui doit être transféré à l'acheteur quand celui-ci a fait le paiement au complet . Toutes les parties dans ce contrat sont au courant que la valeur d'échange ou du prix d'achat énoncé ci-dessous peut être réviser suivant les précisions dans les sections 8, 9, 10, 11, 12, et 13 des termes et conditions du contrat suivant.
-          <br /><span style="float:right">&nbsp;  Initiale: ________</span>
+          Le titre ci dessous décrit le produit qui doit être transféré à l'acheteur quand celui-ci a fait le paiement
+          au complet . Toutes les parties dans ce contrat sont au courant que la valeur d'échange ou du prix d'achat
+          énoncé ci-dessous peut être réviser suivant les précisions dans les sections 8, 9, 10, 11, 12, et 13 des
+          termes et conditions du contrat suivant.
+          <br /><span style="float: right">&nbsp; Initiale: ________</span>
         </p>
       </div>
     </div>
@@ -873,7 +791,6 @@
 
     <!-- +++++++++++++++++++++ CUSTOMER NOTES AND FINANCE INFORMATION +++++++++++++++++++++++++ -->
     <div class="row customer_notes">
-
       <!-- +++++++++++++++++++++++++++++++ CUSTOMER NOTES +++++++++++++++++++++++++ -->
       <div class="col col70">
         <div class="notes_container">
@@ -882,7 +799,8 @@
           </p>
         </div>
         <div>
-          <b>S'il vous plait, veuillez vous rappeler:</b> Diamètre de la boule 2'' avec hauteur de 18'', couette à 4 fils plats, solde dû à la livraison payable par chèque certifié
+          <b>S'il vous plait, veuillez vous rappeler:</b> Diamètre de la boule 2'' avec hauteur de 18'', couette à 4
+          fils plats, solde dû à la livraison payable par chèque certifié
         </div>
         <div class="disclaimer-container">
           <apex:outputPanel rendered="{!disclaimers.size > 0}">
@@ -902,51 +820,44 @@
       <!-- +++++++++++++++++++++++++++++++ FINAnCIAL DETAILS ++++++++++++++++++++++ -->
       <div class="col col30 finacial_details">
         <apex:outputPanel layout="none">
-        <div class="fd_container">
-          <p class="title">Détails Financière</p>
-          <p>
-            Termes en mois
-            <span>{!erpOrder.Finance_Term__c}</span>
-          </p>
-          <p>
-            Taux d'intérêt annuel
-            <span>{!erpOrder.Finance_Annual_Interest__c}</span>
-          </p>
-          <p>
-            Amortissent en mois
-            <span>{!erpOrder.Finance_Ammortization__c}</span>
-          </p>
-          <p>
-            Number of Payments Per Year
-            <span>{!erpOrder.Finance_Payments_Per_Year__c}</span>
-          </p>
-          <p class="summary">
-            {!frenchPaymentString}
-            <span>
-              <apex:outputText value="${0, number, ###,###,###,##0.00}">
-                <apex:param value="{!paymentAmount}"/>
-              </apex:outputText>
-            </span>
-          </p>
-        </div>
+          <div class="fd_container">
+            <p class="title">Détails Financière</p>
+            <p>
+              Termes en mois
+              <span>{!erpOrder.Finance_Term__c}</span>
+            </p>
+            <p>
+              Taux d'intérêt annuel
+              <span>{!erpOrder.Finance_Annual_Interest__c}</span>
+            </p>
+            <p>
+              Amortissent en mois
+              <span>{!erpOrder.Finance_Ammortization__c}</span>
+            </p>
+            <p>
+              Number of Payments Per Year
+              <span>{!erpOrder.Finance_Payments_Per_Year__c}</span>
+            </p>
+            <p class="summary">
+              {!frenchPaymentString}
+              <span>
+                <apex:outputText value="${0, number, ###,###,###,##0.00}">
+                  <apex:param value="{!paymentAmount}" />
+                </apex:outputText>
+              </span>
+            </p>
+          </div>
         </apex:outputPanel>
       </div>
       <!-- =============================== FINACIAL DETAILS ======================= -->
-
-
     </div>
     <!-- =================== CUSTOMER NOTES AND FINANCE INFORMATION ============================ -->
 
-
-
     <!-- +++++++++++++++++++++++++++ SIGNATURES AND SUMMARY +++++++++++++++++++++++ -->
     <div class="row signatures_and_summary">
-
       <!-- ++++++++++++++++++++ SIGNATURES AND STUFF ++++++++++++++++++++++++++++ -->
       <div class="col col70">
-
         <div class="row">
-
           <div class="col col70">
             <div class="row">
               <div class="col col49 signature_container">
@@ -980,20 +891,17 @@
               <img src="{!URLFOR($Resource.LegendPDF,'Icons/CreditCard.png')}" />
               <p>Paiement par carte</p>
               <p>
-                On accepte jusqu’à 2000 dollars par:<br/>
+                On accepte jusqu’à 2000 dollars par:<br />
                 Visa, Mastercard, Debit
               </p>
-              <p >
+              <p>
                 <span style="">Terms:</span>
                 La balance doit être réglée sous 30 jours par des fonds certifiés ou un transfert d’argent.<br />
                 Après 30 jours, 2% d'intérêts par mois seront appliqués au montant impayé.
               </p>
             </div>
           </div>
-
-
         </div>
-
       </div>
       <!-- ==================== SIGNATURES AND STUFF ============================ -->
 
@@ -1004,88 +912,89 @@
             <td>SOUS-TOTAL:</td>
             <td>
               <apex:outputText value="${0, number, ###,###,###,##0.00}">
-                    <apex:param value="{!subTotal}"/>
-               </apex:outputText>
-            </td>
-          </tr>
-          <apex:outputPanel layout="none" rendered="{!IF(totalSaving = 0, false, true)}">
-          <tr>
-            <td class="decrease">ÉCONOMIES:</td>
-            <td class="decrease">
-              <apex:outputText value="${0, number, ###,###,###,##0.00}"
-                               rendered="{!totalSaving != null}">
-                <apex:param value="{!totalSaving}"/>
+                <apex:param value="{!subTotal}" />
               </apex:outputText>
             </td>
           </tr>
+          <apex:outputPanel layout="none" rendered="{!IF(totalSaving = 0, false, true)}">
+            <tr>
+              <td class="decrease">ÉCONOMIES:</td>
+              <td class="decrease">
+                <apex:outputText value="${0, number, ###,###,###,##0.00}" rendered="{!totalSaving != null}">
+                  <apex:param value="{!totalSaving}" />
+                </apex:outputText>
+              </td>
+            </tr>
           </apex:outputPanel>
           <tr>
             <td>TOTAL AVANT TAXES:</td>
             <td>
               <apex:outputText value="${0, number, ###,###,###,##0.00}">
-                        <apex:param value="{!erpOrder.Order_Item_Total__c}"/>
-                  </apex:outputText>
+                <apex:param value="{!erpOrder.Order_Item_Total__c}" />
+              </apex:outputText>
             </td>
           </tr>
-         <!-- OverRide Custom Taxes -->
+          <!-- OverRide Custom Taxes -->
           <apex:outputPanel layout="none" rendered="{!erpOrder.Tax_is_Harmonized__c == true}">
             <tr>
-              <td> TAX (TVH): {! erpOrder.Tax_Rate_Provincial__c + erpOrder.Tax_Rate_Federal__c}%: </td>
+              <td>TAX (TVH): {! erpOrder.Tax_Rate_Provincial__c + erpOrder.Tax_Rate_Federal__c}%:</td>
               <td>
-                  <apex:outputText value="${0, number, ###,###,###,##0.00}">
-                        <apex:param value="{!erpOrder.Tax_Amount_Provincial__c + erpOrder.Tax_Amount_Federal__c}"/>
-                  </apex:outputText>
-               </td>
+                <apex:outputText value="${0, number, ###,###,###,##0.00}">
+                  <apex:param value="{!erpOrder.Tax_Amount_Provincial__c + erpOrder.Tax_Amount_Federal__c}" />
+                </apex:outputText>
+              </td>
             </tr>
           </apex:outputPanel>
 
           <apex:outputPanel layout="none" rendered="{!erpOrder.Tax_is_Harmonized__c != true}">
             <tr>
-              <td> TAX (TPS): {!erpOrder.Tax_Rate_Federal__c}%: </td>
+              <td>TAX (TPS): {!erpOrder.Tax_Rate_Federal__c}%:</td>
               <td>
-                  <apex:outputText value="${0, number, ###,###,###,##0.00}">
-                        <apex:param value="{!erpOrder.Tax_Amount_Federal__c}"/>
-                  </apex:outputText>
-               </td>
+                <apex:outputText value="${0, number, ###,###,###,##0.00}">
+                  <apex:param value="{!erpOrder.Tax_Amount_Federal__c}" />
+                </apex:outputText>
+              </td>
             </tr>
           </apex:outputPanel>
 
           <apex:outputPanel layout="none" rendered="{!erpOrder.Tax_is_Harmonized__c != true}">
             <tr>
-              <td> TAX ({!provTAxInfo.taxName}): {!erpOrder.Tax_Rate_Provincial__c}%: </td>
+              <td>TAX ({!provTAxInfo.taxName}): {!erpOrder.Tax_Rate_Provincial__c}%:</td>
               <td>
-                  <apex:outputText value="${0, number, ###,###,###,##0.00}">
-                        <apex:param value="{!erpOrder.Tax_Amount_Provincial__c}"/>
-                  </apex:outputText>
-               </td>
+                <apex:outputText value="${0, number, ###,###,###,##0.00}">
+                  <apex:param value="{!erpOrder.Tax_Amount_Provincial__c}" />
+                </apex:outputText>
+              </td>
             </tr>
           </apex:outputPanel>
-           <apex:outputPanel layout="none" rendered="{!IF(erpOrder.Tax_Amount_Retail__c > 0,true, false)}">
+          <apex:outputPanel layout="none" rendered="{!IF(erpOrder.Tax_Amount_Retail__c > 0,true, false)}">
             <tr>
-              <td> TAX (RST): {!erpOrder.Tax_Rate_Retail__c}%: </td>
+              <td>TAX (RST): {!erpOrder.Tax_Rate_Retail__c}%:</td>
               <td>
-                  <apex:outputText value="${0, number, ###,###,###,##0.00}">
-                        <apex:param value="{!erpOrder.Tax_Amount_Retail__c}"/>
-                  </apex:outputText>
-               </td>
+                <apex:outputText value="${0, number, ###,###,###,##0.00}">
+                  <apex:param value="{!erpOrder.Tax_Amount_Retail__c}" />
+                </apex:outputText>
+              </td>
             </tr>
           </apex:outputPanel>
           <tr>
             <td>DÉPÔT <span class="deposit_method">by {!erpOrder.Deposit_Method__c}</span>:</td>
             <td class="">
-               <apex:outputText value="- ${0, number, ###,###,###,##0.00}">
-                <apex:param value="{!NULLVALUE( erpOrder.Deposit__c  , 0 ) }"/>
+              <apex:outputText value="- ${0, number, ###,###,###,##0.00}">
+                <apex:param value="{!NULLVALUE( erpOrder.Deposit__c  , 0 ) }" />
               </apex:outputText>
             </td>
           </tr>
 
-            <!-- Seperate taxes -->
+          <!-- Seperate taxes -->
 
           <tr class="total">
             <td>Total:</td>
             <td>
               <apex:outputText value="${0, number, ###,###,###,##0.00}">
-                <apex:param value="{!erpOrder.Grand_Total__c - IF(ISNULL(erpOrder.Deposit__c), 0, erpOrder.Deposit__c)}"/>
+                <apex:param
+                  value="{!erpOrder.Grand_Total__c - IF(ISNULL(erpOrder.Deposit__c), 0, erpOrder.Deposit__c)}"
+                />
               </apex:outputText>
             </td>
           </tr>
@@ -1094,24 +1003,26 @@
         <!-- Dealer Signature -->
         <div class="row">
           <div class="col col100 signature_container">
-            <p style="margin-top:50px;">&nbsp;</p>
+            <p style="margin-top: 50px">&nbsp;</p>
             <p></p>
-            <p style="padding-bottom: 5px;">Signature du concessionnaire</p>
+            <p style="padding-bottom: 5px">Signature du concessionnaire</p>
           </div>
         </div>
         <!-- /Dealer Signature -->
       </div>
       <!-- ============================ COST SUMMARY ============================ -->
-
     </div>
     <!-- =========================== /SIGNATURES AND SUMMARY ====================== -->
     <div class="row">
-      <div class="disclaimer" style="border-bottom: none;">
-        Je, ou nous, acquiesçons avoir reçu une copie de ce contrat, et je, ou nous avons lu les termes et les conditions suivantes de cet accord. Je, ou nous, sommes d’ accord avec la balance que nous paierons au comptant, en chèque certifié, par une traite bancaire ou par l'exécution d'un accord de sécurité, qui est sujet à l'acceptation par une agence de financement et approuvé par le revendeur. L'acheteur reconnaît que l'année et le modèle peuvent ne pas être exactement comme montré ci-dessus. Tous les prix sont sujet à l'approbation du directeur.
+      <div class="disclaimer" style="border-bottom: none">
+        Je, ou nous, acquiesçons avoir reçu une copie de ce contrat, et je, ou nous avons lu les termes et les
+        conditions suivantes de cet accord. Je, ou nous, sommes d’ accord avec la balance que nous paierons au comptant,
+        en chèque certifié, par une traite bancaire ou par l'exécution d'un accord de sécurité, qui est sujet à
+        l'acceptation par une agence de financement et approuvé par le revendeur. L'acheteur reconnaît que l'année et le
+        modèle peuvent ne pas être exactement comme montré ci-dessus. Tous les prix sont sujet à l'approbation du
+        directeur.
       </div>
-      <div class="thankyou">
-        Merci d'avoir choisi Legend pour vous aider à créer des souvenirs sur l'eau.
-      </div>
+      <div class="thankyou">Merci d'avoir choisi Legend pour vous aider à créer des souvenirs sur l'eau.</div>
     </div>
 
     <!-- ++++++++++++++++++++++++++++ FOOTER +++++++++++++++++++++++++++++++++++ -->
@@ -1123,8 +1034,7 @@
 
     <div class="footer-center">
       <div class="address">
-        {!warehouse.Street__c}, {!warehouse.City__c},
-        {!warehouse.State__c}, {!warehouse.Country__c},
+        {!warehouse.Street__c}, {!warehouse.City__c}, {!warehouse.State__c}, {!warehouse.Country__c},
         {!warehouse.Postal_Code__c}
       </div>
     </div>
@@ -1138,277 +1048,411 @@
     </div>
 
     <!-- ============================ FOOTER ================================== -->
+  </div>
+  <!-- /Header Wrapper page Break -->
 
-  </div><!-- /Header Wrapper page Break -->
-
-<!-- +++++++++++++++++++++++++++++++++++++++ TERMS AND CONDITIONS PAGE ++++++++++++++++++++++++ -->
+  <!-- +++++++++++++++++++++++++++++++++++++++ TERMS AND CONDITIONS PAGE ++++++++++++++++++++++++ -->
 
   <div class="invoicePageTwo">
     <h5>Terms and Conditions</h5>
     <div class="additional_terms_container">
-
       <div class="column left">
+        <p>Il est convenu par et entre les parties comme suit:</p>
         <p>
-          Il est convenu par et entre les parties comme suit:
+          <b>1.</b> Les termes et conditions suivants font partie de l'accord décrit au verso des présentes et ont été
+          mutuellement convenus par et entre les parties.
         </p>
         <p>
-          <b>1.</b> Les termes et conditions suivants font partie de l'accord décrit au verso des présentes et ont été mutuellement convenus par et entre les parties.
+          <b>2.</b> La propriété de l'équipement acheté sera conservée par le Concessionnaire jusqu'à ce que le prix
+          d'achat ait été payé en totalité et que l'Acheteur accepte que le Concessionnaire ait une sûreté, telle que
+          définie dans la Loi sur les sûretés mobilières dans la Province en question à l'égard du même jusqu'à ce que
+          le prix d'achat soit payé en totalité, le Concessionnaire doit transférer la propriété de l'équipement acheté
+          à l'Acheteur et décharger tous les enregistrements au bureau de sûreté provinciale applicable. Nonobstant ce
+          qui précède, il incombe à l'Acheteur d'obtenir une couverture d'assurance à compter de la date de livraison de
+          l'équipement acheté. Le Concessionnaire, à sa seule discrétion, aura la possibilité de résilier l'accord de
+          vente jusqu'à la date de prise en charge, sans pénalité, et, s'il choisit, remboursera intégralement tous les
+          dépôts à l'Acheteur.
+        </p>
+        <h6>NOUVEL ÉQUIPEMENT</h6>
+        <p>
+          <b>3.</b> L'Acheteur reconnaît que, lorsque l'équipement acheté est un équipement neuf, le revendeur est un
+          revendeur de l'équipement du fabricant. Le fabricant se réserve le droit de modifier le prix à ses revendeurs
+          et le revendeur se réserve donc le droit de modifier le prix d'achat. Lorsque la modification du prix d'achat
+          entraîne une augmentation du prix d'achat, l'Acheteur peut annuler sa commande, sauf si l'augmentation est
+          uniquement attribuable à une fluctuation ou une variation du taux de change international et/ou les taxes à la
+          consommation applicables.
         </p>
         <p>
-          <b>2.</b> La propriété de l'équipement acheté sera conservée par le Concessionnaire jusqu'à ce que le prix d'achat ait été payé en totalité et que l'Acheteur accepte que le Concessionnaire ait une sûreté, telle que définie dans la Loi sur les sûretés mobilières dans la Province en question à l'égard du même jusqu'à ce que le prix d'achat soit payé en totalité, le Concessionnaire doit transférer la propriété de l'équipement acheté à l'Acheteur et décharger tous les enregistrements au bureau de sûreté provinciale applicable. Nonobstant ce qui précède, il incombe à l'Acheteur d'obtenir une couverture d'assurance à compter de la date de livraison de l'équipement acheté. Le Concessionnaire, à sa seule discrétion, aura la possibilité de résilier l'accord de vente jusqu'à la date de prise en charge, sans pénalité, et, s'il choisit, remboursera intégralement tous les dépôts à l'Acheteur.
-        </p>
-        <h6>
-          NOUVEL ÉQUIPEMENT
-        </h6>
-        <p>
-        <b>3.</b> L'Acheteur reconnaît que, lorsque l'équipement acheté est un équipement neuf, le revendeur est un revendeur de l'équipement du fabricant. Le fabricant se réserve le droit de modifier le prix à ses revendeurs et le revendeur se réserve donc le droit de modifier le prix d'achat. Lorsque la modification du prix d'achat entraîne une augmentation du prix d'achat, l'Acheteur peut annuler sa commande, sauf si l'augmentation est uniquement attribuable à une fluctuation ou une variation du taux de change international et/ou les taxes à la consommation applicables.
-        </p>
-        <p>
-        <b>4.</b> Le fabricant de tout équipement dans lequel le Concessionnaire fait du commerce a le droit d'apporter des modifications au modèle, à la conception, aux pièces ou aux accessoires comme il l'entend, à sa seule discrétion. L'Acheteur s'engage à accepter l'équipement acheté, sous réserve de tous ces changements apportés par le fabricant, à condition que ces changements n'affectent pas la qualité, l'intégrité ou la valeur de l'équipement acheté. En aucun cas, l'Acheteur n'exigera du Concessionnaire ou du Fabricant qu'il fournisse l'Équipement acheté, avec des modifications de modèle, de conception, de pièces ou d'accessoires en option.
+          <b>4.</b> Le fabricant de tout équipement dans lequel le Concessionnaire fait du commerce a le droit
+          d'apporter des modifications au modèle, à la conception, aux pièces ou aux accessoires comme il l'entend, à sa
+          seule discrétion. L'Acheteur s'engage à accepter l'équipement acheté, sous réserve de tous ces changements
+          apportés par le fabricant, à condition que ces changements n'affectent pas la qualité, l'intégrité ou la
+          valeur de l'équipement acheté. En aucun cas, l'Acheteur n'exigera du Concessionnaire ou du Fabricant qu'il
+          fournisse l'Équipement acheté, avec des modifications de modèle, de conception, de pièces ou d'accessoires en
+          option.
         </p>
         <p>
-        <b>5.</b> Le Concessionnaire ne sera pas responsable des pertes ou dommages causés par le retard du fabricant dans la fourniture de l'équipement acheté ou de tout accident, grève, incendie ou toute autre cause indépendante de la volonté du Concessionnaire qui pourrait affecter la livraison et / ou la fourniture de l'équipement acheté.
+          <b>5.</b> Le Concessionnaire ne sera pas responsable des pertes ou dommages causés par le retard du fabricant
+          dans la fourniture de l'équipement acheté ou de tout accident, grève, incendie ou toute autre cause
+          indépendante de la volonté du Concessionnaire qui pourrait affecter la livraison et / ou la fourniture de
+          l'équipement acheté.
         </p>
         <p>
-        <b>6.</b> Le Concessionnaire accepte de céder les avantages de toute garantie reçue à l'égard de l'équipement acheté du fabricant à l'Acheteur une fois terminé. Le revendeur accepte de fournir à l'Acheteur des copies du matériel et de la documentation de garantie du fabricant. L'Acheteur reconnaît avoir inspecté l'équipement acheté et est convaincu que l'équipement acheté est d'une qualité et d'un type satisfaisant pour lui et qu'il est adapté à ses besoins.
+          <b>6.</b> Le Concessionnaire accepte de céder les avantages de toute garantie reçue à l'égard de l'équipement
+          acheté du fabricant à l'Acheteur une fois terminé. Le revendeur accepte de fournir à l'Acheteur des copies du
+          matériel et de la documentation de garantie du fabricant. L'Acheteur reconnaît avoir inspecté l'équipement
+          acheté et est convaincu que l'équipement acheté est d'une qualité et d'un type satisfaisant pour lui et qu'il
+          est adapté à ses besoins.
         </p>
         <p>
-        <b>7.</b> L'Acheteur reconnaît avoir reçu toute la documentation de chaque Fabricant au niveau de leurs garanties respectives et accepte tous les termes, limitations et exclusions en faisant partie. L'Acheteur ne tiendra pas le Concessionnaire responsable de toutes réparations ou défaut pas couvert par la garantie. L'Acheteur comprend parfaitement que les garanties du fabricant qui peuvent être fournies peuvent ne pas prévoir les appels de service et que l'entière responsabilité du transport de l'équipement acheté pour les réparations incombera à l'Acheteur.
+          <b>7.</b> L'Acheteur reconnaît avoir reçu toute la documentation de chaque Fabricant au niveau de leurs
+          garanties respectives et accepte tous les termes, limitations et exclusions en faisant partie. L'Acheteur ne
+          tiendra pas le Concessionnaire responsable de toutes réparations ou défaut pas couvert par la garantie.
+          L'Acheteur comprend parfaitement que les garanties du fabricant qui peuvent être fournies peuvent ne pas
+          prévoir les appels de service et que l'entière responsabilité du transport de l'équipement acheté pour les
+          réparations incombera à l'Acheteur.
         </p>
         <h6>ÉQUIPEMENT D'ÉCHANGE</h6>
         <p>
-        <b>8.</b> L'Acheteur est responsable de la livraison au Concessionnaire de l'équipement d'échange ainsi que de tous les titres de propriété pertinents. L'Acheteur garantit qu'il est le propriétaire légitime et absolue de l'équipement d'échange et qu'il a le droit de le céder et de le transférer au revendeur, libre et clair de tous liens ou et autre quel qu'il soit et qu'il le fera à tout moment ci-après faire ou faire faire tous ces autres actes pour assurer le libre transfert de l'équipement de reprise au Concessionnaire de la manière susmentionnée. L'Acheteur garantit que toutes les taxes prélevées sur l'équipement d'échange ont été payées en totalité.
+          <b>8.</b> L'Acheteur est responsable de la livraison au Concessionnaire de l'équipement d'échange ainsi que de
+          tous les titres de propriété pertinents. L'Acheteur garantit qu'il est le propriétaire légitime et absolue de
+          l'équipement d'échange et qu'il a le droit de le céder et de le transférer au revendeur, libre et clair de
+          tous liens ou et autre quel qu'il soit et qu'il le fera à tout moment ci-après faire ou faire faire tous ces
+          autres actes pour assurer le libre transfert de l'équipement de reprise au Concessionnaire de la manière
+          susmentionnée. L'Acheteur garantit que toutes les taxes prélevées sur l'équipement d'échange ont été payées en
+          totalité.
         </p>
         <p>
-          L'Acheteur déclare et garantit en outre que tout bateau livré au Concessionnaire en tant qu'équipement d'échange est en état de navigabilité et que ses accessoires et équipements sont en bon état de fonctionnement et, sans limitation, que le bloc d'endives, les collecteurs et la culasse de tout bateau endive livré en tant que ou partie de l'équipement d'échange ne sont pas fêlés ou autrement défectueux, et sont l'année, la marque et le modèle tels que décrits au verso.
+          L'Acheteur déclare et garantit en outre que tout bateau livré au Concessionnaire en tant qu'équipement
+          d'échange est en état de navigabilité et que ses accessoires et équipements sont en bon état de fonctionnement
+          et, sans limitation, que le bloc d'endives, les collecteurs et la culasse de tout bateau endive livré en tant
+          que ou partie de l'équipement d'échange ne sont pas fêlés ou autrement défectueux, et sont l'année, la marque
+          et le modèle tels que décrits au verso.
         </p>
         <p>
-        <b>9.</b> S'il est découvert que l'équipement d'échange fait l'objet d'une charge, d'un lien ou d'une réclamation de quelque nature que ce soit (autre que celles décrites dans les présentes), le Concessionnaire aura la possibilité de :
+          <b>9.</b> S'il est découvert que l'équipement d'échange fait l'objet d'une charge, d'un lien ou d'une
+          réclamation de quelque nature que ce soit (autre que celles décrites dans les présentes), le Concessionnaire
+          aura la possibilité de :
         </p>
         <ol type="a">
-          <li>Payer la réclamation et tous les frais encourus pour régler la réclamation et demander un remboursement immédiat à l'Acheteur, ou</li>
-          <li>Additionner le montant de la réclamation plus les frais de règlement de cette réclamation au Prix d'Achat et de l'encaisser comme tel.</li>
+          <li>
+            Payer la réclamation et tous les frais encourus pour régler la réclamation et demander un remboursement
+            immédiat à l'Acheteur, ou
+          </li>
+          <li>
+            Additionner le montant de la réclamation plus les frais de règlement de cette réclamation au Prix d'Achat et
+            de l'encaisser comme tel.
+          </li>
         </ol>
         <p>
-        <b>10.</b> Si l'équipement d'échange n'est pas plaqué et enregistré dans la province où le présent contrat est exécuté, l'Acheteur doit immédiatement l'autoriser et l'enregistrer dans ladite province, à défaut de quoi le Concessionnaire aura le droit de le plaquer et de l'enregistrer, et les dépenses engagées s'ajoutent au Prix d'achat et payable en tant que tel.
+          <b>10.</b> Si l'équipement d'échange n'est pas plaqué et enregistré dans la province où le présent contrat est
+          exécuté, l'Acheteur doit immédiatement l'autoriser et l'enregistrer dans ladite province, à défaut de quoi le
+          Concessionnaire aura le droit de le plaquer et de l'enregistrer, et les dépenses engagées s'ajoutent au Prix
+          d'achat et payable en tant que tel.
         </p>
         <p>
-        <b>11.</b> Il est reconnu par l'Acheteur que l’allocation donnée pour l'équipement d'échange est basée sur des évaluations et/ou des déclarations et des garanties faites par l'Acheteur au Concessionnaire. Le Concessionnaire aura le droit d'inspecter et/ou de réévaluer l'équipement d'échange dans les 30 jours suivant son évaluation et si son état est jugé défectueux ou inacceptable, le Concessionnaire aura, au cours de cette période de 30 jours, la possibilité de :
+          <b>11.</b> Il est reconnu par l'Acheteur que l’allocation donnée pour l'équipement d'échange est basée sur des
+          évaluations et/ou des déclarations et des garanties faites par l'Acheteur au Concessionnaire. Le
+          Concessionnaire aura le droit d'inspecter et/ou de réévaluer l'équipement d'échange dans les 30 jours suivant
+          son évaluation et si son état est jugé défectueux ou inacceptable, le Concessionnaire aura, au cours de cette
+          période de 30 jours, la possibilité de :
         </p>
         <ol type="a">
           <li>Résilier le présent Accord ; ou alors</li>
-          <li>Effectuer toutes les réparations nécessaires pour mettre l'équipement de reprise dans un état commercialisable et facturer directement à cet effet ou ajouter les frais de réparation au prix d'achat et les percevoir comme tel ; ou alors</li>
+          <li>
+            Effectuer toutes les réparations nécessaires pour mettre l'équipement de reprise dans un état
+            commercialisable et facturer directement à cet effet ou ajouter les frais de réparation au prix d'achat et
+            les percevoir comme tel ; ou alors
+          </li>
           <li>Facturer les coûts des réparations à l'Acheteur.</li>
         </ol>
         <p>
-          Dans le cas où l'Acheteur n’aurait pas pris livraison de l’Équipement, la franchise de reprise sera diminuée de plus de 10 %. L'Acheteur a le droit de résilier le présent accord à condition que l'Acheteur paie les frais raisonnables du Concessionnaire engagés à l'égard de l'accord et toutes les dépenses engagées par le Concessionnaire pour le stockage, l'assurance, le reconditionnement, la réparation ou la publicité de l'équipement de reprise. Dans le cas où l'Acheteur a pris livraison de l'Équipement acheté, l'Acheteur s'engage à accepter la nouvelle allocation de reprise telle que déterminée par le Concessionnaire.
+          Dans le cas où l'Acheteur n’aurait pas pris livraison de l’Équipement, la franchise de reprise sera diminuée
+          de plus de 10 %. L'Acheteur a le droit de résilier le présent accord à condition que l'Acheteur paie les frais
+          raisonnables du Concessionnaire engagés à l'égard de l'accord et toutes les dépenses engagées par le
+          Concessionnaire pour le stockage, l'assurance, le reconditionnement, la réparation ou la publicité de
+          l'équipement de reprise. Dans le cas où l'Acheteur a pris livraison de l'Équipement acheté, l'Acheteur
+          s'engage à accepter la nouvelle allocation de reprise telle que déterminée par le Concessionnaire.
         </p>
         <p>
-        <b>12.</b> Lorsque l'Acheteur annule son achat après avoir transféré le titre de propriété de l'équipement d'échange, s'il n'a pas été vendu par le Concessionnaire, doit être racheter par l’Acheteur et celui-ci doit assumer tous les frais raisonnables encourus par le Concessionnaire pour tout stockage et réparation ; si l'équipement de reprise a été vendu par le Concessionnaire, le Concessionnaire doit payer à l'Acheteur tout le produit de la vente à son égard moins une commission de vente de 15 % sur le prix de vente brut et toutes les dépenses engagées par le Concessionnaire pour stocker, assurer, remettre en état, réparer, et tous frais de publicité de l'équipement d'échange. La rétrocession de l'équipement d'échange ou le paiement du produit de la vente, comme prévu ci-dessus, constituera une décharge complète de toutes les réclamations de l'Acheteur concernant l'équipement d'échange.
+          <b>12.</b> Lorsque l'Acheteur annule son achat après avoir transféré le titre de propriété de l'équipement
+          d'échange, s'il n'a pas été vendu par le Concessionnaire, doit être racheter par l’Acheteur et celui-ci doit
+          assumer tous les frais raisonnables encourus par le Concessionnaire pour tout stockage et réparation ; si
+          l'équipement de reprise a été vendu par le Concessionnaire, le Concessionnaire doit payer à l'Acheteur tout le
+          produit de la vente à son égard moins une commission de vente de 15 % sur le prix de vente brut et toutes les
+          dépenses engagées par le Concessionnaire pour stocker, assurer, remettre en état, réparer, et tous frais de
+          publicité de l'équipement d'échange. La rétrocession de l'équipement d'échange ou le paiement du produit de la
+          vente, comme prévu ci-dessus, constituera une décharge complète de toutes les réclamations de l'Acheteur
+          concernant l'équipement d'échange.
         </p>
         <p>
-        <b>13.</b> L'équipement d'échange deviendra la propriété du Concessionnaire dès ; (a) l'exécution du présent contrat et (b) la livraison au Concessionnaire de l'équipement de reprise.
+          <b>13.</b> L'équipement d'échange deviendra la propriété du Concessionnaire dès ; (a) l'exécution du présent
+          contrat et (b) la livraison au Concessionnaire de l'équipement de reprise.
         </p>
-
-      </div><!-- /left column -->
+      </div>
+      <!-- /left column -->
       <div class="column right">
         <h6>MATÉRIEL USAGÉ</h6>
         <p>
-        <b>14.</b> Lorsque l'Acheteur achète de l'Équipement « utilisé » et/ou que le Concessionnaire le possède en courtage, l'Acheteur reconnaît qu'il achète l'Équipement acheté « tel quel, sans aucune garantie». L'Acheteur reconnaît avoir inspecté l'équipement acheté et tous les accessoires en faisant partie et convient que tout l'équipement acheté est de qualité satisfaisante pour lui et adapté à ses besoins.
+          <b>14.</b> Lorsque l'Acheteur achète de l'Équipement « utilisé » et/ou que le Concessionnaire le possède en
+          courtage, l'Acheteur reconnaît qu'il achète l'Équipement acheté « tel quel, sans aucune garantie». L'Acheteur
+          reconnaît avoir inspecté l'équipement acheté et tous les accessoires en faisant partie et convient que tout
+          l'équipement acheté est de qualité satisfaisante pour lui et adapté à ses besoins.
         </p>
         <h6>GÉNÉRAL</h6>
         <p>
-        À L'EXCEPTION DE LA LOI PROVINCIALE, LE CONCESSIONNAIRE DÉCLINE EXPRESSÉMENT TOUTE GARANTIE, EXPLICITE OU IMPLICITE, Y COMPRIS TOUTE GARANTIE IMPLICITE DE QUALITÉ MARCHANDE OU D'ADAPTATION À UN USAGE PARTICULIER, EN CE QUI CONCERNE TOUT ÉQUIPEMENT VENDU CI-DESSOUS.
+          À L'EXCEPTION DE LA LOI PROVINCIALE, LE CONCESSIONNAIRE DÉCLINE EXPRESSÉMENT TOUTE GARANTIE, EXPLICITE OU
+          IMPLICITE, Y COMPRIS TOUTE GARANTIE IMPLICITE DE QUALITÉ MARCHANDE OU D'ADAPTATION À UN USAGE PARTICULIER, EN
+          CE QUI CONCERNE TOUT ÉQUIPEMENT VENDU CI-DESSOUS.
         </p>
         <p>
-        <b>15.</b> Sauf indication contraire dans les présentes, le Concessionnaire n'est pas responsable de fournir le transport à l'Acheteur pour quelque raison que ce soit, que ce soit pour le transport de l'équipement d'échange au Concessionnaire ou le transport de l'équipement acheté à l'Acheteur.
+          <b>15.</b> Sauf indication contraire dans les présentes, le Concessionnaire n'est pas responsable de fournir
+          le transport à l'Acheteur pour quelque raison que ce soit, que ce soit pour le transport de l'équipement
+          d'échange au Concessionnaire ou le transport de l'équipement acheté à l'Acheteur.
         </p>
         <p>
-        <b>16.</b> Sauf convention contraire écrite, les parties aux présentes conviennent que le présent Contrat doit être conclu dans les 30 jours suivant la date des présentes, à défaut de quoi le Concessionnaire, à sa seule discrétion, aura le droit de résilier le Contrat. Dans un tel cas, l'Acheteur sera tenu de payer tous les frais raisonnables du Concessionnaire engagés pour réparer tout Équipement d'échange ou Équipement acheté et pour poursuivre la réalisation de cette transaction, à défaut de quoi l'Acheteur constitue et nomme irrévocablement le Concessionnaire son avocat pour vendre l'équipement en possession du Concessionnaire et déduire du produit, tous les comptes raisonnables du Concessionnaire.
+          <b>16.</b> Sauf convention contraire écrite, les parties aux présentes conviennent que le présent Contrat doit
+          être conclu dans les 30 jours suivant la date des présentes, à défaut de quoi le Concessionnaire, à sa seule
+          discrétion, aura le droit de résilier le Contrat. Dans un tel cas, l'Acheteur sera tenu de payer tous les
+          frais raisonnables du Concessionnaire engagés pour réparer tout Équipement d'échange ou Équipement acheté et
+          pour poursuivre la réalisation de cette transaction, à défaut de quoi l'Acheteur constitue et nomme
+          irrévocablement le Concessionnaire son avocat pour vendre l'équipement en possession du Concessionnaire et
+          déduire du produit, tous les comptes raisonnables du Concessionnaire.
         </p>
         <p>
-        <b>17.</b> Lorsque le Concessionnaire est en possession de l'équipement acheté (une fois que le titre a été transféré à l'Acheteur) ou de l'équipement d'échange, le Concessionnaire ne sera pas considéré comme un dépositaire de ces marchandises ; l'Acheteur sera plutôt un titulaire de licence de l'espace, de temps à autre désigné par le Concessionnaire, où l'équipement acheté ou l'équipement d'échange est garé, stocké ou exposé. Le Concessionnaire n'assume aucune obligation de prendre soin de l'équipement acheté ou de l'équipement d'échange ou d'empêcher la perte ou l'endommagement de ceux-ci, sauf lorsqu'il procède à des réparations.
+          <b>17.</b> Lorsque le Concessionnaire est en possession de l'équipement acheté (une fois que le titre a été
+          transféré à l'Acheteur) ou de l'équipement d'échange, le Concessionnaire ne sera pas considéré comme un
+          dépositaire de ces marchandises ; l'Acheteur sera plutôt un titulaire de licence de l'espace, de temps à autre
+          désigné par le Concessionnaire, où l'équipement acheté ou l'équipement d'échange est garé, stocké ou exposé.
+          Le Concessionnaire n'assume aucune obligation de prendre soin de l'équipement acheté ou de l'équipement
+          d'échange ou d'empêcher la perte ou l'endommagement de ceux-ci, sauf lorsqu'il procède à des réparations.
         </p>
         <p>
-        <b>18.</b> Le présent accord et les affaires des parties seront régis par les lois de la province dans laquelle l'accord est exécuté et le lieu de tout différend juridique sera la juridiction dans laquelle se trouve le Concessionnaire.
+          <b>18.</b> Le présent accord et les affaires des parties seront régis par les lois de la province dans
+          laquelle l'accord est exécuté et le lieu de tout différend juridique sera la juridiction dans laquelle se
+          trouve le Concessionnaire.
         </p>
         <p>
-        <b>19.</b> Cet accord constitue l'intégralité de l'accord entre les parties et il n'y a aucune représentation, garantie, condition ou accord accessoire affectant cet accord autre que celui exprimé dans les présentes.
+          <b>19.</b> Cet accord constitue l'intégralité de l'accord entre les parties et il n'y a aucune représentation,
+          garantie, condition ou accord accessoire affectant cet accord autre que celui exprimé dans les présentes.
         </p>
         <p>
-        <b>20.</b> L'Acheteur s'engage en outre à payer 2 % par mois (24 % par an) sur tout solde restant dû après la livraison du bateau.
+          <b>20.</b> L'Acheteur s'engage en outre à payer 2 % par mois (24 % par an) sur tout solde restant dû après la
+          livraison du bateau.
         </p>
         <p>
-        <b>21. Québec Seulement</b><i> « Déclaration requise par la Loi sur la protection du consommateur »</i> Contrat autre qu'un contrat de crédit qui contient une clause de réserve de propriété.
+          <b>21. Québec Seulement</b
+          ><i> « Déclaration requise par la Loi sur la protection du consommateur »</i> Contrat autre qu'un contrat de
+          crédit qui contient une clause de réserve de propriété.
         </p>
         <p>
-          Si l'Acheteur n'exécute pas son obligation de la manière prévue dans le présent accord, le Concessionnaire peut ; a) exiger le paiement immédiat des acomptes échus ; b) soit reprendre possession de l'équipement d'Achat d'Équipement d'échange qui font l'objet du Contrat. Avant de reprendre l'équipement acheté ou l'équipement d'échange à l'Acheteur, le Concessionnaire doit donner à l'Acheteur un préavis écrit de 30 jours pendant lequel l'Acheteur peut, à son choix ; a) soit remédier au fait que l'Acheteur a fait défaut ; b) soit remettre l'équipement acheté ou l'équipement d'échange au Concessionnaire. Si l'Acheteur remet l'équipement acheté ou l'équipement d'échange au Concessionnaire, son obligation en vertu du présent contrat est éteinte et le Concessionnaire n'est pas tenu de remettre les paiements qu'il a reçus. Si l'Acheteur a payé au moins la moitié de la somme de l'obligation totale et de l'acompte avant la défaillance, le Concessionnaire ne peut reprendre l'équipement acheté ou l'équipement d'échange sans avoir obtenu au préalable l'autorisation du tribunal. Il est dans le meilleur intérêt de l'Acheteur de consulter (article 15, paragraphes a et c de l'article 138 et articles 139 à 142 de la Loi sur la protection du consommateur (chapitre P-40) et, au besoin, de communiquer avec l'Office de la protection du consommateur.
+          Si l'Acheteur n'exécute pas son obligation de la manière prévue dans le présent accord, le Concessionnaire
+          peut ; a) exiger le paiement immédiat des acomptes échus ; b) soit reprendre possession de l'équipement
+          d'Achat d'Équipement d'échange qui font l'objet du Contrat. Avant de reprendre l'équipement acheté ou
+          l'équipement d'échange à l'Acheteur, le Concessionnaire doit donner à l'Acheteur un préavis écrit de 30 jours
+          pendant lequel l'Acheteur peut, à son choix ; a) soit remédier au fait que l'Acheteur a fait défaut ; b) soit
+          remettre l'équipement acheté ou l'équipement d'échange au Concessionnaire. Si l'Acheteur remet l'équipement
+          acheté ou l'équipement d'échange au Concessionnaire, son obligation en vertu du présent contrat est éteinte et
+          le Concessionnaire n'est pas tenu de remettre les paiements qu'il a reçus. Si l'Acheteur a payé au moins la
+          moitié de la somme de l'obligation totale et de l'acompte avant la défaillance, le Concessionnaire ne peut
+          reprendre l'équipement acheté ou l'équipement d'échange sans avoir obtenu au préalable l'autorisation du
+          tribunal. Il est dans le meilleur intérêt de l'Acheteur de consulter (article 15, paragraphes a et c de
+          l'article 138 et articles 139 à 142 de la Loi sur la protection du consommateur (chapitre P-40) et, au besoin,
+          de communiquer avec l'Office de la protection du consommateur.
         </p>
         <h6>COMMUNICATION ET INFORMATIONS PERSONNELLES</h6>
         <p>
-        <b>22.</b> Conformément à la ou aux lois sur la protection des informations personnelles, l'Acheteur reconnaît que le Concessionnaire a un intérêt sérieux et légitime à collecter des informations personnelles concernant l'Acheteur auprès de lui-même ou de tiers, aux fins d'exercer l'activité du Concessionnaire, plus spécifiquement à des fins d'identification, de marketing, de service à la clientèle, de réparation, d'obtention de crédit pour l'Acheteur ou uniquement dans le but de revendre l'Équipement acheté ou l'Équipement d'échange. Aux mêmes fins, l'Acheteur reconnaît que le Concessionnaire peut constituer un fichier avec les informations personnelles collectées, en faire la liste nominative et les communiquer à tout tiers lui manifestant un intérêt sérieux et légitime à les obtenir, principalement au constructeur et/ou ses sociétés affiliées qui font l'objet de cette vente, à l'assureur du véhicule, à tout acquéreur potentiel du véhicule, à toutes sociétés de crédit et à tout autre vendeur de véhicules. Le dossier ainsi constitué par le Concessionnaire sera conservé au siège social du Concessionnaire indiqué dans le présent contrat et ne pourra être consulté que par le personnel habilité, notamment les cadres et les membres du secrétariat du Concessionnaire. L'Acheteur aura le droit à tout moment, en faisant une demande écrite, d'y avoir accès ou de demander au Concessionnaire de corriger ou de supprimer des informations personnelles inexactes, périmées ou non conformes à l'objet du fichier. L'Acheteur consent au Concessionnaire, au constructeur (le cas échéant, à ses sociétés affiliées) ou à leur fournisseur de services à contacter l'Acheteur par téléphone, courrier, courrier électronique ou tout autre moyen de communication électronique. Ce consentement peut être retiré en contactant le Concessionnaire. Une reproduction de cette clause fait foi au même titre que l'original.
+          <b>22.</b> Conformément à la ou aux lois sur la protection des informations personnelles, l'Acheteur reconnaît
+          que le Concessionnaire a un intérêt sérieux et légitime à collecter des informations personnelles concernant
+          l'Acheteur auprès de lui-même ou de tiers, aux fins d'exercer l'activité du Concessionnaire, plus
+          spécifiquement à des fins d'identification, de marketing, de service à la clientèle, de réparation,
+          d'obtention de crédit pour l'Acheteur ou uniquement dans le but de revendre l'Équipement acheté ou
+          l'Équipement d'échange. Aux mêmes fins, l'Acheteur reconnaît que le Concessionnaire peut constituer un fichier
+          avec les informations personnelles collectées, en faire la liste nominative et les communiquer à tout tiers
+          lui manifestant un intérêt sérieux et légitime à les obtenir, principalement au constructeur et/ou ses
+          sociétés affiliées qui font l'objet de cette vente, à l'assureur du véhicule, à tout acquéreur potentiel du
+          véhicule, à toutes sociétés de crédit et à tout autre vendeur de véhicules. Le dossier ainsi constitué par le
+          Concessionnaire sera conservé au siège social du Concessionnaire indiqué dans le présent contrat et ne pourra
+          être consulté que par le personnel habilité, notamment les cadres et les membres du secrétariat du
+          Concessionnaire. L'Acheteur aura le droit à tout moment, en faisant une demande écrite, d'y avoir accès ou de
+          demander au Concessionnaire de corriger ou de supprimer des informations personnelles inexactes, périmées ou
+          non conformes à l'objet du fichier. L'Acheteur consent au Concessionnaire, au constructeur (le cas échéant, à
+          ses sociétés affiliées) ou à leur fournisseur de services à contacter l'Acheteur par téléphone, courrier,
+          courrier électronique ou tout autre moyen de communication électronique. Ce consentement peut être retiré en
+          contactant le Concessionnaire. Une reproduction de cette clause fait foi au même titre que l'original.
         </p>
         <h6>ACCEPTATION DE LA LIVRAISON</h6>
         <p>
-        <b>23.</b> L'Acheteur reconnaît avoir reçu la livraison du véhicule marin et des équipements optionnels décrits dans le présent contrat et déclare en être totalement satisfait à tous égards et s'engage à les payer en totalité à la livraison. L'Acheteur accepte en outre qu'il a reçu une démonstration complète de tous les produits et articles décrits dans ce contrat et qu'il est pleinement conscient de tous les aspects opérationnels de chaque article, appareil et unité fournis avec l'achat.
+          <b>23.</b> L'Acheteur reconnaît avoir reçu la livraison du véhicule marin et des équipements optionnels
+          décrits dans le présent contrat et déclare en être totalement satisfait à tous égards et s'engage à les payer
+          en totalité à la livraison. L'Acheteur accepte en outre qu'il a reçu une démonstration complète de tous les
+          produits et articles décrits dans ce contrat et qu'il est pleinement conscient de tous les aspects
+          opérationnels de chaque article, appareil et unité fournis avec l'achat.
         </p>
-      </div><!-- /right column -->
+      </div>
+      <!-- /right column -->
 
       <div class="full">
-        <p style="margin-bottom: 40px; margin-top: 90px;">
-          <b>Dans ce délai</b>, les parties ont signé à la date et au lieu mentionnés dans le présent contrat. Le présent contrat lie les parties ainsi que leurs successeurs, héritiers, légataires, ayants droit, mandataires ou préposés. Si l'Acheteur est une société, le signataire a tous pouvoirs pour engager la société qu'il représente et garantit que tous les actes appropriés seront nécessaires pour autoriser la signature par lui du présent contrat. L'Acheteur ne peut en aucun cas vendre, transférer, céder ou autrement aliéner le présent contrat ou les droits, intérêts ou avantages qui en découlent.
+        <p style="margin-bottom: 40px; margin-top: 90px">
+          <b>Dans ce délai</b>, les parties ont signé à la date et au lieu mentionnés dans le présent contrat. Le
+          présent contrat lie les parties ainsi que leurs successeurs, héritiers, légataires, ayants droit, mandataires
+          ou préposés. Si l'Acheteur est une société, le signataire a tous pouvoirs pour engager la société qu'il
+          représente et garantit que tous les actes appropriés seront nécessaires pour autoriser la signature par lui du
+          présent contrat. L'Acheteur ne peut en aucun cas vendre, transférer, céder ou autrement aliéner le présent
+          contrat ou les droits, intérêts ou avantages qui en découlent.
         </p>
-        <table class="threeSignatureTable" style="margin-bottom: 15px;">
-        <tr>
-          <td>
-            <p></p>
-            <p>Signature de l'Acheteur</p>
-          </td>
-          <td>
-            <p></p>
-            <p>Signature du co-Acheteur</p>
-          </td>
-          <td>
-            <p></p>
-            <p>Date</p>
-          </td>
-        </tr>
+        <table class="threeSignatureTable" style="margin-bottom: 15px">
+          <tr>
+            <td>
+              <p></p>
+              <p>Signature de l'Acheteur</p>
+            </td>
+            <td>
+              <p></p>
+              <p>Signature du co-Acheteur</p>
+            </td>
+            <td>
+              <p></p>
+              <p>Date</p>
+            </td>
+          </tr>
         </table>
 
-        <table class="threeSignatureTable" style="margin-bottom: 40px;">
+        <table class="threeSignatureTable" style="margin-bottom: 40px">
           <tr>
             <td>
               <p></p>
               <p>Représentant autorisé du vendeur</p>
             </td>
-            <td>
-            </td>
-            <td>
-            </td>
+            <td></td>
+            <td></td>
           </tr>
         </table>
       </div>
-      <h5 class="left" style="margin-top: 2px;">Confirmation du client</h5>
+      <h5 class="left" style="margin-top: 2px">Confirmation du client</h5>
       <div class="full" style="margin-top: 0">
         <p>
-          En signant ci-dessous, je certifie que j'ai été informé des avantages, de la couverture,  des modalités et des conditions des options suivantes, que je les ai choisi de ma propre volonté et que j’ai été libre de les refuser.
+          En signant ci-dessous, je certifie que j'ai été informé des avantages, de la couverture, des modalités et des
+          conditions des options suivantes, que je les ai choisi de ma propre volonté et que j’ai été libre de les
+          refuser.
         </p>
       </div>
 
       <div class="full">
-
         <table class="customer_ack">
           <tbody>
-          <tr>
-            <td>
-              <div>Protection d'assurance-vie</div>
-              <div>Paie le solde de votre prêt automobile en cas de décès.</div>
-            </td>
-            <td>
-              <div class="checkbox"></div>
-              <div>Assurance Refusée</div>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <div>Protection d'assurance contre les maladies graves</div>
-              <div>Paie le solde de votre prêt automobile en cas de: cancer menaçant, greffe d'organe majeur, crise cardiaque, paralysie, accident vasculaire cérébral.</div>
-            </td>
-            <td>
-              <div class="checkbox"></div>
-              <div>Assurance Refusée</div>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <div>Protection d'assurance d’invalidité</div>
-              <div>
-                Effectue le paiement de votre prêt pour vous si vous ne pouvez pas travailler. Paye en plus de tout plan professionnel ou privé.
-              </div>
-            </td>
-            <td>
-              <div class="checkbox"></div>
-              <div>Assurance Refusée</div>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <div>Garantie prolongée de Mercury</div>
-              <div>
-                Couvre toutes les réparations applicables et nécessaires à votre moteur Mercury qui sont engagées après l'expiration de la garantie du fabricant.
-              </div>
-            </td>
-            <td>
-              <div class="checkbox"></div>
-              <div>Garantie Refusée</div>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <div>Couverture des pannes mécaniques</div>
-              <div>
-                Fournit une couverture pour protéger contre les coûts de réparation électriques et mécaniques imprévus.
-              </div>
-            </td>
-            <td>
-              <div class="checkbox"></div>
-              <div>Assurance Refusée</div>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <div>Protection contre la perte de valeur du véhicule</div>
-              <div>
-                Réduit l'écart entre le versement d'une assurance et l'encours de crédit en cas d'accident entraînant la perte totale de votre bateau.              </div>
-            </td>
-            <td>
-              <div class="checkbox"></div>
-              <div>Assurance Refusée</div>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <div>Protection Legend Shield</div>
-              <div>
-                Protège les finitions intérieures et extérieures et est couvert par une garantie de 5 ans.
-              </div>
-            </td>
-            <td>
-              <div class="checkbox"></div>
-              <div>Assurance Refusée</div>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <div>Protection de pneus et jantes</div>
-              <div>
-                Couvre le coût des dommages aux pneus et aux jantes causés par les dangers de la route.
-              </div>
-            </td>
-            <td>
-              <div class="checkbox"></div>
-              <div>Assurance Refusée</div>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <div>Couverture antivol</div>
-              <div>
-                Aide à dissuader le vol et à défaut, aide à récupérer le bateau volé et aide aux dépenses connexes.
-              </div>
-            </td>
-            <td>
-              <div class="checkbox"></div>
-              <div>Assurance Refusée</div>
-            </td>
-          </tr>
+            <tr>
+              <td>
+                <div>Protection d'assurance-vie</div>
+                <div>Paie le solde de votre prêt automobile en cas de décès.</div>
+              </td>
+              <td>
+                <div class="checkbox"></div>
+                <div>Assurance Refusée</div>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <div>Protection d'assurance contre les maladies graves</div>
+                <div>
+                  Paie le solde de votre prêt automobile en cas de: cancer menaçant, greffe d'organe majeur, crise
+                  cardiaque, paralysie, accident vasculaire cérébral.
+                </div>
+              </td>
+              <td>
+                <div class="checkbox"></div>
+                <div>Assurance Refusée</div>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <div>Protection d'assurance d’invalidité</div>
+                <div>
+                  Effectue le paiement de votre prêt pour vous si vous ne pouvez pas travailler. Paye en plus de tout
+                  plan professionnel ou privé.
+                </div>
+              </td>
+              <td>
+                <div class="checkbox"></div>
+                <div>Assurance Refusée</div>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <div>Garantie prolongée de Mercury</div>
+                <div>
+                  Couvre toutes les réparations applicables et nécessaires à votre moteur Mercury qui sont engagées
+                  après l'expiration de la garantie du fabricant.
+                </div>
+              </td>
+              <td>
+                <div class="checkbox"></div>
+                <div>Garantie Refusée</div>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <div>Couverture des pannes mécaniques</div>
+                <div>
+                  Fournit une couverture pour protéger contre les coûts de réparation électriques et mécaniques
+                  imprévus.
+                </div>
+              </td>
+              <td>
+                <div class="checkbox"></div>
+                <div>Assurance Refusée</div>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <div>Protection contre la perte de valeur du véhicule</div>
+                <div>
+                  Réduit l'écart entre le versement d'une assurance et l'encours de crédit en cas d'accident entraînant
+                  la perte totale de votre bateau.
+                </div>
+              </td>
+              <td>
+                <div class="checkbox"></div>
+                <div>Assurance Refusée</div>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <div>Protection Legend Shield</div>
+                <div>Protège les finitions intérieures et extérieures et est couvert par une garantie de 5 ans.</div>
+              </td>
+              <td>
+                <div class="checkbox"></div>
+                <div>Assurance Refusée</div>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <div>Protection de pneus et jantes</div>
+                <div>Couvre le coût des dommages aux pneus et aux jantes causés par les dangers de la route.</div>
+              </td>
+              <td>
+                <div class="checkbox"></div>
+                <div>Assurance Refusée</div>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <div>Couverture antivol</div>
+                <div>
+                  Aide à dissuader le vol et à défaut, aide à récupérer le bateau volé et aide aux dépenses connexes.
+                </div>
+              </td>
+              <td>
+                <div class="checkbox"></div>
+                <div>Assurance Refusée</div>
+              </td>
+            </tr>
           </tbody>
         </table>
-
       </div>
 
       <div class="full">
-
         <!-- <apex:outputPanel layout="none" rendered="{!Opportunity.OpportunityContactRoles.size > 0}">
           <div class="col w40">
             <div class="line"></div>
@@ -1420,53 +1464,66 @@
 
         <div class="col w40">
           <div class="line"></div>
-          <div class="label">
-            <span>{!buyer.Contact.Name }</span> - Debtor
-          </div>
+          <div class="label"><span>{!buyer.Contact.Name }</span> - Debtor</div>
         </div>
 
         <div class="col w20 top">
           <div class="line"></div>
           <div class="label">Date</div>
         </div>
-
       </div>
-
-    </div><!-- /.additional_terms_container -->
+    </div>
+    <!-- /.additional_terms_container -->
   </div>
 
-<!-- ======================================= /TERMS AND CONDITIONS ============================ -->
+  <!-- ======================================= /TERMS AND CONDITIONS ============================ -->
 
-<!-- ++++++++++++++++++++++++++++++++++++ 3RD PARTY AUTHORIZATION  ++++++++++++++++++++++++++++ -->
+  <!-- ++++++++++++++++++++++++++++++++++++ 3RD PARTY AUTHORIZATION  ++++++++++++++++++++++++++++ -->
 
   <div class="invoicePageThree">
     <div class="authorization_form">
-
-      <h1>
-        Lettre d’autorisation d’un tiers
-      </h1>
+      <h1>Lettre d’autorisation d’un tiers</h1>
 
       <div class="content">
         <p>
           <!-- Person Account -->
           <apex:outputPanel layout="none" rendered="{!!soldToBusiness}">
-            Je, <span>{!projectAccount.Name }</span>, résidant au <span>{!projectAccount.BillingStreet}, {!projectAccount.BillingCity}, {!projectAccount.BillingState}, {!projectAccount.BillingPostalCode}</span> autorise par la présente Duhamel and Dewar - Bateaux Legend, à faire une demande de permis d'embarcation de plaisance en mon nom et à fournir à Service Canada, ou au Service du Nouveau Brunswick les renseignements personnels qui peuvent être nécessaires pour délivrer la dite licence en mon nom pour un :
+            Je, <span>{!projectAccount.Name }</span>, résidant au
+            <span
+              >{!projectAccount.BillingStreet}, {!projectAccount.BillingCity}, {!projectAccount.BillingState},
+              {!projectAccount.BillingPostalCode}</span
+            >
+            autorise par la présente Duhamel and Dewar - Bateaux Legend, à faire une demande de permis d'embarcation de
+            plaisance en mon nom et à fournir à Service Canada, ou au Service du Nouveau Brunswick les renseignements
+            personnels qui peuvent être nécessaires pour délivrer la dite licence en mon nom pour un :
           </apex:outputPanel>
           <!-- Business Account -->
           <apex:outputPanel layout="none" rendered="{!soldToBusiness}">
-            Je, <span>{!buyer.Contact.Name }</span>, représentant <span>{!projectAccount.Name}</span> situé à <span>{!projectAccount.BillingStreet}, {!projectAccount.BillingCity}, {!projectAccount.BillingState}, {!projectAccount.BillingPostalCode}</span> autorise par la présente Duhamel and Dewar - Bateaux Legend, à faire une demande de permis d'embarcation de plaisance en mon nom et à fournir à Service Canada, ou au Service du Nouveau Brunswick les renseignements personnels qui peuvent être nécessaires pour délivrer la dite licence en mon nom pour un :
+            Je, <span>{!buyer.Contact.Name }</span>, représentant <span>{!projectAccount.Name}</span> situé à
+            <span
+              >{!projectAccount.BillingStreet}, {!projectAccount.BillingCity}, {!projectAccount.BillingState},
+              {!projectAccount.BillingPostalCode}</span
+            >
+            autorise par la présente Duhamel and Dewar - Bateaux Legend, à faire une demande de permis d'embarcation de
+            plaisance en mon nom et à fournir à Service Canada, ou au Service du Nouveau Brunswick les renseignements
+            personnels qui peuvent être nécessaires pour délivrer la dite licence en mon nom pour un :
           </apex:outputPanel>
         </p>
         <p class="align-center boat_make">
-          <strong>{!boat.GMBLASERP__Serial_Number__r.GMBLASERP__Lot__r.Name} {!boat.AcctSeedERP__Product__r.Name_FR__c}</strong>
+          <strong
+            >{!boat.GMBLASERP__Serial_Number__r.GMBLASERP__Lot__r.Name}
+            {!boat.AcctSeedERP__Product__r.Name_FR__c}</strong
+          >
         </p>
-        <p class='align-center'>Portant le numéro d’identification de coque:</p>
+        <p class="align-center">Portant le numéro d’identification de coque:</p>
         <p class="boat_num"></p>
         <p>
-          Et ou autorise Duhamel et Dewar - Bateaux Legend à agir en mon nom pour les questions relatives a la licence de ma remorque avec le ministere du transport du Quebec.
+          Et ou autorise Duhamel et Dewar - Bateaux Legend à agir en mon nom pour les questions relatives a la licence
+          de ma remorque avec le ministere du transport du Quebec.
         </p>
         <p>
-          De plus, j’accepte d’être contacté par un représentant d'assurance Legend pour examiner les options disponibles de ce programme.
+          De plus, j’accepte d’être contacté par un représentant d'assurance Legend pour examiner les options
+          disponibles de ce programme.
         </p>
       </div>
 
@@ -1481,25 +1538,17 @@
         <img src="{!URLFOR($Resource.LegendPDF,'image/LegendLogoFR-300w.png')}" />
         <h2>A Duhamel and Dewar Company</h2>
         <p>
-          4805 Regional Road 55 - Whitefish, Ontario – P0M 3E0 - PH: 705.866.2821 - TF: 1.800.461.4050 – FX: 705.866.2616
+          4805 Regional Road 55 - Whitefish, Ontario – P0M 3E0 - PH: 705.866.2821 - TF: 1.800.461.4050 – FX:
+          705.866.2616
         </p>
         <p>
-          2375 Industrial Park Road, Innisfil, Ontario -  L9S 3W1 - PH: 705-431-6922 TF:  1.800.459.8448  FAX: 705.431.6924
+          2375 Industrial Park Road, Innisfil, Ontario - L9S 3W1 - PH: 705-431-6922 TF: 1.800.459.8448 FAX: 705.431.6924
         </p>
-        <p>
-          3255 Chemin D’Oka, Ste-Marthe-sur-le-Lac, Quebec -  J0N 1P0 - PH: 450.875.2323
-        </p>
-        <p>
-          web: www.legendboats.com - email: info@legendboats.com
-        </p>
+        <p>3255 Chemin D’Oka, Ste-Marthe-sur-le-Lac, Quebec - J0N 1P0 - PH: 450.875.2323</p>
+        <p>web: www.legendboats.com - email: info@legendboats.com</p>
       </div>
-
     </div>
-
   </div>
 
-<!-- =================================== /3RD PARTY AUTHORIZATION ============================= -->
-
-
-
+  <!-- =================================== /3RD PARTY AUTHORIZATION ============================= -->
 </apex:page>

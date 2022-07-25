@@ -6,33 +6,36 @@ Use of this software is subject to the salesforce.com Developerforce Terms of Us
 WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED. IN NO EVENT SHALL SALESFORCE.COM HAVE ANY LIABILITY FOR ANY DAMAGES, INCLUDING BUT NOT LIMITED TO, DIRECT, INDIRECT, SPECIAL, INCIDENTAL, PUNITIVE, OR CONSEQUENTIAL DAMAGES, OR DAMAGES BASED ON LOST PROFITS, DATA OR USE, IN CONNECTION WITH THE SOFTWARE, HOWEVER CAUSED AND, WHETHER IN CONTRACT, TORT OR UNDER ANY OTHER THEORY OF LIABILITY, WHETHER OR NOT YOU HAVE BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
 -->
 
-<aura:component >
-    <aura:attribute name="timeout" type="Integer" default="3500" />
-    <aura:attribute name="content" type="Object" />
-    <aura:attribute name="typeClass" type="String" />
-    <aura:attribute name="isThemeReverse" type="Boolean" default="true" />
-    <aura:attribute name="isToast" type="Boolean" default="false" />
-    <aura:attribute name="containerId" type="String" default="" />
-    <aura:handler name="change" value="{!v.content}" action="{!c.messageUpdated}" />
-    <div id="{!v.containerId}" class="slds-notify-container slds-fall-into-ground">
-        <div
-            class="{!'slds-notify ' + (v.isToast ? 'slds-notify--toast': '') +' slds-notify--alert ' + v.typeClass + (v.isThemeReverse ? ' slds-theme--inverse-text' : '')}"
-            role="alert">
-            <span class="slds-assistive-text">Info</span>
-                <lightning:buttonIcon iconName="utility:close"
-                                      alternativeText="close"
-                                      variant="bare-inverse"
-                                      class="slds-notify__close"
-                                      onclick="{!c.closebuttonOnclicked}" />
-            <div class="slds-notify__content">
-                <aura:if isTrue="{! empty(v.content.title)}">
-                    <h2 class="slds-text-body--small">{!v.content.message}</h2>
-                    <aura:set attribute="else">
-                        <h2 class="slds-text-heading_small">{!v.content.title}</h2>
-                        <p>{!v.content.message}</p>
-                    </aura:set>
-                </aura:if>
-            </div>
-        </div>
+<aura:component>
+  <aura:attribute name="timeout" type="Integer" default="3500" />
+  <aura:attribute name="content" type="Object" />
+  <aura:attribute name="typeClass" type="String" />
+  <aura:attribute name="isThemeReverse" type="Boolean" default="true" />
+  <aura:attribute name="isToast" type="Boolean" default="false" />
+  <aura:attribute name="containerId" type="String" default="" />
+  <aura:handler name="change" value="{!v.content}" action="{!c.messageUpdated}" />
+  <div id="{!v.containerId}" class="slds-notify-container slds-fall-into-ground">
+    <div
+      class="{!'slds-notify ' + (v.isToast ? 'slds-notify--toast': '') +' slds-notify--alert ' + v.typeClass + (v.isThemeReverse ? ' slds-theme--inverse-text' : '')}"
+      role="alert"
+    >
+      <span class="slds-assistive-text">Info</span>
+      <lightning:buttonIcon
+        iconName="utility:close"
+        alternativeText="close"
+        variant="bare-inverse"
+        class="slds-notify__close"
+        onclick="{!c.closebuttonOnclicked}"
+      />
+      <div class="slds-notify__content">
+        <aura:if isTrue="{! empty(v.content.title)}">
+          <h2 class="slds-text-body--small">{!v.content.message}</h2>
+          <aura:set attribute="else">
+            <h2 class="slds-text-heading_small">{!v.content.title}</h2>
+            <p>{!v.content.message}</p>
+          </aura:set>
+        </aura:if>
+      </div>
     </div>
+  </div>
 </aura:component>

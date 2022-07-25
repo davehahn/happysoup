@@ -1,5 +1,4 @@
 <apex:page showHeader="false" sidebar="false" controller="ERPInvoicePDF" renderAs="pdf">
-
   <apex:stylesheet value="{!URLFOR($Resource.LegendPDF,'css/invoicePDF.min.css')}" />
   <!-- <apex:stylesheet value="{!URLFOR($Resource.LegendPDF,'css/dealer_invoice_page.css')}" /> -->
   <apex:stylesheet value="{!URLFOR($Resource.LegendPDF,'css/service_order_page.min.css')}" />
@@ -14,9 +13,7 @@
   </div>
 
   <div id="footerCenter">
-    <p class="address">
-      {!storeAddress}
-    </p>
+    <p class="address">{!storeAddress}</p>
     <p class="tax_numbers">
       <apex:repeat value="{!taxNumbers}" var="tn">
         <span><b>{!tn.DeveloperName}#</b> {!tn.Tax_Number__c}</span>
@@ -27,13 +24,11 @@
   <div class="dealer-order-erp">
     <!-- +++++++++++++++++++++++++++++++++++++++ HEADER 1 ++++++++++++++++++++++++ -->
     <div class="row header1">
-
-      <div class="left" >
+      <div class="left">
         <img src="{!URLFOR($Resource.LegendPDF,'image/logo_250x30.png')}" />
       </div>
 
       <div class="right">
-
         <div>
           <img src="{!URLFOR($Resource.LegendPDF,'Icons/Email.png')}" />
           <p>info@legendboats.com</p>
@@ -41,64 +36,49 @@
 
         <div>
           <img src="{!URLFOR($Resource.LegendPDF,'Icons/Phone.png')}" />
-           <p>
+          <p>
             phone
-            <span style="float:right;padding-right:25px;">
-              {!warehouse.Phone__c}
-            </span>
+            <span style="float: right; padding-right: 25px"> {!warehouse.Phone__c} </span>
           </p>
-           <p>
+          <p>
             toll free
-            <span style="float:right;padding-right:25px;">
-              {!warehouse.Toll_Free__c}
-            </span>
+            <span style="float: right; padding-right: 25px"> {!warehouse.Toll_Free__c} </span>
           </p>
           <p>
             fax
-            <span style="float:right;padding-right:25px;">
-              {!warehouse.Fax__c}
-            </span>
+            <span style="float: right; padding-right: 25px"> {!warehouse.Fax__c} </span>
           </p>
         </div>
 
-        <div style="position:relative">
+        <div style="position: relative">
           <img src="{!URLFOR($Resource.LegendPDF,'image/web.png')}" />
           <p>www.legendboats.com</p>
-         <!--  <img src="https://www.barcodesinc.com/generator/image.php?code=INV-10812&amp;style=68&amp;type=C128B&amp;width=150&amp;height=40&amp;xres=1&amp;font=3" alt="Barcode" border="0"/> -->
-         <!--  <p class="invoice_number">{!invoiceName}</p> -->
-         <p style="width: 100%; padding-top: 5px; font-size: 12px; text-align: center">
-            Memory Maker
-          </p>
+          <!--  <img src="https://www.barcodesinc.com/generator/image.php?code=INV-10812&amp;style=68&amp;type=C128B&amp;width=150&amp;height=40&amp;xres=1&amp;font=3" alt="Barcode" border="0"/> -->
+          <!--  <p class="invoice_number">{!invoiceName}</p> -->
+          <p style="width: 100%; padding-top: 5px; font-size: 12px; text-align: center">Memory Maker</p>
           <p style="width: 100%; font-size: 14px; font-weight: bold; text-align: center">
             {!erpOrder.Salesperson__r.name}
           </p>
         </div>
-
-      </div><!--header right close -->
+      </div>
+      <!--header right close -->
     </div>
     <!-- ==================================== /HEADER 1 ============================  -->
 
     <!-- +++++++++++++++++++++++++++++++++++ HEADER 2 ++++++++++++++++++++++++++++++ -->
     <div class="row header2" style="overflow: visible">
-
       <div class="customer-info">
         <p>
           <img src="{!URLFOR($Resource.LegendPDF,'Icons/Invoice.png')}" />
           INVOICE TO:
         </p>
-        <p class="buyer_name">
-         {!projectAccount.name}
-        </p>
+        <p class="buyer_name">{!projectAccount.name}</p>
         <p class="buyer_address">
           {!projectAccount.BillingStreet}, {!projectAccount.BillingCity} <br />
           {!projectAccount.BillingState}, {!projectAccount.BillingPostalCode}, {!projectAccount.BillingCountry}
         </p>
-        <p class="buyer_phone">
-          {!projectAccount.phone}
-        </p>
-        <p class="buyer_email">
-          {!projectAccount.PersonEmail}
-        </p>
+        <p class="buyer_phone">{!projectAccount.phone}</p>
+        <p class="buyer_email">{!projectAccount.PersonEmail}</p>
       </div>
 
       <div>
@@ -116,60 +96,57 @@
                   <img src="{!URLFOR($Resource.LegendPDF,'image/invoice2_trans.png')}" width="25" height="25" />
                 </td>
               </tr>
-
             </table>
 
             <div style="">
               <table>
                 <tr>
-                    <td style="">
-                        <p>Total Sale:</p>
-                        <apex:outputText value="${0, number, ###,###,###,##0.00}">
-                              <apex:param value="{!currentBill.AcctSeed__Total__c}"/>
-                        </apex:outputText>
-                    </td>
-                    <td style="">
-                        <p>{!invoiceDateLabel}:</p>
-                        <p>{!invoiceDate}</p>
-                    </td>
-                    <td style="">
-                        <p>Invoice #:</p>
-                        <p>{!invoiceName + ' - ' + currentBill.Name}</p>
-                    </td>
+                  <td style="">
+                    <p>Total Sale:</p>
+                    <apex:outputText value="${0, number, ###,###,###,##0.00}">
+                      <apex:param value="{!currentBill.AcctSeed__Total__c}" />
+                    </apex:outputText>
+                  </td>
+                  <td style="">
+                    <p>{!invoiceDateLabel}:</p>
+                    <p>{!invoiceDate}</p>
+                  </td>
+                  <td style="">
+                    <p>Invoice #:</p>
+                    <p>{!invoiceName + ' - ' + currentBill.Name}</p>
+                  </td>
                 </tr>
               </table>
             </div>
-
           </div>
-
         </div>
-
       </div>
-
     </div>
     <!-- ================================= /HEADER 2 =================================== -->
 
     <!-- +++++++++++++++++++++++++++++++++++ ITEMS ++++++++++++++++++++++++++++++ -->
-    <table class="itemsTable hasKits service-order" style="margin-bottom:25px;margin-top: 20px;">
-        <thead>
-          <tr>
-            <td>Item Description</td>
-            <td style="text-align:center">Ordered</td>
-            <td style="text-align:center;">Shipped</td>
-            <td style="text-align:center;">Backorder</td>
-            <td style="text-align: right; padding-right: 5px;">Price</td>
-            <td style="text-align: right; padding-right: 5px;">Total</td>
-          </tr>
-        </thead>
-        <tbody>
-          <apex:variable var="totalAmountDue" value="{!0}"/>
-          <apex:repeat value="{!materialList}" var="part" >
-          <apex:outputText rendered="{!if(AND((part.quantity - part.previousBilled) == 0,part.billQuantity==0,(part.quantity - part.previousBilled - part.billQuantity) == 0),false,true)}">
+    <table class="itemsTable hasKits service-order" style="margin-bottom: 25px; margin-top: 20px">
+      <thead>
+        <tr>
+          <td>Item Description</td>
+          <td style="text-align: center">Ordered</td>
+          <td style="text-align: center">Shipped</td>
+          <td style="text-align: center">Backorder</td>
+          <td style="text-align: right; padding-right: 5px">Price</td>
+          <td style="text-align: right; padding-right: 5px">Total</td>
+        </tr>
+      </thead>
+      <tbody>
+        <apex:variable var="totalAmountDue" value="{!0}" />
+        <apex:repeat value="{!materialList}" var="part">
+          <apex:outputText
+            rendered="{!if(AND((part.quantity - part.previousBilled) == 0,part.billQuantity==0,(part.quantity - part.previousBilled - part.billQuantity) == 0),false,true)}"
+          >
             <tr>
-              <td class="w44" style="vertical-align: top; padding-left:0; padding:5px 0;">
-                <table style="width: 100%; margin:0; padding: 0; border-collapse: collapse;">
+              <td class="w44" style="vertical-align: top; padding-left: 0; padding: 5px 0">
+                <table style="width: 100%; margin: 0; padding: 0; border-collapse: collapse">
                   <tr>
-                    <td style="width: 35%; text-align:left; padding-left:0;">{!part.productCode}</td>
+                    <td style="width: 35%; text-align: left; padding-left: 0">{!part.productCode}</td>
                     <td>
                       {!part.description}
                       <span style="display:{!IF(ISBLANK(part.serialNumber), 'none','')}">
@@ -180,35 +157,44 @@
                 </table>
                 <!-- <span style="display:inline-block: width: 50%">{!part.productCode}</span>
                 <span style="display:inline-block">{!part.description}</span> -->
-                <apex:outputPanel layout="block" styleClass="kit-contents" rendered="{!part.hasKitParts}" style=":padding-bottom: 5px;">
+                <apex:outputPanel
+                  layout="block"
+                  styleClass="kit-contents"
+                  rendered="{!part.hasKitParts}"
+                  style=":padding-bottom: 5px"
+                >
                   <table class="kitParts">
                     <apex:repeat value="{!part.kitParts}" var="kitPart">
                       <tr>
                         <td>{!kitPart.productCode}</td>
                         <td><apex:outputText value="{!kitPart.description}" escape="false"></apex:outputText></td>
-                        <td style="text-align:right;padding-right: 7px">{!kitPart.Quantity}</td>
+                        <td style="text-align: right; padding-right: 7px">{!kitPart.Quantity}</td>
                       </tr>
                     </apex:repeat>
                   </table>
                 </apex:outputPanel>
               </td>
-              <td class="w10" style="text-align: center; vertical-align: top;">{!part.quantity - part.previousBilled}</td>
-              <td class="w10" style="text-align: center; vertical-align: top;">{!part.billQuantity}</td>
-              <td class="w10" style="text-align: center; vertical-align: top;">{!part.quantity - part.previousBilled - part.billQuantity}</td>
-              <td class="w15 right" style="vertical-align: top;">
+              <td class="w10" style="text-align: center; vertical-align: top">
+                {!part.quantity - part.previousBilled}
+              </td>
+              <td class="w10" style="text-align: center; vertical-align: top">{!part.billQuantity}</td>
+              <td class="w10" style="text-align: center; vertical-align: top">
+                {!part.quantity - part.previousBilled - part.billQuantity}
+              </td>
+              <td class="w15 right" style="vertical-align: top">
                 <apex:outputText value="${0, number, ###,###,###,##0.00}">
-                  <apex:param value="{!part.billUnitPrice}"/>
+                  <apex:param value="{!part.billUnitPrice}" />
                 </apex:outputText>
               </td>
-              <td class="w15 right" style="vertical-align: top;">
+              <td class="w15 right" style="vertical-align: top">
                 <apex:outputText value="${0, number, ###,###,###,##0.00}">
-                  <apex:param value="{!part.billTotal}"/>
+                  <apex:param value="{!part.billTotal}" />
                 </apex:outputText>
-                <apex:variable value="{!part.billTotal + totalAmountDue}" var="totalAmountDue"/>
+                <apex:variable value="{!part.billTotal + totalAmountDue}" var="totalAmountDue" />
               </td>
             </tr>
           </apex:outputText>
-            <!-- <apex:outputPanel layout="none" rendered="{!part.hasKitParts}">
+          <!-- <apex:outputPanel layout="none" rendered="{!part.hasKitParts}">
               <apex:repeat value="{!part.kitParts}" var="kitPart">
                 <tr>
                   <td class="w75" style="padding-left: 10%">
@@ -226,8 +212,8 @@
                 </tr>
               </apex:repeat>
             </apex:outputPanel> -->
-          </apex:repeat>
-        </tbody>
+        </apex:repeat>
+      </tbody>
     </table>
     <!-- ================================= /ITEMS ===================================== -->
 
@@ -237,7 +223,7 @@
         <h2>Notes:</h2>
         <div class="notes_container">
           <apex:outputPanel rendered="{!!ISBLANK(partnerReference)}" layout="none">
-            <p style="padding:0.25rem">
+            <p style="padding: 0.25rem">
               <apex:outputText value="{! 'Partner Reference # '&partnerReference}" />
             </p>
           </apex:outputPanel>
@@ -268,62 +254,64 @@
           </tr>
           </apex:outputPanel> -->
           <tr class="header-line">
-            <td colspan="2" style="padding-top:0;">Sub Total</td>
+            <td colspan="2" style="padding-top: 0">Sub Total</td>
           </tr>
 
           <tr>
-            <td style="padding-top:5px;">TOTAL BEFORE TAX:</td>
-            <td style="padding-top:5px;">
+            <td style="padding-top: 5px">TOTAL BEFORE TAX:</td>
+            <td style="padding-top: 5px">
               <apex:outputText value="${0, number, ###,###,###,##0.00}">
-                        <apex:param value="{!totalAmountPreTax}"/>
-                  </apex:outputText>
+                <apex:param value="{!totalAmountPreTax}" />
+              </apex:outputText>
             </td>
           </tr>
-         <!-- OverRide Custom Taxes -->
+          <!-- OverRide Custom Taxes -->
           <apex:outputPanel layout="none" rendered="{!currentBill.Tax_is_Harmonized__c == true}">
             <tr>
-              <td> TAX (HST) {! currentBill.Tax_Rate_Provincial__c + currentBill.Tax_Rate_Federal__c}%: </td>
+              <td>TAX (HST) {! currentBill.Tax_Rate_Provincial__c + currentBill.Tax_Rate_Federal__c}%:</td>
               <td>
-                  <apex:outputText value="${0, number, ###,###,###,##0.00}">
-                        <apex:param value="{!totalTaxH}"/>
-                  </apex:outputText>
-               </td>
+                <apex:outputText value="${0, number, ###,###,###,##0.00}">
+                  <apex:param value="{!totalTaxH}" />
+                </apex:outputText>
+              </td>
             </tr>
           </apex:outputPanel>
 
           <apex:outputPanel layout="none" rendered="{!currentBill.Tax_is_Harmonized__c != true}">
             <tr>
-              <td> TAX ({!provTAxInfo.taxName}): {!currentBill.Tax_Rate_Provincial__c}% </td>
+              <td>TAX ({!provTAxInfo.taxName}): {!currentBill.Tax_Rate_Provincial__c}%</td>
               <td>
-                  <apex:outputText value="${0, number, ###,###,###,##0.00}">
-                        <apex:param value="{!totalTaxP}"/>
-                  </apex:outputText>
-               </td>
+                <apex:outputText value="${0, number, ###,###,###,##0.00}">
+                  <apex:param value="{!totalTaxP}" />
+                </apex:outputText>
+              </td>
             </tr>
           </apex:outputPanel>
 
           <apex:outputPanel layout="none" rendered="{!currentBill.Tax_is_Harmonized__c != true}">
             <tr>
-              <td> TAX (GST): {!currentBill.Tax_Rate_Federal__c}% </td>
+              <td>TAX (GST): {!currentBill.Tax_Rate_Federal__c}%</td>
               <td>
-                  <apex:outputText value="${0, number, ###,###,###,##0.00}">
-                        <apex:param value="{!totalTaxF}"/>
-                  </apex:outputText>
-               </td>
+                <apex:outputText value="${0, number, ###,###,###,##0.00}">
+                  <apex:param value="{!totalTaxF}" />
+                </apex:outputText>
+              </td>
             </tr>
           </apex:outputPanel>
           <!-- Seperate taxes -->
-          <apex:outputPanel layout="none" rendered="{!IF(AND(currentBill.Tax_Rate_Retail__c != null,currentBill.Tax_Rate_Retail__c > 0),true, false)}">
+          <apex:outputPanel
+            layout="none"
+            rendered="{!IF(AND(currentBill.Tax_Rate_Retail__c != null,currentBill.Tax_Rate_Retail__c > 0),true, false)}"
+          >
             <tr>
-              <td> TAX (RST): {!currentBill.Tax_Rate_Retail__c}%: </td>
+              <td>TAX (RST): {!currentBill.Tax_Rate_Retail__c}%:</td>
               <td>
-                  <apex:outputText value="${0, number, ###,###,###,##0.00}">
-                        <apex:param value="{!totalTaxR}"/>
-                  </apex:outputText>
-               </td>
+                <apex:outputText value="${0, number, ###,###,###,##0.00}">
+                  <apex:param value="{!totalTaxR}" />
+                </apex:outputText>
+              </td>
             </tr>
           </apex:outputPanel>
-
 
           <!-- +++++ Payments +++++ -->
           <apex:outputPanel layout="none" rendered="{!currentBill.AcctSeed__Billing_Cash_Receipts__r.size > 0}">
@@ -336,18 +324,19 @@
                 <table>
                   <apex:repeat value="{!currentBill.AcctSeed__Billing_Cash_Receipts__r}" var="bcr">
                     <tr>
-                      <td style="text-align:left;">
+                      <td style="text-align: left">
                         <apex:outputText value="{0, date, MMM dd'/'yy}">
                           <apex:param value="{!bcr.AcctSeed__Cash_Receipt__r.AcctSeed__Receipt_Date__c}" />
                         </apex:outputText>
                       </td>
-                      <td style="text-align:left;">
-                        {!bcr.AcctSeed__Cash_Receipt__r.Payment_Method__c}
-                      </td>
-                      <td style="text-align:right !important;">
-                        <apex:variable var="adjustmentAmount" value="{!IF(bcr.AcctSeed__Adjustment_Amount__c == null,0,bcr.AcctSeed__Adjustment_Amount__c)}"/>
+                      <td style="text-align: left">{!bcr.AcctSeed__Cash_Receipt__r.Payment_Method__c}</td>
+                      <td style="text-align: right !important">
+                        <apex:variable
+                          var="adjustmentAmount"
+                          value="{!IF(bcr.AcctSeed__Adjustment_Amount__c == null,0,bcr.AcctSeed__Adjustment_Amount__c)}"
+                        />
                         <apex:outputText value="${0, number, ###,###,###,##0.00}">
-                          <apex:param value="{!bcr.AcctSeed__Applied_Amount__c - adjustmentAmount}"/>
+                          <apex:param value="{!bcr.AcctSeed__Applied_Amount__c - adjustmentAmount}" />
                         </apex:outputText>
                       </td>
                     </tr>
@@ -358,52 +347,49 @@
           </apex:outputPanel>
           <!-- ===== Payments ===== -->
           <apex:outputText rendered="{!currentBill.AcctSeed__Credit_Memo_Applied_Amount__c <> 0}">
-          <tr class="header-line">
-            <td colspan="2">Credit Memo Applied</td>
-          </tr>
+            <tr class="header-line">
+              <td colspan="2">Credit Memo Applied</td>
+            </tr>
 
-          <tr>
-            <td colspan="2">
-              <table>
+            <tr>
+              <td colspan="2">
+                <table>
                   <tr>
-                    <td style="text-align:left;">
+                    <td style="text-align: left">
                       <apex:outputText value="{0, date, MMM dd'/'yy}">
                         <apex:param value="{!currentBill.AcctSeed__Date__c}" />
                       </apex:outputText>
                     </td>
-                    <td style="text-align:left;">
-                      &nbsp;
-                    </td>
-                    <td style="text-align:right !important;">
+                    <td style="text-align: left">&nbsp;</td>
+                    <td style="text-align: right !important">
                       <apex:outputText value="${0, number, ###,###,###,##0.00}">
-                        <apex:param value="{!currentBill.AcctSeed__Credit_Memo_Applied_Amount__c}"/>
+                        <apex:param value="{!currentBill.AcctSeed__Credit_Memo_Applied_Amount__c}" />
                       </apex:outputText>
                     </td>
                   </tr>
-              </table>
-            </td>
-          </tr>
+                </table>
+              </td>
+            </tr>
           </apex:outputText>
 
           <tr class="total">
             <td>Total Due:</td>
-            <td style="padding-right: 3px;">
+            <td style="padding-right: 3px">
               <apex:outputText value="${0, number, ###,###,###,##0.00}" rendered="{!!erpOrder.Internal_Warranty__c}">
-                <apex:param value="{!currentBill.AcctSeed__Balance__c}"/>
+                <apex:param value="{!currentBill.AcctSeed__Balance__c}" />
               </apex:outputText>
               <apex:outputText value="${0, number, ###,###,###,##0.00}" rendered="{!erpOrder.Internal_Warranty__c}">
-                <apex:param value="{!totalAmountDue}"/>
+                <apex:param value="{!totalAmountDue}" />
               </apex:outputText>
             </td>
           </tr>
-
         </table>
       </div>
     </div>
     <!-- ============================= /NOTES AND TOTALS ======================== -- >
 
     <!-- ++++++++++++++++++++++++++++ FOOTER +++++++++++++++++++++++++++++++++++ -->
-<!--     <div class="row pdf_footer" style="position: fixed; bottom: 0;">
+    <!--     <div class="row pdf_footer" style="position: fixed; bottom: 0;">
 
       <div class="thankyou">
         Thank you for choosing Legend to help you create memories on the water!
@@ -429,7 +415,5 @@
 
     </div> -->
     <!-- ============================ FOOTER ================================== -->
-
   </div>
-
 </apex:page>

@@ -1,117 +1,110 @@
-<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,force:lightningQuickAction" access="global" controller="ProductInventoryHistoryController_ar">
-    <aura:attribute name="recordId" type="Id"/>
-    <aura:attribute name="listData" type="sObject[]"/>
-	<aura:attribute name="whOptions" type="sObject[]" />
-	<aura:attribute name="idWarehouse" type="String" />
-	<aura:attribute name="availableQuantity" type="Decimal" />
-    <aura:handler action="{!c.doInit}" name="init" value="{!this}"/>
-    <aura:handler name="change" value="{!v.listData}" action="{!c.changeTotal}"/>
-    <lightning:card class="slds-p-around_none slds-m-around_none">
-		<lightning:select name="warehouses" value="{!v.idWarehouse}" label="Select Warehouse" onchange="{!c.warehouseChanged}">
-			<option value="" text="- All Warehouses -"></option>
-			<aura:iteration items="{!v.whOptions}" var="whs">
-				<option value="{!whs.idWarehouse}" text="{!whs.warehouseName}"></option>
-			</aura:iteration>
-		</lightning:select>
-    </lightning:card>
-    <lightning:card class="slds-p-around_none slds-m-around_none">
-        <table class="slds-table slds-table_bordered slds-p-around_none slds-m-around_none">
-            <thead>
-                <tr class="slds-text-title_caps">
-                    <!-- <th scope="col" width="5%">
+<aura:component
+  implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,force:lightningQuickAction"
+  access="global"
+  controller="ProductInventoryHistoryController_ar"
+>
+  <aura:attribute name="recordId" type="Id" />
+  <aura:attribute name="listData" type="sObject[]" />
+  <aura:attribute name="whOptions" type="sObject[]" />
+  <aura:attribute name="idWarehouse" type="String" />
+  <aura:attribute name="availableQuantity" type="Decimal" />
+  <aura:handler action="{!c.doInit}" name="init" value="{!this}" />
+  <aura:handler name="change" value="{!v.listData}" action="{!c.changeTotal}" />
+  <lightning:card class="slds-p-around_none slds-m-around_none">
+    <lightning:select
+      name="warehouses"
+      value="{!v.idWarehouse}"
+      label="Select Warehouse"
+      onchange="{!c.warehouseChanged}"
+    >
+      <option value="" text="- All Warehouses -"></option>
+      <aura:iteration items="{!v.whOptions}" var="whs">
+        <option value="{!whs.idWarehouse}" text="{!whs.warehouseName}"></option>
+      </aura:iteration>
+    </lightning:select>
+  </lightning:card>
+  <lightning:card class="slds-p-around_none slds-m-around_none">
+    <table class="slds-table slds-table_bordered slds-p-around_none slds-m-around_none">
+      <thead>
+        <tr class="slds-text-title_caps">
+          <!-- <th scope="col" width="5%">
                         <div class="slds-truncate" title="Name">
                         </div>
                     </th> -->
-                    <th scope="col" width="20%">
-                        <div class="slds-truncate" title="Balance">
-                            Move Type
-                        </div>
-                    </th>
-                    <th scope="col" width="20%">
-                        <div class="slds-truncate" title="Balance">
-                            Move Date
-                        </div>
-                    </th>
-                    <th scope="col" width="20%">
-                        <div class="slds-truncate" title="Balance">
-                            Warehouse
-                        </div>
-                    </th>
-                    <th scope="col" width="10%">
-                        <div class="slds-truncate" title="Balance">
-                            Lot
-                        </div>
-                    </th>
-                    <th scope="col" width="20%">
-                        <div class="slds-truncate" title="Thumb">
-                            Serial
-                        </div>
-                    </th>
-                    <th scope="col" width="10%">
-                        <div class="slds-truncate" title="Thumb">
-                            Qty
-                        </div>
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                <aura:iteration indexvar="indx" items="{!v.listData}" var="a">
-                    <tr>
-                        <!-- <th data-label="checkbox" scope="row">
+          <th scope="col" width="20%">
+            <div class="slds-truncate" title="Balance">Move Type</div>
+          </th>
+          <th scope="col" width="20%">
+            <div class="slds-truncate" title="Balance">Move Date</div>
+          </th>
+          <th scope="col" width="20%">
+            <div class="slds-truncate" title="Balance">Warehouse</div>
+          </th>
+          <th scope="col" width="10%">
+            <div class="slds-truncate" title="Balance">Lot</div>
+          </th>
+          <th scope="col" width="20%">
+            <div class="slds-truncate" title="Thumb">Serial</div>
+          </th>
+          <th scope="col" width="10%">
+            <div class="slds-truncate" title="Thumb">Qty</div>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <aura:iteration indexvar="indx" items="{!v.listData}" var="a">
+          <tr>
+            <!-- <th data-label="checkbox" scope="row">
                             <ui:inputcheckbox aura:id="boxPack" change="{!c.checkboxSelect}" class="{!a.mapProperty.idS3Obj}" text="{!indx}" value=""></ui:inputcheckbox>
                         </th> -->
-                        <th class="slds-show_small" data-label="fileName" scope="row">
-                            <div class="slds-truncate" style="max-width:90%;">
-                            	{!a.moveType}
-                            </div>
-                        </th>
-                        <th class="slds-show_small" data-label="fileName" scope="row">
-                            <div class="slds-truncate" style="max-width:90%;">
-                            	{!a.moveDate}
-                            </div>
-                        </th>
-                        <th>
-                            <div class="slds-truncate" style="max-width:90%;">
-                                <a href="{!'/one/one.app?#/sObject/'+ a.idWarehouse + '/view'}" target="_blank" title="{!a.warehouseName}">
-                                    {!a.warehouseName}
-                                </a>
-                            </div>                            
-                        </th>
-                        <th>
-                            <div class="slds-truncate" style="max-width:90%;">
-                                <a href="{!'/one/one.app?#/sObject/'+ a.idLot + '/view'}" target="_blank" title="{!a.lotName}">
-                                    {!a.lotName}
-                                </a>
-                            </div>                            
-                        </th>
-                        <th>
-                            <div class="slds-truncate" style="max-width:90%;">
-                                <a href="{!'/one/one.app?#/sObject/'+ a.idSerial + '/view'}" target="_blank" title="{!a.serialName}">
-                                    {!a.serialName}
-                                </a>
-                            </div>                            
-                        </th>
-                        <th scope="row">
-                            {!a.quantity}
-                        </th>
-                    </tr>
-                </aura:iteration>
-            </tbody>
-            <tfoot>
-            	<tr><th colspan="6">&nbsp;</th></tr>
-            	<tr class="slds-text-title_caps">
-                    <th class="slds-show_small" data-label="fileName" scope="row" colspan="5">
-                        <div class="slds-truncate" style="max-width:90%;">
-                        	Current Availability:
-                       	</div>
-                    </th>
-                    <th>
-                        <div class="slds-truncate" style="max-width:90%;">
-                        	{!v.availableQuantity}
-                        </div>                            
-                    </th>
-                </tr>
-            </tfoot>
-        </table>
-    </lightning:card>
+            <th class="slds-show_small" data-label="fileName" scope="row">
+              <div class="slds-truncate" style="max-width: 90%">{!a.moveType}</div>
+            </th>
+            <th class="slds-show_small" data-label="fileName" scope="row">
+              <div class="slds-truncate" style="max-width: 90%">{!a.moveDate}</div>
+            </th>
+            <th>
+              <div class="slds-truncate" style="max-width: 90%">
+                <a
+                  href="{!'/one/one.app?#/sObject/'+ a.idWarehouse + '/view'}"
+                  target="_blank"
+                  title="{!a.warehouseName}"
+                >
+                  {!a.warehouseName}
+                </a>
+              </div>
+            </th>
+            <th>
+              <div class="slds-truncate" style="max-width: 90%">
+                <a href="{!'/one/one.app?#/sObject/'+ a.idLot + '/view'}" target="_blank" title="{!a.lotName}">
+                  {!a.lotName}
+                </a>
+              </div>
+            </th>
+            <th>
+              <div class="slds-truncate" style="max-width: 90%">
+                <a href="{!'/one/one.app?#/sObject/'+ a.idSerial + '/view'}" target="_blank" title="{!a.serialName}">
+                  {!a.serialName}
+                </a>
+              </div>
+            </th>
+            <th scope="row">{!a.quantity}</th>
+          </tr>
+        </aura:iteration>
+      </tbody>
+      <tfoot>
+        <tr>
+          <th colspan="6">&nbsp;</th>
+        </tr>
+        <tr class="slds-text-title_caps">
+          <th class="slds-show_small" data-label="fileName" scope="row" colspan="5">
+            <div class="slds-truncate" style="max-width: 90%">Current Availability:</div>
+          </th>
+          <th>
+            <div class="slds-truncate" style="max-width: 90%">{!v.availableQuantity}</div>
+          </th>
+        </tr>
+      </tfoot>
+    </table>
+  </lightning:card>
 </aura:component>

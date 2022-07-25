@@ -15,35 +15,42 @@
       });
   },
 
-  doInit2: function( component, event, helper){
-   var urlEvent = $A.get("e.force:navigateToURL"),
-       recordId = component.get('v.recordId');
-       urlEvent.setParams({
-         'url': '/lightning/cmp/runtime_sales_lead__convertDesktopConsole?leadConvert__leadId=' + recordId+ '&ws=%2Flightning%2Fr%2FLead%2F'+recordId+'%2Fview'
-       });
-       urlEvent.fire();
+  doInit2: function (component, event, helper) {
+    var urlEvent = $A.get("e.force:navigateToURL"),
+      recordId = component.get("v.recordId");
+    urlEvent.setParams({
+      url:
+        "/lightning/cmp/runtime_sales_lead__convertDesktopConsole?leadConvert__leadId=" +
+        recordId +
+        "&ws=%2Flightning%2Fr%2FLead%2F" +
+        recordId +
+        "%2Fview"
+    });
+    urlEvent.fire();
   },
 
   handleRecordUpdated: function (component, event, helper) {
     var eventParams = event.getParams();
-    console.log('handleRecordUpdate')
+    console.log("handleRecordUpdate");
     if (eventParams.changeType === "LOADED") {
-      const company =  component.get("v.leadRecord.Company");
+      const company = component.get("v.leadRecord.Company");
       // record is loaded (render other component which needs record data value)
       console.log("Record is loaded successfully.");
-      console.log(
-        "record has company " + company
-      );
-      if( company !== undefined && company !== null  ){
+      console.log("record has company " + company);
+      if (company !== undefined && company !== null) {
         var urlEvent = $A.get("e.force:navigateToURL"),
-            recordId = component.get('v.recordId');
+          recordId = component.get("v.recordId");
         urlEvent.setParams({
-          'url': '/lightning/cmp/runtime_sales_lead__convertDesktopConsole?leadConvert__leadId=' + recordId+ '&ws=%2Flightning%2Fr%2FLead%2F'+recordId+'%2Fview'
+          url:
+            "/lightning/cmp/runtime_sales_lead__convertDesktopConsole?leadConvert__leadId=" +
+            recordId +
+            "&ws=%2Flightning%2Fr%2FLead%2F" +
+            recordId +
+            "%2Fview"
         });
         urlEvent.fire();
-      }
-      else {
-        component.set('v.renderForm', true);
+      } else {
+        component.set("v.renderForm", true);
       }
     }
   },

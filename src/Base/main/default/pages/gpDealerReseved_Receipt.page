@@ -1,419 +1,415 @@
 <apex:page standardController="Account" extensions="gcDealerReseved_Receipt" showHeader="true" sidebar="false">
-<head>
-<style>
-tr.pq-row-select td{
-    background-color:yellow;
-}
-tr.total td{
-    font-weight: bold;
-}
-div.pq-grid-footer{
-    display:none;
-}
-.green
-{
-	background-color: #c5e0b2;
-}
-.yellow
-{
-	background-color: #fff3cb;
-}
-.silver
-{
-	background-color: #C0C0C0;
-}
-.red
-{
-    color: #ff0000;
-}
-.link
-{
-    text-decoration:underline;
-    cursor:pointer;
-}
-.editLink
-{
-    color:blue;
-}
-</style>
-<apex:stylesheet value="{!URLFOR($Resource.GMBLJS__jQueryUI,'/jquery-ui/jquery-ui.min.css')}"/>
-<apex:stylesheet value="{!URLFOR($Resource.GMBLJS__pqGridPro241,'/pqgrid.min.css')}"/>
-
-</head>
-<body>
-	<div id="spinner" class="spinner" style="display:none;"></div>
-	<div id="modal" class="modal" style="display:none;"></div>
+  <head>
+    <style>
+      tr.pq-row-select td {
+        background-color: yellow;
+      }
+      tr.total td {
+        font-weight: bold;
+      }
+      div.pq-grid-footer {
+        display: none;
+      }
+      .green {
+        background-color: #c5e0b2;
+      }
+      .yellow {
+        background-color: #fff3cb;
+      }
+      .silver {
+        background-color: #c0c0c0;
+      }
+      .red {
+        color: #ff0000;
+      }
+      .link {
+        text-decoration: underline;
+        cursor: pointer;
+      }
+      .editLink {
+        color: blue;
+      }
+    </style>
+    <apex:stylesheet value="{!URLFOR($Resource.GMBLJS__jQueryUI,'/jquery-ui/jquery-ui.min.css')}" />
+    <apex:stylesheet value="{!URLFOR($Resource.GMBLJS__pqGridPro241,'/pqgrid.min.css')}" />
+  </head>
+  <body>
+    <div id="spinner" class="spinner" style="display: none"></div>
+    <div id="modal" class="modal" style="display: none"></div>
     <apex:pageBlock id="cashReceiptDetail" title="Account Detail">
-        <apex:pageBlockButtons location="top">
-            <button class="btn" onclick="goToUrl('/{!Account.Id}');">Back To Account Detail</button>
-        </apex:pageBlockButtons>
-        <apex:outputPanel id="detailSection">
+      <apex:pageBlockButtons location="top">
+        <button class="btn" onclick="goToUrl('/{!Account.Id}');">Back To Account Detail</button>
+      </apex:pageBlockButtons>
+      <apex:outputPanel id="detailSection">
         <apex:pageBlockSection collapsible="false" columns="2" title="{!Account.Name}">
-            <apex:pageBlockSectionItem >
-                <apex:outputLabel value="{!$ObjectType.Account.fields.RecordTypeId.Label}"/>
-                <apex:outputField value="{!Account.RecordTypeId}"/>
-            </apex:pageBlockSectionItem>
-            <apex:pageBlockSectionItem >
-                <apex:outputLabel value="{!$ObjectType.Account.fields.Type.Label}"/>
-                <apex:outputField value="{!Account.Type}"/>
-            </apex:pageBlockSectionItem>
-            <apex:pageBlockSectionItem >
-                <apex:outputLabel value="{!$ObjectType.Account.fields.Name.Label}"/>
-                <apex:outputField value="{!Account.Name}"/>
-            </apex:pageBlockSectionItem>
-            <apex:pageBlockSectionItem >
-                <apex:outputLabel value="{!$ObjectType.Account.fields.PersonEmail.Label}"/>
-                <apex:outputField value="{!Account.PersonEmail}"/>
-            </apex:pageBlockSectionItem>
-            <apex:pageBlockSectionItem >
-                <apex:outputLabel value="{!$ObjectType.Account.fields.Phone.Label}"/>
-                <apex:outputField value="{!Account.Phone}"/>
-            </apex:pageBlockSectionItem>
-            <apex:pageBlockSectionItem >
-                <apex:outputLabel value="{!$ObjectType.Account.fields.OwnerId.Label}"/>
-                <apex:outputField value="{!Account.OwnerId}"/>
-            </apex:pageBlockSectionItem>
+          <apex:pageBlockSectionItem>
+            <apex:outputLabel value="{!$ObjectType.Account.fields.RecordTypeId.Label}" />
+            <apex:outputField value="{!Account.RecordTypeId}" />
+          </apex:pageBlockSectionItem>
+          <apex:pageBlockSectionItem>
+            <apex:outputLabel value="{!$ObjectType.Account.fields.Type.Label}" />
+            <apex:outputField value="{!Account.Type}" />
+          </apex:pageBlockSectionItem>
+          <apex:pageBlockSectionItem>
+            <apex:outputLabel value="{!$ObjectType.Account.fields.Name.Label}" />
+            <apex:outputField value="{!Account.Name}" />
+          </apex:pageBlockSectionItem>
+          <apex:pageBlockSectionItem>
+            <apex:outputLabel value="{!$ObjectType.Account.fields.PersonEmail.Label}" />
+            <apex:outputField value="{!Account.PersonEmail}" />
+          </apex:pageBlockSectionItem>
+          <apex:pageBlockSectionItem>
+            <apex:outputLabel value="{!$ObjectType.Account.fields.Phone.Label}" />
+            <apex:outputField value="{!Account.Phone}" />
+          </apex:pageBlockSectionItem>
+          <apex:pageBlockSectionItem>
+            <apex:outputLabel value="{!$ObjectType.Account.fields.OwnerId.Label}" />
+            <apex:outputField value="{!Account.OwnerId}" />
+          </apex:pageBlockSectionItem>
         </apex:pageBlockSection>
-        </apex:outputPanel>
+      </apex:outputPanel>
     </apex:pageBlock>
-    
-    <br />
-	<div style="margin:0 auto;">
-		<apex:pageBlock mode="edit" title="Create Dealer Reserve">
-			<div style="margin: 5px;">
-                <apex:form >
-				<table width="90%" align="center">
-                    <tr>
-                        <td>ERP Order:</td>
-                        <td>
-                            <input type="text" name="erpName" id="erpName"/>
-                            <input type="hidden" name="erpId" id="erpId"/>
-                        </td>
-                        <td>GLV 1 (Business Unit):</td>
-                        <td>
-                            <input type="text" name="glv1Name" id="glv1Name"/>
-                            <input type="hidden" name="glv1Id" id="glv1Id"/>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Bank Account:</td>
-                        <td>
-                            <input type="text" name="bankName" id="bankName"/>
-                            <input type="hidden" name="bankId" id="bankId"/>
-                        </td>
-                        <td>Customer Cash Receipt Amount:</td>
-                        <td><input class="amountField" type="text" name="customerAmount" id="customerAmount"/></td>
-                    </tr>
-                    <tr>
-                        <td>Bank GL Account:</td>
-                        <td id="bankGLId">
-                            <apex:selectList size="1">
-                                <apex:selectOptions value="{!retrieveBankGLAccounts}"/>
-                            </apex:selectList>                            
-                        </td>
-                        <td>Dealer Reserved Amount:</td>
-                        <td><input class="amountField" type="text" name="reservedAmount" id="reservedAmount"/></td>
-                    </tr>
-                    <tr>
-                        <td>Payment Reference:</td>
-                        <td><input type="text" name="paymentRef" id="paymentRef"/></td>
-                        <td>Bank Fees:</td>
-                        <td><input class="amountField" type="text" name="bankFees" id="bankFees"/></td>
-                    </tr>
-                    <tr>
-                        <td>Receipt Date:</td>
-                        <td><input type="text" id="receiptDate" name="receiptDate" readonly="true"/></td>
-                        <td>Total:</td>
-                        <td><input readonly="readonly" type="text" name="totalAmount" id="totalAmount"/></td>
-                    </tr>
-                    <tr>
-                        <td align="center" colspan="4"><button class="btn" onclick="createFinanceCharges(true);return false;">Create Dealer Reserved Receipt</button></td>
-                    </tr>
-                </table>
-                </apex:form>
-			</div>
-		</apex:pageBlock>
-	</div>
-<div id="exportStage" style="display:none;"></div>
-</body>
-<apex:includeScript value="{!$Resource.GMBLJS__jQuery}"/>
-<apex:includeScript value="{!URLFOR($Resource.GMBLJS__jQueryUI,'/jquery-ui/jquery-ui.min.js')}"/>
-<apex:includeScript value="{!URLFOR($Resource.GMBLJS__pqGridPro241,'/pqgrid.min.js')}"/>
-<apex:includeScript value="{!URLFOR($Resource.GMBLJS__pqGridPro241,'/touch-punch/touch-punch.min.js')}"/>
-<apex:includeScript value="{!$Resource.GMBLJS__accountingJS}"/>
-<apex:includeScript value="{!$Resource.GMBLJS__ExcellentExport}"/>
-<apex:includeScript value="{!$Resource.GMBLJS__gsrSpinner}"/>
-<apex:includeScript value="{!$Resource.GMBLJS__gsrGrid2}"/>
 
-<script>function setFocusOnLoad() {}</script>
-<script type="text/javascript">
+    <br />
+    <div style="margin: 0 auto">
+      <apex:pageBlock mode="edit" title="Create Dealer Reserve">
+        <div style="margin: 5px">
+          <apex:form>
+            <table width="90%" align="center">
+              <tr>
+                <td>ERP Order:</td>
+                <td>
+                  <input type="text" name="erpName" id="erpName" />
+                  <input type="hidden" name="erpId" id="erpId" />
+                </td>
+                <td>GLV 1 (Business Unit):</td>
+                <td>
+                  <input type="text" name="glv1Name" id="glv1Name" />
+                  <input type="hidden" name="glv1Id" id="glv1Id" />
+                </td>
+              </tr>
+              <tr>
+                <td>Bank Account:</td>
+                <td>
+                  <input type="text" name="bankName" id="bankName" />
+                  <input type="hidden" name="bankId" id="bankId" />
+                </td>
+                <td>Customer Cash Receipt Amount:</td>
+                <td><input class="amountField" type="text" name="customerAmount" id="customerAmount" /></td>
+              </tr>
+              <tr>
+                <td>Bank GL Account:</td>
+                <td id="bankGLId">
+                  <apex:selectList size="1">
+                    <apex:selectOptions value="{!retrieveBankGLAccounts}" />
+                  </apex:selectList>
+                </td>
+                <td>Dealer Reserved Amount:</td>
+                <td><input class="amountField" type="text" name="reservedAmount" id="reservedAmount" /></td>
+              </tr>
+              <tr>
+                <td>Payment Reference:</td>
+                <td><input type="text" name="paymentRef" id="paymentRef" /></td>
+                <td>Bank Fees:</td>
+                <td><input class="amountField" type="text" name="bankFees" id="bankFees" /></td>
+              </tr>
+              <tr>
+                <td>Receipt Date:</td>
+                <td><input type="text" id="receiptDate" name="receiptDate" readonly="true" /></td>
+                <td>Total:</td>
+                <td><input readonly="readonly" type="text" name="totalAmount" id="totalAmount" /></td>
+              </tr>
+              <tr>
+                <td align="center" colspan="4">
+                  <button class="btn" onclick="createFinanceCharges(true);return false;">
+                    Create Dealer Reserved Receipt
+                  </button>
+                </td>
+              </tr>
+            </table>
+          </apex:form>
+        </div>
+      </apex:pageBlock>
+    </div>
+    <div id="exportStage" style="display: none"></div>
+  </body>
+  <apex:includeScript value="{!$Resource.GMBLJS__jQuery}" />
+  <apex:includeScript value="{!URLFOR($Resource.GMBLJS__jQueryUI,'/jquery-ui/jquery-ui.min.js')}" />
+  <apex:includeScript value="{!URLFOR($Resource.GMBLJS__pqGridPro241,'/pqgrid.min.js')}" />
+  <apex:includeScript value="{!URLFOR($Resource.GMBLJS__pqGridPro241,'/touch-punch/touch-punch.min.js')}" />
+  <apex:includeScript value="{!$Resource.GMBLJS__accountingJS}" />
+  <apex:includeScript value="{!$Resource.GMBLJS__ExcellentExport}" />
+  <apex:includeScript value="{!$Resource.GMBLJS__gsrSpinner}" />
+  <apex:includeScript value="{!$Resource.GMBLJS__gsrGrid2}" />
+
+  <script>
+    function setFocusOnLoad() {}
+  </script>
+  <script type="text/javascript">
     $j = jQuery.noConflict();
     var currentTheme = "{!$User.UITheme}";
 
-    $j(document).ready(function()
-    {
-        initDatePicker();
-        $j('input.amountField').on('keyup',function(){
-            calcTotalAmount();
-        });
+    $j(document).ready(function () {
+      initDatePicker();
+      $j("input.amountField").on("keyup", function () {
+        calcTotalAmount();
+      });
     });
 
-    function initDatePicker()
-    {
-        $j('#receiptDate').datepicker({'showButtonPanel':true});
+    function initDatePicker() {
+      $j("#receiptDate").datepicker({ showButtonPanel: true });
 
-        if('{!locale}' == 'en_CA') $j('#receiptDate').datepicker( "option", "dateFormat", "dd/mm/yy" );
+      if ("{!locale}" == "en_CA") $j("#receiptDate").datepicker("option", "dateFormat", "dd/mm/yy");
 
-        $j('#receiptDate').datepicker('setDate', new Date());
+      $j("#receiptDate").datepicker("setDate", new Date());
     }
 
     function calcTotalAmount() {
-        var receiptAmount = parseFloat($j('#customerAmount').val() == '' ? 0 : $j('#customerAmount').val());
-        var financeCharge = parseFloat($j('#reservedAmount').val() == '' ? 0 : $j('#reservedAmount').val());
-        var bankCharge = parseFloat($j('#bankFees').val() == '' ? 0 : $j('#bankFees').val());
-        $j('#totalAmount').val(receiptAmount + financeCharge + bankCharge);
+      var receiptAmount = parseFloat($j("#customerAmount").val() == "" ? 0 : $j("#customerAmount").val());
+      var financeCharge = parseFloat($j("#reservedAmount").val() == "" ? 0 : $j("#reservedAmount").val());
+      var bankCharge = parseFloat($j("#bankFees").val() == "" ? 0 : $j("#bankFees").val());
+      $j("#totalAmount").val(receiptAmount + financeCharge + bankCharge);
     }
 
     $currentSelection = null;
-    $j('#bankName').autocomplete({
-        minLength: 2,
-        autoFocus: false,
-        source: function (request, response) {
-            Visualforce.remoting.Manager.invokeAction(
-                '{!$RemoteAction.gcDealerReseved_Receipt.searchBankAccount}',
-                 request.term,
-                function (result, event) {
-                    if (event.status) {
-                        $j.each(result,function(k,item){
-                            if(item.label == undefined)
-                                result[k].label = item.Name;
-                            if(item.value == undefined)
-                                result[k].value = item.Id;
-                        })  
-                        response(result);
-                    } else {
-                        alert(event.message);
-                    }
-                }, {
-                    buffer: true,
-                    escape: true,
-                    timeout: 120000
-                });
-        },
-        focus: function (event, ui) {
-            $j(this).val(ui.item.Name);
-            $currentSelection = ui.item;
-            return false;
-        },
-        select: function (event, ui) {
-            $j(this).next().val(ui.item.Id);
-            return false;
-        },
-        change: function (event, ui) {
-            if($currentSelection != null)
-            {
-                $j(this).next().val(ui.item.Id);
-                $currentSelection = null;
+    $j("#bankName").autocomplete({
+      minLength: 2,
+      autoFocus: false,
+      source: function (request, response) {
+        Visualforce.remoting.Manager.invokeAction(
+          "{!$RemoteAction.gcDealerReseved_Receipt.searchBankAccount}",
+          request.term,
+          function (result, event) {
+            if (event.status) {
+              $j.each(result, function (k, item) {
+                if (item.label == undefined) result[k].label = item.Name;
+                if (item.value == undefined) result[k].value = item.Id;
+              });
+              response(result);
+            } else {
+              alert(event.message);
             }
-            return false;
+          },
+          {
+            buffer: true,
+            escape: true,
+            timeout: 120000
+          }
+        );
+      },
+      focus: function (event, ui) {
+        $j(this).val(ui.item.Name);
+        $currentSelection = ui.item;
+        return false;
+      },
+      select: function (event, ui) {
+        $j(this).next().val(ui.item.Id);
+        return false;
+      },
+      change: function (event, ui) {
+        if ($currentSelection != null) {
+          $j(this).next().val(ui.item.Id);
+          $currentSelection = null;
         }
+        return false;
+      }
     });
 
     $currentERPSelection = null;
-    $j('#erpName').autocomplete({
-        minLength: 2,
-        autoFocus: false,
-        source: function (request, response) {
-            Visualforce.remoting.Manager.invokeAction(
-                '{!$RemoteAction.gcDealerReseved_Receipt.searchERPAccount}',
-                 '{!Id}', request.term, 
-                function (result, event) {
-                    if (event.status) {
-                        $j.each(result,function(k,item){
-                            if(item.label == undefined)
-                                result[k].label = item.Name;
-                            if(item.value == undefined)
-                                result[k].value = item.Id;
-                        })  
-                        response(result);
-                    } else {
-                        alert(event.message);
-                    }
-                }, {
-                    buffer: true,
-                    escape: true,
-                    timeout: 120000
-                });
-        },
-        focus: function (event, ui) {
-            $j(this).val(ui.item.Name);
-            $currentERPSelection = ui.item;
-            return false;
-        },
-        select: function (event, ui) {
-            $j(this).next().val(ui.item.Id);
-            return false;
-        },
-        change: function (event, ui) {
-            if($currentERPSelection != null)
-            {
-                $j(this).next().val(ui.item.Id);
-                $currentERPSelection = null;
+    $j("#erpName").autocomplete({
+      minLength: 2,
+      autoFocus: false,
+      source: function (request, response) {
+        Visualforce.remoting.Manager.invokeAction(
+          "{!$RemoteAction.gcDealerReseved_Receipt.searchERPAccount}",
+          "{!Id}",
+          request.term,
+          function (result, event) {
+            if (event.status) {
+              $j.each(result, function (k, item) {
+                if (item.label == undefined) result[k].label = item.Name;
+                if (item.value == undefined) result[k].value = item.Id;
+              });
+              response(result);
+            } else {
+              alert(event.message);
             }
-            return false;
+          },
+          {
+            buffer: true,
+            escape: true,
+            timeout: 120000
+          }
+        );
+      },
+      focus: function (event, ui) {
+        $j(this).val(ui.item.Name);
+        $currentERPSelection = ui.item;
+        return false;
+      },
+      select: function (event, ui) {
+        $j(this).next().val(ui.item.Id);
+        return false;
+      },
+      change: function (event, ui) {
+        if ($currentERPSelection != null) {
+          $j(this).next().val(ui.item.Id);
+          $currentERPSelection = null;
         }
+        return false;
+      }
     });
 
     $currentGLVSelection = null;
-    $j('#glv1Name').autocomplete({
-        minLength: 2,
-        autoFocus: false,
-        source: function (request, response) {
-            Visualforce.remoting.Manager.invokeAction(
-                '{!$RemoteAction.gcDealerReseved_Receipt.searchGLVAccount}',
-                 request.term, 
-                function (result, event) {
-                    if (event.status) {
-                        $j.each(result,function(k,item){
-                            if(item.label == undefined)
-                                result[k].label = item.Name;
-                            if(item.value == undefined)
-                                result[k].value = item.Id;
-                        })  
-                        response(result);
-                    } else {
-                        alert(event.message);
-                    }
-                }, {
-                    buffer: true,
-                    escape: true,
-                    timeout: 120000
-                });
-        },
-        focus: function (event, ui) {
-            $j(this).val(ui.item.Name);
-            $currentGLVSelection = ui.item;
-            return false;
-        },
-        select: function (event, ui) {
-            $j(this).next().val(ui.item.Id);
-            return false;
-        },
-        change: function (event, ui) {
-            if($currentGLVSelection != null)
-            {
-                $j(this).next().val(ui.item.Id);
-                $currentGLVSelection = null;
+    $j("#glv1Name").autocomplete({
+      minLength: 2,
+      autoFocus: false,
+      source: function (request, response) {
+        Visualforce.remoting.Manager.invokeAction(
+          "{!$RemoteAction.gcDealerReseved_Receipt.searchGLVAccount}",
+          request.term,
+          function (result, event) {
+            if (event.status) {
+              $j.each(result, function (k, item) {
+                if (item.label == undefined) result[k].label = item.Name;
+                if (item.value == undefined) result[k].value = item.Id;
+              });
+              response(result);
+            } else {
+              alert(event.message);
             }
-            return false;
+          },
+          {
+            buffer: true,
+            escape: true,
+            timeout: 120000
+          }
+        );
+      },
+      focus: function (event, ui) {
+        $j(this).val(ui.item.Name);
+        $currentGLVSelection = ui.item;
+        return false;
+      },
+      select: function (event, ui) {
+        $j(this).next().val(ui.item.Id);
+        return false;
+      },
+      change: function (event, ui) {
+        if ($currentGLVSelection != null) {
+          $j(this).next().val(ui.item.Id);
+          $currentGLVSelection = null;
         }
+        return false;
+      }
     });
 
     function createFinanceCharges(checkExisting) {
-        var reg = /^[+-]?(?=.)(?:\d+,)*\d*(?:\.\d+)?$/;
-        var idERP = $j("#erpId").val();
-        if(idERP == '')
-            idERP = null;
-        var idBankAccount = $j("#bankId").val();
-        var nameBankAccount = $j("#bankName").val();
-        var idGLV1 = $j("#glv1Id").val();
-        var nameGLV1 = $j("#glv1Name").val();
-        var idGLBankAccount = $j("#bankGLId select").val();
-        if(idBankAccount == '' || idBankAccount == null || nameBankAccount == '' || nameBankAccount == null){
-            alert('please search and select a bank account.');
-            $j('#bankName').focus();
-            return;
-        }
-        if(idGLV1 == '' || idGLV1 == null || nameGLV1 == '' || nameGLV1 == null){
-            alert('please search and select a GLV1 (Businedd Unit).');
-            $j('#glv1Name').focus();
-            return;
-        }
-        if($j('#customerAmount').val() == '' || !reg.test($j('#customerAmount').val())){
-            alert('Please enter Customer Receipt Amount.');
-            $j('#customerAmount').focus();
-            return;
-        }
-        if($j('#reservedAmount').val() == '' || !reg.test($j('#reservedAmount').val())){
-            alert('Please enter Dealer Reserved Amount.');
-            $j('#reservedAmount').focus();
-            return;
-        }
-        if($j('#bankFees').val() == '' || !reg.test($j('#bankFees').val())){
-            alert('Please enter Bank Fees Amount.');
-            $j('#bankFees').focus();
-            return;
-        }
-        if($j('#paymentRef').val() == ''){
-            alert('Please enter Payment Reference Amount.');
-            $j('#paymentRef').focus();
-            return;
-        }
-        if($j('#receiptDate').val() == ''){
-            alert('Please enter Valid Date.');
-            $j('#receiptDate').focus();
-            return;
-        }
+      var reg = /^[+-]?(?=.)(?:\d+,)*\d*(?:\.\d+)?$/;
+      var idERP = $j("#erpId").val();
+      if (idERP == "") idERP = null;
+      var idBankAccount = $j("#bankId").val();
+      var nameBankAccount = $j("#bankName").val();
+      var idGLV1 = $j("#glv1Id").val();
+      var nameGLV1 = $j("#glv1Name").val();
+      var idGLBankAccount = $j("#bankGLId select").val();
+      if (idBankAccount == "" || idBankAccount == null || nameBankAccount == "" || nameBankAccount == null) {
+        alert("please search and select a bank account.");
+        $j("#bankName").focus();
+        return;
+      }
+      if (idGLV1 == "" || idGLV1 == null || nameGLV1 == "" || nameGLV1 == null) {
+        alert("please search and select a GLV1 (Businedd Unit).");
+        $j("#glv1Name").focus();
+        return;
+      }
+      if ($j("#customerAmount").val() == "" || !reg.test($j("#customerAmount").val())) {
+        alert("Please enter Customer Receipt Amount.");
+        $j("#customerAmount").focus();
+        return;
+      }
+      if ($j("#reservedAmount").val() == "" || !reg.test($j("#reservedAmount").val())) {
+        alert("Please enter Dealer Reserved Amount.");
+        $j("#reservedAmount").focus();
+        return;
+      }
+      if ($j("#bankFees").val() == "" || !reg.test($j("#bankFees").val())) {
+        alert("Please enter Bank Fees Amount.");
+        $j("#bankFees").focus();
+        return;
+      }
+      if ($j("#paymentRef").val() == "") {
+        alert("Please enter Payment Reference Amount.");
+        $j("#paymentRef").focus();
+        return;
+      }
+      if ($j("#receiptDate").val() == "") {
+        alert("Please enter Valid Date.");
+        $j("#receiptDate").focus();
+        return;
+      }
 
-        var receiptAmount = parseFloat($j('#customerAmount').val());
-        var financeCharge = parseFloat($j('#reservedAmount').val());
-        var bankCharge = parseFloat($j('#bankFees').val());
-        var paymentRef = $j('#paymentRef').val();
-        var receiptDate = $j('#receiptDate').val();
-        if(financeCharge == 0 && bankCharge == 0 && receiptAmount == 0){
-            alert('Please enter Values in all fields.')
-            return;
-        }
+      var receiptAmount = parseFloat($j("#customerAmount").val());
+      var financeCharge = parseFloat($j("#reservedAmount").val());
+      var bankCharge = parseFloat($j("#bankFees").val());
+      var paymentRef = $j("#paymentRef").val();
+      var receiptDate = $j("#receiptDate").val();
+      if (financeCharge == 0 && bankCharge == 0 && receiptAmount == 0) {
+        alert("Please enter Values in all fields.");
+        return;
+      } else if (financeCharge < 0 && bankCharge < 0) {
         /*else if(receiptAmount < 0){
             alert('Receipt amount cannot be negative.')
             return;
         }*/
-        else if(financeCharge < 0 && bankCharge < 0){
-            alert('Both Dealer Reserved and Bank Fees cannot be negative.')
-            return;
-        }
-                            
-        gSpinner.show();
-        Visualforce.remoting.Manager.invokeAction(
-            '{!$RemoteAction.gcDealerReseved_Receipt.createFCBill}',
-            '{!Id}', idBankAccount, idGLBankAccount, paymentRef, receiptAmount, financeCharge, bankCharge, checkExisting, receiptDate, idERP, idGLV1,
-            function(result,event){
-                if(event.status){
-                    if(result == 'exists')
-                    {
-                        if(confirm('There are already an Unapplied Cash Receipt for this customer and an Applied cash receipt for this Bank exist with the same Bank GL account. Are you sure you want to create Dealer reserved receipt again?'))
-                        {
-                            // gSpinner.hide();
-                            createFinanceCharges(false);
-                        }
-                    }
-                    else
-                    {
-                        var arr = result.split('__');
-                        var url;
-                        if(arr.length > 0 && arr[0] == 'disbursement')
-                            url = '/'+arr[1];
-                        else
-                            url = '/apex/ACCTSEED__BankDepositManager?id='+result;
-                        if(currentTheme == 'Theme4d')
-                            sforce.one.navigateToURL(url);
-                        else
-                            window.location.href = url;
-                    }
-                }
-                else{
-                    alert(event.message); 
-                }
-                gSpinner.hide();
-            },
-            {buffer:true, escape:true, timeout:120000});                
+        alert("Both Dealer Reserved and Bank Fees cannot be negative.");
+        return;
+      }
+
+      gSpinner.show();
+      Visualforce.remoting.Manager.invokeAction(
+        "{!$RemoteAction.gcDealerReseved_Receipt.createFCBill}",
+        "{!Id}",
+        idBankAccount,
+        idGLBankAccount,
+        paymentRef,
+        receiptAmount,
+        financeCharge,
+        bankCharge,
+        checkExisting,
+        receiptDate,
+        idERP,
+        idGLV1,
+        function (result, event) {
+          if (event.status) {
+            if (result == "exists") {
+              if (
+                confirm(
+                  "There are already an Unapplied Cash Receipt for this customer and an Applied cash receipt for this Bank exist with the same Bank GL account. Are you sure you want to create Dealer reserved receipt again?"
+                )
+              ) {
+                // gSpinner.hide();
+                createFinanceCharges(false);
+              }
+            } else {
+              var arr = result.split("__");
+              var url;
+              if (arr.length > 0 && arr[0] == "disbursement") url = "/" + arr[1];
+              else url = "/apex/ACCTSEED__BankDepositManager?id=" + result;
+              if (currentTheme == "Theme4d") sforce.one.navigateToURL(url);
+              else window.location.href = url;
+            }
+          } else {
+            alert(event.message);
+          }
+          gSpinner.hide();
+        },
+        { buffer: true, escape: true, timeout: 120000 }
+      );
     }
-    function goToUrl(url)
-    {
-        if(currentTheme == 'Theme4d' || currentTheme == 'Theme4t')
-            sforce.one.navigateToURL(url);
-        else
-            window.location.href = url;
+    function goToUrl(url) {
+      if (currentTheme == "Theme4d" || currentTheme == "Theme4t") sforce.one.navigateToURL(url);
+      else window.location.href = url;
     }
-</script>
+  </script>
 </apex:page>

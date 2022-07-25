@@ -1,78 +1,85 @@
-<apex:page standardController="AcctSeed__Project__c" extensions="gcProject_Override_Create" cache="false" docType="html-5.0" showChat="false" showHeader="true" sidebar="true">
+<apex:page
+  standardController="AcctSeed__Project__c"
+  extensions="gcProject_Override_Create"
+  cache="false"
+  docType="html-5.0"
+  showChat="false"
+  showHeader="true"
+  sidebar="true"
+>
+  <head>
+    <style>
+      .link {
+        cursor: pointer;
+        text-decoration: underline;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      tr.total td {
+        font-weight: bold;
+      }
+      div.pq-grid-footer {
+        display: none;
+      }
+      .ui-autocomplete {
+        max-height: 250px;
+        overflow-y: auto;
+        /* prevent horizontal scrollbar */
+        overflow-x: hidden;
+      }
+      #addNewSerialForm form input,
+      #addNewSerialForm form select,
+      #addNewSerialForm form input {
+        width: 250px;
+      }
+    </style>
 
-<head>
-<style>
-.link{
-    cursor:pointer;
-    text-decoration:underline;
-}
-table{
-    width:100%;
-    border-collapse:collapse;
-}
-tr.total td{
-    font-weight: bold;
-}
-div.pq-grid-footer{
-    display:none;
-}
-.ui-autocomplete {
-    max-height: 250px;
-    overflow-y: auto;
-    /* prevent horizontal scrollbar */
-    overflow-x: hidden;
-}
-#addNewSerialForm form input,
-#addNewSerialForm form select,
-#addNewSerialForm form input
-{
-    width: 250px;
-}
-</style>
+    <apex:stylesheet value="{!URLFOR($Resource.GMBLJS__jQueryUI,'/jquery-ui/jquery-ui.min.css')}" />
+    <apex:stylesheet value="{!URLFOR($Resource.GMBLJS__pqGridPro241,'/pqgrid.min.css')}" />
+  </head>
 
-<apex:stylesheet value="{!URLFOR($Resource.GMBLJS__jQueryUI,'/jquery-ui/jquery-ui.min.css')}"/>
-<apex:stylesheet value="{!URLFOR($Resource.GMBLJS__pqGridPro241,'/pqgrid.min.css')}"/>
+  <body>
+    <apex:outputPanel rendered="{!isBoatSale}">
+      <script>
+        if (
+          confirm(
+            "Boat Sale orders are created from an Opporunity.  Click [OK] to go to the Opportunities tab, or click [Cancel] to return to the Projects tab."
+          )
+        )
+          window.open("/006/o", "_self");
+        else window.open("{!$CurrentPage.parameters.retURL}", "_self");
+      </script>
+    </apex:outputPanel>
 
-</head>
-
-<body>
-
-<apex:outputPanel rendered="{!isBoatSale}">
-    <script>
-        if(confirm('Boat Sale orders are created from an Opporunity.  Click [OK] to go to the Opportunities tab, or click [Cancel] to return to the Projects tab.'))
-            window.open('/006/o','_self');
-        else
-            window.open('{!$CurrentPage.parameters.retURL}','_self');
-    </script>
-</apex:outputPanel>
-
-<apex:outputPanel rendered="{!isCounterSale}">
-    <script>
-        console.log('this is a counter Sale');
+    <apex:outputPanel rendered="{!isCounterSale}">
+      <script>
+        console.log("this is a counter Sale");
         console.log("{!$User.UITheme}");
-        if("{!$User.UITheme}" == "Theme4d")
-        {
-            sforce.one.navigateToURL('#/n/POS');
-            //console.log('render fancy counter sale tool');
+        if ("{!$User.UITheme}" == "Theme4d") {
+          sforce.one.navigateToURL("#/n/POS");
+          //console.log('render fancy counter sale tool');
+        } else {
+          console.log("render crappy page");
+          //return false;
         }
-        else
-        {
-            console.log('render crappy page');
-            //return false;
-        }
-    </script>
-</apex:outputPanel>
+      </script>
+    </apex:outputPanel>
 
-<apex:outputPanel rendered="{!isPartnerBoatSale}">
-    <script>
-        if(confirm('Partner Boat Sale orders are created from a Dealer Order.  Click [OK] to go to the Dealer Orders tab, or click [Cancel] to return to the Projects tab.'))
-            window.open('/{!$ObjectType.Dealer_Order__c.KeyPrefix}/o','_self');
-        else
-            window.open('{!$CurrentPage.parameters.retURL}','_self');
-    </script>
-</apex:outputPanel>
+    <apex:outputPanel rendered="{!isPartnerBoatSale}">
+      <script>
+        if (
+          confirm(
+            "Partner Boat Sale orders are created from a Dealer Order.  Click [OK] to go to the Dealer Orders tab, or click [Cancel] to return to the Projects tab."
+          )
+        )
+          window.open("/{!$ObjectType.Dealer_Order__c.KeyPrefix}/o", "_self");
+        else window.open("{!$CurrentPage.parameters.retURL}", "_self");
+      </script>
+    </apex:outputPanel>
 
-<!--apex:outputPanel rendered="{!isTradeIn}">
+    <!--apex:outputPanel rendered="{!isTradeIn}">
     <script>
         if(confirm('Trade In orders are created from an Opporunity.  Click [OK] to go to the Opportunities tab, or click [Cancel] to return to the Projects tab.'))
             window.open('/006/o','_self');
@@ -81,954 +88,780 @@ div.pq-grid-footer{
     </script>
 </apex:outputPanel-->
 
-<apex:outputPanel rendered="{!isPartnerPartsOrder}">
-    <script>
-        alert('Legend Partner Parts Order cannot be created directly from this screen.');
-        if("{!$User.UITheme}" == "Theme4d")
-            sforce.one.navigateToURL('#/sObject/AcctSeed__Project__c/list');
-        else
-            window.open('{!$CurrentPage.parameters.retURL}','_self');
-    </script>
-</apex:outputPanel>
+    <apex:outputPanel rendered="{!isPartnerPartsOrder}">
+      <script>
+        alert("Legend Partner Parts Order cannot be created directly from this screen.");
+        if ("{!$User.UITheme}" == "Theme4d") sforce.one.navigateToURL("#/sObject/AcctSeed__Project__c/list");
+        else window.open("{!$CurrentPage.parameters.retURL}", "_self");
+      </script>
+    </apex:outputPanel>
 
-<apex:outputPanel rendered="{!isManufacturing}">
-    <script>
-        if(confirm('Manufacturing Work Orders are created using the [Build Boats] tab.  Click [OK] to go to the [Build Boats] page, or click [Cancel] to return to the Projects tab.'))
-            window.open('/apex/gpLegendMRP_buildBoats','_self');
-        else
-            window.open('{!$CurrentPage.parameters.retURL}','_self');
-    </script>
-</apex:outputPanel>
+    <apex:outputPanel rendered="{!isManufacturing}">
+      <script>
+        if (
+          confirm(
+            "Manufacturing Work Orders are created using the [Build Boats] tab.  Click [OK] to go to the [Build Boats] page, or click [Cancel] to return to the Projects tab."
+          )
+        )
+          window.open("/apex/gpLegendMRP_buildBoats", "_self");
+        else window.open("{!$CurrentPage.parameters.retURL}", "_self");
+      </script>
+    </apex:outputPanel>
 
-<apex:outputPanel rendered="{!AND(NOT(isBoatSale),NOT(isManufacturing))}">
-<div style="margin:0 auto; width:98%;">
-
-    <div style="margin:5px auto; padding:5px; text-align:center;">
-        <button type="button" id="btnCreateOrder" onclick="onClickCreateOrder();">
+    <apex:outputPanel rendered="{!AND(NOT(isBoatSale),NOT(isManufacturing))}">
+      <div style="margin: 0 auto; width: 98%">
+        <div style="margin: 5px auto; padding: 5px; text-align: center">
+          <button type="button" id="btnCreateOrder" onclick="onClickCreateOrder();">
             <span style="{!IF(isCounterSale,'','display:none')}">Create Counter Sale Order</span>
             <span style="{!IF(isService,'','display:none')}">Create Service Order</span>
             <span style="{!IF(isWarranty,'','display:none')}">Create Warranty Order</span>
             <span style="{!IF(isTradeIn,'','display:none')}">Create Trade In Order</span>
             <span style="{!IF(isFixedAsset,'','display:none')}">Create Fixed Asset Order</span>
-            <span style="{!IF(AND(!isCounterSale,!isService,!isWarranty,!isTradeIn,!isFixedAsset),'','display:none')}">Create Work Order</span>
-        </button>
+            <span style="{!IF(AND(!isCounterSale,!isService,!isWarranty,!isTradeIn,!isFixedAsset),'','display:none')}"
+              >Create Work Order</span
+            >
+          </button>
+        </div>
+
+        <div id="accounts"></div>
+        <br />
+        <div id="serials" style="{!IF(OR(isService,isWarranty,isTradeIn),'','display:none')}"></div>
+        <div id="fixedAsset" style="{!IF(isFixedAsset,'','display:none')}"></div>
+        <br />
+        INSTRUCTIONS:<br /> Step #1: Select or Create an Account.<br />
+        <div style="{!IF(isCounterSale,'','display:none')}">Step #2: Click the [Create Counter Sale Order] button.</div>
+        <div style="{!IF(isService,'','display:none')}">
+          Step #2: Select or Create a Serial (i.e. a boat).<br />
+          Step #3: Click the [Create Service Order] button.
+        </div>
+        <div style="{!IF(isWarranty,'','display:none')}">
+          Step #2: Select or Create a Serial (i.e. a boat).<br />
+          Step #3: Click the [Create Warranty Order] button.
+        </div>
+        <div style="{!IF(isTradeIn,'','display:none')}">
+          Step #2: Select or Create a Serial (i.e. a boat).<br />
+          Step #3: Click the [Create Trade In Order] button.
+        </div>
+        <div style="{!IF(isFixedAsset,'','display:none')}">
+          Step #2: Select or Create a Fixed Asset.<br />
+          Step #3: Click the [Create Fixed Asset Order] button.
+        </div>
+        <div style="{!IF(AND(!isCounterSale,!isService,!isWarranty,!isTradeIn,!isFixedAsset),'','display:none')}">
+          Step #2: Click the [Create Work Order] button.
+        </div>
+      </div>
+    </apex:outputPanel>
+
+    <div style="display: none" id="addNewAccountItemDiv">
+      <div id="addNewAccountForm">
+        <apex:form id="formNewAccount">
+          <apex:pageBlock mode="read" title="Account Information">
+            <table width="100%">
+              <tr>
+                <td style="width: 90px">Record Type</td>
+                <td style="width: 240px" class="accountRecordType">
+                  <apex:inputField onchange="showHideRow(this);" value="{!newAccount.RecordTypeId}"></apex:inputField>
+                </td>
+                <td style="width: 90px"><apex:outputLabel>Phone</apex:outputLabel></td>
+                <td class="accountPhone" colspan="3">
+                  <apex:inputField value="{!newAccount.Phone}"></apex:inputField>
+                </td>
+              </tr>
+              <tr class="normalAccount">
+                <td><apex:outputLabel>Name</apex:outputLabel></td>
+                <td colspan="3" class="accountName"><apex:inputField value="{!newAccount.Name}"></apex:inputField></td>
+              </tr>
+              <tr class="personAccount" style="display: none">
+                <td><apex:outputLabel>First Name</apex:outputLabel></td>
+                <td class="accountFirstName"><apex:inputText value="{!newAccount.FirstName}"></apex:inputText></td>
+                <td><apex:outputLabel>Last Name</apex:outputLabel></td>
+                <td class="accountLastName">
+                  <apex:outputPanel styleClass="requiredInput" layout="block">
+                    <apex:outputPanel styleClass="requiredBlock" layout="block" />
+                    <apex:inputText required="true" value="{!newAccount.LastName}"></apex:inputText>
+                  </apex:outputPanel>
+                </td>
+              </tr>
+            </table>
+          </apex:pageBlock>
+          <apex:pageBlock mode="read" title="Billing Information">
+            <table width="100%">
+              <tr>
+                <td><apex:outputLabel>Country</apex:outputLabel></td>
+                <td class="billingCountryCode">
+                  <apex:inputField value="{!newAccount.BillingCountryCode}"></apex:inputField>
+                </td>
+                <td><apex:outputLabel>State</apex:outputLabel></td>
+                <td class="billingStateCode">
+                  <apex:inputField value="{!newAccount.BillingStateCode}"></apex:inputField>
+                </td>
+              </tr>
+              <tr>
+                <td><apex:outputLabel>City</apex:outputLabel></td>
+                <td class="billingCity"><apex:inputField value="{!newAccount.BillingCity}"></apex:inputField></td>
+                <td><apex:outputLabel>Zip/Postalcode</apex:outputLabel></td>
+                <td class="billingPostalCode">
+                  <apex:inputField value="{!newAccount.BillingPostalCode}"></apex:inputField>
+                </td>
+              </tr>
+              <tr>
+                <td><apex:outputLabel>Street</apex:outputLabel></td>
+                <td class="billingStreet"><apex:inputField value="{!newAccount.BillingStreet}"></apex:inputField></td>
+              </tr>
+            </table>
+          </apex:pageBlock>
+        </apex:form>
+      </div>
+
+      <div id="addNewSerialForm">
+        <apex:form id="formNewSerial">
+          <apex:pageBlock mode="read" title="">
+            <table width="100%">
+              <tr>
+                <td><apex:outputLabel>Product*</apex:outputLabel></td>
+                <td class="serialProduct v_field">
+                  <input
+                    type="text"
+                    name="serviceProduct"
+                    class="serviceProduct"
+                    placeholder="Search serialized product.."
+                  />
+                  <input type="hidden" name="serviceProdId" class="serviceProductId" />
+                </td>
+              </tr>
+              <tr>
+                <td><apex:outputLabel>Serial Number*</apex:outputLabel></td>
+                <td class="serialName v_field">
+                  <!-- <apex:inputField required="true" value="{!newSerial.Name}" /> -->
+                  <input
+                    type="text"
+                    class="inputSerial"
+                    placeholder="Enter Serial Number #"
+                    style="text-align: center"
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td><apex:outputLabel>Model Year</apex:outputLabel></td>
+                <td class="modelYear">
+                  <input
+                    type="text"
+                    class="inputModelYear"
+                    placeholder="Enter Model Year #"
+                    style="text-align: center"
+                  />
+                </td>
+              </tr>
+              <tr class="lotClass">
+                <td><apex:outputLabel>Lot / Year*</apex:outputLabel></td>
+                <td class="serialLot">
+                  <!-- <apex:inputField value="{!newSerial.GMBLASERP__Lot__c}" /> -->
+                  <input type="text" class="inputLot" placeholder="Enter lot #" style="text-align: center" />
+                </td>
+              </tr>
+              <tr class="lotClass">
+                <td>
+                  <apex:outputLabel><!-- Existing Lot / Year --></apex:outputLabel>
+                </td>
+                <td class="serialLotSelect"><select id="selectLot"></select></td>
+              </tr>
+
+              <tr>
+                <td><apex:outputLabel>Description</apex:outputLabel></td>
+                <td class="serialDesc">
+                  <!-- <apex:inputField value="{!newSerial.Description__c}" /> -->
+                  <textarea id="inputDesc" rows="4" cols="30" maxlength="255" />
+                </td>
+              </tr>
+            </table>
+          </apex:pageBlock>
+        </apex:form>
+      </div>
+
+      <div id="addNewAssetForm">
+        <apex:form id="formNewAsset">
+          <apex:pageBlock mode="read" title="">
+            <table width="100%">
+              <tr>
+                <td><apex:outputLabel>Name*</apex:outputLabel></td>
+                <td>
+                  <input type="text" class="assetName" placeholder="Enter Name" />
+                </td>
+              </tr>
+              <tr>
+                <td><apex:outputLabel>Value*</apex:outputLabel></td>
+                <td>
+                  <input type="text" class="inputValue" placeholder="Enter Value" />
+                </td>
+              </tr>
+              <tr>
+                <td><apex:outputLabel>Serial*</apex:outputLabel></td>
+                <td>
+                  <input type="text" class="assetSerial" placeholder="Enter Serial Number" />
+                </td>
+              </tr>
+            </table>
+          </apex:pageBlock>
+        </apex:form>
+      </div>
     </div>
+  </body>
 
-    <div id="accounts"></div>
-    <br/>
-    <div id="serials" style="{!IF(OR(isService,isWarranty,isTradeIn),'','display:none')}"></div>
-    <div id="fixedAsset" style="{!IF(isFixedAsset,'','display:none')}"></div>
-<br/>
-INSTRUCTIONS:<br/>
-Step #1: Select or Create an Account.<br/>
-<div style="{!IF(isCounterSale,'','display:none')}">
-Step #2: Click the [Create Counter Sale Order] button.
-</div>
-<div style="{!IF(isService,'','display:none')}">
-Step #2: Select or Create a Serial (i.e. a boat).<br/>
-Step #3: Click the [Create Service Order] button.
-</div>
-<div style="{!IF(isWarranty,'','display:none')}">
-Step #2: Select or Create a Serial (i.e. a boat).<br/>
-Step #3: Click the [Create Warranty Order] button.
-</div>
-<div style="{!IF(isTradeIn,'','display:none')}">
-Step #2: Select or Create a Serial (i.e. a boat).<br/>
-Step #3: Click the [Create Trade In Order] button.
-</div>
-<div style="{!IF(isFixedAsset,'','display:none')}">
-Step #2: Select or Create a Fixed Asset.<br/>
-Step #3: Click the [Create Fixed Asset Order] button.
-</div>
-<div style="{!IF(AND(!isCounterSale,!isService,!isWarranty,!isTradeIn,!isFixedAsset),'','display:none')}">
-Step #2: Click the [Create Work Order] button.
-</div>
-</div>
-</apex:outputPanel>
+  <apex:includeScript value="{!$Resource.GMBLJS__jQuery}" />
+  <apex:includeScript value="{!URLFOR($Resource.GMBLJS__jQueryUI,'/jquery-ui/jquery-ui.min.js')}" />
+  <apex:includeScript value="{!URLFOR($Resource.GMBLJS__pqGridPro241,'/pqgrid.min.js')}" />
+  <apex:includeScript value="{!URLFOR($Resource.GMBLJS__pqGridPro241,'/touch-punch/touch-punch.min.js')}" />
+  <apex:includeScript value="{!$Resource.GMBLJS__accountingJS}" />
+  <apex:includeScript value="{!$Resource.GMBLJS__ExcellentExport}" />
+  <apex:includeScript value="{!$Resource.GMBLJS__gsrSpinner}" />
+  <apex:includeScript value="{!$Resource.GMBLJS__gsrGrid2}" />
 
-
-    <div style="display:none;" id="addNewAccountItemDiv">
-        <div id="addNewAccountForm">
-            <apex:form id="formNewAccount">
-                <apex:pageBlock mode="read" title="Account Information">
-                    <table width="100%">
-                        <tr>
-                            <td style="width: 90px;">Record Type</td>
-                            <td style="width: 240px;" class="accountRecordType"><apex:inputField onchange="showHideRow(this);" value="{!newAccount.RecordTypeId}"></apex:inputField></td>
-                            <td style="width: 90px;"><apex:outputLabel >Phone</apex:outputLabel></td>
-                            <td class="accountPhone" colspan="3"><apex:inputField value="{!newAccount.Phone}"></apex:inputField></td>
-                        </tr>
-                        <tr class="normalAccount">
-                            <td><apex:outputLabel >Name</apex:outputLabel></td>
-                            <td colspan="3" class="accountName"><apex:inputField value="{!newAccount.Name}"></apex:inputField></td>
-                        </tr>
-                        <tr class="personAccount" style="display: none;">
-                            <td><apex:outputLabel >First Name</apex:outputLabel></td>
-                            <td class="accountFirstName"><apex:inputText value="{!newAccount.FirstName}"></apex:inputText></td>
-                            <td><apex:outputLabel >Last Name</apex:outputLabel></td>
-                            <td class="accountLastName">
-                                <apex:outputPanel styleClass="requiredInput" layout="block">
-                                <apex:outputPanel styleClass="requiredBlock" layout="block"/>
-                                    <apex:inputText required="true" value="{!newAccount.LastName}"></apex:inputText>
-                                </apex:outputPanel>
-                            </td>
-                        </tr>
-                    </table>
-                </apex:pageBlock>
-                <apex:pageBlock mode="read" title="Billing Information">
-                    <table width="100%">
-                        <tr>
-                            <td><apex:outputLabel >Country</apex:outputLabel></td>
-                            <td class="billingCountryCode"><apex:inputField value="{!newAccount.BillingCountryCode}"></apex:inputField></td>
-                            <td><apex:outputLabel >State</apex:outputLabel></td>
-                            <td class="billingStateCode"><apex:inputField value="{!newAccount.BillingStateCode}"></apex:inputField></td>
-                        </tr>
-                        <tr>
-                            <td><apex:outputLabel >City</apex:outputLabel></td>
-                            <td class="billingCity"><apex:inputField value="{!newAccount.BillingCity}"></apex:inputField></td>
-                            <td><apex:outputLabel >Zip/Postalcode</apex:outputLabel></td>
-                            <td class="billingPostalCode"><apex:inputField value="{!newAccount.BillingPostalCode}"></apex:inputField></td>
-                        </tr>
-                        <tr>
-                            <td><apex:outputLabel >Street</apex:outputLabel></td>
-                            <td class="billingStreet"><apex:inputField value="{!newAccount.BillingStreet}"></apex:inputField></td>
-                        </tr>
-                    </table>
-                </apex:pageBlock>
-            </apex:form>
-        </div>
-
-        <div id="addNewSerialForm">
-            <apex:form id="formNewSerial">
-                <apex:pageBlock mode="read" title="">
-                    <table width="100%">
-                        <tr>
-                            <td><apex:outputLabel >Product*</apex:outputLabel></td>
-                            <td class="serialProduct v_field">
-                                <input type="text" name="serviceProduct" class="serviceProduct" placeholder="Search serialized product.." />
-                                <input type="hidden" name="serviceProdId" class="serviceProductId" />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><apex:outputLabel >Serial Number*</apex:outputLabel></td>
-                            <td class="serialName v_field"><!-- <apex:inputField required="true" value="{!newSerial.Name}" /> -->
-                            <input type="text" class="inputSerial"  placeholder="Enter Serial Number #" style="text-align:center;"/>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><apex:outputLabel >Model Year</apex:outputLabel></td>
-                            <td class="modelYear">
-                                <input type="text" class="inputModelYear"  placeholder="Enter Model Year #" style="text-align:center;"/>
-                            </td>
-                        </tr>
-                        <tr class="lotClass">
-                            <td><apex:outputLabel >Lot / Year*</apex:outputLabel></td>
-                            <td class="serialLot"><!-- <apex:inputField value="{!newSerial.GMBLASERP__Lot__c}" /> -->
-                            <input type="text" class="inputLot"  placeholder="Enter lot #" style="text-align:center;"/>
-                            </td>
-                        </tr>
-                        <tr class="lotClass">
-                            <td><apex:outputLabel ><!-- Existing Lot / Year --></apex:outputLabel></td>
-                            <td class="serialLotSelect"><select id="selectLot"></select>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td><apex:outputLabel >Description</apex:outputLabel></td>
-                            <td class="serialDesc"><!-- <apex:inputField value="{!newSerial.Description__c}" /> -->
-                                <textarea id="inputDesc" rows="4" cols="30" maxlength="255"/>
-                            </td>
-                        </tr>
-                    </table>
-                </apex:pageBlock>
-            </apex:form>
-        </div>
-
-        <div id="addNewAssetForm">
-            <apex:form id="formNewAsset">
-                <apex:pageBlock mode="read" title="">
-                    <table width="100%">
-                        <tr>
-                            <td><apex:outputLabel >Name*</apex:outputLabel></td>
-                            <td>
-                                <input type="text" class="assetName"  placeholder="Enter Name"/>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><apex:outputLabel >Value*</apex:outputLabel></td>
-                            <td>
-                                <input type="text" class="inputValue"  placeholder="Enter Value"/>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><apex:outputLabel >Serial*</apex:outputLabel></td>
-                            <td>
-                                <input type="text" class="assetSerial"  placeholder="Enter Serial Number"/>
-                            </td>
-                        </tr>
-                    </table>
-                </apex:pageBlock>
-            </apex:form>
-        </div>
-
-    </div>
-</body>
-
-<apex:includeScript value="{!$Resource.GMBLJS__jQuery}"/>
-<apex:includeScript value="{!URLFOR($Resource.GMBLJS__jQueryUI,'/jquery-ui/jquery-ui.min.js')}"/>
-<apex:includeScript value="{!URLFOR($Resource.GMBLJS__pqGridPro241,'/pqgrid.min.js')}"/>
-<apex:includeScript value="{!URLFOR($Resource.GMBLJS__pqGridPro241,'/touch-punch/touch-punch.min.js')}"/>
-<apex:includeScript value="{!$Resource.GMBLJS__accountingJS}"/>
-<apex:includeScript value="{!$Resource.GMBLJS__ExcellentExport}"/>
-<apex:includeScript value="{!$Resource.GMBLJS__gsrSpinner}"/>
-<apex:includeScript value="{!$Resource.GMBLJS__gsrGrid2}"/>
-
-<script>function setFocusOnLoad() {}</script>
-<script type="text/javascript">
-    $j = jQuery.noConflict();
-    var preloadedData = [];
-    <apex:outputText rendered="{!OR(isService,isWarranty)}">
-        preloadedData = {!retrieveProduct};
-    </apex:outputText>
-    //////////////////
-    $j(document).ready(function()
-    {
-        initGrid_accounts();
-        initGrid_serials();
-        initGrid_fixedAsset();
-        $j(document).on( "focus", "input.serviceProduct", function( event ) {
-            $inputField = $j(this);
-                $inputField.autocomplete({
-                minLength: 0,
-                autoFocus: false,
-                delay: 500,
-                source: function (request, response) {
-                    var results = $j.ui.autocomplete.filter(preloadedData, request.term);
-                    if(results.length == 0)
-                    {
-                        Visualforce.remoting.Manager.invokeAction(
-                            '{!$RemoteAction.gcProject_Override_Create.searchProductForSerial}',
-                             request.term,
-                            function (result, event) {
-                                if (event.status) {
-                                    $j.each(result,function(k,item){
-                                        if(item.label == undefined)
-                                            result[k].label = item.Name;
-                                        if(item.value == undefined)
-                                            result[k].value = item.Id;
-                                    })
-                                    response(result);
-                                } else {
-                                    alert(event.message);
-                                }
-                            }, {
-                                buffer: true,
-                                escape: true,
-                                timeout: 120000
-                            });
-                    }
-                    else
-                    {
-                        response(results);
-                    }
-                },
-                focus: function (event, ui) {
-                    $inputField.val(ui.item.Name);
-                    return false;
-                },
-                select: function (event, ui) {
-                    productSelected($inputField,ui.item);
-                    return false;
-                },
-                change: function (event, ui) {
-                    if(ui.item != undefined)
+  <script>
+    function setFocusOnLoad() {}
+  </script>
+  <script type="text/javascript">
+        $j = jQuery.noConflict();
+        var preloadedData = [];
+        <apex:outputText rendered="{!OR(isService,isWarranty)}">
+            preloadedData = {!retrieveProduct};
+        </apex:outputText>
+        //////////////////
+        $j(document).ready(function()
+        {
+            initGrid_accounts();
+            initGrid_serials();
+            initGrid_fixedAsset();
+            $j(document).on( "focus", "input.serviceProduct", function( event ) {
+                $inputField = $j(this);
+                    $inputField.autocomplete({
+                    minLength: 0,
+                    autoFocus: false,
+                    delay: 500,
+                    source: function (request, response) {
+                        var results = $j.ui.autocomplete.filter(preloadedData, request.term);
+                        if(results.length == 0)
+                        {
+                            Visualforce.remoting.Manager.invokeAction(
+                                '{!$RemoteAction.gcProject_Override_Create.searchProductForSerial}',
+                                 request.term,
+                                function (result, event) {
+                                    if (event.status) {
+                                        $j.each(result,function(k,item){
+                                            if(item.label == undefined)
+                                                result[k].label = item.Name;
+                                            if(item.value == undefined)
+                                                result[k].value = item.Id;
+                                        })
+                                        response(result);
+                                    } else {
+                                        alert(event.message);
+                                    }
+                                }, {
+                                    buffer: true,
+                                    escape: true,
+                                    timeout: 120000
+                                });
+                        }
+                        else
+                        {
+                            response(results);
+                        }
+                    },
+                    focus: function (event, ui) {
+                        $inputField.val(ui.item.Name);
+                        return false;
+                    },
+                    select: function (event, ui) {
                         productSelected($inputField,ui.item);
-                    else
-                    {
-                        productSelected($inputField,'');
+                        return false;
+                    },
+                    change: function (event, ui) {
+                        if(ui.item != undefined)
+                            productSelected($inputField,ui.item);
+                        else
+                        {
+                            productSelected($inputField,'');
+                        }
+                        return false;
                     }
-                    return false;
-                }
+                });
             });
+
+            // For Autocomplete
+            /*jQuery.fn.filterByText = function() {
+                    return this.each(function() {
+                        var select = $j(this);
+                        var options = [],
+                            defaultOption = '';
+
+                        select.find('option').each(function() {
+                                var elm = $j(this);
+                                if(elm.data('default') != true)
+                                {
+                                    options.push({value: elm.val(), text: elm.text()});
+                                }
+                                else
+                                {
+                                    defaultOption = elm.text();
+                                }
+                            });
+                    });
+                };
+            $j(function() {
+              $j('#selectProduct').filterByText($j('#sort'), true);
+            });*/
         });
 
-        // For Autocomplete
-        /*jQuery.fn.filterByText = function() {
-                return this.each(function() {
-                    var select = $j(this);
-                    var options = [],
-                        defaultOption = '';
-
-                    select.find('option').each(function() {
-                            var elm = $j(this);
-                            if(elm.data('default') != true)
-                            {
-                                options.push({value: elm.val(), text: elm.text()});
-                            }
-                            else
-                            {
-                                defaultOption = elm.text();
-                            }
-                        });
-                });
-            };
-        $j(function() {
-          $j('#selectProduct').filterByText($j('#sort'), true);
-        });*/
-    });
-
-//
-//
-//  ACCOUNT SEARCH RESULTS ******************************************************************
-//
-//
-    function productSelected(obj,item) {
-        if(item == '')
-        {
-            obj.val('');
-            obj.data( "idProduct", '');
-            obj.data( "isLotTracked", '');
-            obj.next('input.serviceProductId').val('');
-            obj.parents('table').find('tr.lotClass').hide();
-        }
-        else if(obj.data( "idProduct") == item.idProduct)
-            return;
-        else
-        {
-            obj.val(item.Name);
-            obj.data( "idProduct", item.idProduct);
-            obj.data( "isLotTracked", item.isLotTracked);
-            obj.next('input.serviceProductId').val(item.idProduct);
-            if(item.isLotTracked == "true"){
-                obj.parents('table').find('tr.lotClass').show();
-                initSelectLot(obj,item.idProduct);
-            }
-            else{
+    //
+    //
+    //  ACCOUNT SEARCH RESULTS ******************************************************************
+    //
+    //
+        function productSelected(obj,item) {
+            if(item == '')
+            {
+                obj.val('');
+                obj.data( "idProduct", '');
+                obj.data( "isLotTracked", '');
+                obj.next('input.serviceProductId').val('');
                 obj.parents('table').find('tr.lotClass').hide();
             }
-        }
-    }
-
-    function showHideRow(select)
-    {
-        var txt = $j(select).find('option:selected').text();
-        if(txt == 'Person Account')
-        {
-            $j(select).closest('table').find('tr.normalAccount').hide();
-            $j(select).closest('table').find('tr.personAccount').show();
-        }
-        else
-        {
-            $j(select).closest('table').find('tr.normalAccount').show();
-            $j(select).closest('table').find('tr.personAccount').hide();
-        }
-    }
-
-    function initGrid_accounts()
-    {
-        var gridObj = { title:"",
-                        collapsible:{on:false,collapsed:false,toggle:false},
-                        columnTemplate: {sortable:true,editable:false, minWidth:80},
-                        dataModel:{data:[], sorting:'local', location:'local'},
-                        dragColumns:{enabled:false},
-                        editable:false,
-                        editModel: {clicksToEdit:1, saveKey: jQuery.ui.keyCode.ENTER, keyUpDown: false, onSave:null, onBlur:'save'},
-                        //editModel:{clicksToEdit:1, pressToEdit:false, filterKeys:true, keyUpDown:true, saveKey:$j.ui.keyCode.ENTER},
-                        //filterModel:{on:true, mode:'AND', header:true},
-                        freezeCols:0,
-                        freezeRows:0,
-                        height:300,
-                        flexHeight:false,
-                        historyModel:{on:false},
-                        hoverMode:'row',
-                        hwrap:false,
-                        numberCell:{show:true},
-                        pageModel: {type:null},
-                        pasteModel:{on:false},
-                        resizable: false,
-                        roundCorners: false,
-                        scrollModel: {autoFit:true},
-                        //selectionModel: { type: null},
-                        selectionModel: {type:'row', mode:'single', fireSelectChange:true},
-                        showBottom:true,
-                        showHeader:true,
-                        showTitle:true,
-                        showTop:true,
-                        showToolbar:false,
-                        sortable:true,
-                        swipeModel:{on:false},
-                        virtualX: false,
-                        //virtualXHeader: false,
-                        virtualY: false,
-                        width:'auto',
-                        wrap:false};
-
-        var myTitle = '';
-        myTitle = 'Search Accounts: &nbsp;&nbsp;<input id=\"inputSearchStringAccount\" type=\"text\" onkeyup=\"onKeyUpSearchAccount(event)\" size=\"20\"/>&nbsp;&nbsp;';
-        myTitle += '<input type=\"button\" class=\"btn\" onclick=\"searchAccount();\" value=\"Search Account\"/>';
-        myTitle += '<input type=\"button\" class=\"btn\" onclick=\"launchDialogCreateAccount();\" value=\"Create New Account\"/>';
-
-        gridObj.title = myTitle;
-
-        gridObj.colModel=[{dataIndx:'accountName',          title:'Account'},
-                          {dataIndx:'billingStreet',        title:'Street'},
-                          {dataIndx:'billingCity',          title:'City'},
-                          {dataIndx:'billingState',         title:'Province / State'},
-                          {dataIndx:'billingPostalCode',    title:'PostalCode'},
-                          {dataIndx:'billingCountry',       title:'Country'},
-                          {dataIndx:'phone',                title:'Phone'},
-                          {dataIndx:"scrollSpacer", minWidth:15, maxWidth:15}];
-
-        //gGrid.initFormat(gridObj.colModel);
-        gGrid.initFilter(gridObj.colModel);
-
-        var $gridDiv = $j('#accounts');
-
-        $gridDiv.pqGrid(gridObj);
-
-        $gridDiv.on('pqgridselectchange',function(event,ui)
-        {
-
-           var data=[];
-           $j.each($gridDiv.pqGrid( "selection",{type:'row', method:'getSelection'}), function(i,row)
-           {
-                var idAccount = row.rowData.idAccount;
-
-                data.push(row.rowData);
-                $gridDiv.pqGrid( "option", "flexHeight", true );
-                $gridDiv.pqGrid( "option", "height", 100 )
-                gGrid.refreshGrid_callback($gridDiv,data);
-                refreshGrid_serials(null,idAccount);
-            });
-        });
-    }
-
-    function refreshGrid_accounts(searchString){
-
-        var $gridDiv = $j('#accounts');
-
-        $gridDiv.pqGrid( "option", "flexHeight", false );
-        $gridDiv.pqGrid( "option", "height", 300 );
-        $gridDiv.pqGrid('showLoading');
-
-        Visualforce.remoting.Manager.invokeAction(
-            '{!$RemoteAction.gcProject_Override_Create.searchAccount}',
-            searchString,
-            function(result,event){
-                if(event.status)
-                {
-                    gGrid.refreshGrid_callback($gridDiv,result);
-                }
-                else
-                {
-                    alert(event.message);
-                }
-                $gridDiv.pqGrid('hideLoading');
-            },
-            {buffer:true, escape:true, timeout:120000});
-
-        $gridDiv.pqGrid("setSelection", null);
-    }
-
-
-
-    function onKeyUpSearchAccount(e)
-    {
-        if (e.which == 13){
-            searchAccount();
-        }
-    }
-
-    function searchAccount()
-    {
-        var searchString = $j('#inputSearchStringAccount').val();
-        //console.log('searchString: '+searchString);
-        if(searchString.trim().length > 0){
-            refreshGrid_accounts(searchString);
-
-        } //OK
-        else return;
-    }
-
-
-    function initGrid_serials()
-    {
-        var gridObj = { title:"",
-                        collapsible:{on:false,collapsed:false,toggle:false},
-                        columnTemplate: {sortable:true,editable:false, minWidth:80},
-                        dataModel:{data:[], sorting:'local', location:'local'},
-                        dragColumns:{enabled:false},
-                        editable:false,
-                        editModel: {clicksToEdit:1, saveKey: jQuery.ui.keyCode.ENTER, keyUpDown: false, onSave:null, onBlur:'save'},
-                        freezeCols:0,
-                        freezeRows:0,
-                        height:300,
-                        flexHeight:false,
-                        historyModel:{on:false},
-                        hoverMode:'row',
-                        hwrap:false,
-                        numberCell:{show:true},
-                        pageModel: {type:null},
-                        pasteModel:{on:false},
-                        resizable: false,
-                        roundCorners: false,
-                        scrollModel: {autoFit:true},
-                        selectionModel: {type:'row', mode:'single', fireSelectChange:true},
-                        showBottom:true,
-                        showHeader:true,
-                        showTitle:true,
-                        showTop:true,
-                        showToolbar:false,
-                        sortable:true,
-                        swipeModel:{on:false},
-                        virtualX: false,
-                        //virtualXHeader: false,
-                        virtualY: false,
-                        width:'auto',
-                        wrap:false};
-
-        var myTitle = '';
-        myTitle += 'Search Serials: &nbsp;&nbsp;<input id=\"inputSearchStringSerial\" type=\"text\" onkeyup=\"onKeyUpSearchSerial(event)\" size=\"20\"/>&nbsp;&nbsp;';
-        myTitle += '<input type=\"button\" class=\"btn\" onclick=\"searchSerial();\" value=\"Search Serial\"/>';
-        myTitle += '<input type=\"button\" class=\"btn\" onclick=\"launchDialogCreateSerial();\" value=\"Create New Serial\"/>';
-
-        gridObj.title = myTitle;
-
-        gridObj.colModel=[{dataIndx:'serialName',           title:'Serial Number'},
-                          {dataIndx:'modelYear',            title:'Model Year'},
-                          {dataIndx:'productName',          title:'Product Name'},
-                          {dataIndx:'lotName',              title:'Lot / Year'},
-                          {dataIndx:'workOrderNumber',      title:'Last Order'},
-                          {dataIndx:'workOrderDate',        title:'Last Order Date'},
-                          {dataIndx:'workOrderAccountName',   title:'Last Order Customer'},
-                          {dataIndx:'workOrderRecordType',  title:'Last Order Type'},
-                          {dataIndx:"scrollSpacer", minWidth:15, maxWidth:15}];
-
-        //gGrid.initFormat(gridObj.colModel);
-        gGrid.initFilter(gridObj.colModel);
-
-        var $gridDiv = $j('#serials');
-
-        $gridDiv.pqGrid(gridObj);
-
-        $gridDiv.on('pqgridselectchange',function(event,ui)
-        {
-           var data=[];
-           $j.each($gridDiv.pqGrid( "selection",{type:'row', method:'getSelection'}), function(i,row)
-           {
-
-                //var obj = $gridDiv.pqGrid( "getRowIndx", { rowData  : row.rowData } );
-                //var rowIndx = obj.rowIndx;
-
-                data.push(row.rowData);
-                $gridDiv.pqGrid( "option", "flexHeight", true );
-                $gridDiv.pqGrid( "option", "height", 100 )
-                gGrid.refreshGrid_callback($gridDiv,data);
-
-           });
-        });
-    }
-
-
-    function refreshGrid_serials(searchString, idAccount){
-
-        var $gridDiv = $j('#serials');
-
-        $gridDiv.pqGrid( "option", "flexHeight", false );
-        $gridDiv.pqGrid( "option", "height", 300 );
-        $gridDiv.pqGrid('showLoading');
-
-        Visualforce.remoting.Manager.invokeAction(
-            '{!$RemoteAction.gcProject_Override_Create.searchSerial}',
-            searchString,idAccount,
-            function(result,event){
-                if(event.status)
-                {
-                    gGrid.refreshGrid_callback($gridDiv,result);
-                }
-                else
-                {
-                    alert(event.message);
-                }
-                $gridDiv.pqGrid('hideLoading');
-            },
-            {buffer:true, escape:true, timeout:120000});
-
-        $gridDiv.pqGrid("setSelection", null);
-    }
-
-    function onKeyUpSearchSerial(e)
-    {
-        if (e.which == 13){
-            searchSerial();
-        }
-    }
-
-    function searchSerial()
-    {
-        var searchString = $j('#inputSearchStringSerial').val();
-        if(searchString.trim().length > 0){
-            refreshGrid_serials(searchString,null);
-        }
-        else return;
-    }
-
-
-function launchDialogCreateAccount()
-{
-    var $dialogDivAccount = $j('<div>');
-    $dialogDivAccount.append($j('#addNewAccountForm').clone());
-
-    $dialogDivAccount.dialog({
-        autoOpen: false,
-        height: 400,
-        width: 700,
-        modal: true,
-        open:function(){
-            $dialogDivAccount.find('form')[0].reset();
-            $dialogDivAccount.find('form td.billingCountryCode select').trigger('change');
-            $dialogDivAccount.find('form td.accountRecordType select option').each(function(){
-                if($j(this).text() == 'Person Account')
-                    $j(this).prop('selected',true);
-            });
-            showHideRow($dialogDivAccount.find('form td.accountRecordType select'));
-        },
-        title: 'Create New Account',
-        buttons:{
-            Save:function(){
-                var mapProperty = {};
-                var proceed = true;
-                var accountName = $dialogDivAccount.find('form td.accountName input').val();
-                var accountLastName = $dialogDivAccount.find('form td.accountLastName input').val();
-                if($j("tr.normalAccount").is(":visible") && $j.trim(accountName) == '')
-                {
-                    alert("Account Name is a required field.");
-                    $dialogDivAccount.find('form td.accountName input').focus();
-                    return false;
-                }
-                else if($j("tr.personAccount").is(":visible") && $j.trim(accountLastName) == '')
-                {
-                    alert("Account Last Name is a required field.");
-                    $dialogDivAccount.find('form td.accountLastName input').focus();
-                    return false;
-                }
-
-                /// Any Other required field
-                $j.each($dialogDivAccount.find('form td.v_field input'),function(){
-                    if($j(this).val() == '' && proceed){
-                        proceed = false;
-                    }
-                });
-
-                if(!proceed)
-                {
-                    alert('Please fill all required fields.');
-                    $dialogDivAccount.find('form td.v_field input').focus();
-                }
-                else{
-
-                    mapProperty.accountRecordType = $dialogDivAccount.find('form td.accountRecordType select').val();
-                    mapProperty.accountName = accountName;//$dialogDivAccount.find('form td.accountName input').val();
-                    mapProperty.accountFirstName = $dialogDivAccount.find('form td.accountFirstName input').val();
-                    mapProperty.accountLastName = accountLastName;//$dialogDivAccount.find('form td.accountLastName input').val();
-                    mapProperty.accountPhone = $dialogDivAccount.find('form td.accountPhone input').val();
-                    mapProperty.billingStateCode = $dialogDivAccount.find('form td.billingStateCode select').val();
-                    mapProperty.billingCity = $dialogDivAccount.find('form td.billingCity input').val();
-                    mapProperty.billingCountryCode = $dialogDivAccount.find('form td.billingCountryCode select').val();
-                    mapProperty.billingPostalCode = $dialogDivAccount.find('form td.billingPostalCode input').val();
-                    mapProperty.billingStreet = $dialogDivAccount.find('form td.billingStreet textarea').val();
-
-                    var $gridDiv = $j('#accounts');
-                    gSpinner.show();
-                    Visualforce.remoting.Manager.invokeAction(
-                        '{!$RemoteAction.gcProject_Override_Create.createAccount}',
-                        mapProperty,
-                        function(result,event) {
-                            if(event.status) {
-
-                                $dialogDivAccount.dialog('close');
-                                $dialogDivAccount.dialog('destroy');
-
-                                gGrid.refreshGrid_callback($gridDiv,result);
-                                $gridDiv.pqGrid("setSelection", {rowIndx:0});
-                            }
-                            else {
-                                alert(event.message);
-                            }
-                            gSpinner.hide();
-                        },
-                        {buffer:true, escape:true, timeout:120000}
-                    );
-
-                }
-            },
-            Cancel: function(){
-                $dialogDivAccount.dialog('close');
-            }
-        }
-    });
-    $dialogDivAccount.dialog('open');
-}
-
-
-function launchDialogCreateSerial()
-{
-    var $dialogDivSerial = $j('<div>');
-    $dialogDivSerial.append($j('#addNewSerialForm').clone());
-
-    $dialogDivSerial.dialog({
-        autoOpen: false,
-        height: 400,
-        width: 700,
-        modal: true,
-        open:function(){
-            $dialogDivSerial.find('form')[0].reset();
-            $dialogDivSerial.find('.lotClass').hide();
-        },
-        title: 'Create New Serial Number',
-        buttons:{
-            Save:function(){
-                var mapProperty = {};
-                var proceed = true;
-                /*$j.each($dialogDivSerial.find('form td.v_field input'),function(){
-                    if($j(this).val() == '' && proceed){
-                        proceed = false;
-                    }
-                });*/
-
-                /*if(!proceed){
-                    alert('Please fill all required fields.');
-                    $dialogDivAccount.find('form td.v_field input').focus();
-                    $dialogDivSerial.find('input.inputSerial').focus();
-                }*/
-                if($dialogDivSerial.find('input.serviceProduct').val()==''){
-                    alert('Please select a product.');
-                    $dialogDivSerial.find('input.serviceProduct').focus();
-
-                }
-                else if($dialogDivSerial.find('input.inputSerial').val()==''){
-                    alert('Please add a serial.');
-                    $dialogDivSerial.find('input.inputSerial').focus();
-
-                }
-                else if($dialogDivSerial.find("input.serviceProduct").data('isLotTracked') == "true" && $dialogDivSerial.find("input.inputLot").val() == ''){
-                    alert('The product is lot tracked. Please select or add a lot.');
-                    $dialogDivSerial.find('input.inputLot').focus();
-                }
-                else{
-
-                    mapProperty.serialName = $dialogDivSerial.find('form td.serialName input').val();
-                    mapProperty.modelYear = $dialogDivSerial.find('form td.modelYear input').val();
-                    mapProperty.serialProduct = $dialogDivSerial.find('form td.serialProduct input.serviceProductId').val();
-                    mapProperty.serialLot = $dialogDivSerial.find('form td.serialLot input').val();
-                    mapProperty.serialDesc = $j('#inputDesc').val();
-
-                    var $gridDiv = $j('#serials');
-                    gSpinner.show();
-                    Visualforce.remoting.Manager.invokeAction(
-                        '{!$RemoteAction.gcProject_Override_Create.createSerial}',
-                        mapProperty,
-                        function(result,event) {
-                            if(event.status) {
-                                $dialogDivSerial.dialog('close');
-                                $dialogDivSerial.dialog('destroy');
-                                gGrid.refreshGrid_callback($gridDiv,result);
-                                $gridDiv.pqGrid("setSelection", {rowIndx:0});
-                            }
-                            else {
-                                alert(event.message);
-                            }
-                            gSpinner.hide();
-                        },
-                        {buffer:true, escape:true, timeout:120000}
-                    );
-
-                }
-            },
-            Cancel: function(){
-                $dialogDivSerial.dialog('close');
-            }
-        }
-    });
-    $dialogDivSerial.dialog('open');
-
-    $dialogDivSerial.find('#selectLot').change(function(){
-        $dialogDivSerial.find('input.inputLot').val($dialogDivSerial.find('#selectLot').val());
-
-    });
-}
-
-function initSelectLot(obj,idProduct)
-{
-    gSpinner.show();
-    var $select = obj.parents('table').find('tr.lotClass #selectLot');//$j('#selectLot');
-    Visualforce.remoting.Manager.invokeAction(
-        '{!$RemoteAction.gcProject_Override_Create.retrieveLots}',
-        idProduct,
-        function(result,event)
-        {
-            if(event.status)
+            else if(obj.data( "idProduct") == item.idProduct)
+                return;
+            else
             {
-                $select.children().remove();
-                $select.append($j('<option>').attr('value','').html('---existing lots---'));
-                $j.each(result,function(i,opt){
-                    var $option = $j('<option>').attr('value',opt.lotName).html(opt.lotName);
-                    $select.append($option);
+                obj.val(item.Name);
+                obj.data( "idProduct", item.idProduct);
+                obj.data( "isLotTracked", item.isLotTracked);
+                obj.next('input.serviceProductId').val(item.idProduct);
+                if(item.isLotTracked == "true"){
+                    obj.parents('table').find('tr.lotClass').show();
+                    initSelectLot(obj,item.idProduct);
+                }
+                else{
+                    obj.parents('table').find('tr.lotClass').hide();
+                }
+            }
+        }
 
-                });
-                obj.parents('table').find('tr.lotClass input.inputLot').val($select.val());
-                //$j('input.inputLot').val($select.val());
+        function showHideRow(select)
+        {
+            var txt = $j(select).find('option:selected').text();
+            if(txt == 'Person Account')
+            {
+                $j(select).closest('table').find('tr.normalAccount').hide();
+                $j(select).closest('table').find('tr.personAccount').show();
             }
             else
             {
-                alert(event.message);
+                $j(select).closest('table').find('tr.normalAccount').show();
+                $j(select).closest('table').find('tr.personAccount').hide();
             }
-            gSpinner.hide();
-        },
-        {buffer:true, escape:true, timeout:120000});
-}
+        }
 
-    //// Fixed Asset
-    function initGrid_fixedAsset()
-    {
-        var gridObj = { title:"",
-                        collapsible:{on:false,collapsed:false,toggle:false},
-                        columnTemplate: {sortable:true,editable:false, minWidth:80},
-                        dataModel:{data:[], sorting:'local', location:'local'},
-                        dragColumns:{enabled:false},
-                        editable:false,
-                        editModel: {clicksToEdit:1, saveKey: jQuery.ui.keyCode.ENTER, keyUpDown: false, onSave:null, onBlur:'save'},
-                        freezeCols:0,
-                        freezeRows:0,
-                        height:300,
-                        flexHeight:false,
-                        historyModel:{on:false},
-                        hoverMode:'row',
-                        hwrap:false,
-                        numberCell:{show:true},
-                        pageModel: {type:null},
-                        pasteModel:{on:false},
-                        resizable: false,
-                        roundCorners: false,
-                        scrollModel: {autoFit:true},
-                        selectionModel: {type:'row', mode:'single', fireSelectChange:true},
-                        showBottom:true,
-                        showHeader:true,
-                        showTitle:true,
-                        showTop:true,
-                        showToolbar:false,
-                        sortable:true,
-                        swipeModel:{on:false},
-                        virtualX: false,
-                        //virtualXHeader: false,
-                        virtualY: false,
-                        width:'auto',
-                        wrap:false};
-
-        var myTitle = '';
-        myTitle += 'Search Asset: &nbsp;&nbsp;<input id=\"inputSearchStringAsset\" type=\"text\" onkeyup=\"onKeyUpSearchAsset(event)\" size=\"20\"/>&nbsp;&nbsp;';
-        myTitle += '<input type=\"button\" class=\"btn\" onclick=\"launchDialogCreateAsset();\" value=\"Create New Fixed Asset\"/>';
-
-        gridObj.title = myTitle;
-
-        gridObj.colModel=[
-                          {dataIndx:'assetName',            title:'Asset Name'},
-                          {dataIndx:'assetValue',           title:'Value'},
-                          {dataIndx:'assetSerial',          title:'Serial'},
-                          {dataIndx:"scrollSpacer", minWidth:15, maxWidth:15}];
-
-        //gGrid.initFormat(gridObj.colModel);
-        gGrid.initFilter(gridObj.colModel);
-
-        var $gridDiv = $j('#fixedAsset');
-
-        $gridDiv.pqGrid(gridObj);
-
-        $gridDiv.on('pqgridselectchange',function(event,ui)
+        function initGrid_accounts()
         {
-           var data=[];
-           $j.each($gridDiv.pqGrid( "selection",{type:'row', method:'getSelection'}), function(i,row)
-           {
-                data.push(row.rowData);
-                $gridDiv.pqGrid( "option", "flexHeight", true );
-                $gridDiv.pqGrid( "option", "height", 100 )
-                gGrid.refreshGrid_callback($gridDiv,data);
+            var gridObj = { title:"",
+                            collapsible:{on:false,collapsed:false,toggle:false},
+                            columnTemplate: {sortable:true,editable:false, minWidth:80},
+                            dataModel:{data:[], sorting:'local', location:'local'},
+                            dragColumns:{enabled:false},
+                            editable:false,
+                            editModel: {clicksToEdit:1, saveKey: jQuery.ui.keyCode.ENTER, keyUpDown: false, onSave:null, onBlur:'save'},
+                            //editModel:{clicksToEdit:1, pressToEdit:false, filterKeys:true, keyUpDown:true, saveKey:$j.ui.keyCode.ENTER},
+                            //filterModel:{on:true, mode:'AND', header:true},
+                            freezeCols:0,
+                            freezeRows:0,
+                            height:300,
+                            flexHeight:false,
+                            historyModel:{on:false},
+                            hoverMode:'row',
+                            hwrap:false,
+                            numberCell:{show:true},
+                            pageModel: {type:null},
+                            pasteModel:{on:false},
+                            resizable: false,
+                            roundCorners: false,
+                            scrollModel: {autoFit:true},
+                            //selectionModel: { type: null},
+                            selectionModel: {type:'row', mode:'single', fireSelectChange:true},
+                            showBottom:true,
+                            showHeader:true,
+                            showTitle:true,
+                            showTop:true,
+                            showToolbar:false,
+                            sortable:true,
+                            swipeModel:{on:false},
+                            virtualX: false,
+                            //virtualXHeader: false,
+                            virtualY: false,
+                            width:'auto',
+                            wrap:false};
 
-           });
-        });
-    }
+            var myTitle = '';
+            myTitle = 'Search Accounts: &nbsp;&nbsp;<input id=\"inputSearchStringAccount\" type=\"text\" onkeyup=\"onKeyUpSearchAccount(event)\" size=\"20\"/>&nbsp;&nbsp;';
+            myTitle += '<input type=\"button\" class=\"btn\" onclick=\"searchAccount();\" value=\"Search Account\"/>';
+            myTitle += '<input type=\"button\" class=\"btn\" onclick=\"launchDialogCreateAccount();\" value=\"Create New Account\"/>';
+
+            gridObj.title = myTitle;
+
+            gridObj.colModel=[{dataIndx:'accountName',          title:'Account'},
+                              {dataIndx:'billingStreet',        title:'Street'},
+                              {dataIndx:'billingCity',          title:'City'},
+                              {dataIndx:'billingState',         title:'Province / State'},
+                              {dataIndx:'billingPostalCode',    title:'PostalCode'},
+                              {dataIndx:'billingCountry',       title:'Country'},
+                              {dataIndx:'phone',                title:'Phone'},
+                              {dataIndx:"scrollSpacer", minWidth:15, maxWidth:15}];
+
+            //gGrid.initFormat(gridObj.colModel);
+            gGrid.initFilter(gridObj.colModel);
+
+            var $gridDiv = $j('#accounts');
+
+            $gridDiv.pqGrid(gridObj);
+
+            $gridDiv.on('pqgridselectchange',function(event,ui)
+            {
+
+               var data=[];
+               $j.each($gridDiv.pqGrid( "selection",{type:'row', method:'getSelection'}), function(i,row)
+               {
+                    var idAccount = row.rowData.idAccount;
+
+                    data.push(row.rowData);
+                    $gridDiv.pqGrid( "option", "flexHeight", true );
+                    $gridDiv.pqGrid( "option", "height", 100 )
+                    gGrid.refreshGrid_callback($gridDiv,data);
+                    refreshGrid_serials(null,idAccount);
+                });
+            });
+        }
+
+        function refreshGrid_accounts(searchString){
+
+            var $gridDiv = $j('#accounts');
+
+            $gridDiv.pqGrid( "option", "flexHeight", false );
+            $gridDiv.pqGrid( "option", "height", 300 );
+            $gridDiv.pqGrid('showLoading');
+
+            Visualforce.remoting.Manager.invokeAction(
+                '{!$RemoteAction.gcProject_Override_Create.searchAccount}',
+                searchString,
+                function(result,event){
+                    if(event.status)
+                    {
+                        gGrid.refreshGrid_callback($gridDiv,result);
+                    }
+                    else
+                    {
+                        alert(event.message);
+                    }
+                    $gridDiv.pqGrid('hideLoading');
+                },
+                {buffer:true, escape:true, timeout:120000});
+
+            $gridDiv.pqGrid("setSelection", null);
+        }
 
 
-    function refreshGrid_fixedAsset(searchString){
 
-        var $gridDiv = $j('#fixedAsset');
+        function onKeyUpSearchAccount(e)
+        {
+            if (e.which == 13){
+                searchAccount();
+            }
+        }
 
-        $gridDiv.pqGrid( "option", "flexHeight", false );
-        $gridDiv.pqGrid( "option", "height", 300 );
-        $gridDiv.pqGrid('showLoading');
+        function searchAccount()
+        {
+            var searchString = $j('#inputSearchStringAccount').val();
+            //console.log('searchString: '+searchString);
+            if(searchString.trim().length > 0){
+                refreshGrid_accounts(searchString);
 
-        Visualforce.remoting.Manager.invokeAction(
-            '{!$RemoteAction.gcProject_Override_Create.searchAsset}',
-            searchString,
-            function(result,event){
-                if(event.status)
-                {
-                    gGrid.refreshGrid_callback($gridDiv,result);
-                }
-                else
-                {
-                    alert(event.message);
-                }
-                $gridDiv.pqGrid('hideLoading');
-            },
-            {buffer:true, escape:true, timeout:120000});
+            } //OK
+            else return;
+        }
 
-        $gridDiv.pqGrid("setSelection", null);
-    }
 
-    function launchDialogCreateAsset()
+        function initGrid_serials()
+        {
+            var gridObj = { title:"",
+                            collapsible:{on:false,collapsed:false,toggle:false},
+                            columnTemplate: {sortable:true,editable:false, minWidth:80},
+                            dataModel:{data:[], sorting:'local', location:'local'},
+                            dragColumns:{enabled:false},
+                            editable:false,
+                            editModel: {clicksToEdit:1, saveKey: jQuery.ui.keyCode.ENTER, keyUpDown: false, onSave:null, onBlur:'save'},
+                            freezeCols:0,
+                            freezeRows:0,
+                            height:300,
+                            flexHeight:false,
+                            historyModel:{on:false},
+                            hoverMode:'row',
+                            hwrap:false,
+                            numberCell:{show:true},
+                            pageModel: {type:null},
+                            pasteModel:{on:false},
+                            resizable: false,
+                            roundCorners: false,
+                            scrollModel: {autoFit:true},
+                            selectionModel: {type:'row', mode:'single', fireSelectChange:true},
+                            showBottom:true,
+                            showHeader:true,
+                            showTitle:true,
+                            showTop:true,
+                            showToolbar:false,
+                            sortable:true,
+                            swipeModel:{on:false},
+                            virtualX: false,
+                            //virtualXHeader: false,
+                            virtualY: false,
+                            width:'auto',
+                            wrap:false};
+
+            var myTitle = '';
+            myTitle += 'Search Serials: &nbsp;&nbsp;<input id=\"inputSearchStringSerial\" type=\"text\" onkeyup=\"onKeyUpSearchSerial(event)\" size=\"20\"/>&nbsp;&nbsp;';
+            myTitle += '<input type=\"button\" class=\"btn\" onclick=\"searchSerial();\" value=\"Search Serial\"/>';
+            myTitle += '<input type=\"button\" class=\"btn\" onclick=\"launchDialogCreateSerial();\" value=\"Create New Serial\"/>';
+
+            gridObj.title = myTitle;
+
+            gridObj.colModel=[{dataIndx:'serialName',           title:'Serial Number'},
+                              {dataIndx:'modelYear',            title:'Model Year'},
+                              {dataIndx:'productName',          title:'Product Name'},
+                              {dataIndx:'lotName',              title:'Lot / Year'},
+                              {dataIndx:'workOrderNumber',      title:'Last Order'},
+                              {dataIndx:'workOrderDate',        title:'Last Order Date'},
+                              {dataIndx:'workOrderAccountName',   title:'Last Order Customer'},
+                              {dataIndx:'workOrderRecordType',  title:'Last Order Type'},
+                              {dataIndx:"scrollSpacer", minWidth:15, maxWidth:15}];
+
+            //gGrid.initFormat(gridObj.colModel);
+            gGrid.initFilter(gridObj.colModel);
+
+            var $gridDiv = $j('#serials');
+
+            $gridDiv.pqGrid(gridObj);
+
+            $gridDiv.on('pqgridselectchange',function(event,ui)
+            {
+               var data=[];
+               $j.each($gridDiv.pqGrid( "selection",{type:'row', method:'getSelection'}), function(i,row)
+               {
+
+                    //var obj = $gridDiv.pqGrid( "getRowIndx", { rowData  : row.rowData } );
+                    //var rowIndx = obj.rowIndx;
+
+                    data.push(row.rowData);
+                    $gridDiv.pqGrid( "option", "flexHeight", true );
+                    $gridDiv.pqGrid( "option", "height", 100 )
+                    gGrid.refreshGrid_callback($gridDiv,data);
+
+               });
+            });
+        }
+
+
+        function refreshGrid_serials(searchString, idAccount){
+
+            var $gridDiv = $j('#serials');
+
+            $gridDiv.pqGrid( "option", "flexHeight", false );
+            $gridDiv.pqGrid( "option", "height", 300 );
+            $gridDiv.pqGrid('showLoading');
+
+            Visualforce.remoting.Manager.invokeAction(
+                '{!$RemoteAction.gcProject_Override_Create.searchSerial}',
+                searchString,idAccount,
+                function(result,event){
+                    if(event.status)
+                    {
+                        gGrid.refreshGrid_callback($gridDiv,result);
+                    }
+                    else
+                    {
+                        alert(event.message);
+                    }
+                    $gridDiv.pqGrid('hideLoading');
+                },
+                {buffer:true, escape:true, timeout:120000});
+
+            $gridDiv.pqGrid("setSelection", null);
+        }
+
+        function onKeyUpSearchSerial(e)
+        {
+            if (e.which == 13){
+                searchSerial();
+            }
+        }
+
+        function searchSerial()
+        {
+            var searchString = $j('#inputSearchStringSerial').val();
+            if(searchString.trim().length > 0){
+                refreshGrid_serials(searchString,null);
+            }
+            else return;
+        }
+
+
+    function launchDialogCreateAccount()
     {
-        var $dialogDivSerial = $j('<div>');
-        $dialogDivSerial.append($j('#addNewAssetForm').clone());
+        var $dialogDivAccount = $j('<div>');
+        $dialogDivAccount.append($j('#addNewAccountForm').clone());
 
-        $dialogDivSerial.dialog({
+        $dialogDivAccount.dialog({
             autoOpen: false,
-            height: 250,
-            width:380,
+            height: 400,
+            width: 700,
             modal: true,
             open:function(){
-                $dialogDivSerial.find('form')[0].reset();
+                $dialogDivAccount.find('form')[0].reset();
+                $dialogDivAccount.find('form td.billingCountryCode select').trigger('change');
+                $dialogDivAccount.find('form td.accountRecordType select option').each(function(){
+                    if($j(this).text() == 'Person Account')
+                        $j(this).prop('selected',true);
+                });
+                showHideRow($dialogDivAccount.find('form td.accountRecordType select'));
             },
-            title: 'Create New Asset',
+            title: 'Create New Account',
             buttons:{
                 Save:function(){
                     var mapProperty = {};
                     var proceed = true;
-                    if($dialogDivSerial.find('input.assetName').val()==''){
-                        alert('Please enter asset name.');
-                        $dialogDivSerial.find('input.assetName').focus();
-
+                    var accountName = $dialogDivAccount.find('form td.accountName input').val();
+                    var accountLastName = $dialogDivAccount.find('form td.accountLastName input').val();
+                    if($j("tr.normalAccount").is(":visible") && $j.trim(accountName) == '')
+                    {
+                        alert("Account Name is a required field.");
+                        $dialogDivAccount.find('form td.accountName input').focus();
+                        return false;
                     }
-                    else if($dialogDivSerial.find('input.inputValue').val()==''){
-                        alert('Please enter asset value.');
-                        $dialogDivSerial.find('input.inputValue').focus();
-
+                    else if($j("tr.personAccount").is(":visible") && $j.trim(accountLastName) == '')
+                    {
+                        alert("Account Last Name is a required field.");
+                        $dialogDivAccount.find('form td.accountLastName input').focus();
+                        return false;
                     }
-                    else if($dialogDivSerial.find('input.assetSerial').val()==''){
-                        alert('Please enter a serial number.');
-                        $dialogDivSerial.find('input.assetSerial').focus();
 
+                    /// Any Other required field
+                    $j.each($dialogDivAccount.find('form td.v_field input'),function(){
+                        if($j(this).val() == '' && proceed){
+                            proceed = false;
+                        }
+                    });
+
+                    if(!proceed)
+                    {
+                        alert('Please fill all required fields.');
+                        $dialogDivAccount.find('form td.v_field input').focus();
                     }
                     else{
 
-                        mapProperty.assetName = $dialogDivSerial.find('input.assetName').val();
-                        mapProperty.assetSerial = $dialogDivSerial.find('input.assetSerial').val();
-                        mapProperty.inputValue = $dialogDivSerial.find('input.inputValue').val();
+                        mapProperty.accountRecordType = $dialogDivAccount.find('form td.accountRecordType select').val();
+                        mapProperty.accountName = accountName;//$dialogDivAccount.find('form td.accountName input').val();
+                        mapProperty.accountFirstName = $dialogDivAccount.find('form td.accountFirstName input').val();
+                        mapProperty.accountLastName = accountLastName;//$dialogDivAccount.find('form td.accountLastName input').val();
+                        mapProperty.accountPhone = $dialogDivAccount.find('form td.accountPhone input').val();
+                        mapProperty.billingStateCode = $dialogDivAccount.find('form td.billingStateCode select').val();
+                        mapProperty.billingCity = $dialogDivAccount.find('form td.billingCity input').val();
+                        mapProperty.billingCountryCode = $dialogDivAccount.find('form td.billingCountryCode select').val();
+                        mapProperty.billingPostalCode = $dialogDivAccount.find('form td.billingPostalCode input').val();
+                        mapProperty.billingStreet = $dialogDivAccount.find('form td.billingStreet textarea').val();
 
-                        var $gridDiv = $j('#fixedAsset');
+                        var $gridDiv = $j('#accounts');
                         gSpinner.show();
                         Visualforce.remoting.Manager.invokeAction(
-                            '{!$RemoteAction.gcProject_Override_Create.createAsset}',
+                            '{!$RemoteAction.gcProject_Override_Create.createAccount}',
+                            mapProperty,
+                            function(result,event) {
+                                if(event.status) {
+
+                                    $dialogDivAccount.dialog('close');
+                                    $dialogDivAccount.dialog('destroy');
+
+                                    gGrid.refreshGrid_callback($gridDiv,result);
+                                    $gridDiv.pqGrid("setSelection", {rowIndx:0});
+                                }
+                                else {
+                                    alert(event.message);
+                                }
+                                gSpinner.hide();
+                            },
+                            {buffer:true, escape:true, timeout:120000}
+                        );
+
+                    }
+                },
+                Cancel: function(){
+                    $dialogDivAccount.dialog('close');
+                }
+            }
+        });
+        $dialogDivAccount.dialog('open');
+    }
+
+
+    function launchDialogCreateSerial()
+    {
+        var $dialogDivSerial = $j('<div>');
+        $dialogDivSerial.append($j('#addNewSerialForm').clone());
+
+        $dialogDivSerial.dialog({
+            autoOpen: false,
+            height: 400,
+            width: 700,
+            modal: true,
+            open:function(){
+                $dialogDivSerial.find('form')[0].reset();
+                $dialogDivSerial.find('.lotClass').hide();
+            },
+            title: 'Create New Serial Number',
+            buttons:{
+                Save:function(){
+                    var mapProperty = {};
+                    var proceed = true;
+                    /*$j.each($dialogDivSerial.find('form td.v_field input'),function(){
+                        if($j(this).val() == '' && proceed){
+                            proceed = false;
+                        }
+                    });*/
+
+                    /*if(!proceed){
+                        alert('Please fill all required fields.');
+                        $dialogDivAccount.find('form td.v_field input').focus();
+                        $dialogDivSerial.find('input.inputSerial').focus();
+                    }*/
+                    if($dialogDivSerial.find('input.serviceProduct').val()==''){
+                        alert('Please select a product.');
+                        $dialogDivSerial.find('input.serviceProduct').focus();
+
+                    }
+                    else if($dialogDivSerial.find('input.inputSerial').val()==''){
+                        alert('Please add a serial.');
+                        $dialogDivSerial.find('input.inputSerial').focus();
+
+                    }
+                    else if($dialogDivSerial.find("input.serviceProduct").data('isLotTracked') == "true" && $dialogDivSerial.find("input.inputLot").val() == ''){
+                        alert('The product is lot tracked. Please select or add a lot.');
+                        $dialogDivSerial.find('input.inputLot').focus();
+                    }
+                    else{
+
+                        mapProperty.serialName = $dialogDivSerial.find('form td.serialName input').val();
+                        mapProperty.modelYear = $dialogDivSerial.find('form td.modelYear input').val();
+                        mapProperty.serialProduct = $dialogDivSerial.find('form td.serialProduct input.serviceProductId').val();
+                        mapProperty.serialLot = $dialogDivSerial.find('form td.serialLot input').val();
+                        mapProperty.serialDesc = $j('#inputDesc').val();
+
+                        var $gridDiv = $j('#serials');
+                        gSpinner.show();
+                        Visualforce.remoting.Manager.invokeAction(
+                            '{!$RemoteAction.gcProject_Override_Create.createSerial}',
                             mapProperty,
                             function(result,event) {
                                 if(event.status) {
@@ -1053,91 +886,292 @@ function initSelectLot(obj,idProduct)
             }
         });
         $dialogDivSerial.dialog('open');
+
+        $dialogDivSerial.find('#selectLot').change(function(){
+            $dialogDivSerial.find('input.inputLot').val($dialogDivSerial.find('#selectLot').val());
+
+        });
     }
 
-    function onKeyUpSearchAsset(e)
+    function initSelectLot(obj,idProduct)
     {
-        if (e.which == 13){
-            searchAsset();
-        }
-    }
-
-    function searchAsset()
-    {
-        var searchString = $j('#inputSearchStringAsset').val();
-        if(searchString.trim().length > 0){
-            refreshGrid_fixedAsset(searchString);
-        }
-        else return;
-    }
-////////////////
-
-function onClickCreateOrder()
-{
-  var isSelectedAcct = $j('#accounts').pqGrid( "selection",{ type: 'row', method: 'isSelected', rowIndx: 0 });
-  var isSelectedSerial = $j('#serials').pqGrid( "selection",{ type: 'row', method: 'isSelected', rowIndx: 0 });
-  var isSelectedAsset = $j('#fixedAsset').pqGrid( "selection",{ type: 'row', method: 'isSelected', rowIndx: 0 });
-  if(!isSelectedAcct){
-    alert('Select or create an Account, in order to proceed.');
-    return;
-  }
-  else if({!isService})
-  {
-    var rowDataAcct = $j('#accounts').pqGrid( "getRowData", {rowIndx: 0} );
-    var isInternal = rowDataAcct.isInternal == 'true' ? true : false;
-    if(!isInternal && !isSelectedSerial){
-        alert('Select or create a Serial Number, in order to create a Service Work Order.');
-        return;
-    }
-  }
-  else if({!isWarranty} && !isSelectedSerial)
-  {
-    alert('Select or create a Serial Number, in order to create a Warranty Work Order.');
-    return;
-  }
-  else if({!isTradeIn} && !isSelectedSerial)
-  {
-    alert('Select or create a Serial Number, in order to create a Trade In Order.');
-    return;
-  }
-  else if({!isFixedAsset} && !isSelectedAsset)
-  {
-    alert('Select or create an Asset, in order to create a Fixed Asset Order.');
-    return;
-  }
-
-    var rowDataAcct = $j('#accounts').pqGrid( "getRowData", {rowIndx: 0} );
-    var idSerialOrAsset = null;
-    if(isSelectedSerial)
-        idSerialOrAsset = $j('#serials').pqGrid( "getRowData", {rowIndx: 0} ).idSerial;
-    else if(isSelectedAsset)
-        idSerialOrAsset = $j('#fixedAsset').pqGrid( "getRowData", {rowIndx: 0} ).idAsset;
-    createOrder(rowDataAcct.accountName, rowDataAcct.idAccount, idSerialOrAsset);
-
-}
-
-function createOrder(accountName, idAccount, idSerialOrAsset)
-{
-    gSpinner.show();
-    Visualforce.remoting.Manager.invokeAction(
-        '{!$RemoteAction.gcProject_Override_Create.createNewProject}',
-        accountName,idAccount,idSerialOrAsset,'{!$CurrentPage.parameters.RecordType}',
-        function(result,event){
-            if(event.status)
+        gSpinner.show();
+        var $select = obj.parents('table').find('tr.lotClass #selectLot');//$j('#selectLot');
+        Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.gcProject_Override_Create.retrieveLots}',
+            idProduct,
+            function(result,event)
             {
-                if("{!$User.UITheme}" == "Theme4d")
-                    sforce.one.navigateToURL('#/sObject/'+result+'/view');
+                if(event.status)
+                {
+                    $select.children().remove();
+                    $select.append($j('<option>').attr('value','').html('---existing lots---'));
+                    $j.each(result,function(i,opt){
+                        var $option = $j('<option>').attr('value',opt.lotName).html(opt.lotName);
+                        $select.append($option);
+
+                    });
+                    obj.parents('table').find('tr.lotClass input.inputLot').val($select.val());
+                    //$j('input.inputLot').val($select.val());
+                }
                 else
-                    window.open('/'+result,'_self');
-            }
-            else
-            {
-                alert(event.message);
+                {
+                    alert(event.message);
+                }
                 gSpinner.hide();
-            }
-        },
-    {buffer:true, escape:true, timeout:120000});
-}
+            },
+            {buffer:true, escape:true, timeout:120000});
+    }
 
-</script>
+        //// Fixed Asset
+        function initGrid_fixedAsset()
+        {
+            var gridObj = { title:"",
+                            collapsible:{on:false,collapsed:false,toggle:false},
+                            columnTemplate: {sortable:true,editable:false, minWidth:80},
+                            dataModel:{data:[], sorting:'local', location:'local'},
+                            dragColumns:{enabled:false},
+                            editable:false,
+                            editModel: {clicksToEdit:1, saveKey: jQuery.ui.keyCode.ENTER, keyUpDown: false, onSave:null, onBlur:'save'},
+                            freezeCols:0,
+                            freezeRows:0,
+                            height:300,
+                            flexHeight:false,
+                            historyModel:{on:false},
+                            hoverMode:'row',
+                            hwrap:false,
+                            numberCell:{show:true},
+                            pageModel: {type:null},
+                            pasteModel:{on:false},
+                            resizable: false,
+                            roundCorners: false,
+                            scrollModel: {autoFit:true},
+                            selectionModel: {type:'row', mode:'single', fireSelectChange:true},
+                            showBottom:true,
+                            showHeader:true,
+                            showTitle:true,
+                            showTop:true,
+                            showToolbar:false,
+                            sortable:true,
+                            swipeModel:{on:false},
+                            virtualX: false,
+                            //virtualXHeader: false,
+                            virtualY: false,
+                            width:'auto',
+                            wrap:false};
+
+            var myTitle = '';
+            myTitle += 'Search Asset: &nbsp;&nbsp;<input id=\"inputSearchStringAsset\" type=\"text\" onkeyup=\"onKeyUpSearchAsset(event)\" size=\"20\"/>&nbsp;&nbsp;';
+            myTitle += '<input type=\"button\" class=\"btn\" onclick=\"launchDialogCreateAsset();\" value=\"Create New Fixed Asset\"/>';
+
+            gridObj.title = myTitle;
+
+            gridObj.colModel=[
+                              {dataIndx:'assetName',            title:'Asset Name'},
+                              {dataIndx:'assetValue',           title:'Value'},
+                              {dataIndx:'assetSerial',          title:'Serial'},
+                              {dataIndx:"scrollSpacer", minWidth:15, maxWidth:15}];
+
+            //gGrid.initFormat(gridObj.colModel);
+            gGrid.initFilter(gridObj.colModel);
+
+            var $gridDiv = $j('#fixedAsset');
+
+            $gridDiv.pqGrid(gridObj);
+
+            $gridDiv.on('pqgridselectchange',function(event,ui)
+            {
+               var data=[];
+               $j.each($gridDiv.pqGrid( "selection",{type:'row', method:'getSelection'}), function(i,row)
+               {
+                    data.push(row.rowData);
+                    $gridDiv.pqGrid( "option", "flexHeight", true );
+                    $gridDiv.pqGrid( "option", "height", 100 )
+                    gGrid.refreshGrid_callback($gridDiv,data);
+
+               });
+            });
+        }
+
+
+        function refreshGrid_fixedAsset(searchString){
+
+            var $gridDiv = $j('#fixedAsset');
+
+            $gridDiv.pqGrid( "option", "flexHeight", false );
+            $gridDiv.pqGrid( "option", "height", 300 );
+            $gridDiv.pqGrid('showLoading');
+
+            Visualforce.remoting.Manager.invokeAction(
+                '{!$RemoteAction.gcProject_Override_Create.searchAsset}',
+                searchString,
+                function(result,event){
+                    if(event.status)
+                    {
+                        gGrid.refreshGrid_callback($gridDiv,result);
+                    }
+                    else
+                    {
+                        alert(event.message);
+                    }
+                    $gridDiv.pqGrid('hideLoading');
+                },
+                {buffer:true, escape:true, timeout:120000});
+
+            $gridDiv.pqGrid("setSelection", null);
+        }
+
+        function launchDialogCreateAsset()
+        {
+            var $dialogDivSerial = $j('<div>');
+            $dialogDivSerial.append($j('#addNewAssetForm').clone());
+
+            $dialogDivSerial.dialog({
+                autoOpen: false,
+                height: 250,
+                width:380,
+                modal: true,
+                open:function(){
+                    $dialogDivSerial.find('form')[0].reset();
+                },
+                title: 'Create New Asset',
+                buttons:{
+                    Save:function(){
+                        var mapProperty = {};
+                        var proceed = true;
+                        if($dialogDivSerial.find('input.assetName').val()==''){
+                            alert('Please enter asset name.');
+                            $dialogDivSerial.find('input.assetName').focus();
+
+                        }
+                        else if($dialogDivSerial.find('input.inputValue').val()==''){
+                            alert('Please enter asset value.');
+                            $dialogDivSerial.find('input.inputValue').focus();
+
+                        }
+                        else if($dialogDivSerial.find('input.assetSerial').val()==''){
+                            alert('Please enter a serial number.');
+                            $dialogDivSerial.find('input.assetSerial').focus();
+
+                        }
+                        else{
+
+                            mapProperty.assetName = $dialogDivSerial.find('input.assetName').val();
+                            mapProperty.assetSerial = $dialogDivSerial.find('input.assetSerial').val();
+                            mapProperty.inputValue = $dialogDivSerial.find('input.inputValue').val();
+
+                            var $gridDiv = $j('#fixedAsset');
+                            gSpinner.show();
+                            Visualforce.remoting.Manager.invokeAction(
+                                '{!$RemoteAction.gcProject_Override_Create.createAsset}',
+                                mapProperty,
+                                function(result,event) {
+                                    if(event.status) {
+                                        $dialogDivSerial.dialog('close');
+                                        $dialogDivSerial.dialog('destroy');
+                                        gGrid.refreshGrid_callback($gridDiv,result);
+                                        $gridDiv.pqGrid("setSelection", {rowIndx:0});
+                                    }
+                                    else {
+                                        alert(event.message);
+                                    }
+                                    gSpinner.hide();
+                                },
+                                {buffer:true, escape:true, timeout:120000}
+                            );
+
+                        }
+                    },
+                    Cancel: function(){
+                        $dialogDivSerial.dialog('close');
+                    }
+                }
+            });
+            $dialogDivSerial.dialog('open');
+        }
+
+        function onKeyUpSearchAsset(e)
+        {
+            if (e.which == 13){
+                searchAsset();
+            }
+        }
+
+        function searchAsset()
+        {
+            var searchString = $j('#inputSearchStringAsset').val();
+            if(searchString.trim().length > 0){
+                refreshGrid_fixedAsset(searchString);
+            }
+            else return;
+        }
+    ////////////////
+
+    function onClickCreateOrder()
+    {
+      var isSelectedAcct = $j('#accounts').pqGrid( "selection",{ type: 'row', method: 'isSelected', rowIndx: 0 });
+      var isSelectedSerial = $j('#serials').pqGrid( "selection",{ type: 'row', method: 'isSelected', rowIndx: 0 });
+      var isSelectedAsset = $j('#fixedAsset').pqGrid( "selection",{ type: 'row', method: 'isSelected', rowIndx: 0 });
+      if(!isSelectedAcct){
+        alert('Select or create an Account, in order to proceed.');
+        return;
+      }
+      else if({!isService})
+      {
+        var rowDataAcct = $j('#accounts').pqGrid( "getRowData", {rowIndx: 0} );
+        var isInternal = rowDataAcct.isInternal == 'true' ? true : false;
+        if(!isInternal && !isSelectedSerial){
+            alert('Select or create a Serial Number, in order to create a Service Work Order.');
+            return;
+        }
+      }
+      else if({!isWarranty} && !isSelectedSerial)
+      {
+        alert('Select or create a Serial Number, in order to create a Warranty Work Order.');
+        return;
+      }
+      else if({!isTradeIn} && !isSelectedSerial)
+      {
+        alert('Select or create a Serial Number, in order to create a Trade In Order.');
+        return;
+      }
+      else if({!isFixedAsset} && !isSelectedAsset)
+      {
+        alert('Select or create an Asset, in order to create a Fixed Asset Order.');
+        return;
+      }
+
+        var rowDataAcct = $j('#accounts').pqGrid( "getRowData", {rowIndx: 0} );
+        var idSerialOrAsset = null;
+        if(isSelectedSerial)
+            idSerialOrAsset = $j('#serials').pqGrid( "getRowData", {rowIndx: 0} ).idSerial;
+        else if(isSelectedAsset)
+            idSerialOrAsset = $j('#fixedAsset').pqGrid( "getRowData", {rowIndx: 0} ).idAsset;
+        createOrder(rowDataAcct.accountName, rowDataAcct.idAccount, idSerialOrAsset);
+
+    }
+
+    function createOrder(accountName, idAccount, idSerialOrAsset)
+    {
+        gSpinner.show();
+        Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.gcProject_Override_Create.createNewProject}',
+            accountName,idAccount,idSerialOrAsset,'{!$CurrentPage.parameters.RecordType}',
+            function(result,event){
+                if(event.status)
+                {
+                    if("{!$User.UITheme}" == "Theme4d")
+                        sforce.one.navigateToURL('#/sObject/'+result+'/view');
+                    else
+                        window.open('/'+result,'_self');
+                }
+                else
+                {
+                    alert(event.message);
+                    gSpinner.hide();
+                }
+            },
+        {buffer:true, escape:true, timeout:120000});
+    }
+  </script>
 </apex:page>

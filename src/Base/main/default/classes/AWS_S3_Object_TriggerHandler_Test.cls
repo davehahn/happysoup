@@ -1,9 +1,7 @@
 @isTest
 private class AWS_S3_Object_TriggerHandler_Test {
-
-	@isTest
+  @isTest
   static void coverage_Test() {
-		AWS_S3_Object_TriggerHandler.coverage();
-	}
-
+    AWS_S3_Object_TriggerHandler.coverage();
+  }
 }

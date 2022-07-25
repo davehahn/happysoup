@@ -2,8 +2,7 @@
  * Created by dave on 2022-01-13.
  */
 @IsTest
-private class TA_CommRec2_StatusHandlerAfter_T
-{
+private class TA_CommRec2_StatusHandlerAfter_T {
   private static User u;
 
   private static List<CommissionRecord2__c> newList;
@@ -32,48 +31,47 @@ private class TA_CommRec2_StatusHandlerAfter_T
   }
 
   @IsTest
-  static void TA_AfterUpdate_ReviewedToApproved(){
+  static void TA_AfterUpdate_ReviewedToApproved() {
     init('Reviewed', 'Approved');
 
     Test.startTest();
-    new TA_CommRec2_StatusHandlerAfter().afterUpdate( newLIst, OldList);
+    new TA_CommRec2_StatusHandlerAfter().afterUpdate(newLIst, OldList);
     Test.stopTest();
   }
 
   @IsTest
-  static void TA_AfterUpdateApprovedToReviewed(){
+  static void TA_AfterUpdateApprovedToReviewed() {
     init('Approved', 'Reviewed');
 
     Test.startTest();
-    new TA_CommRec2_StatusHandlerAfter().afterUpdate( newLIst, OldList);
+    new TA_CommRec2_StatusHandlerAfter().afterUpdate(newLIst, OldList);
     Test.stopTest();
   }
 
   @IsTest
-  static void TA_AfterUpdate_DisputedToApproved(){
+  static void TA_AfterUpdate_DisputedToApproved() {
     init('Disputed', 'Approved');
 
     Test.startTest();
-    new TA_CommRec2_StatusHandlerAfter().afterUpdate( newLIst, OldList);
+    new TA_CommRec2_StatusHandlerAfter().afterUpdate(newLIst, OldList);
     Test.stopTest();
   }
 
   @IsTest
-  static void TA_AfterUpdate_ReviewedToNew(){
+  static void TA_AfterUpdate_ReviewedToNew() {
     init('Reviewed', 'New');
 
     Test.startTest();
-    new TA_CommRec2_StatusHandlerAfter().afterUpdate( newLIst, OldList);
+    new TA_CommRec2_StatusHandlerAfter().afterUpdate(newLIst, OldList);
     Test.stopTest();
   }
 
   @IsTest
-  static void TA_AfterUpdateApprovedToNew(){
+  static void TA_AfterUpdateApprovedToNew() {
     init('Approved', 'New');
 
     Test.startTest();
-    new TA_CommRec2_StatusHandlerAfter().afterUpdate( newLIst, OldList);
+    new TA_CommRec2_StatusHandlerAfter().afterUpdate(newLIst, OldList);
     Test.stopTest();
   }
-
 }

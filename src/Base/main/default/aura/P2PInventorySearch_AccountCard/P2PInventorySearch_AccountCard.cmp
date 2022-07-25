@@ -18,21 +18,17 @@
             <span>{! v.dealer.name }</span>
           </h2>
           <p>
-            <span>
-              {!v.dealer.city}, {!v.dealer.state}
-            </span>
+            <span> {!v.dealer.city}, {!v.dealer.state} </span>
             <span class="slds-m-left_medium">
               <aura:if isTrue="{!v.dealer.inStock}">
                 <span class="slds-m-right_medium">
-                  <lightning:icon iconName="standard:product_required"
-                                  size="xx-small" />
+                  <lightning:icon iconName="standard:product_required" size="xx-small" />
                   IN STOCK
                 </span>
               </aura:if>
               <aura:if isTrue="{!v.dealer.onOrder}">
                 <span>
-                  <lightning:icon iconName="standard:product_request"
-                                  size="xx-small" />
+                  <lightning:icon iconName="standard:product_request" size="xx-small" />
                   ON ORDER
                 </span>
               </aura:if>
@@ -41,10 +37,12 @@
         </div>
         <div class="slds-no-flex">
           <div class="slds-dropdown-trigger slds-dropdown-trigger_click slds-is-open">
-            <lightning:buttonIcon iconName="{! if(v.showDetails, 'utility:up', 'utility:down')}"
-                                  size="small"
-                                  onclick="{!c.toggleDetails}"
-                                  alternativeText="{! if(v.showDetails, 'Hide Details', 'More Details')}" />
+            <lightning:buttonIcon
+              iconName="{! if(v.showDetails, 'utility:up', 'utility:down')}"
+              size="small"
+              onclick="{!c.toggleDetails}"
+              alternativeText="{! if(v.showDetails, 'Hide Details', 'More Details')}"
+            />
           </div>
         </div>
       </header>
@@ -52,9 +50,7 @@
     <aura:if isTrue="{! v.showDetails}">
       <div class="slds-card__body slds-card__body_inner">
         <lightning:layout multipleRows="true">
-          <lightning:layoutItem padding="horizontal-small"
-                                size="12"
-                                class="slds-text-align_left">
+          <lightning:layoutItem padding="horizontal-small" size="12" class="slds-text-align_left">
             <p>{!v.dealer.phone}</p>
             <p class="slds-m-bottom_small">{!v.dealer.email}</p>
             <p>{!v.dealer.street}</p>
@@ -65,5 +61,4 @@
       </div>
     </aura:if>
   </article>
-
 </aura:component>

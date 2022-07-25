@@ -3,13 +3,12 @@
  */
 
 ({
-  defaultCustomItem: function( component )
-  {
-    component.set('v.customItem', {
+  defaultCustomItem: function (component) {
+    component.set("v.customItem", {
       id: Math.random().toString(36).substr(2, 9),
       include: true,
       quantity: 1,
-      productName: '',
+      productName: "",
       saleTotal: null,
       factoryPbTotal: null,
       riggingCost: null,
@@ -18,74 +17,69 @@
     });
   },
 
-  fetchData: function( component, pbId, province )
-  {
-    var action = component.get('c.fetchData'),
-        pbId = typeof( pbId ) === 'undefined' ? null : pbId,
-        province = typeof( province ) === 'undefined' ? null : province,
-        params = {
-          recordId: component.get('v.recordId'),
-          pbId: pbId,
-          province: province
-        };
+  fetchData: function (component, pbId, province) {
+    var action = component.get("c.fetchData"),
+      pbId = typeof pbId === "undefined" ? null : pbId,
+      province = typeof province === "undefined" ? null : province,
+      params = {
+        recordId: component.get("v.recordId"),
+        pbId: pbId,
+        province: province
+      };
     action.setParams(params);
-    return new LightningApex( this, action ).fire();
+    return new LightningApex(this, action).fire();
   },
 
-  setResultValues: function( component, result )
-  {
-    console.log( JSON.parse( JSON.stringify( result ) ) );
-    component.set('v.pbOptions', result.pbOptions );
-    component.set('v.provinceOptions', result.provinceOptions );
-    component.set('v.lineItems', result.items);
-    component.set('v.saleItems', result.saleItems );
-    component.set('v.businessOfficeItems', result.businessOfficeItems );
-    component.set('v.selectedPbId', result.pbId );
-    component.set('v.selectedProvince', result.currentProvince );
-    this.setTotals( component );
+  setResultValues: function (component, result) {
+    console.log(JSON.parse(JSON.stringify(result)));
+    component.set("v.pbOptions", result.pbOptions);
+    component.set("v.provinceOptions", result.provinceOptions);
+    component.set("v.lineItems", result.items);
+    component.set("v.saleItems", result.saleItems);
+    component.set("v.businessOfficeItems", result.businessOfficeItems);
+    component.set("v.selectedPbId", result.pbId);
+    component.set("v.selectedProvince", result.currentProvince);
+    this.setTotals(component);
   },
 
-  setTotals: function( component )
-  {
-    var grandTotal=0, salesTotal=0, boTotal=0, factoryPbTotal=0, riggingTotal=0;
-    for( let li of component.get('v.saleItems') )
-    {
-      if( li.include )
-      {
-        grandTotal += parseFloat( li.saleTotal );
-        salesTotal += parseFloat( li.saleTotal );
-        factoryPbTotal += parseFloat( li.factoryPbTotal );
-        riggingTotal += parseFloat( li.riggingCost );
+  setTotals: function (component) {
+    var grandTotal = 0,
+      salesTotal = 0,
+      boTotal = 0,
+      factoryPbTotal = 0,
+      riggingTotal = 0;
+    for (let li of component.get("v.saleItems")) {
+      if (li.include) {
+        grandTotal += parseFloat(li.saleTotal);
+        salesTotal += parseFloat(li.saleTotal);
+        factoryPbTotal += parseFloat(li.factoryPbTotal);
+        riggingTotal += parseFloat(li.riggingCost);
       }
     }
-    for( let li of component.get('v.businessOfficeItems') )
-    {
-      if( li.include )
-      {
-        grandTotal += parseFloat( li.saleTotal );
-        boTotal += parseFloat( li.saleTotal );
-        factoryPbTotal += parseFloat( li.factoryPbTotal );
-        riggingTotal += parseFloat( li.riggingCost );
+    for (let li of component.get("v.businessOfficeItems")) {
+      if (li.include) {
+        grandTotal += parseFloat(li.saleTotal);
+        boTotal += parseFloat(li.saleTotal);
+        factoryPbTotal += parseFloat(li.factoryPbTotal);
+        riggingTotal += parseFloat(li.riggingCost);
       }
     }
 
-    component.set('v.saleTotal', grandTotal);
-    component.set('v.salesItemsTotal', salesTotal );
-    component.set('v.businessOfficeItemsTotal', boTotal);
-    component.set('v.riggingLabourTotal', riggingTotal);
-    component.set('v.factoryPbTotal', factoryPbTotal);
-    component.set('v.factoryPbProfit', grandTotal - factoryPbTotal - riggingTotal );
-    component.set('v.factoryPbProfitPercent', 1 - ( (factoryPbTotal+riggingTotal)/grandTotal )  );
+    component.set("v.saleTotal", grandTotal);
+    component.set("v.salesItemsTotal", salesTotal);
+    component.set("v.businessOfficeItemsTotal", boTotal);
+    component.set("v.riggingLabourTotal", riggingTotal);
+    component.set("v.factoryPbTotal", factoryPbTotal);
+    component.set("v.factoryPbProfit", grandTotal - factoryPbTotal - riggingTotal);
+    component.set("v.factoryPbProfitPercent", 1 - (factoryPbTotal + riggingTotal) / grandTotal);
   },
 
-  isFormValid: function( component )
-  {
-    return component.find('customItemField').reduce(function (validSoFar, inputCmp) {
-        inputCmp.showHelpMessageIfInvalid();
-        console.log( inputCmp.get('v.label') );
-        console.log( inputCmp.get('v.validity').valid )
-        return validSoFar && inputCmp.get('v.validity').valid;
+  isFormValid: function (component) {
+    return component.find("customItemField").reduce(function (validSoFar, inputCmp) {
+      inputCmp.showHelpMessageIfInvalid();
+      console.log(inputCmp.get("v.label"));
+      console.log(inputCmp.get("v.validity").valid);
+      return validSoFar && inputCmp.get("v.validity").valid;
     }, true);
   }
-
 });

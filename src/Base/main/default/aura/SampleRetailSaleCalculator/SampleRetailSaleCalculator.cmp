@@ -1,9 +1,12 @@
-<aura:component controller="SampleRetailSaleCalculator"
-                implements="force:appHostable,flexipage:availableForAllPageTypes,forceCommunity:availableForAllPageTypes">
-
-  <ltng:require scripts="{!join(',', $Resource.Libraries +'/js/LightningApex.js',
+<aura:component
+  controller="SampleRetailSaleCalculator"
+  implements="force:appHostable,flexipage:availableForAllPageTypes,forceCommunity:availableForAllPageTypes"
+>
+  <ltng:require
+    scripts="{!join(',', $Resource.Libraries +'/js/LightningApex.js',
                                      $Resource.Libraries +'/js/LightningUtils.js') }"
-                afterScriptsLoaded="{!c.dataInit}" />
+    afterScriptsLoaded="{!c.dataInit}"
+  />
 
   <aura:attribute name="isInternalAccount" type="Boolean" />
   <!-- <aura:attribute name="boatFamily" type="String" /> -->
@@ -21,8 +24,8 @@
   <aura:attribute name="calcdCoopDiscountAmount" type="Decimal" />
   <aura:attribute name="calcdVolumeDiscountAmount" type="Decimal" />
 
-  <aura:attribute name="retailPromotionTotal" type="Decimal" default="0.00"/>
-  <aura:attribute name="partnerPromotionTotal" type="Decimal" default="0.00"/>
+  <aura:attribute name="retailPromotionTotal" type="Decimal" default="0.00" />
+  <aura:attribute name="partnerPromotionTotal" type="Decimal" default="0.00" />
   <aura:attribute name="promotions" type="Array" />
   <aura:attribute name="retailPromotion" type="Decimal" />
   <aura:attribute name="partnerPromotion" type="Decimal" />
@@ -33,32 +36,26 @@
 
   <aura:attribute name="mobileMenuValue" type="String" default="builder" />
 
-  <aura:handler name="init"
-                value="{!this}"
-                action="{!c.doInit}" />
-  <aura:handler name="majorProductSelected"
-                  event="c:CPQ_MajorProductSelected_Event"
-                  action="{!c.handleMajorProductSelected}" />
+  <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+  <aura:handler
+    name="majorProductSelected"
+    event="c:CPQ_MajorProductSelected_Event"
+    action="{!c.handleMajorProductSelected}"
+  />
 
   <!-- <aura:handler name="change"
                 value="{!v.boatFamily}"
                 action="{!c.handleFamilySelect}" /> -->
-  <aura:handler name="change"
-                value="{!v.cpq}"
-                action="{!c.handleCPQ}" />
+  <aura:handler name="change" value="{!v.cpq}" action="{!c.handleCPQ}" />
   <!-- <aura:handler name="change"
                 value="{!v.selectedOptions}"
                 action="{!c.calcTotals}" /> -->
-  <aura:handler name="change"
-                value="{!v.customProducts}"
-                action="{!c.calcTotals}" />
+  <aura:handler name="change" value="{!v.customProducts}" action="{!c.calcTotals}" />
   <!-- <aura:handler name="optionChanged"
                event="c:CPQ_OptionLine_ChangeEvent"
                action="{!c.handleOptionChange}" /> -->
 
-
   <div class="slds-card">
-
     <c:Lgnd_Spinner_dh aura:id="spinner" />
 
     <!-- Page Header -->
@@ -82,19 +79,25 @@
             <div class="slds-page-header__controls">
               <div class="mobile-menu">
                 <aura:if isTrue="{! and( !empty(v.cpq), !empty(v.cpq.theBoat) )}">
-                  <lightning:buttonMenu aura:id="menu"
-                                        iconName="utility:apps"
-                                        alternativeText="Show menu"
-                                        onselect="{!c.handleMobileMenuChange}"
-                                        menuAlignment="right">
-                      <aura:if isTrue="{! not(v.isQuoting) }" >
-                        <lightning:menuItem label="Builder"
-                                            value="builder"
-                                            checked="{! equals(v.mobileMenuValue, 'builder')}"/>
-                        <lightning:menuItem label="Summary"
-                                            value="summary"
-                                            checked="{! equals(v.mobileMenuValue, 'summary')}"/>
-                      </aura:if>
+                  <lightning:buttonMenu
+                    aura:id="menu"
+                    iconName="utility:apps"
+                    alternativeText="Show menu"
+                    onselect="{!c.handleMobileMenuChange}"
+                    menuAlignment="right"
+                  >
+                    <aura:if isTrue="{! not(v.isQuoting) }">
+                      <lightning:menuItem
+                        label="Builder"
+                        value="builder"
+                        checked="{! equals(v.mobileMenuValue, 'builder')}"
+                      />
+                      <lightning:menuItem
+                        label="Summary"
+                        value="summary"
+                        checked="{! equals(v.mobileMenuValue, 'summary')}"
+                      />
+                    </aura:if>
                   </lightning:buttonMenu>
                 </aura:if>
               </div>
@@ -120,105 +123,140 @@
             <lightning:layoutItem size="6" smallDeviceSize="6" mediumDeviceSize="8" largeDeviceSize="10">
               <lightning:layout multipleRows="true" verticalAlign="center">
                 <!-- PROFIT -->
-                <lightning:layoutItem size="12" smallDeviceSize="12" mediumDeviceSize="12" largeDeviceSize="12" class="slds-align_absolute-center profit-row">
+                <lightning:layoutItem
+                  size="12"
+                  smallDeviceSize="12"
+                  mediumDeviceSize="12"
+                  largeDeviceSize="12"
+                  class="slds-align_absolute-center profit-row"
+                >
                   <label class="slds-form-element__label profit">Profit:</label>
-                  <lightning:formattedNumber value="{!v.retailTotal - v.partnerTotal}"
-                                                 style="currency"
-                                                 currencyCode="CAD"
-                                                 class="profit-total" />
+                  <lightning:formattedNumber
+                    value="{!v.retailTotal - v.partnerTotal}"
+                    style="currency"
+                    currencyCode="CAD"
+                    class="profit-total"
+                  />
                 </lightning:layoutItem>
 
                 <lightning:layoutItem size="12" smallDeviceSize="12" mediumDeviceSize="12" largeDeviceSize="12">
-                  <lightning:layout multipleRows="true"
-                                verticalAlign="center"
-                                horizontalAlign="center"
-                                class="profit-breakdown">
+                  <lightning:layout
+                    multipleRows="true"
+                    verticalAlign="center"
+                    horizontalAlign="center"
+                    class="profit-breakdown"
+                  >
                     <!-- RETAIL vs COST -->
-                    <lightning:layoutItem size="12" smallDeviceSize="12" mediumDeviceSize="6" largeDeviceSize="6" class="slds-text-align_center">
+                    <lightning:layoutItem
+                      size="12"
+                      smallDeviceSize="12"
+                      mediumDeviceSize="6"
+                      largeDeviceSize="6"
+                      class="slds-text-align_center"
+                    >
                       <!-- COST -->
                       <div class="custom-total">
                         <label class="slds-form-element__label">Cost:</label>
-                        <lightning:formattedNumber value="{!v.partnerTotal}"
-                                                     style="currency"
-                                                     currencyCode="CAD"
-                                                     class="small-total" />
+                        <lightning:formattedNumber
+                          value="{!v.partnerTotal}"
+                          style="currency"
+                          currencyCode="CAD"
+                          class="small-total"
+                        />
                       </div>
                       <!-- RETAIL -->
                       <div class="custom-total">
                         <label class="slds-form-element__label">Retail:</label>
-                        <lightning:formattedNumber value="{!v.retailTotal}"
-                                                     style="currency"
-                                                     currencyCode="CAD"
-                                                     class="small-total" />
+                        <lightning:formattedNumber
+                          value="{!v.retailTotal}"
+                          style="currency"
+                          currencyCode="CAD"
+                          class="small-total"
+                        />
                       </div>
                     </lightning:layoutItem>
                     <!-- MARGIN / MARKUP -->
-                    <lightning:layoutItem size="12" smallDeviceSize="12" mediumDeviceSize="6" largeDeviceSize="6" class="slds-text-align_center">
+                    <lightning:layoutItem
+                      size="12"
+                      smallDeviceSize="12"
+                      mediumDeviceSize="6"
+                      largeDeviceSize="6"
+                      class="slds-text-align_center"
+                    >
                       <!-- MARGIN -->
                       <div class="custom-total">
                         <label class="slds-form-element__label">Margin:</label>
-                        <lightning:formattedNumber value="{!((v.retailTotal - v.partnerTotal) / v.retailTotal) }"
-                                                   style="percent"
-                                                   maximumFractionDigits="2"
-                                                   class="small-total" />
+                        <lightning:formattedNumber
+                          value="{!((v.retailTotal - v.partnerTotal) / v.retailTotal) }"
+                          style="percent"
+                          maximumFractionDigits="2"
+                          class="small-total"
+                        />
                       </div>
                       <!-- MARKUP -->
                       <div class="custom-total">
-                        <label  class="slds-form-element__label">Markup:</label>
-                        <lightning:formattedNumber value="{!((v.retailTotal - v.partnerTotal) / v.partnerTotal) }"
-                                                    style="percent"
-                                                    maximumFractionDigits="2"
-                                                    class="small-total" />
+                        <label class="slds-form-element__label">Markup:</label>
+                        <lightning:formattedNumber
+                          value="{!((v.retailTotal - v.partnerTotal) / v.partnerTotal) }"
+                          style="percent"
+                          maximumFractionDigits="2"
+                          class="small-total"
+                        />
                       </div>
                     </lightning:layoutItem>
                   </lightning:layout>
                 </lightning:layoutItem>
               </lightning:layout>
-
-            </lightning:layoutItem>
-          </lightning:layout><!--/grid-->
-        </div><!-- /page-header -->
+            </lightning:layoutItem> </lightning:layout
+          ><!--/grid-->
+        </div>
+        <!-- /page-header -->
       </aura:if>
     </section>
-
 
     <!-- PAGE CONTENT -->
     <div aura:id="cpq-content">
       <lightning:layout multipleRows="true" class="slds-m-top_medium">
-
         <!-- BUILDER -->
-        <lightning:layoutItem size="12"
-                              smallDeviceSize="12"
-                              mediumDeviceSize="12"
-                              largeDeviceSize="5"
-                              class="{! if( equals(v.mobileMenuValue, 'builder'), 'builder mobile-visible', 'builder mobile-hidden') }">
-          <c:CPQ_Builder aura:id="cpqBuilder"
-                         cpq="{!v.cpq}"
-                         allowCustomProducts="true"
-                         includeCostForCustomProducts="true"
-                         allowInactiveBoats="true"
-                         enableTrollingMotors="false"/>
+        <lightning:layoutItem
+          size="12"
+          smallDeviceSize="12"
+          mediumDeviceSize="12"
+          largeDeviceSize="5"
+          class="{! if( equals(v.mobileMenuValue, 'builder'), 'builder mobile-visible', 'builder mobile-hidden') }"
+        >
+          <c:CPQ_Builder
+            aura:id="cpqBuilder"
+            cpq="{!v.cpq}"
+            allowCustomProducts="true"
+            includeCostForCustomProducts="true"
+            allowInactiveBoats="true"
+            enableTrollingMotors="false"
+          />
         </lightning:layoutItem>
 
         <!-- SUMMARY / CALCULATOR  DESKTOP -->
-        <lightning:layoutItem size="12"
-                              smallDeviceSize="12"
-                              mediumDeviceSize="12"
-                              largeDeviceSize="7"
-                              class="{! if( equals(v.mobileMenuValue, 'summary'), 'summary mobile-visible desktop-summary', 'summary mobile-hidden desktop-summary') }">
+        <lightning:layoutItem
+          size="12"
+          smallDeviceSize="12"
+          mediumDeviceSize="12"
+          largeDeviceSize="7"
+          class="{! if( equals(v.mobileMenuValue, 'summary'), 'summary mobile-visible desktop-summary', 'summary mobile-hidden desktop-summary') }"
+        >
           <aura:if isTrue="{! not( empty( v.cpq.theBoat ) ) }">
             <div class="slds-m-left_small">
               <div class="slds-card slds-border_top slds-border_right slds-border_bottom slds-border_left">
-
                 <!-- Boat / Motor / Trailer table -->
-                <table class="slds-table slds-table_bordered slds-table_resizable-cols slds-table_fixed-layout summary-table">
+                <table
+                  class="slds-table slds-table_bordered slds-table_resizable-cols slds-table_fixed-layout summary-table"
+                >
                   <thead>
                     <tr class="slds-text-title_caps">
-                      <th scope="col" style="width:10%"></th>
-                      <th scope="col" style="width:30%"></th>
-                      <th scope="col" style="width:20%">Retail</th>
-                      <th scope="col" style="width:20%">Discount %</th>
-                      <th scope="col" style="width:20%">Base Cost</th>
+                      <th scope="col" style="width: 10%"></th>
+                      <th scope="col" style="width: 30%"></th>
+                      <th scope="col" style="width: 20%">Retail</th>
+                      <th scope="col" style="width: 20%">Discount %</th>
+                      <th scope="col" style="width: 20%">Base Cost</th>
                     </tr>
                   </thead>
                   <!-- Boat / Motor / Trailer -->
@@ -228,15 +266,19 @@
                         <td><b>Boat</b></td>
                         <td>{!v.cpq.theBoat.name}</td>
                         <td>
-                          <lightning:formattedNumber value="{!v.cpq.theBoat.retailPrice}"
-                                                         style="currency"
-                                                         currencyCode="CAD" />
+                          <lightning:formattedNumber
+                            value="{!v.cpq.theBoat.retailPrice}"
+                            style="currency"
+                            currencyCode="CAD"
+                          />
                         </td>
                         <td></td>
                         <td>
-                          <lightning:formattedNumber value="{!v.cpq.theBoat.partnerPrice}"
-                                                         style="currency"
-                                                         currencyCode="CAD" />
+                          <lightning:formattedNumber
+                            value="{!v.cpq.theBoat.partnerPrice}"
+                            style="currency"
+                            currencyCode="CAD"
+                          />
                         </td>
                       </tr>
                     </aura:if>
@@ -248,24 +290,30 @@
                           <aura:if isTrue="{! equals(v.cpq.theMotor.retailUpgradeCost, 0)}">
                             Included
                             <aura:set attribute="else">
-                              <lightning:formattedNumber value="{!v.cpq.theMotor.retailUpgradeCost}"
-                                                         style="currency"
-                                                         currencyCode="CAD" />
+                              <lightning:formattedNumber
+                                value="{!v.cpq.theMotor.retailUpgradeCost}"
+                                style="currency"
+                                currencyCode="CAD"
+                              />
                             </aura:set>
                           </aura:if>
                         </td>
                         <td>
-                          <lightning:input type="number"
-                                           label="Mercury Volume Discount"
-                                           value="{!v.mercDiscount}"
-                                           formatter="percent"
-                                           step="0.01"
-                                           onchange="{!c.calcTotals}" />
+                          <lightning:input
+                            type="number"
+                            label="Mercury Volume Discount"
+                            value="{!v.mercDiscount}"
+                            formatter="percent"
+                            step="0.01"
+                            onchange="{!c.calcTotals}"
+                          />
                         </td>
                         <td>
-                          <lightning:formattedNumber value="{!v.calcdPartnerMotorCost}"
-                                                         style="currency"
-                                                         currencyCode="CAD" />
+                          <lightning:formattedNumber
+                            value="{!v.calcdPartnerMotorCost}"
+                            style="currency"
+                            currencyCode="CAD"
+                          />
                         </td>
                       </tr>
                     </aura:if>
@@ -277,9 +325,11 @@
                           <aura:if isTrue="{! equals(v.cpq.theTrailer.retailUpgradeCost, 0)}">
                             Included
                             <aura:set attribute="else">
-                              <lightning:formattedNumber value="{!v.cpq.theTrailer.retailUpgradeCost}"
-                                                         style="currency"
-                                                         currencyCode="CAD" />
+                              <lightning:formattedNumber
+                                value="{!v.cpq.theTrailer.retailUpgradeCost}"
+                                style="currency"
+                                currencyCode="CAD"
+                              />
                             </aura:set>
                           </aura:if>
                         </td>
@@ -288,9 +338,11 @@
                           <aura:if isTrue="{! equals(v.cpq.theTrailer.partnerUpgradeCost, 0)}">
                             Included
                             <aura:set attribute="else">
-                              <lightning:formattedNumber value="{!v.cpq.theTrailer.partnerUpgradeCost}"
-                                                         style="currency"
-                                                         currencyCode="CAD" />
+                              <lightning:formattedNumber
+                                value="{!v.cpq.theTrailer.partnerUpgradeCost}"
+                                style="currency"
+                                currencyCode="CAD"
+                              />
                             </aura:set>
                           </aura:if>
                         </td>
@@ -310,44 +362,52 @@
                     </tbody>
                     <thead>
                       <tr class="slds-text-title_caps">
-                        <th scope="col" class="slds-border_top" style="width:10%; text-align:left">Qty</th>
-                        <th scope="col" class="slds-border_top" style="width:30%; text-align:left">Product Name</th>
-                        <th scope="col" class="slds-border_top" style="width:20%">Retail</th>
-                        <th scope="col" class="slds-border_top" style="width:20%"></th>
-                        <th scope="col" class="slds-border_top" style="width:20%">Base Cost</th>
+                        <th scope="col" class="slds-border_top" style="width: 10%; text-align: left">Qty</th>
+                        <th scope="col" class="slds-border_top" style="width: 30%; text-align: left">Product Name</th>
+                        <th scope="col" class="slds-border_top" style="width: 20%">Retail</th>
+                        <th scope="col" class="slds-border_top" style="width: 20%"></th>
+                        <th scope="col" class="slds-border_top" style="width: 20%">Base Cost</th>
                       </tr>
                     </thead>
                     <tbody>
                       <aura:iteration items="{!v.cpq.saleItems}" var="opt">
                         <tr class="option-row">
-                          <td>
-                            {!opt.quantity}
-                          </td>
+                          <td>{!opt.quantity}</td>
                           <td>
                             <div class="slds-truncate">{!opt.productName}</div>
                           </td>
                           <td class="option-price">
-                            <lightning:formattedNumber value="{!mult( opt.quantity, opt.salePrice )}"
-                                                       style="currency"
-                                                       currencyCode="CAD" />
+                            <lightning:formattedNumber
+                              value="{!mult( opt.quantity, opt.salePrice )}"
+                              style="currency"
+                              currencyCode="CAD"
+                            />
                             <aura:if isTrue="{! opt.quantity > 1}">
                               <div>
-                                <lightning:formattedNumber value="{!opt.salePrice}"
-                                                         style="currency"
-                                                         currencyCode="CAD" /> ea.
+                                <lightning:formattedNumber
+                                  value="{!opt.salePrice}"
+                                  style="currency"
+                                  currencyCode="CAD"
+                                />
+                                ea.
                               </div>
                             </aura:if>
                           </td>
                           <td></td>
                           <td class="option-price">
-                            <lightning:formattedNumber value="{!mult( opt.quantity, opt.partnerPrice )}"
-                                                       style="currency"
-                                                       currencyCode="CAD" />
+                            <lightning:formattedNumber
+                              value="{!mult( opt.quantity, opt.partnerPrice )}"
+                              style="currency"
+                              currencyCode="CAD"
+                            />
                             <aura:if isTrue="{! opt.quantity > 1}">
                               <div>
-                                <lightning:formattedNumber value="{!opt.partnerPrice}"
-                                                         style="currency"
-                                                         currencyCode="CAD" /> ea.
+                                <lightning:formattedNumber
+                                  value="{!opt.partnerPrice}"
+                                  style="currency"
+                                  currencyCode="CAD"
+                                />
+                                ea.
                               </div>
                             </aura:if>
                           </td>
@@ -363,27 +423,37 @@
                                 <div class="slds-truncate">{!subOpt.productName}</div>
                               </td>
                               <td class="option-price">
-                                <lightning:formattedNumber value="{!mult( subOpt.quantity, subOpt.retailPrice )}"
-                                                           style="currency"
-                                                           currencyCode="CAD" />
+                                <lightning:formattedNumber
+                                  value="{!mult( subOpt.quantity, subOpt.retailPrice )}"
+                                  style="currency"
+                                  currencyCode="CAD"
+                                />
                                 <aura:if isTrue="{! subOpt.quantity > 1}">
                                   <div>
-                                    <lightning:formattedNumber value="{!subOpt.retailPrice}"
-                                                             style="currency"
-                                                             currencyCode="CAD" /> ea.
+                                    <lightning:formattedNumber
+                                      value="{!subOpt.retailPrice}"
+                                      style="currency"
+                                      currencyCode="CAD"
+                                    />
+                                    ea.
                                   </div>
                                 </aura:if>
                               </td>
                               <td></td>
                               <td class="option-price">
-                                <lightning:formattedNumber value="{!mult( subOpt.quantity, subOpt.partnerPrice )}"
-                                                           style="currency"
-                                                           currencyCode="CAD" />
+                                <lightning:formattedNumber
+                                  value="{!mult( subOpt.quantity, subOpt.partnerPrice )}"
+                                  style="currency"
+                                  currencyCode="CAD"
+                                />
                                 <aura:if isTrue="{! subOpt.quantity > 1}">
                                   <div>
-                                    <lightning:formattedNumber value="{!subOpt.partnerPrice}"
-                                                             style="currency"
-                                                             currencyCode="CAD" /> ea.
+                                    <lightning:formattedNumber
+                                      value="{!subOpt.partnerPrice}"
+                                      style="currency"
+                                      currencyCode="CAD"
+                                    />
+                                    ea.
                                   </div>
                                 </aura:if>
                               </td>
@@ -398,52 +468,47 @@
                     <tbody>
                       <tr>
                         <td colspan="5">
-                          <div class="slds-text-title_caps slds-m-top_large slds-text-align_left">
-                            Custom Products
-                          </div>
+                          <div class="slds-text-title_caps slds-m-top_large slds-text-align_left">Custom Products</div>
                         </td>
                       </tr>
                     </tbody>
                     <thead>
                       <tr class="slds-text-title_caps">
-                        <th scope="col" class="slds-border_top" style="width:10%; text-align:left">Qty</th>
-                        <th scope="col" class="slds-border_top" style="width:30%; text-align:left">Product Name</th>
-                        <th scope="col" class="slds-border_top" style="width:20%">Retail</th>
-                        <th scope="col" class="slds-border_top" style="width:20%"></th>
-                        <th scope="col" class="slds-border_top" style="width:20%">Base Cost</th>
+                        <th scope="col" class="slds-border_top" style="width: 10%; text-align: left">Qty</th>
+                        <th scope="col" class="slds-border_top" style="width: 30%; text-align: left">Product Name</th>
+                        <th scope="col" class="slds-border_top" style="width: 20%">Retail</th>
+                        <th scope="col" class="slds-border_top" style="width: 20%"></th>
+                        <th scope="col" class="slds-border_top" style="width: 20%">Base Cost</th>
                       </tr>
                     </thead>
                     <tbody>
                       <aura:iteration items="{!v.cpq.customProducts}" var="cp">
                         <tr>
-                          <td>
-                            {!cp.quantity}
-                          </td>
-                          <td>
-                            {!cp.description}
-                          </td>
+                          <td>{!cp.quantity}</td>
+                          <td>{!cp.description}</td>
                           <td class="option-price">
-                            <lightning:formattedNumber value="{!mult( cp.quantity, cp.amount )}"
-                                                       style="currency"
-                                                       currencyCode="CAD" />
+                            <lightning:formattedNumber
+                              value="{!mult( cp.quantity, cp.amount )}"
+                              style="currency"
+                              currencyCode="CAD"
+                            />
                             <aura:if isTrue="{! cp.quantity > 1}">
                               <div>
-                                <lightning:formattedNumber value="{!cp.amount}"
-                                                         style="currency"
-                                                         currencyCode="CAD" /> ea.
+                                <lightning:formattedNumber value="{!cp.amount}" style="currency" currencyCode="CAD" />
+                                ea.
                               </div>
                             </aura:if>
                           </td>
                           <td></td>
                           <td class="option-price">
-                            <lightning:formattedNumber value="{!mult( cp.quantity, cp.cost )}"
-                                                       style="currency"
-                                                       currencyCode="CAD" />
+                            <lightning:formattedNumber
+                              value="{!mult( cp.quantity, cp.cost )}"
+                              style="currency"
+                              currencyCode="CAD"
+                            />
                             <aura:if isTrue="{! cp.quantity > 1}">
                               <div>
-                                <lightning:formattedNumber value="{!cp.cost}"
-                                                         style="currency"
-                                                         currencyCode="CAD" /> ea.
+                                <lightning:formattedNumber value="{!cp.cost}" style="currency" currencyCode="CAD" /> ea.
                               </div>
                             </aura:if>
                           </td>
@@ -456,9 +521,7 @@
                     <tbody>
                       <tr>
                         <td colspan="5">
-                          <div class="slds-text-title_caps slds-m-top_large slds-text-align_left">
-                            Fees
-                          </div>
+                          <div class="slds-text-title_caps slds-m-top_large slds-text-align_left">Fees</div>
                         </td>
                       </tr>
                     </tbody>
@@ -473,26 +536,28 @@
                     <tbody class="fees">
                       <aura:iteration items="{!v.cpq.theBoat.fees}" var="fee">
                         <tr>
-                          <td colSpan="2">
-                            <div class="slds-truncate">
-                              {!fee.feeName}
-                            </div>
+                          <td colspan="2">
+                            <div class="slds-truncate">{!fee.feeName}</div>
                           </td>
                           <td class="option-price slds-text-align_center">
-                            <lightning:formattedNumber value="{!fee.retailAmount}"
-                                                       style="currency"
-                                                       currencyCode="CAD" />
+                            <lightning:formattedNumber
+                              value="{!fee.retailAmount}"
+                              style="currency"
+                              currencyCode="CAD"
+                            />
                           </td>
                           <td></td>
                           <td class="option-price">
-                            <lightning:input type="number"
-                                           value="{!fee.partnerAmount}"
-                                           formatter="currency"
-                                           step="0.01"
-                                           label="Partner Fee Amount"
-                                           variant="label-hidden"
-                                           class="currency-input"
-                                           onchange="{!c.calcTotals}" />
+                            <lightning:input
+                              type="number"
+                              value="{!fee.partnerAmount}"
+                              formatter="currency"
+                              step="0.01"
+                              label="Partner Fee Amount"
+                              variant="label-hidden"
+                              class="currency-input"
+                              onchange="{!c.calcTotals}"
+                            />
                             <!-- <lightning:formattedNumber value="{!fee.partnerAmount}"
                                                        style="currency"
                                                        currencyCode="CAD" /> -->
@@ -502,25 +567,27 @@
                       <aura:if isTrue="{! not(empty( v.cpq.theMotor ) ) }">
                         <aura:iteration items="{!v.cpq.theMotor.fees}" var="fee">
                           <tr>
-                            <td colSpan="2">
-                              <div class="slds-truncate">
-                                {!fee.feeName}
-                              </div>
+                            <td colspan="2">
+                              <div class="slds-truncate">{!fee.feeName}</div>
                             </td>
                             <td class="option-price slds-text-align_center">
-                              <lightning:formattedNumber value="{!fee.retailAmount}"
-                                                         style="currency"
-                                                         currencyCode="CAD" />
+                              <lightning:formattedNumber
+                                value="{!fee.retailAmount}"
+                                style="currency"
+                                currencyCode="CAD"
+                              />
                             </td>
                             <td></td>
                             <td class="option-price">
-                              <lightning:input type="number"
-                                           value="{!fee.partnerAmount}"
-                                           formatter="currency"
-                                           label="Partner Fee Amount"
-                                           variant="label-hidden"
-                                           class="currency-input"
-                                           onchange="{!c.calcTotals}" />
+                              <lightning:input
+                                type="number"
+                                value="{!fee.partnerAmount}"
+                                formatter="currency"
+                                label="Partner Fee Amount"
+                                variant="label-hidden"
+                                class="currency-input"
+                                onchange="{!c.calcTotals}"
+                              />
                               <!-- <lightning:formattedNumber value="{!fee.partnerAmount}"
                                                          style="currency"
                                                          currencyCode="CAD" /> -->
@@ -531,25 +598,27 @@
                       <aura:if isTrue="{! not(empty( v.cpq.theTrailer ) ) }">
                         <aura:iteration items="{!v.cpq.theTrailer.fees}" var="fee">
                           <tr>
-                            <td colSpan="2">
-                              <div class="slds-truncate">
-                                {!fee.feeName}
-                              </div>
+                            <td colspan="2">
+                              <div class="slds-truncate">{!fee.feeName}</div>
                             </td>
                             <td class="option-price slds-text-align_center">
-                              <lightning:formattedNumber value="{!fee.retailAmount}"
-                                                         style="currency"
-                                                         currencyCode="CAD" />
+                              <lightning:formattedNumber
+                                value="{!fee.retailAmount}"
+                                style="currency"
+                                currencyCode="CAD"
+                              />
                             </td>
                             <td></td>
                             <td class="option-price">
-                              <lightning:input type="number"
-                                           value="{!fee.partnerAmount}"
-                                           formatter="currency"
-                                           label="Partner Fee Amount"
-                                           variant="label-hidden"
-                                           class="currency-input"
-                                           onchange="{!c.calcTotals}" />
+                              <lightning:input
+                                type="number"
+                                value="{!fee.partnerAmount}"
+                                formatter="currency"
+                                label="Partner Fee Amount"
+                                variant="label-hidden"
+                                class="currency-input"
+                                onchange="{!c.calcTotals}"
+                              />
                               <!-- <lightning:formattedNumber value="{!fee.partnerAmount}"
                                                          style="currency"
                                                          currencyCode="CAD" /> -->
@@ -584,18 +653,22 @@
                       <td>Legend Co-Op</td>
                       <td></td>
                       <td>
-                        <lightning:input type="number"
-                                         value="{!v.coopDiscount}"
-                                         formatter="percent"
-                                         step="0.01"
-                                         label="Coop Discount"
-                                         variant="label-hidden"
-                                         onchange="{!c.calcTotals}" />
+                        <lightning:input
+                          type="number"
+                          value="{!v.coopDiscount}"
+                          formatter="percent"
+                          step="0.01"
+                          label="Coop Discount"
+                          variant="label-hidden"
+                          onchange="{!c.calcTotals}"
+                        />
                       </td>
                       <td>
-                        <lightning:formattedNumber value="{!v.calcdCoopDiscountAmount}"
-                                                         style="currency"
-                                                         currencyCode="CAD" />
+                        <lightning:formattedNumber
+                          value="{!v.calcdCoopDiscountAmount}"
+                          style="currency"
+                          currencyCode="CAD"
+                        />
                       </td>
                     </tr>
                     <tr>
@@ -603,33 +676,35 @@
                       <td>Legend Volume</td>
                       <td></td>
                       <td>
-                        <lightning:input type="number"
-                                         value="{!v.volumeDiscount}"
-                                         formatter="percent"
-                                         step="0.01"
-                                         variant="label-hidden"
-                                         onchange="{!c.calcTotals}" />
+                        <lightning:input
+                          type="number"
+                          value="{!v.volumeDiscount}"
+                          formatter="percent"
+                          step="0.01"
+                          variant="label-hidden"
+                          onchange="{!c.calcTotals}"
+                        />
                       </td>
                       <td>
-                        <lightning:formattedNumber value="{!v.calcdVolumeDiscountAmount}"
-                                                         style="currency"
-                                                         currencyCode="CAD" />
+                        <lightning:formattedNumber
+                          value="{!v.calcdVolumeDiscountAmount}"
+                          style="currency"
+                          currencyCode="CAD"
+                        />
                       </td>
                     </tr>
                   </tbody>
                   <tbody>
                     <tr>
                       <td colspan="5">
-                        <div class="slds-text-title_caps slds-m-top_large slds-text-align_left">
-                          Promotions
-                        </div>
+                        <div class="slds-text-title_caps slds-m-top_large slds-text-align_left">Promotions</div>
                       </td>
                     </tr>
                   </tbody>
                   <thead>
                     <tr class="slds-text-title_caps">
                       <th scope="col" class="slds-border_top"></th>
-                      <th scope="col" class="slds-border_top" style="text-align:left">Name</th>
+                      <th scope="col" class="slds-border_top" style="text-align: left">Name</th>
                       <th scope="col" class="slds-border_top">Retail</th>
                       <th scope="col" class="slds-border_top"></th>
                       <th scope="col" class="slds-border_top">Rebate</th>
@@ -640,87 +715,102 @@
                       <aura:iteration items="{!v.promotions}" var="promo" indexVar="idx">
                         <tr>
                           <td>
-                            <lightning:buttonIcon iconName="utility:close"
-                                                  variant="bare"
-                                                  value="{!idx}"
-                                                  onclick="{!c.handleRemovePromotion}" />
+                            <lightning:buttonIcon
+                              iconName="utility:close"
+                              variant="bare"
+                              value="{!idx}"
+                              onclick="{!c.handleRemovePromotion}"
+                            />
                           </td>
                           <td class="promotion-name">
-                            <lightning:input type="text"
-                                             value="{!promo.name}"
-                                             formatter="currency"
-                                             label="Promotion Name"
-                                             variant="label-hidden" />
+                            <lightning:input
+                              type="text"
+                              value="{!promo.name}"
+                              formatter="currency"
+                              label="Promotion Name"
+                              variant="label-hidden"
+                            />
                           </td>
-                          <td style="text-align:center">
-                            <lightning:input type="number"
-                                             value="{!promo.retail}"
-                                             formatter="currency"
-                                             label="Promotion Retail Amount"
-                                             variant="label-hidden"
-                                             class="currency-input"
-                                             onchange="{!c.handlePromotionChange}" />
+                          <td style="text-align: center">
+                            <lightning:input
+                              type="number"
+                              value="{!promo.retail}"
+                              formatter="currency"
+                              label="Promotion Retail Amount"
+                              variant="label-hidden"
+                              class="currency-input"
+                              onchange="{!c.handlePromotionChange}"
+                            />
                           </td>
                           <td></td>
                           <td>
-                            <lightning:input type="number"
-                                             value="{!promo.partner}"
-                                             formatter="currency"
-                                             label="Promotion Partner Amount"
-                                             variant="label-hidden"
-                                             class="currency-input"
-                                             onchange="{!c.handlePromotionChange}" />
+                            <lightning:input
+                              type="number"
+                              value="{!promo.partner}"
+                              formatter="currency"
+                              label="Promotion Partner Amount"
+                              variant="label-hidden"
+                              class="currency-input"
+                              onchange="{!c.handlePromotionChange}"
+                            />
                           </td>
                         </tr>
                       </aura:iteration>
                     </aura:if>
                     <tr>
                       <td>
-                        <lightning:buttonIcon iconName="utility:close"
-                                                  variant="bare"
-                                                  onclick="{!c.handleRemovePromotion}" />
+                        <lightning:buttonIcon
+                          iconName="utility:close"
+                          variant="bare"
+                          onclick="{!c.handleRemovePromotion}"
+                        />
                       </td>
                       <td class="promotion-name">
-                        <lightning:input value="{!v.promotionName}"
-                                         label="Promotion Name"
-                                         variant="label-hidden" />
+                        <lightning:input value="{!v.promotionName}" label="Promotion Name" variant="label-hidden" />
                       </td>
-                      <td style="text-align:center">
-                        <lightning:input type="number"
-                                         value="{!v.retailPromotion}"
-                                         formatter="currency"
-                                         label="Retail Promotion Amount"
-                                         variant="label-hidden"
-                                         class="currency-input"
-                                         onchange="{!c.handlePromotionChange}" />
+                      <td style="text-align: center">
+                        <lightning:input
+                          type="number"
+                          value="{!v.retailPromotion}"
+                          formatter="currency"
+                          label="Retail Promotion Amount"
+                          variant="label-hidden"
+                          class="currency-input"
+                          onchange="{!c.handlePromotionChange}"
+                        />
                       </td>
                       <td></td>
                       <td>
-                        <lightning:input type="number"
-                                         value="{!v.partnerPromotion}"
-                                         formatter="currency"
-                                         label="Partner Promotion Amount"
-                                         variant="label-hidden"
-                                         class="currency-input"
-                                         onchange="{!c.handlePromotionChange}" />
+                        <lightning:input
+                          type="number"
+                          value="{!v.partnerPromotion}"
+                          formatter="currency"
+                          label="Partner Promotion Amount"
+                          variant="label-hidden"
+                          class="currency-input"
+                          onchange="{!c.handlePromotionChange}"
+                        />
                       </td>
                     </tr>
                     <tr>
                       <td>
-                        <lightning:button label="Add"
-                                          onclick="{!c.handleAddPromotion}" />
+                        <lightning:button label="Add" onclick="{!c.handleAddPromotion}" />
                       </td>
-                      <td style="text-align:right">Total Promotions</td>
-                      <td style="text-align:center">
-                        <lightning:formattedNumber value="{!v.retailPromotionTotal}"
-                                                   style="currency"
-                                                   currencyCode="CAD" />
+                      <td style="text-align: right">Total Promotions</td>
+                      <td style="text-align: center">
+                        <lightning:formattedNumber
+                          value="{!v.retailPromotionTotal}"
+                          style="currency"
+                          currencyCode="CAD"
+                        />
                       </td>
                       <td></td>
                       <td>
-                        <lightning:formattedNumber value="{!v.partnerPromotionTotal}"
-                                                   style="currency"
-                                                   currencyCode="CAD" />
+                        <lightning:formattedNumber
+                          value="{!v.partnerPromotionTotal}"
+                          style="currency"
+                          currencyCode="CAD"
+                        />
                       </td>
                     </tr>
                   </tbody>
@@ -731,26 +821,27 @@
         </lightning:layoutItem>
 
         <!-- SUMMARY / CALCULATOR  MOBILE -->
-        <lightning:layoutItem size="12" class="{! if( equals(v.mobileMenuValue, 'summary'), 'summary mobile-visible mobile-summary', 'summary mobile-hidden mobile-summary') }">
-          <div class="section-header"> Boat / Motor / Trailer </div>
+        <lightning:layoutItem
+          size="12"
+          class="{! if( equals(v.mobileMenuValue, 'summary'), 'summary mobile-visible mobile-summary', 'summary mobile-hidden mobile-summary') }"
+        >
+          <div class="section-header">Boat / Motor / Trailer</div>
           <!-- BOAT -->
           <aura:if isTrue="{! not(empty( v.cpq.theBoat ) ) }">
             <div class="item-detail-card">
-              <p class="item-detail-card-title">
-                {!v.cpq.theBoat.name}
-              </p>
+              <p class="item-detail-card-title">{!v.cpq.theBoat.name}</p>
               <lightning:layout horizontalAlign="center">
                 <lightning:layoutItem size="6" class="slds-text-align_center">
                   <label>Retail</label>
-                  <lightning:formattedNumber value="{!v.cpq.theBoat.retailPrice}"
-                                             style="currency"
-                                             currencyCode="CAD" />
+                  <lightning:formattedNumber value="{!v.cpq.theBoat.retailPrice}" style="currency" currencyCode="CAD" />
                 </lightning:layoutItem>
                 <lightning:layoutItem size="6" class="slds-text-align_center">
                   <label>Base Cost</label>
-                  <lightning:formattedNumber value="{!v.cpq.theBoat.partnerPrice}"
-                                             style="currency"
-                                             currencyCode="CAD" />
+                  <lightning:formattedNumber
+                    value="{!v.cpq.theBoat.partnerPrice}"
+                    style="currency"
+                    currencyCode="CAD"
+                  />
                 </lightning:layoutItem>
               </lightning:layout>
             </div>
@@ -759,36 +850,36 @@
           <!-- MOTOR -->
           <aura:if isTrue="{! equals(v.cpq.theMotor.retailUpgradeCost, 0)}">
             <div class="item-detail-card">
-              <p class="item-detail-card-title">
-                {!v.cpq.theMotor.name}
-              </p>
+              <p class="item-detail-card-title">{!v.cpq.theMotor.name}</p>
               <lightning:layout horizontalAlign="center">
                 <lightning:layoutItem size="6" class="slds-text-align_center">
                   <label>Retail</label>
                   <aura:if isTrue="{! equals(v.cpq.theMotor.retailUpgradeCost, 0)}">
                     Included
                     <aura:set attribute="else">
-                      <lightning:formattedNumber value="{!v.cpq.theMotor.retailUpgradeCost}"
-                                                 style="currency"
-                                                 currencyCode="CAD" />
+                      <lightning:formattedNumber
+                        value="{!v.cpq.theMotor.retailUpgradeCost}"
+                        style="currency"
+                        currencyCode="CAD"
+                      />
                     </aura:set>
                   </aura:if>
                 </lightning:layoutItem>
                 <lightning:layoutItem size="6" class="slds-text-align_center">
                   <label>Base Cost</label>
-                  <lightning:formattedNumber value="{!v.calcdPartnerMotorCost}"
-                                           style="currency"
-                                           currencyCode="CAD" />
+                  <lightning:formattedNumber value="{!v.calcdPartnerMotorCost}" style="currency" currencyCode="CAD" />
                 </lightning:layoutItem>
               </lightning:layout>
-              <p class="slds-text-align_center ">
-                <lightning:input type="number"
-                                 label="Mercury Volume Discount"
-                                 value="{!v.mercDiscount}"
-                                 formatter="percent"
-                                 step="0.01"
-                                 class="merc-discount"
-                                 onchange="{!c.calcTotals}" />
+              <p class="slds-text-align_center">
+                <lightning:input
+                  type="number"
+                  label="Mercury Volume Discount"
+                  value="{!v.mercDiscount}"
+                  formatter="percent"
+                  step="0.01"
+                  class="merc-discount"
+                  onchange="{!c.calcTotals}"
+                />
               </p>
             </div>
           </aura:if>
@@ -796,18 +887,18 @@
           <!-- TRAILER -->
           <aura:if isTrue="{! not(empty( v.cpq.theTrailer ) ) }">
             <div class="item-detail-card">
-              <p class="item-detail-card-title">
-                {!v.cpq.theTrailer.name}
-              </p>
+              <p class="item-detail-card-title">{!v.cpq.theTrailer.name}</p>
               <lightning:layout horizontalAlign="center">
                 <lightning:layoutItem size="6" class="slds-text-align_center">
                   <label>Retail</label>
                   <aura:if isTrue="{! equals(v.cpq.theTrailer.retailUpgradeCost, 0)}">
                     Included
                     <aura:set attribute="else">
-                      <lightning:formattedNumber value="{!v.cpq.theTrailer.retailUpgradeCost}"
-                                                 style="currency"
-                                                 currencyCode="CAD" />
+                      <lightning:formattedNumber
+                        value="{!v.cpq.theTrailer.retailUpgradeCost}"
+                        style="currency"
+                        currencyCode="CAD"
+                      />
                     </aura:set>
                   </aura:if>
                 </lightning:layoutItem>
@@ -816,9 +907,11 @@
                   <aura:if isTrue="{! equals(v.cpq.theTrailer.partnerUpgradeCost, 0)}">
                     Included
                     <aura:set attribute="else">
-                      <lightning:formattedNumber value="{!v.cpq.theTrailer.partnerUpgradeCost}"
-                                                 style="currency"
-                                                 currencyCode="CAD" />
+                      <lightning:formattedNumber
+                        value="{!v.cpq.theTrailer.partnerUpgradeCost}"
+                        style="currency"
+                        currencyCode="CAD"
+                      />
                     </aura:set>
                   </aura:if>
                 </lightning:layoutItem>
@@ -831,9 +924,7 @@
             <div class="section-header">Options &amp; Accessories</div>
             <aura:iteration items="{!v.cpq.selectedOptions}" var="opt">
               <div class="item-detail-card">
-                <p class="item-detail-card-title">
-                  {!opt.name}
-                </p>
+                <p class="item-detail-card-title">{!opt.name}</p>
                 <lightning:layout horizontalAlign="center">
                   <lightning:layoutItem size="4" class="slds-text-align_center">
                     <label class="slds-m-bottom_small">Quantity</label>
@@ -841,27 +932,28 @@
                   </lightning:layoutItem>
                   <lightning:layoutItem size="4" class="slds-text-align_center option-price">
                     <label class="slds-m-bottom_small">Retail Cost</label>
-                    <lightning:formattedNumber value="{!mult( opt.quantitySelected, opt.retailPrice )}"
-                                               style="currency"
-                                               currencyCode="CAD" />
+                    <lightning:formattedNumber
+                      value="{!mult( opt.quantitySelected, opt.retailPrice )}"
+                      style="currency"
+                      currencyCode="CAD"
+                    />
                     <aura:if isTrue="{! opt.quantitySelected > 1}">
                       <div>
-                        <lightning:formattedNumber value="{!opt.retailPrice}"
-                                                 style="currency"
-                                                 currencyCode="CAD" /> ea.
+                        <lightning:formattedNumber value="{!opt.retailPrice}" style="currency" currencyCode="CAD" /> ea.
                       </div>
                     </aura:if>
                   </lightning:layoutItem>
                   <lightning:layoutItem size="4" class="slds-text-align_center option-price">
                     <label class="slds-m-bottom_small">Base Cost</label>
-                    <lightning:formattedNumber value="{!mult( opt.quantitySelected, opt.partnerPrice )}"
-                                               style="currency"
-                                               currencyCode="CAD" />
+                    <lightning:formattedNumber
+                      value="{!mult( opt.quantitySelected, opt.partnerPrice )}"
+                      style="currency"
+                      currencyCode="CAD"
+                    />
                     <aura:if isTrue="{! opt.quantitySelected > 1}">
                       <div>
-                        <lightning:formattedNumber value="{!opt.partnerPrice}"
-                                                 style="currency"
-                                                 currencyCode="CAD" /> ea.
+                        <lightning:formattedNumber value="{!opt.partnerPrice}" style="currency" currencyCode="CAD" />
+                        ea.
                       </div>
                     </aura:if>
                   </lightning:layoutItem>
@@ -869,9 +961,7 @@
                 <aura:if isTrue="{! not( empty( opt.subOptions ) ) }">
                   <aura:iteration items="{! opt.selectedSubOptions }" var="subOpt" indexVar="idx">
                     <div class="item-detail-card child-card">
-                      <p class="item-detail-card-title">
-                        {!subOpt.name}
-                      </p>
+                      <p class="item-detail-card-title">{!subOpt.name}</p>
                       <lightning:layout horizontalAlign="center">
                         <lightning:layoutItem size="4" class="slds-text-align_center">
                           <label class="slds-m-bottom_small">Quantity</label>
@@ -879,27 +969,37 @@
                         </lightning:layoutItem>
                         <lightning:layoutItem size="4" class="slds-text-align_center option-price">
                           <label class="slds-m-bottom_small">Retail Cost</label>
-                          <lightning:formattedNumber value="{!mult( subOpt.quantitySelected, subOpt.retailPrice )}"
-                                                     style="currency"
-                                                     currencyCode="CAD" />
+                          <lightning:formattedNumber
+                            value="{!mult( subOpt.quantitySelected, subOpt.retailPrice )}"
+                            style="currency"
+                            currencyCode="CAD"
+                          />
                           <aura:if isTrue="{! subOpt.quantitySelected > 1}">
                             <div>
-                              <lightning:formattedNumber value="{!subOpt.retailPrice}"
-                                                       style="currency"
-                                                       currencyCode="CAD" /> ea.
+                              <lightning:formattedNumber
+                                value="{!subOpt.retailPrice}"
+                                style="currency"
+                                currencyCode="CAD"
+                              />
+                              ea.
                             </div>
                           </aura:if>
                         </lightning:layoutItem>
                         <lightning:layoutItem size="4" class="slds-text-align_center option-price">
                           <label class="slds-m-bottom_small">Base Cost</label>
-                          <lightning:formattedNumber value="{!mult(subOpt.quantitySelected, subOpt.partnerPrice )}"
-                                                     style="currency"
-                                                     currencyCode="CAD" />
+                          <lightning:formattedNumber
+                            value="{!mult(subOpt.quantitySelected, subOpt.partnerPrice )}"
+                            style="currency"
+                            currencyCode="CAD"
+                          />
                           <aura:if isTrue="{! subOpt.quantity > 1}">
                             <div>
-                              <lightning:formattedNumber value="{!subOpt.partnerPrice}"
-                                                       style="currency"
-                                                       currencyCode="CAD" /> ea.
+                              <lightning:formattedNumber
+                                value="{!subOpt.partnerPrice}"
+                                style="currency"
+                                currencyCode="CAD"
+                              />
+                              ea.
                             </div>
                           </aura:if>
                         </lightning:layoutItem>
@@ -917,9 +1017,7 @@
             <aura:iteration items="{!v.customProducts}" var="cp">
               <aura:iteration items="{!v.customProducts}" var="cp">
                 <div class="item-detail-card">
-                  <p class="item-detail-card-title">
-                    {!cp.productName}
-                  </p>
+                  <p class="item-detail-card-title">{!cp.productName}</p>
                   <lightning:layout horizontalAlign="center">
                     <lightning:layoutItem size="4" class="slds-text-align_center">
                       <label class="slds-m-bottom_small">Quantity</label>
@@ -927,27 +1025,28 @@
                     </lightning:layoutItem>
                     <lightning:layoutItem size="4" class="slds-text-align_center option-price">
                       <label class="slds-m-bottom_small">Retail Cost</label>
-                      <lightning:formattedNumber value="{!mult( cp.quantity, cp.retailPrice )}"
-                                                 style="currency"
-                                                 currencyCode="CAD" />
+                      <lightning:formattedNumber
+                        value="{!mult( cp.quantity, cp.retailPrice )}"
+                        style="currency"
+                        currencyCode="CAD"
+                      />
                       <aura:if isTrue="{! cp.quantity > 1}">
                         <div>
-                          <lightning:formattedNumber value="{!cp.retailPrice}"
-                                                   style="currency"
-                                                   currencyCode="CAD" /> ea.
+                          <lightning:formattedNumber value="{!cp.retailPrice}" style="currency" currencyCode="CAD" />
+                          ea.
                         </div>
                       </aura:if>
                     </lightning:layoutItem>
                     <lightning:layoutItem size="4" class="slds-text-align_center option-price">
                       <label class="slds-m-bottom_small">Base Cost</label>
-                      <lightning:formattedNumber value="{!mult( cp.quantity, cp.cost )}"
-                                                 style="currency"
-                                                 currencyCode="CAD" />
+                      <lightning:formattedNumber
+                        value="{!mult( cp.quantity, cp.cost )}"
+                        style="currency"
+                        currencyCode="CAD"
+                      />
                       <aura:if isTrue="{! cp.quantity > 1}">
                         <div>
-                          <lightning:formattedNumber value="{!cp.cost}"
-                                                   style="currency"
-                                                   currencyCode="CAD" /> ea.
+                          <lightning:formattedNumber value="{!cp.cost}" style="currency" currencyCode="CAD" /> ea.
                         </div>
                       </aura:if>
                     </lightning:layoutItem>
@@ -957,35 +1056,37 @@
             </aura:iteration>
           </aura:if>
 
-           <!-- FEES -->
+          <!-- FEES -->
           <aura:if isTrue="{!v.hasFees}">
-            <div class="section-header"> Fees </div>
+            <div class="section-header">Fees</div>
             <aura:iteration items="{!v.cpq.theBoat.fees}" var="fee">
               <div class="item-detail-card">
-                <p class="item-detail-card-title">
-                  {!fee.feeName}
-                </p>
+                <p class="item-detail-card-title">{!fee.feeName}</p>
                 <lightning:layout horizontalAlign="center">
                   <lightning:layoutItem size="6" class="slds-text-align_center">
                     <label class="slds-m-bottom_xsmall">Retail Cost</label>
-                    <lightning:input type="number"
-                                     value="{!fee.retailAmount}"
-                                     formatter="currency"
-                                     step="0.01"
-                                     label="Retail Fee Amount"
-                                     variant="label-hidden"
-                                     disabled="true" />
+                    <lightning:input
+                      type="number"
+                      value="{!fee.retailAmount}"
+                      formatter="currency"
+                      step="0.01"
+                      label="Retail Fee Amount"
+                      variant="label-hidden"
+                      disabled="true"
+                    />
                   </lightning:layoutItem>
                   <lightning:layoutItem size="6" class="slds-text-align_center">
                     <label>Base Cost</label>
-                    <lightning:input type="number"
-                                     value="{!fee.partnerAmount}"
-                                     formatter="currency"
-                                     step="0.01"
-                                     label="Partner Fee Amount"
-                                     variant="label-hidden"
-                                     class="currency-input"
-                                     onchange="{!c.calcTotals}" />
+                    <lightning:input
+                      type="number"
+                      value="{!fee.partnerAmount}"
+                      formatter="currency"
+                      step="0.01"
+                      label="Partner Fee Amount"
+                      variant="label-hidden"
+                      class="currency-input"
+                      onchange="{!c.calcTotals}"
+                    />
                   </lightning:layoutItem>
                 </lightning:layout>
               </div>
@@ -994,31 +1095,33 @@
             <aura:if isTrue="{! not( empty(v.theTrailer) )}">
               <aura:iteration items="{!v.cpq.theTrailer.fees}" var="fee">
                 <div class="item-detail-card">
-                  <p class="item-detail-card-title small-title">
-                    {!fee.feeName}
-                  </p>
+                  <p class="item-detail-card-title small-title">{!fee.feeName}</p>
                   <lightning:layout horizontalAlign="center">
                     <lightning:layoutItem size="6" class="slds-text-align_center">
                       <label class="slds-m-bottom_xsmall">Retail Cost</label>
-                      <lightning:input type="number"
-                                       value="{!fee.retailAmount}"
-                                       formatter="currency"
-                                       step="0.01"
-                                       label="Retail Fee Amount"
-                                       variant="label-hidden"
-                                       class="currency-input"
-                                       disabled="true" />
+                      <lightning:input
+                        type="number"
+                        value="{!fee.retailAmount}"
+                        formatter="currency"
+                        step="0.01"
+                        label="Retail Fee Amount"
+                        variant="label-hidden"
+                        class="currency-input"
+                        disabled="true"
+                      />
                     </lightning:layoutItem>
                     <lightning:layoutItem size="6" class="slds-text-align_center">
                       <label>Base Cost</label>
-                      <lightning:input type="number"
-                                       value="{!fee.partnerAmount}"
-                                       formatter="currency"
-                                       step="0.01"
-                                       label="Partner Fee Amount"
-                                       variant="label-hidden"
-                                       class="currency-input"
-                                       onchange="{!c.calcTotals}" />
+                      <lightning:input
+                        type="number"
+                        value="{!fee.partnerAmount}"
+                        formatter="currency"
+                        step="0.01"
+                        label="Partner Fee Amount"
+                        variant="label-hidden"
+                        class="currency-input"
+                        onchange="{!c.calcTotals}"
+                      />
                     </lightning:layoutItem>
                   </lightning:layout>
                 </div>
@@ -1028,31 +1131,33 @@
             <aura:if isTrue="{! not( empty(v.theMotor) )}">
               <aura:iteration items="{!v.cpq.theMotor.fees}" var="fee">
                 <div class="item-detail-card">
-                  <p class="item-detail-card-title small-title">
-                    {!fee.feeName}
-                  </p>
+                  <p class="item-detail-card-title small-title">{!fee.feeName}</p>
                   <lightning:layout horizontalAlign="center">
                     <lightning:layoutItem size="6" class="slds-text-align_center">
                       <label class="slds-m-bottom_xsmall">Retail Cost</label>
-                      <lightning:input type="number"
-                                       value="{!fee.retailAmount}"
-                                       formatter="currency"
-                                       step="0.01"
-                                       label="Retail Fee Amount"
-                                       variant="label-hidden"
-                                       class="currency-input"
-                                       disabled="true" />
+                      <lightning:input
+                        type="number"
+                        value="{!fee.retailAmount}"
+                        formatter="currency"
+                        step="0.01"
+                        label="Retail Fee Amount"
+                        variant="label-hidden"
+                        class="currency-input"
+                        disabled="true"
+                      />
                     </lightning:layoutItem>
                     <lightning:layoutItem size="6" class="slds-text-align_center">
                       <label>Base Cost</label>
-                      <lightning:input type="number"
-                                       value="{!fee.partnerAmount}"
-                                       formatter="currency"
-                                       step="0.01"
-                                       label="Partner Fee Amount"
-                                       variant="label-hidden"
-                                       class="currency-input"
-                                       onchange="{!c.calcTotals}" />
+                      <lightning:input
+                        type="number"
+                        value="{!fee.partnerAmount}"
+                        formatter="currency"
+                        step="0.01"
+                        label="Partner Fee Amount"
+                        variant="label-hidden"
+                        class="currency-input"
+                        onchange="{!c.calcTotals}"
+                      />
                     </lightning:layoutItem>
                   </lightning:layout>
                 </div>
@@ -1065,57 +1170,61 @@
 
           <!-- Legend Co-Op -->
           <div class="item-detail-card">
-            <p class="item-detail-card-title">
-              Legend Co-Op
-            </p>
+            <p class="item-detail-card-title">Legend Co-Op</p>
             <lightning:layout horizontalAlign="center">
               <lightning:layoutItem size="6" class="slds-text-align_center">
                 <label>Discount %</label>
-                <lightning:input type="number"
-                                 value="{!v.coopDiscount}"
-                                 formatter="percent"
-                                 step="0.01"
-                                 label="Coop Discount %"
-                                 variant="label-hidden"
-                                 onchange="{!c.calcTotals}" />
+                <lightning:input
+                  type="number"
+                  value="{!v.coopDiscount}"
+                  formatter="percent"
+                  step="0.01"
+                  label="Coop Discount %"
+                  variant="label-hidden"
+                  onchange="{!c.calcTotals}"
+                />
               </lightning:layoutItem>
               <lightning:layoutItem size="6" class="slds-text-align_center">
                 <label>Base Cost</label>
-                <lightning:input type="number"
-                                     value="{!v.calcdCoopDiscountAmount}"
-                                     formatter="currency"
-                                     step="0.01"
-                                     label="Coop Discount Amount"
-                                     variant="label-hidden"
-                                     disabled="true" />
+                <lightning:input
+                  type="number"
+                  value="{!v.calcdCoopDiscountAmount}"
+                  formatter="currency"
+                  step="0.01"
+                  label="Coop Discount Amount"
+                  variant="label-hidden"
+                  disabled="true"
+                />
               </lightning:layoutItem>
             </lightning:layout>
           </div>
           <!-- Legend Volume -->
           <div class="item-detail-card">
-            <p class="item-detail-card-title">
-              Legend Volume
-            </p>
+            <p class="item-detail-card-title">Legend Volume</p>
             <lightning:layout horizontalAlign="center">
               <lightning:layoutItem size="6" class="slds-text-align_center">
                 <label>Discount %</label>
-                <lightning:input type="number"
-                                 value="{!v.volumeDiscount}"
-                                 formatter="percent"
-                                 step="0.01"
-                                 label="Volume Discount %"
-                                 variant="label-hidden"
-                                 onchange="{!c.calcTotals}" />
+                <lightning:input
+                  type="number"
+                  value="{!v.volumeDiscount}"
+                  formatter="percent"
+                  step="0.01"
+                  label="Volume Discount %"
+                  variant="label-hidden"
+                  onchange="{!c.calcTotals}"
+                />
               </lightning:layoutItem>
               <lightning:layoutItem size="6" class="slds-text-align_center">
                 <label>Base Cost</label>
-                <lightning:input type="number"
-                                     value="{!v.calcdVolumeDiscountAmount}"
-                                     formatter="currency"
-                                     step="0.01"
-                                     label="Volume Discount Amount"
-                                     variant="label-hidden"
-                                     disabled="true" />
+                <lightning:input
+                  type="number"
+                  value="{!v.calcdVolumeDiscountAmount}"
+                  formatter="currency"
+                  step="0.01"
+                  label="Volume Discount Amount"
+                  variant="label-hidden"
+                  disabled="true"
+                />
               </lightning:layoutItem>
             </lightning:layout>
           </div>
@@ -1128,14 +1237,10 @@
                 <p class="item-detail-card-title">&nbsp;</p>
               </lightning:layoutItem>
               <lightning:layoutItem size="5" class="slds-text-align_center">
-                <p class="item-detail-card-title">
-                  Retail
-                </p>
+                <p class="item-detail-card-title">Retail</p>
               </lightning:layoutItem>
               <lightning:layoutItem size="5" class="slds-text-align_center">
-                <p class="item-detail-card-title">
-                  Rebate
-                </p>
+                <p class="item-detail-card-title">Rebate</p>
               </lightning:layoutItem>
             </lightning:layout>
 
@@ -1143,29 +1248,35 @@
               <aura:iteration items="{!v.promotions}" var="promo" indexVar="idx">
                 <lightning:layout horizontalAlign="center">
                   <lightning:layoutItem size="2" class="slds-text-align_center">
-                    <lightning:buttonIcon iconName="utility:close"
-                                          alternativeText="Remove"
-                                          value="{!idx}"
-                                          variant="bare"
-                                          onclick="{!c.handleRemovePromotion}" />
+                    <lightning:buttonIcon
+                      iconName="utility:close"
+                      alternativeText="Remove"
+                      value="{!idx}"
+                      variant="bare"
+                      onclick="{!c.handleRemovePromotion}"
+                    />
                   </lightning:layoutItem>
                   <lightning:layoutItem size="5" class="slds-text-align_center">
-                    <lightning:input type="number"
-                                     value="{!promo.retail}"
-                                     formatter="currency"
-                                     label="Retail Promotion Amount"
-                                     variant="label-hidden"
-                                     class="currency-input"
-                                     onchange="{!c.handlePromotionChange}" />
+                    <lightning:input
+                      type="number"
+                      value="{!promo.retail}"
+                      formatter="currency"
+                      label="Retail Promotion Amount"
+                      variant="label-hidden"
+                      class="currency-input"
+                      onchange="{!c.handlePromotionChange}"
+                    />
                   </lightning:layoutItem>
                   <lightning:layoutItem size="5" class="slds-text-align_center">
-                    <lightning:input type="number"
-                                     value="{!promo.partner}"
-                                     formatter="currency"
-                                     label="Partner Promotion Amount"
-                                     variant="label-hidden"
-                                     class="currency-input"
-                                     onchange="{!c.handlePromotionChange}" />
+                    <lightning:input
+                      type="number"
+                      value="{!promo.partner}"
+                      formatter="currency"
+                      label="Partner Promotion Amount"
+                      variant="label-hidden"
+                      class="currency-input"
+                      onchange="{!c.handlePromotionChange}"
+                    />
                   </lightning:layoutItem>
                 </lightning:layout>
               </aura:iteration>
@@ -1173,55 +1284,51 @@
 
             <lightning:layout horizontalAlign="center">
               <lightning:layoutItem size="2" class="slds-text-align_center">
-                <lightning:buttonIcon iconName="utility:close"
-                                      alternativeText="Remove"
-                                      variant="bare"
-                                      onclick="{!c.handleRemovePromotion}" />
+                <lightning:buttonIcon
+                  iconName="utility:close"
+                  alternativeText="Remove"
+                  variant="bare"
+                  onclick="{!c.handleRemovePromotion}"
+                />
               </lightning:layoutItem>
               <lightning:layoutItem size="5" class="slds-text-align_center">
-                <lightning:input type="number"
-                                 value="{!v.retailPromotion}"
-                                 formatter="currency"
-                                 label="Retail Promotion Amount"
-                                 variant="label-hidden"
-                                 class="currency-input"
-                                 onchange="{!c.handlePromotionChange}" />
+                <lightning:input
+                  type="number"
+                  value="{!v.retailPromotion}"
+                  formatter="currency"
+                  label="Retail Promotion Amount"
+                  variant="label-hidden"
+                  class="currency-input"
+                  onchange="{!c.handlePromotionChange}"
+                />
               </lightning:layoutItem>
               <lightning:layoutItem size="5" class="slds-text-align_center">
-                <lightning:input type="number"
-                                 value="{!v.partnerPromotion}"
-                                 formatter="currency"
-                                 label="Partner Promotion Amount"
-                                 variant="label-hidden"
-                                 class="currency-input"
-                                 onchange="{!c.handlePromotionChange}" />
+                <lightning:input
+                  type="number"
+                  value="{!v.partnerPromotion}"
+                  formatter="currency"
+                  label="Partner Promotion Amount"
+                  variant="label-hidden"
+                  class="currency-input"
+                  onchange="{!c.handlePromotionChange}"
+                />
               </lightning:layoutItem>
             </lightning:layout>
 
             <lightning:layout horizontalAlign="center" class="promo-total-line">
               <lightning:layoutItem size="2" class="slds-text-align_center">
-                <lightning:button label="Add"
-                                  onclick="{!c.handleAddPromotion}" />
+                <lightning:button label="Add" onclick="{!c.handleAddPromotion}" />
               </lightning:layoutItem>
               <lightning:layoutItem size="5" class="slds-text-align_center">
-                <lightning:formattedNumber value="{!v.retailPromotionTotal}"
-                                           style="currency"
-                                           currencyCode="CAD" />
+                <lightning:formattedNumber value="{!v.retailPromotionTotal}" style="currency" currencyCode="CAD" />
               </lightning:layoutItem>
               <lightning:layoutItem size="5" class="slds-text-align_center">
-                <lightning:formattedNumber value="{!v.partnerPromotionTotal}"
-                                           style="currency"
-                                           currencyCode="CAD" />
+                <lightning:formattedNumber value="{!v.partnerPromotionTotal}" style="currency" currencyCode="CAD" />
               </lightning:layoutItem>
             </lightning:layout>
           </div>
-
         </lightning:layoutItem>
-
-
       </lightning:layout>
     </div>
-
   </div>
-
 </aura:component>

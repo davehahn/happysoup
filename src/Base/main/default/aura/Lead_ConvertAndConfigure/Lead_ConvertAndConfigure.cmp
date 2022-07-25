@@ -16,16 +16,12 @@
   <aura:attribute name="recordError" type="String" />
 
   <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
-  <aura:handler
-    event="c:Retail_Sales_Tool_OppCreated_Event"
-    action="{!c.handleOppCreated}"
-  />
+  <aura:handler event="c:Retail_Sales_Tool_OppCreated_Event" action="{!c.handleOppCreated}" />
   <lightning:workspaceAPI aura:id="workspace" />
 
   <aura:html tag="style">
-    .slds-modal__container { padding: 0 !important; width:100% !important;
-    max-width: 70rem; } .slds-modal__content{ overflow-y:hidden !important;
-    height:unset !important; max-height:unset !important; position:relative; }
+    .slds-modal__container { padding: 0 !important; width:100% !important; max-width: 70rem; } .slds-modal__content{
+    overflow-y:hidden !important; height:unset !important; max-height:unset !important; position:relative; }
     .cuf-content { padding: 0 0rem !important; margin: -1rem; }
   </aura:html>
 
@@ -70,26 +66,10 @@
         />
 
         <lightning:progressIndicator currentStep="{!v.currentStep}" type="base">
-          <lightning:progressStep
-            label="{!v.steps[0]}"
-            title="{!v.steps[0]}"
-            value="{!v.steps[0]}"
-          />
-          <lightning:progressStep
-            label="{!v.steps[1]}"
-            title="{!v.steps[1]}"
-            value="{!v.steps[1]}"
-          />
-          <lightning:progressStep
-            label="{!v.steps[2]}"
-            title="{!v.steps[2]}"
-            value="{!v.steps[2]}"
-          />
-          <lightning:progressStep
-            label="{!v.steps[3]}"
-            title="{!v.steps[3]}"
-            value="{!v.steps[3]}"
-          />
+          <lightning:progressStep label="{!v.steps[0]}" title="{!v.steps[0]}" value="{!v.steps[0]}" />
+          <lightning:progressStep label="{!v.steps[1]}" title="{!v.steps[1]}" value="{!v.steps[1]}" />
+          <lightning:progressStep label="{!v.steps[2]}" title="{!v.steps[2]}" value="{!v.steps[2]}" />
+          <lightning:progressStep label="{!v.steps[3]}" title="{!v.steps[3]}" value="{!v.steps[3]}" />
         </lightning:progressIndicator>
 
         <aura:if isTrue="{! not( v.onLastStep )}">

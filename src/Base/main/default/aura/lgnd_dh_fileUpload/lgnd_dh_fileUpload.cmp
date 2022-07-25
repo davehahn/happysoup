@@ -1,40 +1,34 @@
 <aura:component controller="lgnd_FileUploadController" access="public">
-
-  <aura:attribute name="fileList" type="Object" access="public"/>
+  <aura:attribute name="fileList" type="Object" access="public" />
   <aura:attribute name="toastContent" type="Object" />
 
   <!-- Events -->
   <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
-  <aura:handler event="c:lgnd_dh_fileUploadBegin_Event"
-                action="{!c.doFileUpload}" />
+  <aura:handler event="c:lgnd_dh_fileUploadBegin_Event" action="{!c.doFileUpload}" />
   <aura:registerEvent name="uploadComplete" type="c:lgnd_dh_fileUploadComplete_Event" />
 
   <!-- METHODS -->
-  <aura:method name="doFileUpload" access="public">
+  <aura:method name="doFileUpload" access="public"> </aura:method>
 
-  </aura:method>
+  <c:toast content="{!v.toastContent}" isThemeReverse="false" containerId="toast" isToast="true" />
 
-  <c:toast content="{!v.toastContent}" isThemeReverse="false" containerId="toast" isToast="true"/>
-
-  <lightning:input type="file"
-                     label="Attachment"
-                     name="file"
-                     multiple="true"
-                     accept="image/jpeg,image/gif,image/png,application/pdf,image/x-eps"
-                     onchange="{! c.handleFilesChange }"/>
-
+  <lightning:input
+    type="file"
+    label="Attachment"
+    name="file"
+    multiple="true"
+    accept="image/jpeg,image/gif,image/png,application/pdf,image/x-eps"
+    onchange="{! c.handleFilesChange }"
+  />
 
   <ul class="fileList">
     <aura:iteration items="{!v.fileList}" var="f">
       <li>
-        <c:lgnd_dh_fileUpload_fileLine file="{!f}"
-                                       aura:id="file--CMP" />
+        <c:lgnd_dh_fileUpload_fileLine file="{!f}" aura:id="file--CMP" />
       </li>
     </aura:iteration>
   </ul>
   <aura:if isTrue="{! !empty(v.fileList) }">
-    <lightning:button label="Clear"
-                      onclick="{! c.clearFileList }" />
+    <lightning:button label="Clear" onclick="{! c.clearFileList }" />
   </aura:if>
-
 </aura:component>

@@ -1,61 +1,71 @@
-<apex:page standardController="Lot_Exchange__c" extensions="gcLotExchange_Ext" cache="false" docType="html-5.0" showChat="false" showHeader="true" sidebar="false">
-<head>
-<style>
-.link{
-    cursor:pointer;
-    text-decoration:underline;
-}
-table{
-    border-collapse:collapse;
-}
-tr.total td{
-    font-weight: bold;
-}
-div.pq-grid-footer{
-    display:none;
-}
-tr.pq-row-select td{
-    background-color:yellow;
-}
-</style>
+<apex:page
+  standardController="Lot_Exchange__c"
+  extensions="gcLotExchange_Ext"
+  cache="false"
+  docType="html-5.0"
+  showChat="false"
+  showHeader="true"
+  sidebar="false"
+>
+  <head>
+    <style>
+      .link {
+        cursor: pointer;
+        text-decoration: underline;
+      }
+      table {
+        border-collapse: collapse;
+      }
+      tr.total td {
+        font-weight: bold;
+      }
+      div.pq-grid-footer {
+        display: none;
+      }
+      tr.pq-row-select td {
+        background-color: yellow;
+      }
+    </style>
 
-<apex:stylesheet value="{!URLFOR($Resource.GMBLJS__jQueryUI,'/jquery-ui/jquery-ui.min.css')}"/>
-<apex:stylesheet value="{!URLFOR($Resource.GMBLJS__pqGridPro241,'/pqgrid.min.css')}"/>
-</head>
+    <apex:stylesheet value="{!URLFOR($Resource.GMBLJS__jQueryUI,'/jquery-ui/jquery-ui.min.css')}" />
+    <apex:stylesheet value="{!URLFOR($Resource.GMBLJS__pqGridPro241,'/pqgrid.min.css')}" />
+  </head>
 
-<body>
-<apex:form >
-    <apex:actionFunction name="rerenderInMoves" reRender="inMoves"/>
-    <apex:actionFunction name="rerenderOutMoves" reRender="outMoves"/>
-</apex:form>
-	<apex:outputPanel id="detailContainer">
-    	<apex:detail subject="{!Id}" relatedList="false" id="theDetail" inlineEdit="true"/>
-	</apex:outputPanel>
+  <body>
+    <apex:form>
+      <apex:actionFunction name="rerenderInMoves" reRender="inMoves" />
+      <apex:actionFunction name="rerenderOutMoves" reRender="outMoves" />
+    </apex:form>
+    <apex:outputPanel id="detailContainer">
+      <apex:detail subject="{!Id}" relatedList="false" id="theDetail" inlineEdit="true" />
+    </apex:outputPanel>
 
     <apex:pageBlock title="Transferred Serials">
-        
-        <apex:pageBlockButtons location="top">
-            <button type="button" class="btn" id="btnLaunchSearch" onclick="launchSearchSerial();">Search Serial to Transfer Lot</button>
-        </apex:pageBlockButtons>
+      <apex:pageBlockButtons location="top">
+        <button type="button" class="btn" id="btnLaunchSearch" onclick="launchSearchSerial();">
+          Search Serial to Transfer Lot
+        </button>
+      </apex:pageBlockButtons>
 
-        <div>
-     		<div id="lines"></div>
-        </div>
-
+      <div>
+        <div id="lines"></div>
+      </div>
     </apex:pageBlock>
     <apex:relatedList id="outMoves" subject="{!Id}" list="Outbound_Inventory_Movements__r" />
     <apex:relatedList id="inMoves" subject="{!Id}" list="Inbound_Inventory_Movements__r" />
-</body>
+  </body>
 
-<apex:includeScript value="{!$Resource.GMBLJS__jQuery}"/>
-<apex:includeScript value="{!URLFOR($Resource.GMBLJS__jQueryUI,'/jquery-ui/jquery-ui.min.js')}"/>
-<apex:includeScript value="{!URLFOR($Resource.GMBLJS__pqGridPro241,'/pqgrid.min.js')}"/>
-<apex:includeScript value="{!URLFOR($Resource.GMBLJS__pqGridPro241,'/touch-punch/touch-punch.min.js')}"/>
-<apex:includeScript value="{!$Resource.GMBLJS__accountingJS}"/>
-<apex:includeScript value="{!$Resource.GMBLJS__gsrGrid2}"/>
+  <apex:includeScript value="{!$Resource.GMBLJS__jQuery}" />
+  <apex:includeScript value="{!URLFOR($Resource.GMBLJS__jQueryUI,'/jquery-ui/jquery-ui.min.js')}" />
+  <apex:includeScript value="{!URLFOR($Resource.GMBLJS__pqGridPro241,'/pqgrid.min.js')}" />
+  <apex:includeScript value="{!URLFOR($Resource.GMBLJS__pqGridPro241,'/touch-punch/touch-punch.min.js')}" />
+  <apex:includeScript value="{!$Resource.GMBLJS__accountingJS}" />
+  <apex:includeScript value="{!$Resource.GMBLJS__gsrGrid2}" />
 
-<script>function setFocusOnLoad() {}</script>
-<script type="text/javascript">
+  <script>
+    function setFocusOnLoad() {}
+  </script>
+  <script type="text/javascript">
     $j = jQuery.noConflict();
 
     $j(document).ready(function()
@@ -78,7 +88,7 @@ tr.pq-row-select td{
         var gridObj = { title:"",
                         collapsible:{on:false,collapsed:false,toggle:false},
                         columnTemplate: {sortable:true,editable:false, minWidth:80},
-                        dataModel:{data:[], sorting:'local', location:'local'}, 
+                        dataModel:{data:[], sorting:'local', location:'local'},
                         dragColumns:{enabled:false},
                         editable:false,
                         editModel: {clicksToEdit:1, saveKey: jQuery.ui.keyCode.ENTER, keyUpDown: false, onSave:null, onBlur:'save'},
@@ -135,7 +145,7 @@ tr.pq-row-select td{
                         if(ui.rowData.isTotal || ui.rowData.periodIsOpen == 'false') return '';
                         return '<span class="link" onclick="reverseExchange(\''+ui.rowData.idOutbound+'\',\''+ui.rowData.idSerialNew+'\');">Undo</span>';
                     }
-                });                 
+                });
             }
             else if(col.dataIndx == 'productNameFrom')
             {
@@ -145,13 +155,13 @@ tr.pq-row-select td{
                         if (ui.rowData.isTotal || !ui.rowData.idProductFrom) return '';
 
                         var myHTML = ui.rowData.productNameFrom;
-                        
+
                         if({!$ObjectType.Product2.accessible})
                             return '<a href=\"/'+ui.rowData.idProductFrom+'\" target=\"_blank\">'+myHTML+'</a>';
 
                         return myHTML;
                     }
-                });                 
+                });
             }
             else if(col.dataIndx == 'productNameTo')
             {
@@ -161,13 +171,13 @@ tr.pq-row-select td{
                         if (ui.rowData.isTotal || !ui.rowData.idProductTo) return '';
 
                         var myHTML = ui.rowData.productNameTo;
-                        
+
                         if({!$ObjectType.Product2.accessible})
                             return '<a href=\"/'+ui.rowData.idProductTo+'\" target=\"_blank\">'+myHTML+'</a>';
 
                         return myHTML;
                     }
-                });                 
+                });
             }
             else if(col.dataIndx == 'productName')
             {
@@ -177,13 +187,13 @@ tr.pq-row-select td{
                         if (ui.rowData.isTotal || !ui.rowData.idProduct) return '';
 
                         var myHTML = ui.rowData.productName;
-                        
+
                         if({!$ObjectType.Product2.accessible})
                             return '<a href=\"/'+ui.rowData.idProduct+'\" target=\"_blank\">'+myHTML+'</a>';
 
                         return myHTML;
                     }
-                });                 
+                });
             }
             else if(col.dataIndx == 'inboundName')
             {
@@ -193,7 +203,7 @@ tr.pq-row-select td{
                         if (ui.rowData.isTotal) return '';
                         return '<a href=\"/'+ui.rowData.idInbound+'\" target=\"_blank\">'+ui.rowData.inboundName+'</a>';
                     }
-                });                 
+                });
             }
             else if(col.dataIndx == 'outboundName')
             {
@@ -203,7 +213,7 @@ tr.pq-row-select td{
                         if (ui.rowData.isTotal) return '';
                         return '<a href=\"/'+ui.rowData.idOutbound+'\" target=\"_blank\">'+ui.rowData.outboundName+'</a>';
                     }
-                });                 
+                });
             }
             else if(col.dataIndx == 'lotNameFrom')
             {
@@ -213,7 +223,7 @@ tr.pq-row-select td{
                         if (ui.rowData.isTotal) return '';
                         return '<a href=\"/'+ui.rowData.idLotFrom+'\" target=\"_blank\">'+ui.rowData.lotNameFrom+'</a>';
                     }
-                });                 
+                });
             }
             else if(col.dataIndx == 'lotNameTo')
             {
@@ -223,8 +233,8 @@ tr.pq-row-select td{
                         if (ui.rowData.isTotal) return '';
                         return '<a href=\"/'+ui.rowData.idLotTo+'\" target=\"_blank\">'+ui.rowData.lotNameTo+'</a>';
                     }
-                });                 
-            } 
+                });
+            }
             else if(col.dataIndx == 'serialNameOld')
             {
                 $j.extend(col,{
@@ -233,8 +243,8 @@ tr.pq-row-select td{
                         if (ui.rowData.isTotal) return '';
                         return '<a href=\"/'+ui.rowData.idSerialOld+'\" target=\"_blank\">'+ui.rowData.serialNameOld+'</a>';
                     }
-                });                 
-            } 
+                });
+            }
             else if(col.dataIndx == 'serialNameNew')
             {
                 $j.extend(col,{
@@ -243,8 +253,8 @@ tr.pq-row-select td{
                         if (ui.rowData.isTotal) return '';
                         return '<a href=\"/'+ui.rowData.idSerialNew+'\" target=\"_blank\">'+ui.rowData.serialNameNew+'</a>';
                     }
-                });                 
-            }  
+                });
+            }
         });
 
         var $gridDiv = $j('#lines');
@@ -267,7 +277,7 @@ tr.pq-row-select td{
                 }
                 else
                 {
-                    alert(event.message); 
+                    alert(event.message);
                 }
         		$gridDiv.pqGrid('hideLoading');
             },
@@ -289,11 +299,11 @@ tr.pq-row-select td{
                 }
                 else
                 {
-                    alert(event.message); 
+                    alert(event.message);
                 }
                 $gridDiv.pqGrid('hideLoading');
             },
-            {buffer:true, escape:true, timeout:120000});        
+            {buffer:true, escape:true, timeout:120000});
     }
 
     function startTransferSingle(idSerial, rowIndx)
@@ -339,11 +349,11 @@ tr.pq-row-select td{
                 }
                 else
                 {
-                    alert(event.message); 
+                    alert(event.message);
                 }
                 $gridDiv.pqGrid('hideLoading');
             },
-            {buffer:true, escape:true, timeout:120000});        
+            {buffer:true, escape:true, timeout:120000});
     }
 
     function launchSearchSerial()
@@ -363,10 +373,10 @@ tr.pq-row-select td{
             modal: true,
             position:{my:'center bottom', at:'center top', of:'#lines'},
             close:function(){
-            	$gridDiv.pqGrid('destroy'); 
-            	$gridDiv.remove(); 
-            	$dialogDiv.dialog('destroy'); 
-            	$dialogDiv.remove(); 
+            	$gridDiv.pqGrid('destroy');
+            	$gridDiv.remove();
+            	$dialogDiv.dialog('destroy');
+            	$dialogDiv.remove();
             },
             open:function(){
             	initGrid_searchSerial($gridDiv);
@@ -383,7 +393,7 @@ tr.pq-row-select td{
         var gridObj = { title:"",
                         collapsible:{on:false,collapsed:false,toggle:false},
                         columnTemplate: {sortable:true, minWidth:80},
-                        dataModel:{data:[], sorting:'local', location:'local', sortDir:'up', sortIndx:'productName'}, 
+                        dataModel:{data:[], sorting:'local', location:'local', sortDir:'up', sortIndx:'productName'},
                         dragColumns:{enabled:false},
                         editable:false,
                         filterModel:{on:true, mode:'AND', header:true},
@@ -420,8 +430,8 @@ tr.pq-row-select td{
                           {dataIndx:'lotName',						title:'Lot', maxWidth:100},
                           {dataIndx:'serialName',					title:'Serial Number',	gFilter:'text'},
                           {dataIndx:'action',                       title:'Action',         align:'center', maxWidth:80, sortable:false},
-                          {dataIndx:"state", title: "", minWidth:70, maxWidth:70, align: "center", cb:{header: false, all: false}, 
-						  	type: 'checkBoxSelection', resizable: false, sortable: false, editable: false},
+                          {dataIndx:"state", title: "", minWidth:70, maxWidth:70, align: "center", cb:{header: false, all: false},
+    		  	type: 'checkBoxSelection', resizable: false, sortable: false, editable: false},
                           {dataIndx:"scrollSpacer", minWidth:15, maxWidth:15}];
 
 
@@ -436,14 +446,14 @@ tr.pq-row-select td{
                     render:function(ui)
                     {
                         if (ui.rowData.isTotal || !ui.rowData.idSerial) return '';
-                        
+
                         if({!$ObjectType.GMBLASERP__Serial_Number__c.accessible})
                             return '<a href=\"/'+ui.rowData.idSerial+'\" target=\"_blank\">'+ui.rowData.serialName+'</a>';
                         else
                             return ui.rowData.serialName;
                     }
-                });                 
-            } 
+                });
+            }
 
             else if(col.dataIndx == 'nestName')
             {
@@ -451,14 +461,14 @@ tr.pq-row-select td{
                     render:function(ui)
                     {
                         if (ui.rowData.isTotal || !ui.rowData.idNest) return '';
-                        
+
                         if({!$ObjectType.GMBLASERP__Serial_Number__c.accessible})
                             return '<a href=\"/'+ui.rowData.idNest+'\" target=\"_blank\">'+ui.rowData.nestName+'</a>';
                         else
                             return ui.rowData.nestName;
                     }
-                });                 
-            } 
+                });
+            }
 
             else if(col.dataIndx == 'action')
             {
@@ -472,7 +482,7 @@ tr.pq-row-select td{
             }
         });
 
-        $gridDiv.pqGrid(gridObj);    
+        $gridDiv.pqGrid(gridObj);
     }
 
     function refreshGrid_searchSerial(){
@@ -488,7 +498,7 @@ tr.pq-row-select td{
                 {
                     gGrid.refreshGrid_callback($gridDiv,result);
                 }
-                else 
+                else
                 {
                     alert(event.message);
                 }
@@ -496,6 +506,5 @@ tr.pq-row-select td{
             },
             {buffer:true, escape:true, timeout:120000});
     }
-
-</script>
+  </script>
 </apex:page>

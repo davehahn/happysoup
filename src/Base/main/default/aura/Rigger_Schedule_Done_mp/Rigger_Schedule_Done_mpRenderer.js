@@ -1,4 +1,3 @@
 ({
-	afterRender : function() {
-	}
-})
+  afterRender: function () {}
+});

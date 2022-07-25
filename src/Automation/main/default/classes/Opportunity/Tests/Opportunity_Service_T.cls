@@ -162,7 +162,7 @@ public class Opportunity_Service_T {
     TA_Opportunity_TestHelper.init();
     Account customer = Factory_Account.insertFullPersonAccount('Testy', 'McTesterson');
     Account beforeAcct = [SELECT Id, Type FROM Account WHERE Id = :customer.Id];
-    TA_Opportunity_TestHelper.opp = Factory_Opportunity.insertOpportunity(customer,Test_Constants.idRetailPricebook);
+    TA_Opportunity_TestHelper.opp = Factory_Opportunity.insertOpportunity(customer, Test_Constants.idRetailPricebook);
     TA_Opportunity_TestHelper.createOpportunityLineItem();
     List<Opportunity> oldOpportunities = TA_Opportunity_TestHelper.getOldList();
     Test.startTest();
@@ -176,12 +176,12 @@ public class Opportunity_Service_T {
     TA_Opportunity_TestHelper.opp.Tax_Rate_Federal__c = 10;
     TA_Opportunity_TestHelper.opp.Tax_Rate_Retail__c = 10;
     TA_Opportunity_TestHelper.opp.GL_Account_Variable_3__c = gcConstants.idGlv3Ontario;
-//    Trade_In_Record__c trade = new Trade_In_Record__c(
-//      Lien_Amount__c = 1000,
-//      Opportunity__c = TA_Opportunity_TestHelper.opp.id,
-//      Total_Value__c = 10000
-//    );
-//    insert trade;
+    //    Trade_In_Record__c trade = new Trade_In_Record__c(
+    //      Lien_Amount__c = 1000,
+    //      Opportunity__c = TA_Opportunity_TestHelper.opp.id,
+    //      Total_Value__c = 10000
+    //    );
+    //    insert trade;
 
     update TA_Opportunity_TestHelper.opp;
     TA_Opportunity_TestHelper.opp = [

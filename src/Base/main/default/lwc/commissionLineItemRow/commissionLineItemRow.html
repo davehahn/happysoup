@@ -9,62 +9,76 @@
     <td class="slds-text-align_center">{lineItem.quantity}</td>
     <td class="slds-text-align_left">
       {lineItem.description}
-      <div if:true={shouldDisplayComment} style="font-size: 0.7rem;">{lineItem.comment}</div>
+      <div if:true={shouldDisplayComment} style="font-size: 0.7rem">{lineItem.comment}</div>
     </td>
     <td class="slds-text-align_center">
-      <lightning-formatted-number value={lineItem.totalSale}
-                                  format-style="currency"
-                                  class={salePriceClass}
-                                  currency-code="CAD"></lightning-formatted-number>
+      <lightning-formatted-number
+        value={lineItem.totalSale}
+        format-style="currency"
+        class={salePriceClass}
+        currency-code="CAD"
+      ></lightning-formatted-number>
       <template if:true={renderEachSalePrice}>
-                <span>
-                  (<lightning-formatted-number value={lineItem.salePrice}
-                                               format-style="currency"
-                                               currency-code="CAD"></lightning-formatted-number>
-                  ea.)
-                </span>
+        <span>
+          (<lightning-formatted-number
+            value={lineItem.salePrice}
+            format-style="currency"
+            currency-code="CAD"
+          ></lightning-formatted-number>
+          ea.)
+        </span>
       </template>
     </td>
     <td class="slds-text-align_center">
-      <lightning-formatted-number value={lineItem.totalCost}
-                                  format-style="currency"
-                                  currency-code="CAD"></lightning-formatted-number>
+      <lightning-formatted-number
+        value={lineItem.totalCost}
+        format-style="currency"
+        currency-code="CAD"
+      ></lightning-formatted-number>
       <template if:true={renderEachUnitCost}>
-                <span>
-                  (<lightning-formatted-number value={lineItem.unitCost}
-                                               format-style="currency"
-                                               currency-code="CAD"></lightning-formatted-number>
-                  ea.)
-                </span>
+        <span>
+          (<lightning-formatted-number
+            value={lineItem.unitCost}
+            format-style="currency"
+            currency-code="CAD"
+          ></lightning-formatted-number>
+          ea.)
+        </span>
       </template>
     </td>
     <td class="slds-text-align_center">
-      <lightning-formatted-number value={lineItem.totalLabour}
-                                  format-style="currency"
-                                  currency-code="CAD"></lightning-formatted-number>
+      <lightning-formatted-number
+        value={lineItem.totalLabour}
+        format-style="currency"
+        currency-code="CAD"
+      ></lightning-formatted-number>
     </td>
     <td class="slds-text-align_center">
-      <lightning-formatted-number value={lineItem.profit}
-                                  format-style="currency"
-                                  class={profitClass}
-                                  currency-code="CAD"></lightning-formatted-number>
+      <lightning-formatted-number
+        value={lineItem.profit}
+        format-style="currency"
+        class={profitClass}
+        currency-code="CAD"
+      ></lightning-formatted-number>
     </td>
     <template if:true={renderRatePaymentColumns}>
       <td class="slds-text-align_center">
-        <lightning-formatted-number value={lineItem.commissionRate}
-                                    format-style="percent"
-                                    maximum-fraction-digits="2"></lightning-formatted-number>
+        <lightning-formatted-number
+          value={lineItem.commissionRate}
+          format-style="percent"
+          maximum-fraction-digits="2"
+        ></lightning-formatted-number>
       </td>
       <td class="slds-text-align_center">
-        <lightning-formatted-number value={lineItem.payment}
-                                    format-style="currency"
-                                    currency-code="CAD"></lightning-formatted-number>
+        <lightning-formatted-number
+          value={lineItem.payment}
+          format-style="currency"
+          currency-code="CAD"
+        ></lightning-formatted-number>
       </td>
     </template>
     <td class="slds-text-align_right">
-      <lightning-button-menu if:true={lineItem.isEditable}
-                             icon-size="small"
-                             menu-alignment="auto">
+      <lightning-button-menu if:true={lineItem.isEditable} icon-size="small" menu-alignment="auto">
         <lightning-menu-item value="edit" label="Edit" onclick={handleMenuClick}></lightning-menu-item>
         <lightning-menu-item value="delete" label="Delete" onclick={handleMenuClick}></lightning-menu-item>
       </lightning-button-menu>
@@ -72,11 +86,13 @@
   </tr>
   <template if:true={hasKitParts}>
     <template for:each={lineItem.kitParts} for:item="kitPart" for:index="idx">
-      <c-commission-line-item-row key={kitPart.id}
-                                  line-item={kitPart}
-                                  line-number={idx}
-                                  record-calculation-method={recordCalculationMethod}
-                                  is-child-row="true"></c-commission-line-item-row>
+      <c-commission-line-item-row
+        key={kitPart.id}
+        line-item={kitPart}
+        line-number={idx}
+        record-calculation-method={recordCalculationMethod}
+        is-child-row="true"
+      ></c-commission-line-item-row>
     </template>
   </template>
 </template>

@@ -1,29 +1,28 @@
-<apex:page showHeader="false"
-           sidebar="false"
-           applyHtmlTag="false"
-           applyBodyTag="false"
-           docType="html-5.0"
-           StandardController="Square_Transaction__c"
-           extensions="RunSquarePaymentFlow">
-
+<apex:page
+  showHeader="false"
+  sidebar="false"
+  applyHtmlTag="false"
+  applyBodyTag="false"
+  docType="html-5.0"
+  StandardController="Square_Transaction__c"
+  extensions="RunSquarePaymentFlow"
+>
   <apex:slds />
-  <apex:includeScript value="{!URLFOR($Resource.Libraries, 'js/handlebars.min-latest.js')}"/>
+  <apex:includeScript value="{!URLFOR($Resource.Libraries, 'js/handlebars.min-latest.js')}" />
 
   <style>
-
-
     .sqr-payment-container {
       background: #ffffff;
     }
 
     .sqr-payment-input {
-      background: #FFF;
+      background: #fff;
       border: 1px solid transparent;
       padding: 10px 20px;
       border-radius: 20px;
       font-size: 14px;
       color: #666;
-      width:calc( 100% - 1.5rem );
+      width: calc(100% - 1.5rem);
       height: 39px;
       margin: 0 0.75rem 24px 0.75rem;
       box-sizing: border-box;
@@ -36,7 +35,7 @@
 
     .sqr-payment-input--focus {
       outline: none;
-      border: 1px solid #CCC;
+      border: 1px solid #ccc;
     }
 
     .sqr-payment-container label {
@@ -46,69 +45,63 @@
       display: block;
     }
 
-
-    .round-button{
+    .round-button {
       display: block;
-      position: relative; margin: 0 auto 1.5em;
+      position: relative;
+      margin: 0 auto 1.5em;
       width: -moz-fit-content;
       width: fit-content;
       padding: 0.5em 0.5em;
       z-index: 2;
-      font-family: 'gotham-medium';
+      font-family: "gotham-medium";
       font-size: 1.35em;
       font-weight: 600;
       background: #00b2ed none !important;
       border: 1px solid #00b2ed;
-      color: #FFF;
+      color: #fff;
       border-radius: 60px;
       margin-left: 25px;
-
     }
 
-    .round-button:hover:enabled{
-        background-color: #049dd1 !important;
-        background: none;
+    .round-button:hover:enabled {
+      background-color: #049dd1 !important;
+      background: none;
     }
 
     @media all and (max-width: 600px) {
-        .orderDetails {
-            max-width: 100% !important;
-            padding: 10px;
-            margin-bottom: 35px;
-            margin-left: 35px;
-        }
+      .orderDetails {
+        max-width: 100% !important;
+        padding: 10px;
+        margin-bottom: 35px;
+        margin-left: 35px;
+      }
     }
 
     .orderDetails {
-            max-width: 30%;
-            padding: 10px;
-            margin-bottom: 35px;
-            margin-left: 35px;
+      max-width: 30%;
+      padding: 10px;
+      margin-bottom: 35px;
+      margin-left: 35px;
     }
 
     #spinner {
-      display:none;
+      display: none;
     }
 
     #spinner.busy {
-      display:initial;
+      display: initial;
     }
 
     #toast-container {
-      display:none;
+      display: none;
     }
 
     #toast-container.has-errors {
       display: initial;
     }
-
   </style>
 
-
-
-
   <apex:outputPanel layout="none" rendered="{!Square_Transaction__c.sqStatus__c == 'INCOMPLETE'}">
-
     <div class="slds-scope">
       <div id="spinner" class="slds-spinner_container">
         <div role="status" class="slds-spinner slds-spinner--medium">
@@ -124,15 +117,14 @@
     <div class="orderDetails">
       <h1>Order Details</h1>
 
-      <br /><br />
-      <b>Account:</b> {!Square_Transaction__c.Account__r.Name}
-      <br /><hr />
-      <b>Payment Status:</b> {!Square_Transaction__c.sqStatus__c}
-      <br /><hr />
-      <b>Description:</b> {!Square_Transaction__c.Description__c}
-      <br /><hr />
-      <b>Notes:</b> {!Square_Transaction__c.Notes__c}
-      <br /><hr />
+      <br /><br /> <b>Account:</b> {!Square_Transaction__c.Account__r.Name} <br />
+      <hr />
+      <b>Payment Status:</b> {!Square_Transaction__c.sqStatus__c} <br />
+      <hr />
+      <b>Description:</b> {!Square_Transaction__c.Description__c} <br />
+      <hr />
+      <b>Notes:</b> {!Square_Transaction__c.Notes__c} <br />
+      <hr />
       <b>Amount Due:</b> ${!Square_Transaction__c.Amount__c}
     </div>
 
@@ -140,21 +132,21 @@
     <button id="submit-button" class="round-button">Pay Now</button>
 
     <script id="toast-msg" type="text/handlebars-template">
-    <div class="slds-notify_container slds-is-relative">
-      <div class="slds-notify slds-notify_toast slds-theme_{{state}}" role="status">
-        <div class="slds-notify__content" style="width:100%;">
-          <h2 class="slds-text-heading_small slds-m-bottom_small" style="text-align: center">
-            {{title}}
-          </h2>
-          <ul style="list-style:inside">
-            {{#each messages}}
-              <li>{{this.message}}</li>
-            {{/each}}
-          </ul>
+      <div class="slds-notify_container slds-is-relative">
+        <div class="slds-notify slds-notify_toast slds-theme_{{state}}" role="status">
+          <div class="slds-notify__content" style="width:100%;">
+            <h2 class="slds-text-heading_small slds-m-bottom_small" style="text-align: center">
+              {{title}}
+            </h2>
+            <ul style="list-style:inside">
+              {{#each messages}}
+                <li>{{this.message}}</li>
+              {{/each}}
+            </ul>
+          </div>
         </div>
       </div>
-    </div>
-  </script>
+    </script>
 
     <script>
 
@@ -232,18 +224,16 @@
           "error"
         );
       }
-
     </script>
   </apex:outputPanel>
 
   <apex:outputPanel layout="none" rendered="{!Square_Transaction__c.sqStatus__c == 'COMPLETED'}">
-
     <div class="slds-scope">
       <div class="slds-notify_container slds-is-relative slds-m-top_large">
         <div class="slds-notify slds-notify_toast slds-theme_success" role="status">
-          <div class="slds-notify__content" style="width:100%;">
+          <div class="slds-notify__content" style="width: 100%">
             <h2 class="slds-text-heading_small slds-text-align_center">
-              This payment has already been processed.<br/>
+              This payment has already been processed.<br />
               <b>Thank you!</b>
             </h2>
             <p class="slds-text-align_center slds-m-top_medium">
@@ -255,6 +245,4 @@
       </div>
     </div>
   </apex:outputPanel>
-
 </apex:page>
-

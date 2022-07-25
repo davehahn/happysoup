@@ -1,369 +1,430 @@
-<aura:component controller="RegistrationExt"
-								access="global"
-								implements="forceCommunity:availableForAllPageTypes,flexipage:availableForAllPageTypes">
+<aura:component
+  controller="RegistrationExt"
+  access="global"
+  implements="forceCommunity:availableForAllPageTypes,flexipage:availableForAllPageTypes"
+>
+  <aura:attribute name="registration" type="Registration__c" />
+  <aura:attribute name="NestedItems" type="List" />
+  <aura:attribute name="MotorUpgrades" type="List" />
+  <aura:attribute name="title" type="String" default="Product Registration" />
+  <aura:attribute name="acctLabel" type="String" default="Customer" />
+  <aura:attribute name="serno" type="String" />
+  <aura:attribute name="sernoId" type="String" />
+  <aura:attribute name="nestId" type="String" />
+  <aura:attribute name="accountId" type="Id" />
+  <aura:attribute name="searchQuery" type="String" />
+  <aura:attribute name="errorMessage" type="String" />
+  <aura:attribute name="ProductName" type="String" />
+  <aura:attribute name="ProductId" type="String" />
+  <aura:attribute name="ProductDescription" type="String" />
+  <aura:attribute name="ProductType" type="String" />
+  <aura:attribute name="ProductLocation" type="String" />
+  <aura:attribute name="Customer" type="Object" />
+  <aura:attribute name="AccountType" type="String" default="Account" />
+  <aura:attribute name="accountScope" type="String" default="customer" />
+  <aura:attribute name="context" type="String" default="unlimited" />
+  <aura:attribute name="regLabel" type="String" default="Register" />
+  <aura:attribute name="MotorUpgrade" type="String" />
+  <aura:attribute name="MotorSerial" type="String" />
+  <aura:attribute name="caseId" type="String" />
+  <aura:attribute name="RestrictToThisProduct" type="String" />
+  <aura:attribute name="DeliveryDate" type="Date" />
+  <aura:attribute name="hideSernoSearch" type="Boolean" default="false" />
+  <aura:attribute name="productRegistered" type="Boolean" default="false" />
+  <aura:attribute name="canBeNest" type="Boolean" default="false" />
+  <aura:attribute name="showProductCard" type="Boolean" default="false" />
+  <aura:attribute name="showAccountForm" type="Boolean" default="false" />
+  <aura:attribute name="selectionMade" type="Boolean" default="false" />
+  <aura:attribute name="sernoSelected" type="Boolean" default="false" />
+  <aura:attribute name="redirectToRecord" type="Boolean" default="true" />
+  <aura:attribute name="regInProcess" type="Boolean" default="false" />
+  <aura:attribute name="paymentMethod" type="String" default="Cash" />
+  <aura:attribute name="salesPeople" type="List" />
+  <aura:attribute name="memoryMaker" type="String" />
 
-  <aura:attribute name="registration" 					type="Registration__c" 														/>
-	<aura:attribute name="NestedItems" 						type="List"																				/>
-	<aura:attribute name="MotorUpgrades" 					type="List"																				/>
-	<aura:attribute name="title" 									type="String" 		default="Product Registration"	/>
-	<aura:attribute name="acctLabel"							type="String" 		default="Customer"							/>
-	<aura:attribute name="serno" 									type="String" 																		/>
-	<aura:attribute name="sernoId" 								type="String" 																		/>
-	<aura:attribute name="nestId" 								type="String" 																		/>
-	<aura:attribute name="accountId" 							type="Id" 																		/>
-	<aura:attribute name="searchQuery" 						type="String" 																		/>
-	<aura:attribute name="errorMessage"						type="String" 																		/>
-	<aura:attribute name="ProductName"        		type="String" 																		/>
-	<aura:attribute name="ProductId"        			type="String" 																		/>
-	<aura:attribute name="ProductDescription" 		type="String" 																		/>
-	<aura:attribute name="ProductType"        		type="String" 																		/>
-	<aura:attribute name="ProductLocation"    		type="String" 																		/>
-	<aura:attribute name="Customer"								type="Object" 																		/>
-	<aura:attribute name="AccountType"  					type="String"			default="Account" 							/>
-	<aura:attribute name="accountScope"			 			type="String" 		default="customer"							/>
-	<aura:attribute name="context"  							type="String"   	default="unlimited"					    />
-	<aura:attribute name="regLabel" 							type="String"   	default="Register"					    />
-	<aura:attribute name="MotorUpgrade"						type="String"																			/>
-	<aura:attribute name="MotorSerial"						type="String"																			/>
-	<aura:attribute name="caseId" 								type="String" 																		/>
-	<aura:attribute name="RestrictToThisProduct" 	type="String"                     								/>
-	<aura:attribute name="DeliveryDate"						type="Date"																				/>
-	<aura:attribute name="hideSernoSearch" 				type="Boolean" 		default="false" 								/>
-	<aura:attribute name="productRegistered" 			type="Boolean" 		default="false" 								/>
-	<aura:attribute name="canBeNest"							type="Boolean"		default="false"									/>
-	<aura:attribute name="showProductCard"				type="Boolean" 		default="false" 								/>
-	<aura:attribute name="showAccountForm"				type="Boolean" 		default="false" 								/>
-	<aura:attribute name="selectionMade" 					type="Boolean" 		default="false" 								/>
-	<aura:attribute name="sernoSelected" 					type="Boolean" 		default="false" 								/>
-	<aura:attribute name="redirectToRecord" 			type="Boolean" 		default="true" 									/>
-	<aura:attribute name="regInProcess" 					type="Boolean" 		default="false" 								/>
-	<aura:attribute name="paymentMethod"					type="String"			default="Cash"									/>
-	<aura:attribute name="salesPeople"						type="List"																				/>
-	<aura:attribute name="memoryMaker"						type="String"																			/>
-
-
-	<ltng:require scripts="{! join(',', $Resource.Libraries +'/js/LightningApex.js',
+  <ltng:require
+    scripts="{! join(',', $Resource.Libraries +'/js/LightningApex.js',
                           						$Resource.Libraries +'/js/LightningUtils.js') }"
-                afterScriptsLoaded="{!c.doInit}"  />
+    afterScriptsLoaded="{!c.doInit}"
+  />
 
-	<aura:registerEvent name="registrationSuccessEvent" type="c:lgnd_registration_success_Event" />
+  <aura:registerEvent name="registrationSuccessEvent" type="c:lgnd_registration_success_Event" />
 
-	<aura:handler name="accountSelected"
-								event="c:lgnd_account_search_selected_Event"
-								action="{!c.handleAccountSelected}" />
-	<aura:handler name="accountSearchCleared"
-								event="c:lgnd_account_search_cleared_Event"
-								action="{!c.handleAccountSearchCleared}" />
-	<aura:handler name="lgnd_registration_event"
-								event="c:lgnd_registration_event"
-								action="{!c.handleCreateAccount}" />
-	<aura:handler name="change" value="{!v.accountId}" action="{!c.accountCreated}" />
+  <aura:handler
+    name="accountSelected"
+    event="c:lgnd_account_search_selected_Event"
+    action="{!c.handleAccountSelected}"
+  />
+  <aura:handler
+    name="accountSearchCleared"
+    event="c:lgnd_account_search_cleared_Event"
+    action="{!c.handleAccountSearchCleared}"
+  />
+  <aura:handler name="lgnd_registration_event" event="c:lgnd_registration_event" action="{!c.handleCreateAccount}" />
+  <aura:handler name="change" value="{!v.accountId}" action="{!c.accountCreated}" />
 
-	<aura:handler name="change" value="{!v.showAccountCard}" action="{!c.toggleAccountCard}" />
-	<aura:handler name="change" value="{!v.errorMessage}" action="{!c.toggleMessage}" />
-	<aura:handler name="change" value="{!v.ProductId}" action="{!c.populateUpgrades}" />
-	<aura:handler name="change" value="{!v.canBeNest}" action="{!c.clearUpgrades}" />
+  <aura:handler name="change" value="{!v.showAccountCard}" action="{!c.toggleAccountCard}" />
+  <aura:handler name="change" value="{!v.errorMessage}" action="{!c.toggleMessage}" />
+  <aura:handler name="change" value="{!v.ProductId}" action="{!c.populateUpgrades}" />
+  <aura:handler name="change" value="{!v.canBeNest}" action="{!c.clearUpgrades}" />
 
-	<div class="slds-grid slds-wrap">
-		<div class="slds-size_1-of-1">
-			<lightning:spinner aura:id="registrationSpinner" class="slds-hide" />
-		</div>
-		<lightning:card title="{!v.title}" iconName="action:add_relationship" class="slds-p-horizontal_small slds-size_1-of-1">
-			<div aura:id="registration">
-				<div class="slds-grid slds-wrap">
-					<div class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_error slds-hide" aura:id="alert" role="alert">
-					  <span class="slds-assistive-text">error</span>
-					  <p>{!v.errorMessage}</p>
-					</div>
-					<aura:if isTrue="{!v.productRegistered}">
-						<div class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_info" aura:id="success" role="alert">
-						  <span class="slds-assistive-text">success</span>
-						  <p>Product has been registered. High five!</p>
-						</div>
-					</aura:if>
-					<div class="slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_6-of-12">
-						<div class="{! v.hideSernoSearch == true ? 'slds-hide' : '' }">
-							<div class="slds-p-horizontal_small">
-								<c:lgnd_serno_search serno="{!v.serno}"
-																		sernoId="{!v.sernoId}"
-																		nestId="{!v.nestId}"
-																		showProductCard="{!v.showProductCard}"
-																		ProductName="{!v.ProductName}"
-																		ProductId="{!v.ProductId}"
-																		ProductDescription="{!v.ProductDescription}"
-																		ProductType="{!v.ProductType}"
-																		ProductLocation="{!v.ProductLocation}"
-																		selectionMade="{!v.sernoSelected}"
-																		canBeNest="{!v.canBeNest}"
-																		errorMessage="{!v.errorMessage}"
-																		context="{!v.context}"
-																		RestrictToThisProduct="{!v.RestrictToThisProduct}"
-																		aura:id="sernoSearch" />
-							</div>
-						</div>
-						<div class="{! v.hideSernoSearch != true ? 'slds-hide' : '' }">
-							<div class="slds-p-horizontal_small">
-								<lightning:input type="text" label="Serial Number" name="search" value="{!v.serno}" readonly="true" disabled="true" />
-							</div>
-						</div>
-						<article class="{! v.showProductCard == true ? 'slds-card' : 'slds-hide' }" aura:id="product-card" id="product-card">
-						  <div class="slds-card__header slds-grid">
-						    <header class="slds-media slds-media_center slds-has-flexi-truncate">
-						      <div class="slds-media__figure">
-						         <lightning:icon iconName="custom:custom55" />
-						      </div>
-						      <div class="slds-media__body">
-						        <h2>
-						          <a href="javascript:void(0);" class="slds-card__header-link slds-truncate" title="[object Object]">
-						            <span class="slds-text-heading_small">Product</span>
-						          </a>
-						        </h2>
-						      </div>
-						    </header>
-						  </div>
-						  <div class="slds-card__body slds-card__body_inner no-overflow">
-						  	<table class="slds-table">
-						  		<tr>
-						  			<th>Name</th>
-						  			<td title="{!v.ProductName}">{!v.ProductName}</td>
-						  		</tr>
-						  		<tr>
-						  			<th>Type</th>
-						  			<td>{!v.ProductType}</td>
-						  		</tr>
-						  	</table>
-						  </div>
-						</article>
-					</div>
-					<div class="slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_6-of-12">
-						<div class="slds-p-horizontal_small">
-							<c:lgnd_account_search scope="{!v.accountScope}"
-																		 selectorOnly="true"
-																		 fieldLabel="Search Existing Customers" />
-						</div>
-						<aura:if isTrue="{! and(v.showAccountForm, equals(v.accountScope,'customer'))}" >
-							<lightning:layout multipleRows="true">
+  <div class="slds-grid slds-wrap">
+    <div class="slds-size_1-of-1">
+      <lightning:spinner aura:id="registrationSpinner" class="slds-hide" />
+    </div>
+    <lightning:card
+      title="{!v.title}"
+      iconName="action:add_relationship"
+      class="slds-p-horizontal_small slds-size_1-of-1"
+    >
+      <div aura:id="registration">
+        <div class="slds-grid slds-wrap">
+          <div
+            class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_error slds-hide"
+            aura:id="alert"
+            role="alert"
+          >
+            <span class="slds-assistive-text">error</span>
+            <p>{!v.errorMessage}</p>
+          </div>
+          <aura:if isTrue="{!v.productRegistered}">
+            <div
+              class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_info"
+              aura:id="success"
+              role="alert"
+            >
+              <span class="slds-assistive-text">success</span>
+              <p>Product has been registered. High five!</p>
+            </div>
+          </aura:if>
+          <div class="slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_6-of-12">
+            <div class="{! v.hideSernoSearch == true ? 'slds-hide' : '' }">
+              <div class="slds-p-horizontal_small">
+                <c:lgnd_serno_search
+                  serno="{!v.serno}"
+                  sernoId="{!v.sernoId}"
+                  nestId="{!v.nestId}"
+                  showProductCard="{!v.showProductCard}"
+                  ProductName="{!v.ProductName}"
+                  ProductId="{!v.ProductId}"
+                  ProductDescription="{!v.ProductDescription}"
+                  ProductType="{!v.ProductType}"
+                  ProductLocation="{!v.ProductLocation}"
+                  selectionMade="{!v.sernoSelected}"
+                  canBeNest="{!v.canBeNest}"
+                  errorMessage="{!v.errorMessage}"
+                  context="{!v.context}"
+                  RestrictToThisProduct="{!v.RestrictToThisProduct}"
+                  aura:id="sernoSearch"
+                />
+              </div>
+            </div>
+            <div class="{! v.hideSernoSearch != true ? 'slds-hide' : '' }">
+              <div class="slds-p-horizontal_small">
+                <lightning:input
+                  type="text"
+                  label="Serial Number"
+                  name="search"
+                  value="{!v.serno}"
+                  readonly="true"
+                  disabled="true"
+                />
+              </div>
+            </div>
+            <article
+              class="{! v.showProductCard == true ? 'slds-card' : 'slds-hide' }"
+              aura:id="product-card"
+              id="product-card"
+            >
+              <div class="slds-card__header slds-grid">
+                <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                  <div class="slds-media__figure">
+                    <lightning:icon iconName="custom:custom55" />
+                  </div>
+                  <div class="slds-media__body">
+                    <h2>
+                      <a
+                        href="javascript:void(0);"
+                        class="slds-card__header-link slds-truncate"
+                        title="[object Object]"
+                      >
+                        <span class="slds-text-heading_small">Product</span>
+                      </a>
+                    </h2>
+                  </div>
+                </header>
+              </div>
+              <div class="slds-card__body slds-card__body_inner no-overflow">
+                <table class="slds-table">
+                  <tr>
+                    <th>Name</th>
+                    <td title="{!v.ProductName}">{!v.ProductName}</td>
+                  </tr>
+                  <tr>
+                    <th>Type</th>
+                    <td>{!v.ProductType}</td>
+                  </tr>
+                </table>
+              </div>
+            </article>
+          </div>
+          <div class="slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_6-of-12">
+            <div class="slds-p-horizontal_small">
+              <c:lgnd_account_search
+                scope="{!v.accountScope}"
+                selectorOnly="true"
+                fieldLabel="Search Existing Customers"
+              />
+            </div>
+            <aura:if isTrue="{! and(v.showAccountForm, equals(v.accountScope,'customer'))}">
+              <lightning:layout multipleRows="true">
+                <!-- Left side - Details -->
+                <lightning:layoutItem
+                  size="12"
+                  smallDeviceSize="12"
+                  mediumDeviceSize="6"
+                  largeDeviceSize="6"
+                  padding="around-small"
+                >
+                  <h2 class="slds-text-heading_small slds-m-bottom_small">Details</h2>
 
-								<!-- Left side - Details -->
-								<lightning:layoutItem size="12"
-																			smallDeviceSize="12"
-																			mediumDeviceSize="6"
-																			largeDeviceSize="6"
-																			padding="around-small">
-									<h2 class="slds-text-heading_small
-                            slds-m-bottom_small">Details</h2>
+                  <lightning:layout multipleRows="true">
+                    <!-- First Name -->
+                    <lightning:layoutItem size="12" class="slds-p-around_x-small">
+                      <lightning:input
+                        type="text"
+                        label="First Name"
+                        required="true"
+                        value="{!v.Customer.firstName}"
+                        aura:id="required-form-1"
+                        messageWhenValueMissing="First Name is required"
+                      />
+                    </lightning:layoutItem>
 
-									<lightning:layout multipleRows="true">
-										<!-- First Name -->
-										<lightning:layoutItem size="12"
-																					class="slds-p-around_x-small">
-											<lightning:input type="text"
-																			 label="First Name"
-																			 required="true"
-																			 value="{!v.Customer.firstName}"
-																			 aura:id="required-form-1"
-																			 messageWhenValueMissing="First Name is required" />
-										</lightning:layoutItem>
+                    <!-- Last Name -->
+                    <lightning:layoutItem size="12" class="slds-p-around_x-small">
+                      <lightning:input
+                        type="text"
+                        label="Last Name"
+                        required="true"
+                        value="{!v.Customer.lastName}"
+                        aura:id="required-form-1"
+                        messageWhenValueMissing="Last Name is required"
+                      />
+                    </lightning:layoutItem>
 
-										<!-- Last Name -->
-										<lightning:layoutItem size="12"
-																					class="slds-p-around_x-small">
-											<lightning:input type="text"
-																			 label="Last Name"
-																			 required="true"
-																			 value="{!v.Customer.lastName}"
-																			 aura:id="required-form-1"
-																			 messageWhenValueMissing="Last Name is required" />
-										</lightning:layoutItem>
+                    <!-- Phone # -->
+                    <lightning:layoutItem
+                      size="12"
+                      smallDeviceSize="12"
+                      mediumDeviceSize="6"
+                      largeDeviceSize="6"
+                      class="slds-p-around_x-small"
+                    >
+                      <lightning:input
+                        type="tel"
+                        label="Phone"
+                        value="{!v.Customer.phone}"
+                        aura:id="required-form-1"
+                        required="{! empty(v.Customer.mobilePhone)}"
+                        pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
+                        messageWhenValueMissing="One of Phone/Mobile Phone is required"
+                        messageWhenPatternMismatch="Please match required format ###-###-####"
+                      />
+                    </lightning:layoutItem>
 
-										<!-- Phone # -->
-										<lightning:layoutItem size="12"
-																					smallDeviceSize="12"
-																					mediumDeviceSize="6"
-																					largeDeviceSize="6"
-																					class="slds-p-around_x-small">
-											<lightning:input type="tel"
-																			 label="Phone"
-																			 value="{!v.Customer.phone}"
-																			 aura:id="required-form-1"
-																			 required="{! empty(v.Customer.mobilePhone)}"
-																			 pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
-																			 messageWhenValueMissing="One of Phone/Mobile Phone is required"
-																			 messageWhenPatternMismatch="Please match required format ###-###-####"/>
-										</lightning:layoutItem>
+                    <!-- Mobile Phone # -->
+                    <lightning:layoutItem
+                      size="12"
+                      smallDeviceSize="12"
+                      mediumDeviceSize="6"
+                      largeDeviceSize="6"
+                      class="slds-p-around_x-small"
+                    >
+                      <lightning:input
+                        type="tel"
+                        label="Mobile Phone"
+                        required="{! empty(v.Customer.phone)}"
+                        value="{!v.Customer.mobilePhone}"
+                        aura:id="required-form-1"
+                        pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
+                        messageWhenValueMissing="One of Phone/Mobile Phone is required"
+                        messageWhenPatternMismatch="Please match required format ###-###-####"
+                      />
+                    </lightning:layoutItem>
 
-										<!-- Mobile Phone # -->
-										<lightning:layoutItem size="12"
-																					smallDeviceSize="12"
-																					mediumDeviceSize="6"
-																					largeDeviceSize="6"
-																					class="slds-p-around_x-small">
-											<lightning:input type="tel"
-																			 label="Mobile Phone"
-																			 required="{! empty(v.Customer.phone)}"
-																			 value="{!v.Customer.mobilePhone}"
-																			 aura:id="required-form-1"
-																			 pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
-																			 messageWhenValueMissing="One of Phone/Mobile Phone is required"
-																			 messageWhenPatternMismatch="Please match required format ###-###-####" />
-										</lightning:layoutItem>
+                    <!-- Email -->
+                    <lightning:layoutItem size="12" class="slds-p-around_x-small">
+                      <lightning:input
+                        type="email"
+                        label="Email"
+                        required="true"
+                        value="{!v.Customer.email}"
+                        aura:id="required-form-1"
+                        messageWhenValueMissing="Email is required"
+                      />
+                    </lightning:layoutItem>
+                  </lightning:layout>
+                </lightning:layoutItem>
+                <lightning:layoutItem
+                  size="12"
+                  smallDeviceSize="12"
+                  mediumDeviceSize="12"
+                  largeDeviceSize="6"
+                  class="slds-p-around_x-small"
+                >
+                  <h2 class="slds-text-heading_small slds-m-bottom_small">Address</h2>
+                  <c:lgnd_form_address
+                    street="{!v.Customer.street}"
+                    city="{!v.Customer.city}"
+                    province_code="{!v.Customer.stateCode}"
+                    province="{!v.Customer.state}"
+                    country="{!v.Customer.country}"
+                    country_code="{!v.Customer.countryCode}"
+                    zip="{!v.Customer.postalCode}"
+                    allRequired="true"
+                    aura:id="address-form"
+                  />
+                </lightning:layoutItem>
+              </lightning:layout>
+            </aura:if>
+            <aura:if isTrue="{!and(v.showAccountForm, equals(v.accountScope,'dealer'))}">
+              <article class="slds-card" aura:id="account-card" id="account-card">
+                <div class="slds-card__header slds-grid">
+                  <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                    <div class="slds-media__figure">
+                      <lightning:icon iconName="standard:account" />
+                    </div>
+                    <div class="slds-media__body">
+                      <h2>
+                        <a href="javascript:void(0);" class="slds-card__header-link slds-truncate">
+                          <span class="slds-text-heading_small">Account</span>
+                        </a>
+                      </h2>
+                    </div>
+                  </header>
+                </div>
+                <div class="slds-card__body slds-card__body_inner no-overflow">
+                  <table class="slds-table">
+                    <tr>
+                      <th>Name</th>
+                      <td>{!v.Customer.name}</td>
+                    </tr>
+                    <tr>
+                      <th>Phone</th>
+                      <td>{!v.Customer.phone}</td>
+                    </tr>
+                    <tr>
+                      <th>Address</th>
+                      <td>
+                        {!v.Customer.street}<br /> {!v.Customer.city + ', ' + v.Customer.state}<br />
+                        {!v.Customer.country + ' ' + v.Customer.postalCode}
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+              </article>
+            </aura:if>
+          </div>
 
-										<!-- Email -->
-										<lightning:layoutItem size="12"
-																					class="slds-p-around_x-small">
-											<lightning:input type="email"
-																			 label="Email"
-																			 required="true"
-																			 value="{!v.Customer.email}"
-																			 aura:id="required-form-1"
-																			 messageWhenValueMissing="Email is required" />
-										</lightning:layoutItem>
-									</lightning:layout>
-								</lightning:layoutItem>
-								<lightning:layoutItem size="12"
-																			smallDeviceSize="12"
-																			mediumDeviceSize="12"
-																			largeDeviceSize="6"
-																			class="slds-p-around_x-small">
+          <aura:if isTrue="{! and(v.MotorUpgrades.length gt 0, v.canBeNest)}">
+            <aura:if isTrue="{! v.accountScope != 'dealer'}">
+              <div class="slds-size_1-of-1">
+                <div style="margin: 0 0.75rem 0.75rem 0.75rem">
+                  <article class="slds-card" style="padding: 0.75rem">
+                    <h4>Motor {!v.accountScope}</h4>
+                    <lightning:select name="selectItem" label="Select an item" value="{!v.MotorUpgrade}">
+                      <option value="">choose one...</option>
+                      <aura:iteration items="{!v.MotorUpgrades}" var="upgrade">
+                        <option value="{!upgrade.Id}">{!upgrade.Name}</option>
+                      </aura:iteration>
+                    </lightning:select>
+                    <aura:if isTrue="{! v.MotorUpgrade != '' }">
+                      <lightning:input label="Motor Serial Number" value="{!v.MotorSerial}" />
+                    </aura:if>
+                  </article>
+                </div>
+              </div>
+            </aura:if>
+          </aura:if>
 
-									<h2 class="slds-text-heading_small
-													slds-m-bottom_small">Address</h2>
-									<c:lgnd_form_address street="{!v.Customer.street}"
-																			 city="{!v.Customer.city}"
-																			 province_code="{!v.Customer.stateCode}"
-																			 province="{!v.Customer.state}"
-																			 country="{!v.Customer.country}"
-																			 country_code="{!v.Customer.countryCode}"
-																			 zip="{!v.Customer.postalCode}"
-																			 allRequired="true"
-																			 aura:id="address-form" />
+          <div class="slds-size_1-of-1">
+            <c:lgnd_nested_items
+              nestId="{!v.nestId}"
+              NestedItems="{!v.NestedItems}"
+              sernoSelected="{!v.sernoSelected}"
+              canBeNest="{!v.canBeNest}"
+            />
+          </div>
 
-								</lightning:layoutItem>
-							</lightning:layout>
-						</aura:if>
-						<aura:if isTrue="{!and(v.showAccountForm, equals(v.accountScope,'dealer'))}">
-							<article class="slds-card" aura:id="account-card" id="account-card">
-								<div class="slds-card__header slds-grid">
-									<header class="slds-media slds-media_center slds-has-flexi-truncate">
-										<div class="slds-media__figure">
-											<lightning:icon iconName="standard:account" />
-										</div>
-										<div class="slds-media__body">
-											<h2>
-												<a href="javascript:void(0);" class="slds-card__header-link slds-truncate" >
-													<span class="slds-text-heading_small">Account</span>
-												</a>
-											</h2>
-										</div>
-									</header>
-								</div>
-								<div class="slds-card__body slds-card__body_inner no-overflow">
-									<table class="slds-table">
-										<tr>
-											<th>Name</th>
-											<td>{!v.Customer.name}</td>
-										</tr>
-										<tr>
-											<th>Phone</th>
-											<td>{!v.Customer.phone}</td>
-										</tr>
-										<tr>
-											<th>Address</th>
-											<td>
-												{!v.Customer.street}<br/>
-												{!v.Customer.city + ', ' + v.Customer.state}<br/>
-												{!v.Customer.country + '  ' + v.Customer.postalCode}
-											</td>
-										</tr>
-									</table>
-								</div>
-							</article>
-						</aura:if>
+          <div class="slds-large-size_1-of-2 slds-medium-size_1-of-2 slds-small-size_1-of-1">
+            <div style="margin: 0.75rem">
+              <article class="slds-card" id="deliveryDate" style="padding: 0.75rem">
+                <h4>Delivery Date</h4>
+                <lightning:input
+                  type="date"
+                  label="When is the customer picking up their boat?"
+                  value="{! v.DeliveryDate }"
+                  aura:id="dateField"
+                />
+                <!--								<ui:inputDate aura:id="dateField"-->
+                <!--															label="When is the customer picking up their boat?"-->
+                <!--															value="{! v.DeliveryDate }"-->
+                <!--															displayDatePicker="true"/>-->
+              </article>
+            </div>
+          </div>
 
-					</div>
+          <div class="slds-large-size_1-of-2 slds-medium-size_1-of-2 slds-small-size_1-of-1">
+            <div style="margin: 0.75rem">
+              <article class="slds-card" id="salesPerson" style="padding: 0.75rem">
+                <h4>Memory Maker</h4>
+                <lightning:select label="Who made the sale?" value="{!v.memoryMaker}">
+                  <option value="">- Select -</option>
+                  <aura:iteration items="{!v.salesPeople}" var="sp">
+                    <option value="{!sp.Id}">{! join(' ', sp.FirstName, sp.LastName)}</option>
+                  </aura:iteration>
+                </lightning:select>
+              </article>
+            </div>
+          </div>
 
-					<aura:if isTrue="{! and(v.MotorUpgrades.length gt 0, v.canBeNest)}">
-						<aura:if isTrue="{! v.accountScope != 'dealer'}">
-							<div class="slds-size_1-of-1">
-								<div style="margin: 0 0.75rem 0.75rem 0.75rem">
-									<article class="slds-card" style="padding: 0.75rem">
-										<h4>Motor {!v.accountScope}</h4>
-								    <lightning:select name="selectItem" label="Select an item" value="{!v.MotorUpgrade}">
-							        <option value="">choose one...</option>
-					          	<aura:iteration items="{!v.MotorUpgrades}" var="upgrade">
-						            <option value="{!upgrade.Id}">{!upgrade.Name}</option>
-						          </aura:iteration>
-								    </lightning:select>
-								    <aura:if isTrue="{! v.MotorUpgrade != '' }">
-								    	<lightning:input label="Motor Serial Number" value="{!v.MotorSerial}" />
-								    </aura:if>
-									</article>
-								</div>
-							</div>
-						</aura:if>
-					</aura:if>
+          <div class="slds-size_1-of-1">
+            <div style="margin: 0.75rem">
+              <article class="slds-card" id="paymentMethod" style="padding: 0.75rem">
+                <h4>Payment Method</h4>
+                <lightning:select
+                  name="paymentMethod"
+                  label="Was this a cash or finance deal?"
+                  value="{!v.paymentMethod}"
+                >
+                  <option value="Cash">Cash</option>
+                  <option value="Finance">Finance</option>
+                </lightning:select>
+              </article>
+            </div>
+          </div>
+        </div>
 
-					<div class="slds-size_1-of-1">
-						<c:lgnd_nested_items nestId="{!v.nestId}"
-																 NestedItems="{!v.NestedItems}"
-																 sernoSelected="{!v.sernoSelected}"
-																 canBeNest="{!v.canBeNest}" />
-					</div>
-
-					<div class="slds-large-size_1-of-2 slds-medium-size_1-of-2 slds-small-size_1-of-1">
-						<div style="margin: 0.75rem">
-							<article class="slds-card" id="deliveryDate" style="padding: 0.75rem">
-								<h4>Delivery Date</h4>
-								<lightning:input type="date"
-																 label="When is the customer picking up their boat?"
-																 value="{! v.DeliveryDate }"
-																 aura:id="dateField" />
-<!--								<ui:inputDate aura:id="dateField"-->
-<!--															label="When is the customer picking up their boat?"-->
-<!--															value="{! v.DeliveryDate }"-->
-<!--															displayDatePicker="true"/>-->
-							</article>
-						</div>
-					</div>
-
-					<div class="slds-large-size_1-of-2 slds-medium-size_1-of-2 slds-small-size_1-of-1">
-							<div style="margin: 0.75rem">
-								<article class="slds-card" id="salesPerson" style="padding: 0.75rem">
-									<h4>Memory Maker</h4>
-									<lightning:select label="Who made the sale?" value="{!v.memoryMaker}">
-										<option value="">- Select -</option>
-										<aura:iteration items="{!v.salesPeople}" var="sp">
-											<option value="{!sp.Id}">{! join(' ', sp.FirstName, sp.LastName)}</option>
-										</aura:iteration>
-									</lightning:select>
-								</article>
-							</div>
-						</div>
-
-					<div class="slds-size_1-of-1">
-						<div style="margin: 0.75rem">
-							<article class="slds-card" id="paymentMethod" style="padding: 0.75rem">
-								<h4>Payment Method</h4>
-								<lightning:select name="paymentMethod" label="Was this a cash or finance deal?" value="{!v.paymentMethod}">
-									<option value="Cash">Cash</option>
-									<option value="Finance">Finance</option>
-								</lightning:select>
-							</article>
-						</div>
-					</div>
-				</div>
-
-				<div class="slds-size_1-of-1 slds-p-horizontal_small">
-					<div class="slds-p-around_large slds-float_right">
-			    	<aura:if isTrue="{!v.context == 'limited'}">
-			    		<lightning:button variant="base" label="Cancel" onclick="{!c.cancelRegister}" aura:id="buttonCancelRegister" />
-			    	</aura:if>&nbsp;
-			    	<lightning:button variant="brand" label="{!v.regLabel}" onclick="{!c.clickRegister}" aura:id="buttonClickRegister" />
-			    </div>
-				</div>
-			</div>
-
-		</lightning:card>
-
-	</div>
+        <div class="slds-size_1-of-1 slds-p-horizontal_small">
+          <div class="slds-p-around_large slds-float_right">
+            <aura:if isTrue="{!v.context == 'limited'}">
+              <lightning:button
+                variant="base"
+                label="Cancel"
+                onclick="{!c.cancelRegister}"
+                aura:id="buttonCancelRegister"
+              /> </aura:if
+            >&nbsp;
+            <lightning:button
+              variant="brand"
+              label="{!v.regLabel}"
+              onclick="{!c.clickRegister}"
+              aura:id="buttonClickRegister"
+            />
+          </div>
+        </div>
+      </div>
+    </lightning:card>
+  </div>
 </aura:component>

@@ -1,9 +1,7 @@
 @isTest
 private class ProductDetailExt_Test {
-
-	@isTest
+  @isTest
   static void coverage_Test() {
-		ProductDetailExt.coverage();
-	}
-
+    ProductDetailExt.coverage();
+  }
 }

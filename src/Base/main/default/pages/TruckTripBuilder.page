@@ -1,24 +1,24 @@
-<apex:page showHeader="true"
-            sidebar="false"
-            docType="html-5.0"
-            standardStylesheets="false"
-            standardController="Truck_Trip__c"
-            extensions="TripBuilderController"
-            action="{!init}">
-
+<apex:page
+  showHeader="true"
+  sidebar="false"
+  docType="html-5.0"
+  standardStylesheets="false"
+  standardController="Truck_Trip__c"
+  extensions="TripBuilderController"
+  action="{!init}"
+>
   <c:lgnd_slds_resources />
   <apex:stylesheet value="{!URLFOR($Resource.DragulaJS, 'dragula.min.css')}" />
   <apex:stylesheet value="{!URLFOR($Resource.truckTripResources, 'css/styles.min.css')}" />
   <apex:stylesheet value="{!URLFOR($Resource.truckTripResources, 'css/truck-load-styles.min.css')}" />
 
-  <div class="lgnd" style="min-height: 600px;">
+  <div class="lgnd" style="min-height: 600px">
     <div id="trip-backdrop" class="slds-backdrop"></div>
     <div id="trip-dialog" aria-hidden="true" role="dialog" class="slds-modal"></div>
 
     <div id="trip-header" class="slds-page-header" role="banner"></div>
 
     <div id="trip-content"></div>
-
   </div>
 
   <apex:includeScript value="{!URLFOR($Resource.pickupCalendar, 'js/lib/moment.min.js')}" />
@@ -87,7 +87,5 @@
       });
 
     })(jQuery.noConflict(), document, window)
-
   </script>
-
 </apex:page>

@@ -1,9 +1,7 @@
 @isTest
 private class arMaterial_PACKAGE_Test {
-
-	@isTest
+  @isTest
   static void coverage_Test() {
-		arMaterial_PACKAGE.coverage();
-	}
-
+    arMaterial_PACKAGE.coverage();
+  }
 }

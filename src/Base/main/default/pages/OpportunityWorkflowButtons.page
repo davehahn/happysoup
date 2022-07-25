@@ -1,124 +1,102 @@
-<apex:page standardController="Opportunity"
-           extensions="OpportunityExt"
-           showHeader="true"
-           sidebar="true">
-
-
-  <apex:includeScript value="{!URLFOR($Resource.jQuery)}"  />
-  <link href='https://fonts.googleapis.com/css?family=Lato:300,400' rel='stylesheet' type='text/css' />
+<apex:page standardController="Opportunity" extensions="OpportunityExt" showHeader="true" sidebar="true">
+  <apex:includeScript value="{!URLFOR($Resource.jQuery)}" />
+  <link href="https://fonts.googleapis.com/css?family=Lato:300,400" rel="stylesheet" type="text/css" />
   <!-- <link href='https://fonts.googleapis.com/css?family=Roboto:400,100,300' rel='stylesheet' type='text/css' /> -->
   <apex:stylesheet value="{!URLFOR($Resource.LegendDetailHeader, 'css/opportunity_stage_handler.min.css')}" />
 
   <script type="text/javascript">
     $j = jQuery.noConflict();
 
-    var stageMap = {'Business Office Approval Pending':1,
-                    'Tagging Pending': 2,
-                    'Orientation Specialist Add-On Call': 3,
-                    'Pending Work Order': 4,
-                    'Pending Rigging': 5,
-                    'Pending Inspection': 6,
-                    'Pending Pickup': 7,
-                    'Picked Up / Won': 8};
+    var stageMap = {
+      "Business Office Approval Pending": 1,
+      "Tagging Pending": 2,
+      "Orientation Specialist Add-On Call": 3,
+      "Pending Work Order": 4,
+      "Pending Rigging": 5,
+      "Pending Inspection": 6,
+      "Pending Pickup": 7,
+      "Picked Up / Won": 8
+    };
 
-    $j(function(){
+    $j(function () {
       setupStageChanger();
-      $j('.btnContainer').addClass("loaded");
+      $j(".btnContainer").addClass("loaded");
     });
 
-    function setupStageChanger(){
+    function setupStageChanger() {
       var linkNum,
         stageNumber = stageMap["{!Opportunity.StageName}"],
-        $links = $j('.btnContainer a');
-      if( stageNumber !== undefined){
-        $links.each(function() {
-          linkNum =  parseInt( $j(this).data('stage-number') );
-          if( linkNum === stageNumber ){
-            $j(this).removeClass('disabled')
-            .addClass('complete');
-            if( !$j(this).hasClass('unclickable') ){
-              $j(this).addClass('retractable');
+        $links = $j(".btnContainer a");
+      if (stageNumber !== undefined) {
+        $links.each(function () {
+          linkNum = parseInt($j(this).data("stage-number"));
+          if (linkNum === stageNumber) {
+            $j(this).removeClass("disabled").addClass("complete");
+            if (!$j(this).hasClass("unclickable")) {
+              $j(this).addClass("retractable");
             }
-          }
-          else if (linkNum < stageNumber){
-            $j(this).removeClass('disabled')
-            .addClass('complete')
-            .attr('onclick', '').unbind('click');
-          }
-          else if( linkNum === (stageNumber +1) ){
-            $j(this).removeClass('disabled').addClass('available');
-          }
-          else {
-            $j(this).attr('onclick', '').unbind('click');
+          } else if (linkNum < stageNumber) {
+            $j(this).removeClass("disabled").addClass("complete").attr("onclick", "").unbind("click");
+          } else if (linkNum === stageNumber + 1) {
+            $j(this).removeClass("disabled").addClass("available");
+          } else {
+            $j(this).attr("onclick", "").unbind("click");
           }
         });
       } else {
-        $links.first().removeClass('disabled').addClass('available');
+        $links.first().removeClass("disabled").addClass("available");
       }
-      $links.each(function() {
-        if( $j(this).hasClass('unclickable') ){
-          $j(this).attr('onclick', '').unbind('click');
+      $links.each(function () {
+        if ($j(this).hasClass("unclickable")) {
+          $j(this).attr("onclick", "").unbind("click");
         }
       });
       makeItFit();
     }
 
-    function makeItFit()
-    {
-      var maxWidth = $j('.btnContainer').parent().width(),
+    function makeItFit() {
+      var maxWidth = $j(".btnContainer").parent().width(),
         btnWidthTotal = 0,
         linkWidth,
         link1w = 0,
         link2w = 0;
 
-      $j('.btnContainer a').each(function(inx, ele){
+      $j(".btnContainer a").each(function (inx, ele) {
         var $ele = $j(ele),
-         eleW = $ele.outerWidth();
+          eleW = $ele.outerWidth();
         btnWidthTotal += eleW;
-        if( eleW > link1w )
-        {
-         link1w = eleW;
+        if (eleW > link1w) {
+          link1w = eleW;
+        } else if (eleW > link2w) {
+          link2w = eleW;
         }
-        else if( eleW > link2w )
-        {
-         link2w = eleW;
-        }
-        $ele.data('full-width', eleW );
+        $ele.data("full-width", eleW);
       });
 
       //each button has a 36px wide arrow on each end so add 36*8 to btnWidthTotal
-      btnWidthTotal += (8*36);
+      btnWidthTotal += 8 * 36;
 
-      if( btnWidthTotal > maxWidth)
-      {
-        linkWidth = (parseInt(maxWidth) - ((16*36) + parseInt(link1w) + parseInt(link2w) )) / 7;
+      if (btnWidthTotal > maxWidth) {
+        linkWidth = (parseInt(maxWidth) - (16 * 36 + parseInt(link1w) + parseInt(link2w))) / 7;
 
-        $j('.btnContainer a:not(".available")').each(function(index, ele){
+        $j('.btnContainer a:not(".available")').each(function (index, ele) {
           var $ele = $j(ele);
-          if( $ele.data('full-width') > linkWidth )
-          {
-            $ele.css('width', linkWidth)
-            .on({
-              mouseenter: function()
-              {
+          if ($ele.data("full-width") > linkWidth) {
+            $ele.css("width", linkWidth).on({
+              mouseenter: function () {
                 var $this = $j(this);
-                if( $this.data('full-width') > linkWidth)
-                {
-                  $this.css('width', $this.data('full-width'));
+                if ($this.data("full-width") > linkWidth) {
+                  $this.css("width", $this.data("full-width"));
                 }
               },
-              mouseleave: function()
-              {
-                 $j(this).css('width', linkWidth);
+              mouseleave: function () {
+                $j(this).css("width", linkWidth);
               }
             });
           }
         });
-
       }
-
     }
-
   </script>
   <!-- <style type="text/css">
 
@@ -293,121 +271,147 @@
   </style> -->
 
   <c:LegendFormResources includeFontAwesome="true" />
-  <apex:form >
+  <apex:form>
+    <div class="btnContainer">
+      <apex:commandLink
+        action="{!httpUpdateStage}"
+        value="Sales Manager Approved"
+        target="_parent"
+        styleClass="disabled unclickable"
+        html-data-stage-number="1"
+      >
+        <apex:param assignTo="{!httpStage}" value="Business Office Approval Pending" />
+        <span></span>
+      </apex:commandLink>
+      <apex:commandLink
+        action="{!httpUpdateStage}"
+        value="Business Office Approved"
+        target="_parent"
+        styleClass="disabled unclickable"
+        html-data-stage-number="2"
+      >
+        <apex:param assignTo="{!httpStage}" value="Tagging Pending" />
+        <span></span>
+      </apex:commandLink>
+      <apex:commandLink
+        action="{!httpUpdateStage}"
+        value="Tagged"
+        target="_parent"
+        styleClass="disabled"
+        html-data-stage-number="3"
+      >
+        <apex:param assignTo="{!httpStage}" value="Orientation Specialist Add-On Call" />
+        <span></span>
+      </apex:commandLink>
+      <apex:commandLink
+        action="{!httpUpdateStage}"
+        value="Add On Call Complete"
+        target="_parent"
+        styleClass="disabled"
+        html-data-stage-number="4"
+      >
+        <apex:param assignTo="{!httpStage}" value="Pending Work Order" />
+        <span></span>
+      </apex:commandLink>
+      <apex:commandLink
+        action="{!httpUpdateStage}"
+        value="Work Order Created"
+        target="_parent"
+        styleClass="disabled"
+        html-data-stage-number="5"
+      >
+        <apex:param assignTo="{!httpStage}" value="Pending Rigging" />
+        <span></span>
+      </apex:commandLink>
+      <apex:commandLink
+        action="{!httpUpdateStage}"
+        value="Rigged"
+        target="_parent"
+        styleClass="disabled"
+        html-data-stage-number="6"
+      >
+        <apex:param assignTo="{!httpStage}" value="Pending Inspection" />
+        <span></span>
+      </apex:commandLink>
+      <apex:commandLink
+        action="{!httpUpdateStage}"
+        value="Inspected by Salesperson"
+        target="_parent"
+        styleClass="disabled"
+        html-data-stage-number="7"
+      >
+        <apex:param assignTo="{!httpStage}" value="Pending Pickup" />
+        <span></span>
+      </apex:commandLink>
+      <apex:commandLink
+        action="{!httpUpdateStage}"
+        value="Picked Up/Delivered"
+        target="_parent"
+        styleClass="disabled"
+        html-data-stage-number="8"
+      >
+        <apex:param assignTo="{!httpStage}" value="Picked Up / Won" />
+        <span></span>
+      </apex:commandLink>
+    </div>
 
-  <div class="btnContainer">
-    <apex:commandLink action="{!httpUpdateStage}"
-                      value="Sales Manager Approved"
-                      target="_parent"
-                      styleClass="disabled unclickable"
-                      html-data-stage-number="1">
-      <apex:param assignTo="{!httpStage}" value="Business Office Approval Pending" />
-      <span></span>
-    </apex:commandLink>
-    <apex:commandLink action="{!httpUpdateStage}"
-                      value="Business Office Approved"
-                      target="_parent"
-                      styleClass="disabled unclickable"
-                      html-data-stage-number="2">
-      <apex:param assignTo="{!httpStage}" value="Tagging Pending" />
-      <span></span>
-    </apex:commandLink>
-    <apex:commandLink action="{!httpUpdateStage}"
-                      value="Tagged"
-                      target="_parent"
-                      styleClass="disabled"
-                      html-data-stage-number="3">
-      <apex:param assignTo="{!httpStage}" value="Orientation Specialist Add-On Call" />
-      <span></span>
-    </apex:commandLink>
-    <apex:commandLink action="{!httpUpdateStage}"
-                      value="Add On Call Complete"
-                      target="_parent"
-                      styleClass="disabled"
-                      html-data-stage-number="4">
-      <apex:param assignTo="{!httpStage}" value="Pending Work Order" />
-      <span></span>
-    </apex:commandLink>
-    <apex:commandLink action="{!httpUpdateStage}"
-                      value="Work Order Created"
-                      target="_parent"
-                      styleClass="disabled"
-                      html-data-stage-number="5">
-      <apex:param assignTo="{!httpStage}" value="Pending Rigging" />
-      <span></span>
-    </apex:commandLink>
-    <apex:commandLink action="{!httpUpdateStage}"
-                      value="Rigged"
-                      target="_parent"
-                      styleClass="disabled"
-                      html-data-stage-number="6">
-      <apex:param assignTo="{!httpStage}" value="Pending Inspection" />
-      <span></span>
-    </apex:commandLink>
-    <apex:commandLink action="{!httpUpdateStage}"
-                      value="Inspected by Salesperson"
-                      target="_parent"
-                      styleClass="disabled"
-                      html-data-stage-number="7">
-      <apex:param assignTo="{!httpStage}" value="Pending Pickup" />
-      <span></span>
-    </apex:commandLink>
-    <apex:commandLink action="{!httpUpdateStage}"
-                      value="Picked Up/Delivered"
-                      target="_parent"
-                      styleClass="disabled"
-                      html-data-stage-number="8">
-      <apex:param assignTo="{!httpStage}" value="Picked Up / Won" />
-      <span></span>
-    </apex:commandLink>
-  </div>
-
-  <div style="width:100%; height:75px;text-align:center; margin-top:20px;">
-    <a href="/apex/BoatConfigurator?opportunity_id={!current_opportunity.Id}"
-       class="fd_button smaller invert radius"
-       target="_parent">
-       {!BoatBuilderButtonText}
-    </a>
-    <apex:outputPanel layout="none" rendered="{!hasLineItems}">
-      <a href="/apex/RetailBoatSale_Finalize?id={!current_opportunity.Id}"
-         class="fd_button smaller invert radius"
-         target="_parent">
-         Finalize Sale
+    <div style="width: 100%; height: 75px; text-align: center; margin-top: 20px">
+      <a
+        href="/apex/BoatConfigurator?opportunity_id={!current_opportunity.Id}"
+        class="fd_button smaller invert radius"
+        target="_parent"
+      >
+        {!BoatBuilderButtonText}
       </a>
-    </apex:outputPanel>
-    <apex:outputPanel layout="none" rendered="{!IsBOM_or_ADMIN}">
-      <a href="/apex/Opportunity_FinanceForm?id={!current_opportunity.Id}"
-         class="fd_button smaller invert radius"
-         target="_parent">
-         Business Office Items
-      </a>
-    </apex:outputPanel>
-    <apex:outputPanel layout="none" rendered="{!hasLineItems}">
-      <div style="display:inline-block; margin-left:25px;">
-        <a href="/apex/OpportunityDocumentBuilder?id={!current_opportunity.Id}&docType=quote"
-           class="fd_button smaller aqua invert radius"
-           target="_parent">
-           Create Quote
+      <apex:outputPanel layout="none" rendered="{!hasLineItems}">
+        <a
+          href="/apex/RetailBoatSale_Finalize?id={!current_opportunity.Id}"
+          class="fd_button smaller invert radius"
+          target="_parent"
+        >
+          Finalize Sale
         </a>
-        <apex:outputPanel layout="none" rendered="{!CanCreateInvoice}">
-          <a href="/apex/OpportunityDocumentBuilder?id={!current_opportunity.Id}&docType=invoice"
-             class="fd_button smaller aqua invert radius"
-             target="_parent">
-             Create Invoice
+      </apex:outputPanel>
+      <apex:outputPanel layout="none" rendered="{!IsBOM_or_ADMIN}">
+        <a
+          href="/apex/Opportunity_FinanceForm?id={!current_opportunity.Id}"
+          class="fd_button smaller invert radius"
+          target="_parent"
+        >
+          Business Office Items
+        </a>
+      </apex:outputPanel>
+      <apex:outputPanel layout="none" rendered="{!hasLineItems}">
+        <div style="display: inline-block; margin-left: 25px">
+          <a
+            href="/apex/OpportunityDocumentBuilder?id={!current_opportunity.Id}&docType=quote"
+            class="fd_button smaller aqua invert radius"
+            target="_parent"
+          >
+            Create Quote
           </a>
-        </apex:outputPanel>
-      </div>
-    </apex:outputPanel>
-    <apex:outputPanel layout="none" rendered="{!hasCommission}">
-      <div style="display:inline-block; margin-left:25px;">
-      <a href="/apex/CommissionCalculator?opportunity_id={!current_opportunity.Id}&retURL=/{!current_opportunity.Id}"
-           class="fd_button smaller gold invert radius"
-           target="_parent">
-           Commission
-        </a>
-      </div>
-    </apex:outputPanel>
-  </div>
-
+          <apex:outputPanel layout="none" rendered="{!CanCreateInvoice}">
+            <a
+              href="/apex/OpportunityDocumentBuilder?id={!current_opportunity.Id}&docType=invoice"
+              class="fd_button smaller aqua invert radius"
+              target="_parent"
+            >
+              Create Invoice
+            </a>
+          </apex:outputPanel>
+        </div>
+      </apex:outputPanel>
+      <apex:outputPanel layout="none" rendered="{!hasCommission}">
+        <div style="display: inline-block; margin-left: 25px">
+          <a
+            href="/apex/CommissionCalculator?opportunity_id={!current_opportunity.Id}&retURL=/{!current_opportunity.Id}"
+            class="fd_button smaller gold invert radius"
+            target="_parent"
+          >
+            Commission
+          </a>
+        </div>
+      </apex:outputPanel>
+    </div>
   </apex:form>
 </apex:page>

@@ -4,73 +4,72 @@
   <apex:stylesheet value="{!URLFOR($Resource.multiselect_styles)}" />
 
   <style type="text/css">
-
     #searchActive {
       position: absolute;
       background: rgba(156, 211, 248, 0.23);
-      display:none;
+      display: none;
     }
 
     #searchActive img {
-      opacity:0.7;
+      opacity: 0.7;
     }
 
     #searchActive > div {
-      opacity:0.8;
+      opacity: 0.8;
       z-index: 10000;
-      position:absolute;
-      width:128px;
-      height:128px;
-      background:transparent;
-      top:50%;
-      left:50%;
-      margin-left:-64px;
-      margin-top:-64px;
+      position: absolute;
+      width: 128px;
+      height: 128px;
+      background: transparent;
+      top: 50%;
+      left: 50%;
+      margin-left: -64px;
+      margin-top: -64px;
     }
 
     #searchActive > div > div {
-      position:absolute;
-      left:0px;
-      top:0px;
-      width:128px;
-      height:128px;
+      position: absolute;
+      left: 0px;
+      top: 0px;
+      width: 128px;
+      height: 128px;
     }
 
     #productSeachField {
-      width:35%;
-      margin-left:2%;
+      width: 35%;
+      margin-left: 2%;
       padding: 1%;
       font-family: dialog;
     }
 
     #productSeachField label {
       font-size: 14px;
-      width:15%;
+      width: 15%;
       line-height: 26px;
-      background-image: linear-gradient(to top, #1797C0, #64D3FF);
+      background-image: linear-gradient(to top, #1797c0, #64d3ff);
       display: inline-block;
       text-align: center;
       position: relative;
       left: 3px;
       padding: 0px 7px;
-      border-left: 1px solid #1797C0;
-      border-top: 1px solid #1797C0;
-      border-bottom: 1px solid #1797C0;
-      color: #F9FDFF;
+      border-left: 1px solid #1797c0;
+      border-top: 1px solid #1797c0;
+      border-bottom: 1px solid #1797c0;
+      color: #f9fdff;
       border-radius: 3px 0px 0px 3px;
     }
 
     #productSeachField input {
-      width:75%;
+      width: 75%;
       line-height: 26px;
       font-size: 12px;
       padding: 0px 5px;
       margin: 0px;
       border: none;
       display: inline-block;
-      border-right: 1px solid #1797C0;
-      border-top: 1px solid #1797C0;
-      border-bottom: 1px solid #1797C0;
+      border-right: 1px solid #1797c0;
+      border-top: 1px solid #1797c0;
+      border-bottom: 1px solid #1797c0;
       border-radius: 0px 3px 3px 0px;
     }
 
@@ -84,38 +83,38 @@
       line-height: 5rem;
       padding: 0;
       margin: 0;
-      background: #FFF;
+      background: #fff;
       text-align: center;
       margin-bottom: 10px;
-      position:relative;
-      z-index:10;
+      position: relative;
+      z-index: 10;
     }
 
     .headerNav .title {
       color: #363636;
       font-size: 2.5rem;
-      font-family: 'Lato', serif;
-      font-weight:300;
+      font-family: "Lato", serif;
+      font-weight: 300;
     }
 
-    .headerNav input[type=submit] {
-      float:right;
-      margin-right:20px;
-      margin-top:1rem;
+    .headerNav input[type="submit"] {
+      float: right;
+      margin-right: 20px;
+      margin-top: 1rem;
     }
 
     .tabs {
       margin-left: 0;
-      width:15%;
-      margin-top:20px;
-      top:0;
+      width: 15%;
+      margin-top: 20px;
+      top: 0;
     }
 
     .tabs dd {
-      margin-right:1px;
+      margin-right: 1px;
     }
     .tabs dd.active {
-      margin-right:0;
+      margin-right: 0;
     }
 
     .tabs dd a:hover {
@@ -123,78 +122,75 @@
     }
 
     .tabs > dd:last-child > a {
-      border-right:none;
-      border-bottom: 1px solid #CCC;
+      border-right: none;
+      border-bottom: 1px solid #ccc;
     }
 
     .tabs-content {
-      width:85%;
-      border-left:1px solid #CCC;
-      padding-top:0;
-      border-top:none;
+      width: 85%;
+      border-left: 1px solid #ccc;
+      padding-top: 0;
+      border-top: none;
     }
-
   </style>
 
- <!--  <apex:includeScript value="{!URLFOR($Resource.jQuery)}"  /> -->
+  <!--  <apex:includeScript value="{!URLFOR($Resource.jQuery)}"  /> -->
 
   <script type="text/javascript">
     $j = jQuery.noConflict();
 
-    $j(function(){
+    $j(function () {
       initSearch();
       positionSearchIndicator();
       $j("[id*=productOptionForm]").on({
-        keydown: function(e) {
-          if(e.keyCode === 13){
-            console.log('ENTER');
+        keydown: function (e) {
+          if (e.keyCode === 13) {
+            console.log("ENTER");
             e.preventDefault();
           }
         }
       });
       $j(window).on({
-        "resize":  positionSearchIndicator,
-        "scroll": function(e){
+        resize: positionSearchIndicator,
+        scroll: function (e) {
           var $this = $j(this),
-          $content = $j('.tabs-content');
-          $content.css('padding-top', $this.scrollTop() );
+            $content = $j(".tabs-content");
+          $content.css("padding-top", $this.scrollTop());
         }
-      }
-      );
+      });
       $j(document).foundation();
-      initTabs()
+      initTabs();
     });
 
-    function initTabs()
-    {
-      var $tabs = $j('.tabs'),
-          $tabsContent = $j('.tabs-content'),
-          tHeight = $tabs.height(),
-          tcHeight = $tabsContent.height(),
-          height = tHeight > tcHeight ? tHeight : tcHeight;
+    function initTabs() {
+      var $tabs = $j(".tabs"),
+        $tabsContent = $j(".tabs-content"),
+        tHeight = $tabs.height(),
+        tcHeight = $tabsContent.height(),
+        height = tHeight > tcHeight ? tHeight : tcHeight;
 
-      $tabs.css('height', height + 25);
-      $tabsContent.css('height', height + 25);
+      $tabs.css("height", height + 25);
+      $tabsContent.css("height", height + 25);
     }
 
-    function cloneBoatSelectChanged(select){
+    function cloneBoatSelectChanged(select) {
       var value = $j(select).val(),
-        $button = $j('.cloneButtonContainer');
-      if(value != null && value != ''){
+        $button = $j(".cloneButtonContainer");
+      if (value != null && value != "") {
         $button.show();
       } else {
         $button.hide();
       }
     }
 
-    function initSearch(){
-      $j('#productSearch').on({
-        keyup: function(e) {
-          if(e.keyCode === 27 || (e.keyCode >= 37 && e.keyCode <= 40)){
+    function initSearch() {
+      $j("#productSearch").on({
+        keyup: function (e) {
+          if (e.keyCode === 27 || (e.keyCode >= 37 && e.keyCode <= 40)) {
             return;
           }
-          if(this.value.length > 3 || this.value.length === 0){
-             $j('#searchActive').show();
+          if (this.value.length > 3 || this.value.length === 0) {
+            $j("#searchActive").show();
             fetchSearch(this.value);
           }
         }
@@ -202,35 +198,35 @@
     }
 
     function searchComplete() {
-      $j('#searchActive').hide();
+      $j("#searchActive").hide();
     }
 
     function positionSearchIndicator() {
-      var $select = $j('#productSeachField').closest('td').find('td.selectCell select[data-list-position="left"]').first();
-      $j('#searchActive').css({
+      var $select = $j("#productSeachField")
+        .closest("td")
+        .find('td.selectCell select[data-list-position="left"]')
+        .first();
+      $j("#searchActive").css({
         top: $select.position().top,
         left: $select.position().left,
         width: $select.width(),
         height: $select.height()
       });
     }
-
   </script>
 
   <apex:form id="productOptionForm">
-
-
-
-    <apex:actionFunction name="fetchSearch"
-                         action="{!fetchSearchResults}"
-                         rerender="search"
-                         oncomplete="searchComplete()" >
-      <apex:param name="search_string" value=""  />
+    <apex:actionFunction
+      name="fetchSearch"
+      action="{!fetchSearchResults}"
+      rerender="search"
+      oncomplete="searchComplete()"
+    >
+      <apex:param name="search_string" value="" />
     </apex:actionFunction>
 
     <div class="">
-
-      <dl class="tabs vertical" data-tab='true'>
+      <dl class="tabs vertical" data-tab="true">
         <dd class="active">
           <a href="#searchTab">Part Search</a>
         </dd>
@@ -239,61 +235,51 @@
             <a href="#{!familyNames[family]}">{!family}</a>
           </dd>
         </apex:repeat>
-
       </dl>
 
       <div class="tabs-content vertical">
         <div class="headerNav">
           <span class="title"> Edit Options For {!product.Name}</span>
-            <apex:commandButton action="/{!product.Id}" value="Cancel" styleClass="fd_button small invert" />
-            <apex:commandButton action="{!save}" value="Save" styleClass="fd_button small invert success"/>
+          <apex:commandButton action="/{!product.Id}" value="Cancel" styleClass="fd_button small invert" />
+          <apex:commandButton action="{!save}" value="Save" styleClass="fd_button small invert success" />
         </div>
         <div class="content active" id="searchTab">
-
           <div id="productSeachField">
             <label>Search: </label>
-            <input id="productSearch"
-                   class="searchBox"
-                   name="search"
-                   placeholder=".. by Name or Product Code" />
+            <input id="productSearch" class="searchBox" name="search" placeholder=".. by Name or Product Code" />
           </div>
 
           <div id="searchActive">
             <div>
               <apex:image value="{! $Resource.bbSpinner2}" />
               <div>
-                <apex:image value="{!$Resource.smallLegendL}"/>
-               </div>
+                <apex:image value="{!$Resource.smallLegendL}" />
+              </div>
             </div>
           </div>
           <apex:outputPanel id="search">
-            <c:MultiselectPicklist leftLabel="Search Results"
+            <c:MultiselectPicklist
+              leftLabel="Search Results"
               leftOptions="{!allSearchResults}"
               rightLabel="Selected"
               rightOptions="{!selectedSearchResults}"
-              size="20"/>
+              size="20"
+            />
           </apex:outputPanel>
-
         </div>
 
         <apex:repeat value="{!optionsMap}" var="family">
           <div class="content" id="{!familyNames[family] }">
-
-            <c:MultiselectPicklist leftLabel="Available {!family}"
+            <c:MultiselectPicklist
+              leftLabel="Available {!family}"
               leftOptions="{!optionsMap[family].available}"
               rightLabel="Selected {!family}"
               rightOptions="{!optionsMap[family].selected}"
-              size="20"/>
-
+              size="20"
+            />
           </div>
         </apex:repeat>
-
       </div>
-
     </div>
-
-
-
   </apex:form>
-
 </apex:page>

@@ -1,51 +1,41 @@
 ({
-	doInit : function(component, event, helper) {
-    component.set('v.scriptsLoaded', true);
-    helper.loadSchedulable( component );
-	},
-
-  refresh: function( component, event, helper )
-  {
-    helper.loadSchedulable( component );
+  doInit: function (component, event, helper) {
+    component.set("v.scriptsLoaded", true);
+    helper.loadSchedulable(component);
   },
 
-  onRender: function( component , event, helper )
-  {
-    var scriptsLoaded = component.get('v.scriptsLoaded'),
-        allowRetail = component.get('v.allowRetail'),
-        allowService = component.get('v.allowService');
+  refresh: function (component, event, helper) {
+    helper.loadSchedulable(component);
+  },
 
-    if( scriptsLoaded )
-    {
+  onRender: function (component, event, helper) {
+    var scriptsLoaded = component.get("v.scriptsLoaded"),
+      allowRetail = component.get("v.allowRetail"),
+      allowService = component.get("v.allowService");
+
+    if (scriptsLoaded) {
       var items = $(".schedulable");
-      if( items.length > 0  )
-      {
+      if (items.length > 0) {
         items.draggable({
-          revert:true,
+          revert: true,
           revertDuration: 0,
-          appendTo: '.cal-container',
-          helper: 'clone',
+          appendTo: ".cal-container",
+          helper: "clone",
           opacity: 0.75,
           addClasses: false,
           zIndex: 10000
         });
       }
-
     }
-
   },
 
-  searchChanged: function( component, event, helper )
-  {
-    var searchValue = component.get('v.searchValue');
-    if( searchValue == null || searchValue.length === 0 )
-      helper.applyCalenderFilter( component );
-    else
-      helper.applySearch( component, searchValue );
+  searchChanged: function (component, event, helper) {
+    var searchValue = component.get("v.searchValue");
+    if (searchValue == null || searchValue.length === 0) helper.applyCalenderFilter(component);
+    else helper.applySearch(component, searchValue);
   },
 
-  clearSearch: function( component )
-  {
-    component.set('v.searchValue', '');
+  clearSearch: function (component) {
+    component.set("v.searchValue", "");
   }
-})
+});

@@ -2,11 +2,8 @@
  * Created by dave on 2020-02-05.
  */
 
-public with sharing class CommissionLineItem2_Selector extends Application_Selector
-{
-
-  public CommissionLineItem2_Selector()
-  {
+public with sharing class CommissionLineItem2_Selector extends Application_Selector {
+  public CommissionLineItem2_Selector() {
     this.sObjectName = 'CommissionLineItem2__c';
     this.fields = new List<String>{
       'Id',
@@ -33,36 +30,29 @@ public with sharing class CommissionLineItem2_Selector extends Application_Selec
     };
   }
 
-  public static List<CommissionLineItem2__c> allById( Set<Id> ids )
-  {
+  public static List<CommissionLineItem2__c> allById(Set<Id> ids) {
     CommissionLineItem2_Selector selector = new CommissionLineItem2_Selector();
     selector
-      .addWhere( whereInClauseBuilder(
-        'Id',
-        (Set<String>)JSON.deserialize( JSON.serialize(ids), Set<String>.class)
-      ))
-      .addOrderBy( 'Description__c DESC, Product__r.AcctSeedERP__Serialized__c DESC, Product__r.RecordType.Name' );
-    return (List<CommissionLineItem2__c>)selector.query();
+      .addWhere(whereInClauseBuilder('Id', (Set<String>) JSON.deserialize(JSON.serialize(ids), Set<String>.class)))
+      .addOrderBy('Description__c DESC, Product__r.AcctSeedERP__Serialized__c DESC, Product__r.RecordType.Name');
+    return (List<CommissionLineItem2__c>) selector.query();
   }
 
-  public static List<CommissionLineItem2__c> allByCommissionRecordId( String comRecId )
-  {
+  public static List<CommissionLineItem2__c> allByCommissionRecordId(String comRecId) {
     CommissionLineItem2_Selector selector = new CommissionLineItem2_Selector();
     selector
-      .addWhere( 'CommissionRecord2__c = \'' + comRecId + '\'' )
-      .addOrderBy( 'Description__c DESC, Product__r.AcctSeedERP__Serialized__c DESC, Product__r.RecordType.Name' );
-    return (List<CommissionLineItem2__c>)selector.query();
+      .addWhere('CommissionRecord2__c = \'' + comRecId + '\'')
+      .addOrderBy('Description__c DESC, Product__r.AcctSeedERP__Serialized__c DESC, Product__r.RecordType.Name');
+    return (List<CommissionLineItem2__c>) selector.query();
   }
 
-  public static List<CommissionLineItem2__c> allByMaterialIds( Set<Id> matIds )
-  {
+  public static List<CommissionLineItem2__c> allByMaterialIds(Set<Id> matIds) {
     CommissionLineItem2_Selector selector = new CommissionLineItem2_Selector();
     selector
-      .addWhere( whereInClauseBuilder(
-        'Material__c',
-        (Set<String>)JSON.deserialize( JSON.serialize(matIds), Set<String>.class)
-      ))
-      .addOrderBy( 'Description__c DESC, Product__r.AcctSeedERP__Serialized__c DESC, Product__r.RecordType.Name' );
-    return (List<CommissionLineItem2__c>)selector.query();
+      .addWhere(
+        whereInClauseBuilder('Material__c', (Set<String>) JSON.deserialize(JSON.serialize(matIds), Set<String>.class))
+      )
+      .addOrderBy('Description__c DESC, Product__r.AcctSeedERP__Serialized__c DESC, Product__r.RecordType.Name');
+    return (List<CommissionLineItem2__c>) selector.query();
   }
 }

@@ -2,9 +2,7 @@
  * Created by dave on 2020-06-09.
  */
 
-public virtual class Customer
-{
-
+public virtual class Customer {
   public String id { get; set; }
   public String type { get; set; }
   public String street { get; set; }
@@ -21,12 +19,10 @@ public virtual class Customer
   private Lead theLead;
   private Boolean createOpportunityOnLeadConvert = false;
 
-  public Customer()
-  {
+  public Customer() {
   }
 
-  public Customer(Account acct)
-  {
+  public Customer(Account acct) {
     this.id = acct.Id;
     this.street = acct.BillingStreet;
     this.city = acct.BillingCity;
@@ -37,75 +33,60 @@ public virtual class Customer
     this.postalCode = acct.BillingPostalCode;
   }
 
-  public void fillCountryAndState()
-  {
-    if( this.state != null && this.stateCode == null )
-    {
+  public void fillCountryAndState() {
+    if (this.state != null && this.stateCode == null) {
       fixState('code');
     }
-    if( this.stateCode != null && this.state == null )
-    {
+    if (this.stateCode != null && this.state == null) {
       fixState('state');
     }
-    if( this.country != null && this.countryCode == null )
-    {
+    if (this.country != null && this.countryCode == null) {
       fixCountry('code');
     }
-    if( this.countryCode != null && this.country == null )
-    {
+    if (this.countryCode != null && this.country == null) {
       fixCountry('country');
     }
   }
 
-  public Customer setCreateOpportunityOnLeadConvert( boolean shouldConvert )
-  {
+  public Customer setCreateOpportunityOnLeadConvert(boolean shouldConvert) {
     this.createOpportunityOnLeadConvert = shouldConvert;
     return this;
   }
 
-  private void fixState( String missingAttr )
-  {
+  private void fixState(String missingAttr) {
     Schema.DescribeFieldResult fieldResult = User.statecode.getDescribe();
     List<Schema.PicklistEntry> ple = fieldResult.getPicklistValues();
-    for( Schema.PicklistEntry f : ple) {
-      if( missingAttr == 'code' && f.getLabel() == this.state )
-      {
+    for (Schema.PicklistEntry f : ple) {
+      if (missingAttr == 'code' && f.getLabel() == this.state) {
         this.stateCode = f.getValue();
       }
-      if( missingAttr == 'state' && f.getValue() == this.stateCode )
-      {
+      if (missingAttr == 'state' && f.getValue() == this.stateCode) {
         this.state = f.getLabel();
       }
     }
   }
 
-  private void fixCountry( String missingAttr )
-  {
+  private void fixCountry(String missingAttr) {
     Schema.DescribeFieldResult fieldResult = User.Countrycode.getDescribe();
     List<Schema.PicklistEntry> ple = fieldResult.getPicklistValues();
-    for( Schema.PicklistEntry f : ple) {
-      if( missingAttr == 'code' && f.getLabel() == this.country )
-      {
+    for (Schema.PicklistEntry f : ple) {
+      if (missingAttr == 'code' && f.getLabel() == this.country) {
         this.countryCode = f.getValue();
       }
-      if( missingAttr == 'country' && f.getValue() == this.countryCode )
-      {
+      if (missingAttr == 'country' && f.getValue() == this.countryCode) {
         this.country = f.getLabel();
       }
     }
   }
 
-  private String formatPhoneNumber( String pn )
-  {
-    if( pn == null )
+  private String formatPhoneNumber(String pn) {
+    if (pn == null)
       return null;
-    pn = pn.replaceAll('[^0-9]','');
-    return pn.substring(0,3) + '-' + pn.substring(3,6) + '-' + pn.substring(6);
+    pn = pn.replaceAll('[^0-9]', '');
+    return pn.substring(0, 3) + '-' + pn.substring(3, 6) + '-' + pn.substring(6);
   }
 
-
-  public virtual class Person extends Customer
-  {
+  public virtual class Person extends Customer {
     public String firstName { get; set; }
     public String lastName { get; set; }
     public String email { get; set; }
@@ -125,14 +106,12 @@ public virtual class Customer
     public String teams { get; set; }
     public String wowNotes { get; set; }
 
-    public Person()
-    {
+    public Person() {
       super();
       this.type = 'person';
     }
 
-    public Person(Account acct)
-    {
+    public Person(Account acct) {
       super(acct);
       this.type = 'person';
       this.firstName = acct.FirstName;
@@ -155,8 +134,7 @@ public virtual class Customer
       this.leadCampaignInfluences = new List<Map<String, String>>();
     }
 
-    public Person( Lead l )
-    {
+    public Person(Lead l) {
       this.type = 'person';
       this.id = l.Id;
       this.firstName = l.FirstName;
@@ -176,23 +154,17 @@ public virtual class Customer
       this.numberOfChildren = 0;
       this.isTaxExempt = false;
       this.leadCampaignInfluences = new List<Map<String, String>>();
-      try
-      {
-        for( CampaignMember cm : l.CampaignMembers )
-        {
+      try {
+        for (CampaignMember cm : l.CampaignMembers) {
           this.leadCampaignInfluences.add(
-            new Map<String, String>{
-              'label' => cm.Campaign.Name,
-              'value' => cm.CampaignId
-            }
+            new Map<String, String>{ 'label' => cm.Campaign.Name, 'value' => cm.CampaignId }
           );
         }
+      } catch (Exception e) {
       }
-      catch( Exception e ){}
     }
 
-    public Account revertToAccount()
-    {
+    public Account revertToAccount() {
       fillCountryAndState();
       this.theAccount = new Account(
         Id = this.id == null || this.id.length() == 0 ? null : this.id,
@@ -224,8 +196,7 @@ public virtual class Customer
       return this.theAccount;
     }
 
-    public Lead revertToLead()
-    {
+    public Lead revertToLead() {
       fillCountryAndState();
       this.theLead = new Lead(
         FirstName = this.firstName,
@@ -243,135 +214,99 @@ public virtual class Customer
         Street = this.street,
         PostalCode = this.postalCode
       );
-      if( this.id != null )
+      if (this.id != null)
         this.theLead.Id = this.id;
       return this.theLead;
     }
 
-    public AccountSaveResult upsertRecord()
-    {
-      if( this.id != null &&
-          this.id.length() > 0 &&
-          LGND_Utilities.sObjectNameFromId( this.id ) == 'Lead' )
-      {
+    public AccountSaveResult upsertRecord() {
+      if (this.id != null && this.id.length() > 0 && LGND_Utilities.sObjectNameFromId(this.id) == 'Lead') {
         revertToLead();
         update this.theLead;
         return convertLead();
-      }
-      else
-      {
+      } else {
         return doAccountSave();
       }
     }
-    
-      //This method is added by Pooja as a part of Ecwid Integration 
-      public AccountSaveResult convertLead(String operation){
-          return convertLead();
-      }
-      
-    private AccountSaveResult convertLead()
-    {
 
+    //This method is added by Pooja as a part of Ecwid Integration
+    public AccountSaveResult convertLead(String operation) {
+      return convertLead();
+    }
+
+    private AccountSaveResult convertLead() {
       Database.LeadConvert lc = new Database.LeadConvert();
-      lc.setLeadId( this.theLead.Id );
-      LeadStatus convertStatus = [ SELECT Id, ApiName FROM LeadStatus WHERE IsConverted = true LIMIT 1];
-      lc.setConvertedStatus( convertStatus.ApiName );
-      lc.setDoNotCreateOpportunity( !this.createOpportunityOnLeadConvert );
-      lc.setOwnerId( UserInfo.getUserId() );
-      if( this.id != null && this.id != this.theLead.Id )
-      {
-        lc.setAccountId( this.id );
+      lc.setLeadId(this.theLead.Id);
+      LeadStatus convertStatus = [SELECT Id, ApiName FROM LeadStatus WHERE IsConverted = TRUE LIMIT 1];
+      lc.setConvertedStatus(convertStatus.ApiName);
+      lc.setDoNotCreateOpportunity(!this.createOpportunityOnLeadConvert);
+      lc.setOwnerId(UserInfo.getUserId());
+      if (this.id != null && this.id != this.theLead.Id) {
+        lc.setAccountId(this.id);
       }
-      try
-      {
-        Database.LeadConvertResult leadConvertResult =
-          Database.convertLead( lc );
-        if( leadConvertResult.isSuccess() )
-        {
+      try {
+        Database.LeadConvertResult leadConvertResult = Database.convertLead(lc);
+        if (leadConvertResult.isSuccess()) {
           this.id = leadConvertResult.getAccountId();
           AccountSaveResult result = new AccountSaveResult();
           result.status = 'success';
           result.record = revertToAccount();
-          if( this.createOpportunityOnLeadConvert )
+          if (this.createOpportunityOnLeadConvert)
             result.opportunityId = leadConvertResult.getOpportunityId();
           return result;
+        } else {
+          return handleErrors(leadConvertResult.getErrors());
         }
-        else
-        {
-          return handleErrors( leadConvertResult.getErrors() );
-        }
-      }
-      catch( Exception e )
-      {
-        if( e.getMessage().contains('DUPLICATES_DETECTED') )
-        {
+      } catch (Exception e) {
+        if (e.getMessage().contains('DUPLICATES_DETECTED')) {
           this.id = null;
           AccountSaveResult result = doAccountSave();
           return result;
         }
         AccountSaveResult result = new AccountSaveResult();
         result.status = 'error';
-        result.addMessage( e.getMessage() );
+        result.addMessage(e.getMessage());
         return result;
       }
-
     }
 
-    private AccountSaveResult doAccountSave()
-    {
+    private AccountSaveResult doAccountSave() {
       System.debug('doAccountSave');
-      Database.UpsertResult saveResult =
-        Database.upsert(
-          this.revertToAccount(),
-          Account.Fields.Id,
-          false
-        );
+      Database.UpsertResult saveResult = Database.upsert(this.revertToAccount(), Account.Fields.Id, false);
 
-      if (saveResult.isSuccess())
-      {
+      if (saveResult.isSuccess()) {
         return handleSaveSuccess();
-      }
-      else
-      {
+      } else {
         return handleErrors(saveResult.getErrors());
       }
     }
 
-    private AccountSaveResult forceAccountUpdate()
-    {
+    private AccountSaveResult forceAccountUpdate() {
       System.debug('forceAccountUpdate');
       Database.DMLOptions dml = new Database.DMLOptions();
       dml.DuplicateRuleHeader.allowSave = true;
       dml.DuplicateRuleHeader.runAsCurrentUser = true;
-      Database.SaveResult saveResult = Database.update( revertToAccount(), dml );
-      if( saveResult.isSuccess() )
-      {
+      Database.SaveResult saveResult = Database.update(revertToAccount(), dml);
+      if (saveResult.isSuccess()) {
         return handleSaveSuccess();
-      }
-      else
-      {
-        return handleErrors( saveResult.getErrors() );
+      } else {
+        return handleErrors(saveResult.getErrors());
       }
     }
 
-    private AccountSaveResult forceAccountSave()
-    {
+    private AccountSaveResult forceAccountSave() {
       Database.DMLOptions dml = new Database.DMLOptions();
       dml.DuplicateRuleHeader.allowSave = true;
       dml.DuplicateRuleHeader.runAsCurrentUser = true;
-      Database.SaveResult saveResult = Database.insert( revertToAccount(), dml );
-      if( saveResult.isSuccess() )
-      {
+      Database.SaveResult saveResult = Database.insert(revertToAccount(), dml);
+      if (saveResult.isSuccess()) {
         return handleSaveSuccess();
-      }
-      else
-      {
-        return handleErrors( saveResult.getErrors() );
+      } else {
+        return handleErrors(saveResult.getErrors());
       }
     }
 
-    private AccountSaveResult handleSaveSuccess()
-    {
+    private AccountSaveResult handleSaveSuccess() {
       System.debug('handleSaveSuccess');
       AccountSaveResult result = new AccountSaveResult();
       result.record = this.theAccount;
@@ -379,17 +314,14 @@ public virtual class Customer
       return result;
     }
 
-    private AccountSaveResult handleErrors( List<Database.Error> errors )
-    {
+    private AccountSaveResult handleErrors(List<Database.Error> errors) {
       System.debug('handleErrors');
       AccountSaveResult result = new AccountSaveResult();
       result.status = 'error';
-      for( Database.Error error : errors )
-      {
-        System.debug( error.getMessage() );
-        result.addMessage( error.getMessage() );
-        if( error instanceof Database.DuplicateError )
-        {
+      for (Database.Error error : errors) {
+        System.debug(error.getMessage());
+        result.addMessage(error.getMessage());
+        if (error instanceof Database.DuplicateError) {
           System.debug('Instance of Duplicate Error');
           /* The Error */
           Database.DuplicateError duplicateError = (Database.DuplicateError) error;
@@ -399,94 +331,87 @@ public virtual class Customer
           Datacloud.MatchResult[] matchResults = duplicateResult.getMatchResults();
           Datacloud.MatchResult matchResult = matchResults[0];
           Datacloud.MatchRecord[] matchRecords = matchResult.getMatchRecords();
-          for (Datacloud.MatchRecord matchRecord : matchRecords)
-          {
-            result.addDuplicate( matchRecord.getRecord() );
+          for (Datacloud.MatchRecord matchRecord : matchRecords) {
+            result.addDuplicate(matchRecord.getRecord());
           }
         }
       }
-      if( result.duplicateRecords != null )
-      {
+      if (result.duplicateRecords != null) {
         System.debug('we have duplicate records');
-        if( result.duplicateRecords.size() == 1 )
-        {
-          System.debug( 'Single Duplicate Error' );
-          System.debug( result.duplicateRecords[0] );
-          if( result.duplicateRecords[0].get('PersonEmail') == this.email )
-          {
+        if (result.duplicateRecords.size() == 1) {
+          System.debug('Single Duplicate Error');
+          System.debug(result.duplicateRecords[0]);
+          if (result.duplicateRecords[0].get('PersonEmail') == this.email) {
             System.debug('EMAIL IS THE DUP');
-            String err = this.email + ' is already in use by a Customer by the name of ' + result.duplicateRecords[0].get('Name');
-            AuraHandledException ex = new AuraHandledException( err );
-            ex.setMessage( err );
+            String err =
+              this.email +
+              ' is already in use by a Customer by the name of ' +
+              result.duplicateRecords[0].get('Name');
+            AuraHandledException ex = new AuraHandledException(err);
+            ex.setMessage(err);
             throw ex;
-          }
-          else
-          {
+          } else {
             this.id = (Id) result.duplicateRecords[0].get('Id');
           }
         }
 
-
-        if( result.duplicateRecords.size() > 1 )
-        {
-          for( SObject dup : result.duplicateRecords)
-          {
-            if( dup.get('PersonEmail') == this.email )
-            {
+        if (result.duplicateRecords.size() > 1) {
+          for (SObject dup : result.duplicateRecords) {
+            if (dup.get('PersonEmail') == this.email) {
               System.debug('EMAIL IS THE DUP');
-              throw new AuraHandledException( this.email + ' is already in use by a Customer by the name of ' + dup.get('Name') );
+              throw new AuraHandledException(
+                this.email +
+                ' is already in use by a Customer by the name of ' +
+                dup.get('Name')
+              );
             }
-            if( dup.get('Name') == this.firstName + ' ' + this.lastName )
-            {
-              this.id = (Id)dup.get('Id');
+            if (dup.get('Name') == this.firstName + ' ' + this.lastName) {
+              this.id = (Id) dup.get('Id');
               break;
             }
           }
         }
-        return this.id == null ?
-          forceAccountSave() :
-          this.theLead != null ? convertLead() : forceAccountUpdate();
+        return this.id == null ? forceAccountSave() : this.theLead != null ? convertLead() : forceAccountUpdate();
       }
       return result;
     }
-
   }
 
   public virtual class Dealer extends Customer {
     public String name { get; set; }
 
-    public Dealer( Account acct )
-    {
-      super( acct );
+    public Dealer(Account acct) {
+      super(acct);
       this.name = acct.Name;
       this.type = 'dealer';
     }
   }
 
-  public virtual class AccountSaveResult
-  {
-    @AuraEnabled public Account record;
-    @AuraEnabled public String opportunityId;
-    @AuraEnabled public String status;
-    @AuraEnabled public String[] messages;
-    @AuraEnabled public List<SObject> duplicateRecords;
+  public virtual class AccountSaveResult {
+    @AuraEnabled
+    public Account record;
+    @AuraEnabled
+    public String opportunityId;
+    @AuraEnabled
+    public String status;
+    @AuraEnabled
+    public String[] messages;
+    @AuraEnabled
+    public List<SObject> duplicateRecords;
 
-    public AccountSaveResult(){}
+    public AccountSaveResult() {
+    }
 
-    public void addDuplicate( SObject dup )
-    {
-      if( this.duplicateRecords == null )
+    public void addDuplicate(SObject dup) {
+      if (this.duplicateRecords == null)
         this.duplicateRecords = new List<SObject>();
-      this.duplicateRecords.add( dup );
+      this.duplicateRecords.add(dup);
     }
 
-    public void addMessage( String msg )
-    {
-      if( this.messages == null )
+    public void addMessage(String msg) {
+      if (this.messages == null)
         this.messages = new List<String>();
-      this.messages.add( msg );
+      this.messages.add(msg);
     }
-
   }
-
 }

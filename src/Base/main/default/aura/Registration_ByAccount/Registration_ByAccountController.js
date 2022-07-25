@@ -3,16 +3,14 @@
  */
 
 ({
-  doInit: function( component, event, helper )
-  {
-    helper.doInit( component );
+  doInit: function (component, event, helper) {
+    helper.doInit(component);
   },
 
-  handleYearSelect: function( component, event, helper )
-  {
-     var year = component.get('v.selectedYear'),
-         options = component.get('v.regData');
+  handleYearSelect: function (component, event, helper) {
+    var year = component.get("v.selectedYear"),
+      options = component.get("v.regData");
 
-     component.set('v.mapMarkers', options[year] );
+    component.set("v.mapMarkers", options[year]);
   }
 });

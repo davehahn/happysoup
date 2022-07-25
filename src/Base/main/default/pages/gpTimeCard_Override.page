@@ -1,21 +1,22 @@
 <apex:page cache="false" docType="html-5.0" showChat="false" showHeader="true" sidebar="true">
-
-<head>
-</head>
-<style type="text/css">
-    a.redirectLink{
-        font-weight: bold;
-        font-size: 14px;
-        margin: 5px;
+  <head> </head>
+  <style type="text/css">
+    a.redirectLink {
+      font-weight: bold;
+      font-size: 14px;
+      margin: 5px;
     }
-</style>
-<body>
-<div style="text-align: center; font-size: 16px;"><h1>Time cards are managed from Employee detail page and Time Card Period Detail page.</h1>
-<br />
-<br />
-<a class="redirectLink" href="/{!$ObjectType.Employee__c.KeyPrefix}">Click here to go to Employees list</a>
-<br />
-<a class="redirectLink" href="/{!$ObjectType.AcctSeed__Time_Card_Period__c.KeyPrefix}">Click here to go to Time Card Periods list</a>
-</div>
-</body> 
+  </style>
+  <body>
+    <div style="text-align: center; font-size: 16px">
+      <h1>Time cards are managed from Employee detail page and Time Card Period Detail page.</h1>
+      <br />
+      <br />
+      <a class="redirectLink" href="/{!$ObjectType.Employee__c.KeyPrefix}">Click here to go to Employees list</a>
+      <br />
+      <a class="redirectLink" href="/{!$ObjectType.AcctSeed__Time_Card_Period__c.KeyPrefix}"
+        >Click here to go to Time Card Periods list</a
+      >
+    </div>
+  </body>
 </apex:page>

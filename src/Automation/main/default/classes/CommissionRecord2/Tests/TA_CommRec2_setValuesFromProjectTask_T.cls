@@ -21,8 +21,8 @@ private class TA_CommRec2_setValuesFromProjectTask_T {
     Id retailPB = settings.Default_Retail_Pricebook__c;
     System.assertEquals(retailPB, newList[0].Retail_Pricebook__c, 'Retail PB should be set');
     System.assertEquals(helper.project.Id, newList[0].Project__c, 'Project Id should be set');
-    System.assertEquals( helper.tasks[0].Commission_Calculation_Method__c, newList[0].Calculation_Method__c );
-    System.assertEquals( helper.tasks[0].AcctSeed__GL_Account_Variable_2__c, newList[0].Department_GLV2__c );
+    System.assertEquals(helper.tasks[0].Commission_Calculation_Method__c, newList[0].Calculation_Method__c);
+    System.assertEquals(helper.tasks[0].AcctSeed__GL_Account_Variable_2__c, newList[0].Department_GLV2__c);
   }
 
   @IsTest
@@ -42,7 +42,7 @@ private class TA_CommRec2_setValuesFromProjectTask_T {
     Id retailPB = settings.Default_Retail_Pricebook__c;
     System.assertEquals(retailPB, result.Retail_Pricebook__c, 'Retail PB should be set');
     System.assertEquals(helper.project.Id, result.Project__c, 'Project Id should be set');
-    System.assertEquals( helper.tasks[0].Commission_Calculation_Method__c, result.Calculation_Method__c );
-    System.assertEquals( helper.tasks[0].AcctSeed__GL_Account_Variable_2__c, result.Department_GLV2__c );
+    System.assertEquals(helper.tasks[0].Commission_Calculation_Method__c, result.Calculation_Method__c);
+    System.assertEquals(helper.tasks[0].AcctSeed__GL_Account_Variable_2__c, result.Department_GLV2__c);
   }
 }

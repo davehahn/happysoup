@@ -1,6 +1,5 @@
 ({
-	resetNewItem: function( component )
-  {
-    component.set('v.newItem', {});
-	}
-})
+  resetNewItem: function (component) {
+    component.set("v.newItem", {});
+  }
+});

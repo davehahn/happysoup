@@ -1,8 +1,7 @@
 @isTest
 public class CommissionRecordFeedTransfer_Test {
-
-  @isTest static void coverage_test()
-  {
+  @isTest
+  static void coverage_test() {
     CommissionRecordFeedTransfer.coverage();
   }
 

@@ -1,7 +1,7 @@
 /**
  * Created by dave on 2019-10-08.
  */
-Public Virtual Class Promise Implements Queueable, Database.AllowsCallouts {
+public virtual class Promise implements Queueable, Database.AllowsCallouts {
   //   ___           _                     __     __
   //  |_ _|_ __  ___| |_ __ _ _ __   ___ ___ \   / /_ _ _ __ ___
   //   | || '_ \/ __| __/ _` | '_ \ / __/ _ \ \ / / _` | '__/ __|
@@ -14,7 +14,7 @@ Public Virtual Class Promise Implements Queueable, Database.AllowsCallouts {
    * instances. Because lists are ordered, we can ensure the order of execution
    * of the various steps in this promise chain.
    */
-  Protected List<Promise.Deferred> promiseStack = new List<Promise.Deferred>();
+  protected List<Promise.Deferred> promiseStack = new List<Promise.Deferred>();
 
   /**
    * promiseData stores the results of the immediately previous execution step
@@ -25,8 +25,7 @@ Public Virtual Class Promise Implements Queueable, Database.AllowsCallouts {
    *  N.B. The original call to .execute(Object o) sets the value of this
    *    this variable to o.
    */
-  Protected Object promiseData;
-
+  protected Object promiseData;
 
   /**
    * These two variables hold references to this promise chain's
@@ -34,8 +33,8 @@ Public Virtual Class Promise Implements Queueable, Database.AllowsCallouts {
    *    the event of an error, or when the chain completes all
    *    the promiseStacks instances' .resolve() methods
    */
-  Protected Promise.Error errorHandler;
-  Protected Promise.Done doneHandler;
+  protected Promise.Error errorHandler;
+  protected Promise.Done doneHandler;
 
   //    ____                _                   _
   //   / ___|___  _ __  ___| |_ _ __ _   _  ___| |_ ___  _ __ ___
@@ -49,7 +48,7 @@ Public Virtual Class Promise Implements Queueable, Database.AllowsCallouts {
    * @param Promise.Deferred deferred - Instance of class that implements Promise.Deferred
    * returns Promise instance
    */
-  Public Promise(Promise.Deferred deferred) {
+  public Promise(Promise.Deferred deferred) {
     then(deferred);
   }
 
@@ -65,7 +64,7 @@ Public Virtual Class Promise Implements Queueable, Database.AllowsCallouts {
    * @param   Promise.Deferred deferred class to execute asynchronusly (But in order)
    * @return  this (for chaining)
    */
-  Public Promise then(Promise.Deferred deferred) {
+  public Promise then(Promise.Deferred deferred) {
     promiseStack.add(deferred);
     return this;
   }
@@ -77,7 +76,7 @@ Public Virtual Class Promise Implements Queueable, Database.AllowsCallouts {
    * @param  errorHandler The handler to use
    * @return              this (for chaining)
    */
-  Public Promise error(Promise.Error errorHandler) {
+  public Promise error(Promise.Error errorHandler) {
     this.errorHandler = errorHandler;
     return this;
   }
@@ -89,11 +88,10 @@ Public Virtual Class Promise Implements Queueable, Database.AllowsCallouts {
    * @param  doneHandler The handler to use
    * @return             this (for chaining)
    */
-  Public Promise done(Promise.Done doneHandler) {
+  public Promise done(Promise.Done doneHandler) {
     this.doneHandler = doneHandler;
     return this;
   }
-
 
   //   ____                      _          _____                     _   _
   //  |  _ \ _ __ ___  _ __ ___ (_)___  ___| ____|_  _____  ___ _   _| |_(_) ___  _ __
@@ -107,7 +105,7 @@ Public Virtual Class Promise Implements Queueable, Database.AllowsCallouts {
    * @param input Object to pass to the first Promise.deferred
    *    implementing class in the promiseStack
    */
-  Public Void execute(Object input) {
+  public Void execute(Object input) {
     promiseData = input;
     System.enqueueJob(this);
   }
@@ -117,7 +115,7 @@ Public Virtual Class Promise Implements Queueable, Database.AllowsCallouts {
    *    but crucially does not pass any initial data
    *    to the first promise.deferred object.
    */
-  Public Void execute() {
+  public Void execute() {
     System.enqueueJob(this);
   }
 
@@ -128,7 +126,7 @@ Public Virtual Class Promise Implements Queueable, Database.AllowsCallouts {
    * @return Void will either return nothing (void) or enqueue the next
    *    Next item in the promiseStack
    */
-  Public Void execute(QueueableContext context) {
+  public Void execute(QueueableContext context) {
     try {
       Promise.Deferred currentPromise = promiseStack.remove(0);
       promiseData = currentPromise.resolve(promiseData);
@@ -159,7 +157,7 @@ Public Virtual Class Promise Implements Queueable, Database.AllowsCallouts {
    *    implementing class to the next.
    *
    */
-  Public Interface Deferred {
+  public interface Deferred {
     Object resolve(Object input);
   }
 
@@ -169,7 +167,7 @@ Public Virtual Class Promise Implements Queueable, Database.AllowsCallouts {
    *    return an object so that the Done handler can be
    *    executed after an error occurs.
    */
-  Public Interface Error {
+  public interface Error {
     Object error(Exception e);
   }
 
@@ -179,8 +177,7 @@ Public Virtual Class Promise Implements Queueable, Database.AllowsCallouts {
    * regardless of error status if it's included in the promise
    * chain.
    */
-  Public Interface Done {
+  public interface Done {
     Void done(Object input);
   }
-
 }

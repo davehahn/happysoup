@@ -1,54 +1,74 @@
-<aura:component access="global" implements="force:appHostable,flexipage:availableForAllPageTypes,force:hasRecordId" controller="ListAccountBillings_ar">
+<aura:component
+  access="global"
+  implements="force:appHostable,flexipage:availableForAllPageTypes,force:hasRecordId"
+  controller="ListAccountBillings_ar"
+>
+  <aura:attribute name="recordId" type="Id" />
+  <aura:attribute name="idPeriod" type="Id" />
+  <aura:attribute name="transactionData" type="Object" />
+  <aura:attribute name="listData" type="sObject[]" />
+  <aura:attribute name="listTitle" type="String" />
+  <aura:attribute name="message" type="String" />
+  <aura:attribute name="messageType" type="String" default="success" />
+  <aura:attribute name="cssCustomStyle" type="String" />
+  <aura:attribute name="options" type="String[]" />
+  <aura:attribute name="columns" type="List" />
+  <aura:attribute name="hasSelections" type="Boolean" default="false" />
+  <aura:attribute name="receiptType" type="String" />
+  <aura:attribute name="dmlSuccess" type="Boolean" default="false" />
+  <aura:attribute name="btnDisabled" type="Boolean" default="false" />
 
-    <aura:attribute name="recordId" type="Id" />
-    <aura:attribute name="idPeriod" type="Id" />
-    <aura:attribute name="transactionData" type="Object" />   
-    <aura:attribute name="listData" type="sObject[]" />   
-    <aura:attribute name="listTitle" type="String" />
-    <aura:attribute name="message" type="String" />
-    <aura:attribute name="messageType" type="String" default="success" />
-    <aura:attribute name="cssCustomStyle" type="String" />
-    <aura:attribute name="options" type="String[]" /> 
-    <aura:attribute name="columns" type="List" />
-    <aura:attribute name="hasSelections" type="Boolean" default="false" />
-    <aura:attribute name="receiptType" type="String" />
-    <aura:attribute name="dmlSuccess" type="Boolean" default="false" />
-    <aura:attribute name="btnDisabled" type="Boolean" default="false" />
+  <aura:attribute name="reloadAfterSuccess" type="Boolean" default="true" />
+  <aura:attribute name="loadAsModal" type="Boolean" default="true" />
 
-    <aura:attribute name="reloadAfterSuccess" type="Boolean" default="true" />
-    <aura:attribute name="loadAsModal" type="Boolean" default="true" />
-
-	<aura:registerEvent name="RemoveComponent" type="c:AccountBilling_ar"/>
-    <style>{!v.cssCustomStyle}</style>
-    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
-        <div role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
-            <div class="slds-modal__container">
-              <div class="slds-modal__header">
-                <h2 id="header99" class="slds-text-heading--medium">{!v.listTitle}</h2>
-              </div>
-              <div class="slds-modal__content slds-p-around--medium">
-                <lightning:datatable aura:id="billDataTable"
-                         data="{! v.listData }"
-                         columns="{! v.columns }"
-                         keyField="Id"
-                         onrowselection="{!c.rowSelected}"/>
-              </div>
-              <div class="slds-modal__footer">
-	              <div class="select-auto-width">
-	               <lightning:select name="billSelector" label="" aura:id="receiptTypes" class="slds-select" disabled="{! not(v.hasSelections)}">
-	                  <option value="" text="Select Receipt Type"></option>
-	                  <aura:iteration items="{!v.options}" var="option">
-	                    <option value="{!option}" text="{!option}"></option>
-	                  </aura:iteration>
-	               </lightning:select>
-	              </div>&nbsp;
-	              <lightning:button name="Receive" class="slds-button slds-button--brand" label="Receive" onclick="{!c.receiveBillings}" disabled="{! not(v.hasSelections)}" />
-	              <button class="slds-button slds-button--neutral" onclick="{!c.removeComponent}">Close</button>
-              </div>
-          </div>
+  <aura:registerEvent name="RemoveComponent" type="c:AccountBilling_ar" />
+  <style>
+    {!v.cssCustomStyle}
+  </style>
+  <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+  <div role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+    <div class="slds-modal__container">
+      <div class="slds-modal__header">
+        <h2 id="header99" class="slds-text-heading--medium">{!v.listTitle}</h2>
       </div>
-      <div class="slds-backdrop slds-backdrop--open"></div>
-    <lightning:spinner aura:id="spinner" />
-    
-    <br /><br />
+      <div class="slds-modal__content slds-p-around--medium">
+        <lightning:datatable
+          aura:id="billDataTable"
+          data="{! v.listData }"
+          columns="{! v.columns }"
+          keyField="Id"
+          onrowselection="{!c.rowSelected}"
+        />
+      </div>
+      <div class="slds-modal__footer">
+        <div class="select-auto-width">
+          <lightning:select
+            name="billSelector"
+            label=""
+            aura:id="receiptTypes"
+            class="slds-select"
+            disabled="{! not(v.hasSelections)}"
+          >
+            <option value="" text="Select Receipt Type"></option>
+            <aura:iteration items="{!v.options}" var="option">
+              <option value="{!option}" text="{!option}"></option>
+            </aura:iteration>
+          </lightning:select>
+        </div>
+        &nbsp;
+        <lightning:button
+          name="Receive"
+          class="slds-button slds-button--brand"
+          label="Receive"
+          onclick="{!c.receiveBillings}"
+          disabled="{! not(v.hasSelections)}"
+        />
+        <button class="slds-button slds-button--neutral" onclick="{!c.removeComponent}">Close</button>
+      </div>
+    </div>
+  </div>
+  <div class="slds-backdrop slds-backdrop--open"></div>
+  <lightning:spinner aura:id="spinner" />
+
+  <br /><br />
 </aura:component>

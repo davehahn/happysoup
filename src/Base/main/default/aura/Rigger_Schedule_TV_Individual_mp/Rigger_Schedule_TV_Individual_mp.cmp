@@ -1,84 +1,80 @@
 <aura:component controller="Rigger_Schedule_mp">
-	<aura:attribute type="Employee__c" name="rigger" />
-	<aura:attribute type="Rigger_Job__c[]" name="jobs"/>
+  <aura:attribute type="Employee__c" name="rigger" />
+  <aura:attribute type="Rigger_Job__c[]" name="jobs" />
 
-	<aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+  <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
 
-	<div class="slds-p-around_small slds-size_1-of-8 rigger">
-		<div class="slds-card" >
-			<h1 class="slds-text-heading_medium">
-				{!v.rigger.Name}
-			</h1>
-			<aura:iteration items="{!v.jobs}" var="j">
-				<div aura:id="job"
-						 class="{!j.job.class}">
-					<aura:if isTrue="{!j.job.ERP_Order__c != null}">
-						<div class="hasERP">
-							<div class="RecordType">
-								{!j.job.ERP_Order__r.RecordType.Name}
-							</div>
-<!--							<p class="age">-->
-<!--								<aura:if isTrue="{!j.timeEstimate != null}">-->
-<!--									<span>{!j.timeEstimate}</span> hours<br/>-->
-<!--									<br/>-->
-<!--								</aura:if>-->
-<!--							</p>-->
-							<div class="progress slds-border_bottom slds-m-bottom_small">
-								<div class="slds-grid slds-grid_vertical-align-end">
-									<div class="slds-col slds-text-align_center slds-border_right slds-size_1-of-2">
-										<div style="font-size:1.1rem">
-											<lightning:formattedNumber value="{!j.timeSpent}" maximumFractionDigits="2" />
-											<span class="slds-text-body_small slds-m-left_xx-small">hrs</span>
-										</div>
-										<div class="slds-text-body_small" style="margin-top: -8px;">Actual</div>
-									</div>
-									<div class="slds-col slds-text-align_center">
-										<div style="font-size:1.1rem">
-											<lightning:formattedNumber value="{!j.timeEstimate}" maximumFractionDigits="2" />
-											<span class="slds-text-body_small slds-m-left_xx-small">hrs</span>
-										</div>
-										<div class="slds-text-body_small" style="margin-top: -8px;">Estimated</div>
-									</div>
-								</div>
-								<div class="slds-progress-bar slds-progress-bar_large">
-												<span class="{! join( ' ', 'slds-progress-bar__value', j.progressClass)}"
-															style="{! join('', 'width:', j.progress, '%;')}"></span>
-								</div>
-							</div>
-							<aura:if isTrue="{!j.job.ERP_Order__r.Parking_Spot__c != null}">
-								<p><strong>Parking Spot</strong>: {!j.job.ERP_Order__r.Parking_Spot__c}</p>
-							</aura:if>
-							<aura:if isTrue="{!j.job.ERP_Order__c != null}">
-								<p><strong>ERP #</strong>: {!j.job.ERP_Order__r.AcctSeedERP__Work_Order_Number__c}</p>
-							</aura:if>
-							<p>
-								<strong>{!j.job.ERP_Order__r.AcctSeed__Account__r.Name}</strong>
-							</p>
-							<p>
-								<strong>Boat</strong>:
-								{!j.job.ERP_Order__r.Serial_Product__c}
-								<aura:if isTrue="{!j.job.ERP_Order__r.Serial_Product__c == null}">
-									{!j.job.ERP_Order__r.Model_Name__c}
-									<aura:if isTrue="{!j.job.ERP_Order__r.Model_Name__c == null}">
-										{!j.job.Manufactured_Product_Name__c}
-									</aura:if>
-								</aura:if>
-							</p>
-							<aura:if isTrue="{!j.job.ERP_Order__r.Serial_Number__c != null}">
-								<p>{!j.job.ERP_Order__r.Serial_Number__r.Name}</p>
-							</aura:if>
-							<aura:iteration items="{!j.materials}" var="m">
-								<aura:if isTrue="{!m.Product_Record_Type__c == 'Motor'}">
-									<p><strong>{!m.Product_Record_Type__c}</strong>: {!m.Product_Name__c}</p>
-								</aura:if>
-								<aura:if isTrue="{!m.Product_Record_Type__c == 'Trailer'}">
-									<p><strong>{!m.Product_Record_Type__c}</strong>: {!m.Product_Name__c}</p>
-								</aura:if>
-								<aura:if isTrue="{!m.AcctSeedERP__Product__r.Family == 'Canvas'}">
-									<p><strong>{!m.AcctSeedERP__Product__r.Family}</strong>: {!m.Product_Name__c}</p>
-								</aura:if>
-							</aura:iteration>
-<!-- 							<aura:if isTrue="{!j.materialsText != null}">
+  <div class="slds-p-around_small slds-size_1-of-8 rigger">
+    <div class="slds-card">
+      <h1 class="slds-text-heading_medium">{!v.rigger.Name}</h1>
+      <aura:iteration items="{!v.jobs}" var="j">
+        <div aura:id="job" class="{!j.job.class}">
+          <aura:if isTrue="{!j.job.ERP_Order__c != null}">
+            <div class="hasERP">
+              <div class="RecordType">{!j.job.ERP_Order__r.RecordType.Name}</div>
+              <!--							<p class="age">-->
+              <!--								<aura:if isTrue="{!j.timeEstimate != null}">-->
+              <!--									<span>{!j.timeEstimate}</span> hours<br/>-->
+              <!--									<br/>-->
+              <!--								</aura:if>-->
+              <!--							</p>-->
+              <div class="progress slds-border_bottom slds-m-bottom_small">
+                <div class="slds-grid slds-grid_vertical-align-end">
+                  <div class="slds-col slds-text-align_center slds-border_right slds-size_1-of-2">
+                    <div style="font-size: 1.1rem">
+                      <lightning:formattedNumber value="{!j.timeSpent}" maximumFractionDigits="2" />
+                      <span class="slds-text-body_small slds-m-left_xx-small">hrs</span>
+                    </div>
+                    <div class="slds-text-body_small" style="margin-top: -8px">Actual</div>
+                  </div>
+                  <div class="slds-col slds-text-align_center">
+                    <div style="font-size: 1.1rem">
+                      <lightning:formattedNumber value="{!j.timeEstimate}" maximumFractionDigits="2" />
+                      <span class="slds-text-body_small slds-m-left_xx-small">hrs</span>
+                    </div>
+                    <div class="slds-text-body_small" style="margin-top: -8px">Estimated</div>
+                  </div>
+                </div>
+                <div class="slds-progress-bar slds-progress-bar_large">
+                  <span
+                    class="{! join( ' ', 'slds-progress-bar__value', j.progressClass)}"
+                    style="{! join('', 'width:', j.progress, '%;')}"
+                  ></span>
+                </div>
+              </div>
+              <aura:if isTrue="{!j.job.ERP_Order__r.Parking_Spot__c != null}">
+                <p><strong>Parking Spot</strong>: {!j.job.ERP_Order__r.Parking_Spot__c}</p>
+              </aura:if>
+              <aura:if isTrue="{!j.job.ERP_Order__c != null}">
+                <p><strong>ERP #</strong>: {!j.job.ERP_Order__r.AcctSeedERP__Work_Order_Number__c}</p>
+              </aura:if>
+              <p>
+                <strong>{!j.job.ERP_Order__r.AcctSeed__Account__r.Name}</strong>
+              </p>
+              <p>
+                <strong>Boat</strong>: {!j.job.ERP_Order__r.Serial_Product__c}
+                <aura:if isTrue="{!j.job.ERP_Order__r.Serial_Product__c == null}">
+                  {!j.job.ERP_Order__r.Model_Name__c}
+                  <aura:if isTrue="{!j.job.ERP_Order__r.Model_Name__c == null}">
+                    {!j.job.Manufactured_Product_Name__c}
+                  </aura:if>
+                </aura:if>
+              </p>
+              <aura:if isTrue="{!j.job.ERP_Order__r.Serial_Number__c != null}">
+                <p>{!j.job.ERP_Order__r.Serial_Number__r.Name}</p>
+              </aura:if>
+              <aura:iteration items="{!j.materials}" var="m">
+                <aura:if isTrue="{!m.Product_Record_Type__c == 'Motor'}">
+                  <p><strong>{!m.Product_Record_Type__c}</strong>: {!m.Product_Name__c}</p>
+                </aura:if>
+                <aura:if isTrue="{!m.Product_Record_Type__c == 'Trailer'}">
+                  <p><strong>{!m.Product_Record_Type__c}</strong>: {!m.Product_Name__c}</p>
+                </aura:if>
+                <aura:if isTrue="{!m.AcctSeedERP__Product__r.Family == 'Canvas'}">
+                  <p><strong>{!m.AcctSeedERP__Product__r.Family}</strong>: {!m.Product_Name__c}</p>
+                </aura:if>
+              </aura:iteration>
+              <!-- 							<aura:if isTrue="{!j.materialsText != null}">
 								<p>{!j.materialsText}</p>
 							</aura:if>
 							<aura:iteration items="{!j.tasks}" var="task" indexVar="i">
@@ -86,24 +82,24 @@
 									<p>{!task.Complaint_dh__c}</p>
 								</aura:if>
 							</aura:iteration>-->
-							<aura:if isTrue="{!j.job.ERP_Order__r.Rigging_Status__c != null}">
-								<p><strong>Rigging Status</strong>: {!j.job.ERP_Order__r.Rigging_Status__c}</p>
-							</aura:if>
-							<div class="clearfix"></div>
-						</div>
-					</aura:if>
-					<aura:if isTrue="{!j.job.ERP_Order__c == null}">
-						<div class="hasNoERP">
-							<aura:if isTrue="{!j.job.ERP_Order__r.Parking_Spot__c != null}">
-								<p>Parking Spot: {!j.job.ERP_Order__r.Parking_Spot__c}</p>
-							</aura:if>
-							<p>{!j.job.Model__r.Name}</p>
-							<p>{!j.job.Notes__c}</p>
-							<div class="clearfix"></div>
-						</div>
-					</aura:if>
-				</div>
-			</aura:iteration>
-		</div>
-	</div>
+              <aura:if isTrue="{!j.job.ERP_Order__r.Rigging_Status__c != null}">
+                <p><strong>Rigging Status</strong>: {!j.job.ERP_Order__r.Rigging_Status__c}</p>
+              </aura:if>
+              <div class="clearfix"></div>
+            </div>
+          </aura:if>
+          <aura:if isTrue="{!j.job.ERP_Order__c == null}">
+            <div class="hasNoERP">
+              <aura:if isTrue="{!j.job.ERP_Order__r.Parking_Spot__c != null}">
+                <p>Parking Spot: {!j.job.ERP_Order__r.Parking_Spot__c}</p>
+              </aura:if>
+              <p>{!j.job.Model__r.Name}</p>
+              <p>{!j.job.Notes__c}</p>
+              <div class="clearfix"></div>
+            </div>
+          </aura:if>
+        </div>
+      </aura:iteration>
+    </div>
+  </div>
 </aura:component>

@@ -4,7 +4,6 @@
 
 <!-- Commission Payment Card -->
 <template>
-
   <c-legend-spinner></c-legend-spinner>
 
   <!--DISPUTE MODAL -->
@@ -17,18 +16,26 @@
         <div class="slds-modal__content slds-p-around_medium">
           <div class="slds-form-element">
             <div class="slds-form-element__control">
-              <textarea  placeholder="Reason for Dispute" class="slds-textarea" onkeyup={handleDisputeReasonChange}></textarea>
+              <textarea
+                placeholder="Reason for Dispute"
+                class="slds-textarea"
+                onkeyup={handleDisputeReasonChange}
+              ></textarea>
             </div>
           </div>
         </div>
         <footer class="slds-modal__footer">
-          <lightning-button label="Cancel"
-                            onclick={handleCancelDispute}
-                            class="slds-m-right_x-small"></lightning-button>
-          <lightning-button label="Dispute"
-                            variant="brand"
-                            onclick={handleSaveDispute}
-                            disabled={disputeFormInvalid}></lightning-button>
+          <lightning-button
+            label="Cancel"
+            onclick={handleCancelDispute}
+            class="slds-m-right_x-small"
+          ></lightning-button>
+          <lightning-button
+            label="Dispute"
+            variant="brand"
+            onclick={handleSaveDispute}
+            disabled={disputeFormInvalid}
+          ></lightning-button>
         </footer>
       </div>
     </section>
@@ -42,8 +49,18 @@
       </div>
       <div if:true={renderStatusMenu} class="status-menu">
         <lightning-button-menu icon-size="small" icon-name="utility:justify_text" variant="bare">
-          <lightning-menu-item value="Accepted" label="Accept" onclick={handleStatusChange} prefix-icon-name="utility:check"></lightning-menu-item>
-          <lightning-menu-item value="Disputed" label="Disputed" onclick={handleStatusChange} prefix-icon-name="utility:priority"></lightning-menu-item>
+          <lightning-menu-item
+            value="Accepted"
+            label="Accept"
+            onclick={handleStatusChange}
+            prefix-icon-name="utility:check"
+          ></lightning-menu-item>
+          <lightning-menu-item
+            value="Disputed"
+            label="Disputed"
+            onclick={handleStatusChange}
+            prefix-icon-name="utility:priority"
+          ></lightning-menu-item>
         </lightning-button-menu>
       </div>
       <lightning-layout>
@@ -59,15 +76,17 @@
       </lightning-layout>
 
       <p class="amount">
-        <lightning-formatted-number value={payment.amount}
-                                    format-style="currency"
-                                    currency-code="CAD"></lightning-formatted-number>
+        <lightning-formatted-number
+          value={payment.amount}
+          format-style="currency"
+          currency-code="CAD"
+        ></lightning-formatted-number>
       </p>
       <template if:true={renderSplit}>
-      <p>
-        <b>Split: </b>
-        {payment.split}%
-      </p>
+        <p>
+          <b>Split: </b>
+          {payment.split}%
+        </p>
       </template>
     </lightning-card>
   </template>
@@ -75,29 +94,33 @@
   <template if:true={isEditing}>
     <lightning-card>
       <div class="remove-payment">
-        <lightning-button-icon icon-name="utility:close"
-                               variant="bare"
-                               value={payment.id}
-                               onclick={handleRemovePayment}></lightning-button-icon>
+        <lightning-button-icon
+          icon-name="utility:close"
+          variant="bare"
+          value={payment.id}
+          onclick={handleRemovePayment}
+        ></lightning-button-icon>
       </div>
       <lightning-layout>
         <lightning-layout-item size="2">
           <lightning-avatar src={payment.avatarURL}></lightning-avatar>
         </lightning-layout-item>
         <lightning-layout-item size="10">
-          <c-live-lookup-input value={payment.owner}
-                               label="Owner"
-                               placeholder="Search for User"
-                               result-icon="standard:user"
-                               s-object-type="User"
-                               return-fields={userSelectFields}
-                               filter-on-fields={userFilterFields}
-                               where-clause="IsActive = true"
-                               value-field="Name"
-                               onselect={handleOwnerSelect}></c-live-lookup-input>
+          <c-live-lookup-input
+            value={payment.owner}
+            label="Owner"
+            placeholder="Search for User"
+            result-icon="standard:user"
+            s-object-type="User"
+            return-fields={userSelectFields}
+            filter-on-fields={userFilterFields}
+            where-clause="IsActive = true"
+            value-field="Name"
+            onselect={handleOwnerSelect}
+          ></c-live-lookup-input>
         </lightning-layout-item>
-        </lightning-layout>
-        <!--<lightning-layout>
+      </lightning-layout>
+      <!--<lightning-layout>
           <lightning-layout-item size="2">
             &nbsp;
           </lightning-layout-item>
@@ -112,25 +135,25 @@
         </lightning-layout-item>
       </lightning-layout>-->
       <p class="amount">
-        <lightning-formatted-number value={payment.amount}
-                                    format-style="currency"
-                                    currency-code="CAD"></lightning-formatted-number>
+        <lightning-formatted-number
+          value={payment.amount}
+          format-style="currency"
+          currency-code="CAD"
+        ></lightning-formatted-number>
       </p>
 
-<!--      <p>-->
-<!--        <b>Split: </b>-->
-<!--        {payment.split}%-->
-<!--      </p>-->
+      <!--      <p>-->
+      <!--        <b>Split: </b>-->
+      <!--        {payment.split}%-->
+      <!--      </p>-->
       <template if:true={renderSplit}>
-      <lightning-slider label="Split %"
-                        size="xx-small"
-
-                        value={payment.split}
-                        onchange={handleSpitPercentChange}></lightning-slider>
+        <lightning-slider
+          label="Split %"
+          size="xx-small"
+          value={payment.split}
+          onchange={handleSpitPercentChange}
+        ></lightning-slider>
       </template>
     </lightning-card>
-
   </template>
-
-
 </template>

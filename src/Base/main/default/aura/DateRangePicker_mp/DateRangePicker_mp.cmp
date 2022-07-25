@@ -1,16 +1,16 @@
 <aura:component>
-	<aura:attribute type="Date" name="startDate" />
-	<aura:attribute type="Date" name="endDate" />
-	<div class="slds-grid">
-		<div class="slds-col">
-			<div class="slds-m-right_small">
-				<lightning:input type="date" label="Start Date" value="{!v.startDate}" min="2017-10-01" />
-			</div>
-		</div>
-		<div class="slds-col">
-			<div class="slds-m-left_small">
-				<lightning:input type="date" label="End Date" value="{!v.endDate}" min="2017-10-01" />
-			</div>
-		</div>
-	</div>
+  <aura:attribute type="Date" name="startDate" />
+  <aura:attribute type="Date" name="endDate" />
+  <div class="slds-grid">
+    <div class="slds-col">
+      <div class="slds-m-right_small">
+        <lightning:input type="date" label="Start Date" value="{!v.startDate}" min="2017-10-01" />
+      </div>
+    </div>
+    <div class="slds-col">
+      <div class="slds-m-left_small">
+        <lightning:input type="date" label="End Date" value="{!v.endDate}" min="2017-10-01" />
+      </div>
+    </div>
+  </div>
 </aura:component>

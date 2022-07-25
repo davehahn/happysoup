@@ -2,23 +2,22 @@
  * Created by dave on 2021-01-15.
  */
 
-import { LightningElement, wire, track } from 'lwc';
-import { CurrentPageReference, NavigationMixin } from 'lightning/navigation';
-import { errorToast, successToast, warningToast, reduceErrors } from 'c/utils';
-import { fireEvent, registerListener, unregisterAllListeners} from 'c/pubsub';
-import { loadStyle } from 'lightning/platformResourceLoader';
-import gothamFonts from '@salesforce/resourceUrl/GothamHTF';
-import LOGO from '@salesforce/resourceUrl/LegendLogo';
-import VLOGO from '@salesforce/resourceUrl/LegendLogoVertical';
-import fetchOrderDetails from '@salesforce/apex/OnlineBoatReservation_Controller.fetchOrderDetails';
-import setPickupDealership from '@salesforce/apex/OnlineBoatReservation_Controller.setPickupDealership';
+import { LightningElement, wire, track } from "lwc";
+import { CurrentPageReference, NavigationMixin } from "lightning/navigation";
+import { errorToast, successToast, warningToast, reduceErrors } from "c/utils";
+import { fireEvent, registerListener, unregisterAllListeners } from "c/pubsub";
+import { loadStyle } from "lightning/platformResourceLoader";
+import gothamFonts from "@salesforce/resourceUrl/GothamHTF";
+import LOGO from "@salesforce/resourceUrl/LegendLogo";
+import VLOGO from "@salesforce/resourceUrl/LegendLogoVertical";
+import fetchOrderDetails from "@salesforce/apex/OnlineBoatReservation_Controller.fetchOrderDetails";
+import setPickupDealership from "@salesforce/apex/OnlineBoatReservation_Controller.setPickupDealership";
 
 export default class BoatReservationThankyou extends NavigationMixin(LightningElement) {
-
   isEN = true;
   isFR = false;
   logo = LOGO;
-	vertLogo = VLOGO;
+  vertLogo = VLOGO;
   locator;
   spinner;
   opportunityId;
@@ -37,7 +36,6 @@ export default class BoatReservationThankyou extends NavigationMixin(LightningEl
   @track mapMarkers;
   zoomLevel = 10;
 
-
   _stylesLoaded = false;
   _componentRendered = false;
   _initialized = false;
@@ -47,201 +45,168 @@ export default class BoatReservationThankyou extends NavigationMixin(LightningEl
     console.log(`Language passed in ${currentPageReference.state.language}`);
     console.log(`Opportunity Id = ${currentPageReference.state.opportunityId}`);
     this.opportunityId = currentPageReference.state.opportunityId;
-    if( currentPageReference.state.language === 'french' )
-    {
+    if (currentPageReference.state.language === "french") {
       this.isEN = false;
       this.isFR = true;
     }
-    console.log('wire currentPageReference');
+    console.log("wire currentPageReference");
     this.init();
   }
 
   @wire(CurrentPageReference) pageRef;
 
-  @wire( fetchOrderDetails, { opportunityId: '$opportunityId'} )
-  wiredDetails( { error, data } )
-  {
-    if( data )
-    {
-      console.log( JSON.parse(JSON.stringify(data)) );
+  @wire(fetchOrderDetails, { opportunityId: "$opportunityId" })
+  wiredDetails({ error, data }) {
+    if (data) {
+      console.log(JSON.parse(JSON.stringify(data)));
       this.customer = data.account;
       this.boat = data.boat;
-		 	this.mapMarkers = [
-				{
-					location: {
-						Country: 'Canada',
-						PostalCode: data.account.BillingPostalCode
-					},
-				}
-			];
-      if( Object.keys( data ).indexOf('motor') )
-      {
+      this.mapMarkers = [
+        {
+          location: {
+            Country: "Canada",
+            PostalCode: data.account.BillingPostalCode
+          }
+        }
+      ];
+      if (Object.keys(data).indexOf("motor")) {
         this.motor = data.motor;
       }
-      if( Object.keys( data ).indexOf('trailer') )
-      {
+      if (Object.keys(data).indexOf("trailer")) {
         this.trailer = data.trailer;
       }
-      if( Object.keys( data ).indexOf('options') )
-      {
+      if (Object.keys(data).indexOf("options")) {
         this.options = data.options;
       }
-      if( Object.keys( data ).indexOf('summaryImages') )
-      {
+      if (Object.keys(data).indexOf("summaryImages")) {
         this.summaryImages = data.summaryImages;
       }
       this.orderNumber = data.opportunity.Reference_Number__c;
       this.paymentAmount = data.opportunity.Deposit__c;
-      if( data.opportunity.PickupDealership__c )
-      {
+      if (data.opportunity.PickupDealership__c) {
         this.pickupDealershipName = data.opportunity.PickupDealership__r.Name;
         this.pickupDealershipSelected = true;
       }
       this.dataLoaded = true;
-      console.log('wire fetchOrderDetails');
+      console.log("wire fetchOrderDetails");
       this.init();
-    }
-    else if( error )
-    {
-      console.log( error );
+    } else if (error) {
+      console.log(error);
     }
   }
 
-  connectedCallback()
-  {
-		registerListener('setMap', this.setMapMarkers, this);
-	}
+  connectedCallback() {
+    registerListener("setMap", this.setMapMarkers, this);
+  }
 
-  renderedCallback()
-  {
-    console.log('renderedCallback called');
-    if( !this._stylesLoaded )
-    {
-      loadStyle( this, gothamFonts + '/fonts.css')
-      .then( () => {
+  renderedCallback() {
+    console.log("renderedCallback called");
+    if (!this._stylesLoaded) {
+      loadStyle(this, gothamFonts + "/fonts.css").then(() => {
         this._stylesLoaded = true;
       });
     }
-    if( this.pickupDealershipSelected )
-    {
+    if (this.pickupDealershipSelected) {
       this._componentRendered = true;
-      console.log('renderedCallback');
+      console.log("renderedCallback");
       this.init();
-    }
-    else
-    {
-      this.locator = this.template.querySelector('c-account-find-closest-partner');
-      if( this.locator )
-      {
+    } else {
+      this.locator = this.template.querySelector("c-account-find-closest-partner");
+      if (this.locator) {
         this._componentRendered = true;
-        console.log('renderedCallback');
+        console.log("renderedCallback");
         this.init();
       }
     }
   }
 
-  init()
-  {
-    console.log(`init ${this.dataLoaded} ${this._componentRendered}` );
-    if( this.dataLoaded && this._componentRendered )
-    {
-      this.spinner = this.template.querySelector('c-legend-spinner');
+  init() {
+    console.log(`init ${this.dataLoaded} ${this._componentRendered}`);
+    if (this.dataLoaded && this._componentRendered) {
+      this.spinner = this.template.querySelector("c-legend-spinner");
 
-      if( this.pickupDealershipSelected )
-      {
+      if (this.pickupDealershipSelected) {
         this._initialized = true;
         this.spinner.close();
+      } else {
+        this.locator
+          .findPartners(this.customer.BillingPostalCode)
+          .then((result) => {})
+          .catch((error) => {
+            errorToast(this, reduceErrors(error)[0]);
+          })
+          .finally(() => {
+            this._initialized = true;
+            this.spinner.close();
+          });
       }
-      else
-      {
-        this.locator.findPartners( this.customer.BillingPostalCode )
-        .then( result => {
-        })
-        .catch( error => {
-          errorToast( this, reduceErrors( error )[0] );
-        })
-        .finally( () => {
-          this._initialized = true;
-          this.spinner.close();
-        })
-      }
-      console.log( this.boat );
-      console.log( this.motor );
-      console.log( this.trailer );
-      console.log( this.options );
-
+      console.log(this.boat);
+      console.log(this.motor);
+      console.log(this.trailer);
+      console.log(this.options);
     }
-
   }
 
-  get ready()
-  {
+  get ready() {
     return this._initialized;
   }
 
-  get containerClass()
-  {
-    let klass = 'config-thanks';
-    return this._initialized ? klass + ' loaded' : klass;
+  get containerClass() {
+    let klass = "config-thanks";
+    return this._initialized ? klass + " loaded" : klass;
   }
 
-  get shippingTiming()
-  {
+  get shippingTiming() {
     let marketingContent = this.boat.marketingContent;
-    for(const mc of marketingContent){
-      const label = mc['label'].toLowerCase();
-      const origContent = mc['content'];
-      const stripContent = origContent.replace(/(<([^>]+)>)/ig,"");
-      if(this.isEN){
-        if(label === 'shippingtiming'){
+    for (const mc of marketingContent) {
+      const label = mc["label"].toLowerCase();
+      const origContent = mc["content"];
+      const stripContent = origContent.replace(/(<([^>]+)>)/gi, "");
+      if (this.isEN) {
+        if (label === "shippingtiming") {
           return stripContent;
         }
-      } else if(this.isFR){
-        if(label === 'shippingtimingfr'){
+      } else if (this.isFR) {
+        if (label === "shippingtimingfr") {
           return stripContent;
         }
       }
-
     }
-    return '';
+    return "";
   }
 
-  handleAccountSelected( event )
-  {
+  handleAccountSelected(event) {
     this.spinner.open();
     this.pickupDealershipName = event.detail.name;
-    setPickupDealership( {
+    setPickupDealership({
       opportunityId: this.opportunityId,
       dealerId: event.detail.id
     })
-    .then( () => {
-      this.pickupDealershipSelected = true;
-    })
-    .catch( (err) => {
-      errorToast( this, reduceErrors( err )[0] );
-    })
-    .finally( () => {
-      this.spinner.close();
-    });
-
+      .then(() => {
+        this.pickupDealershipSelected = true;
+      })
+      .catch((err) => {
+        errorToast(this, reduceErrors(err)[0]);
+      })
+      .finally(() => {
+        this.spinner.close();
+      });
   }
 
-  handleHomeNav()
-	{
-		this.navigateToCommunityPage(
-			{ pageName: 'home' }
-		);
-	}
+  handleHomeNav() {
+    this.navigateToCommunityPage({ pageName: "home" });
+  }
 
-	setMapMarkers(payload){
-		this.mapMarkers = [{
-			location: {
-				Street: payload.location.Street,
-				City: payload.location.City,
-				State: payload.location.State,
-			},
-			title: payload.name,
-		}];
-	}
-
+  setMapMarkers(payload) {
+    this.mapMarkers = [
+      {
+        location: {
+          Street: payload.location.Street,
+          City: payload.location.City,
+          State: payload.location.State
+        },
+        title: payload.name
+      }
+    ];
+  }
 }

@@ -1,188 +1,199 @@
-<apex:page StandardController="AcctSeed__Time_Card_Period__c" extensions="gcTimeCardPeriod_Ext" showHeader="true" sidebar="true" cache="false" docType="html-5.0">
+<apex:page
+  StandardController="AcctSeed__Time_Card_Period__c"
+  extensions="gcTimeCardPeriod_Ext"
+  showHeader="true"
+  sidebar="true"
+  cache="false"
+  docType="html-5.0"
+>
+  <head>
+    <style>
+      .link {
+        cursor: pointer;
+        text-decoration: underline;
+      }
+      table {
+        border-collapse: collapse;
+      }
+      tr.total td {
+        font-weight: bold;
+      }
+      div.pq-grid-footer {
+        display: none;
+      }
+      .btn-disable {
+        cursor: default;
+        pointer-events: none;
 
-<head>
-<style>
-.link{
-    cursor:pointer;
-    text-decoration:underline;
-}
-table{
-    border-collapse:collapse;
-}
-tr.total td{
-    font-weight: bold;
-}
-div.pq-grid-footer{
-    display:none;
-}
-.btn-disable{
-    cursor: default;
-    pointer-events: none;
+        /*Button disabled - CSS color class*/
+        color: #c0c0c0;
+        background-color: #ffffff;
+      }
+      tr.pq-row-select td {
+        background-color: yellow;
+      }
+      .highlight {
+        background-color: yellow;
+      }
+      .tcv1NonWork {
+        background-color: #add8e6;
+      }
+      .tcv2NonDirect {
+        background-color: #90ee90;
+      }
+    </style>
 
-    /*Button disabled - CSS color class*/
-    color: #c0c0c0;
-    background-color: #ffffff;
-}
-tr.pq-row-select td{
-    background-color:yellow;
-}
-.highlight{
-    background-color: yellow;
-}
-.tcv1NonWork
-{
-    background-color: #ADD8E6;
-}
-.tcv2NonDirect
-{
-    background-color: #90EE90;
-}
-</style>
+    <apex:stylesheet value="{!URLFOR($Resource.GMBLJS__jQueryUI,'/jquery-ui/jquery-ui.min.css')}" />
+    <apex:stylesheet value="{!URLFOR($Resource.GMBLJS__pqGridPro241,'/pqgrid.min.css')}" />
+  </head>
 
-<apex:stylesheet value="{!URLFOR($Resource.GMBLJS__jQueryUI,'/jquery-ui/jquery-ui.min.css')}"/>
-<apex:stylesheet value="{!URLFOR($Resource.GMBLJS__pqGridPro241,'/pqgrid.min.css')}"/>
+  <!--javascript is deliberately include ABOVE the HTML body, because the c:gcmpTimeCardLine depends on these libraries as well.-->
+  <apex:includeScript value="{!$Resource.GMBLJS__jQuery}" />
+  <apex:includeScript value="{!URLFOR($Resource.GMBLJS__jQueryUI,'/jquery-ui/jquery-ui.min.js')}" />
+  <apex:includeScript value="{!URLFOR($Resource.GMBLJS__pqGridPro241,'/pqgrid.min.js')}" />
+  <apex:includeScript value="{!URLFOR($Resource.GMBLJS__pqGridPro241,'/touch-punch/touch-punch.min.js')}" />
+  <apex:includeScript value="{!$Resource.GMBLJS__accountingJS}" />
+  <apex:includeScript value="{!$Resource.GMBLJS__ExcellentExport}" />
+  <apex:includeScript value="{!$Resource.GMBLJS__gsrGrid2}" />
+  <apex:includeScript value="{!$Resource.GMBLJS__dateJSENUS}" />
 
-</head>
-
-<!--javascript is deliberately include ABOVE the HTML body, because the c:gcmpTimeCardLine depends on these libraries as well.-->
-<apex:includeScript value="{!$Resource.GMBLJS__jQuery}"/>
-<apex:includeScript value="{!URLFOR($Resource.GMBLJS__jQueryUI,'/jquery-ui/jquery-ui.min.js')}"/>
-<apex:includeScript value="{!URLFOR($Resource.GMBLJS__pqGridPro241,'/pqgrid.min.js')}"/>
-<apex:includeScript value="{!URLFOR($Resource.GMBLJS__pqGridPro241,'/touch-punch/touch-punch.min.js')}"/>
-<apex:includeScript value="{!$Resource.GMBLJS__accountingJS}"/>
-<apex:includeScript value="{!$Resource.GMBLJS__ExcellentExport}"/>
-<apex:includeScript value="{!$Resource.GMBLJS__gsrGrid2}"/>
-<apex:includeScript value="{!$Resource.GMBLJS__dateJSENUS}"/>
-
-<script>function setFocusOnLoad() {}</script>
-<script type="text/javascript">
-
+  <script>
+    function setFocusOnLoad() {}
+  </script>
+  <script type="text/javascript">
     $j = jQuery.noConflict();
 
-    $j(document).ready(function()
-    {
-        $j('.ptBody').remove(); //remove this page label, to avoid confusion when the time card period is changed by the code on this page.
-        initGrid_employees();
-        refreshGrid_employees();
-        initComponent_timeCardLines();
+    $j(document).ready(function () {
+      $j(".ptBody").remove(); //remove this page label, to avoid confusion when the time card period is changed by the code on this page.
+      initGrid_employees();
+      refreshGrid_employees();
+      initComponent_timeCardLines();
 
-        initGrid_timeCardDays();
-        refreshGrid_timeCardDays();
+      initGrid_timeCardDays();
+      refreshGrid_timeCardDays();
     });
 
     accounting.settings = {
-        currency: {
-            symbol : "$",   // default currency symbol is '$'
-            format: "%s%v", // controls output: %s = symbol, %v = value/number (can be object: see below)
-            decimal : ".",  // decimal point separator
-            thousand: ",",  // thousands separator
-            precision : 2   // decimal places
-        },
-        number: {
-            precision : 2,  // default precision on numbers is 0
-            thousand: ",",
-            decimal : "."
-        }
-    }
+      currency: {
+        symbol: "$", // default currency symbol is '$'
+        format: "%s%v", // controls output: %s = symbol, %v = value/number (can be object: see below)
+        decimal: ".", // decimal point separator
+        thousand: ",", // thousands separator
+        precision: 2 // decimal places
+      },
+      number: {
+        precision: 2, // default precision on numbers is 0
+        thousand: ",",
+        decimal: "."
+      }
+    };
 
     function pqDatePicker(ui) {
-        var $this = $j(this);
-        $this
-            //.css({ zIndex: 3, position: "relative" })
-            .datepicker({
-                yearRange: "-20:+0", //20 years prior to present.
-                changeYear: true,
-                changeMonth: true,
-                //showButtonPanel: true,
-                onClose: function (evt, ui) {
-                    $j(this).focus();
-                }
-            });
-        //default From date
-        //$this.filter(".pq-from").datepicker("option", "defaultDate", new Date("01/01/1996"));
-        //default To date
-        //$this.filter(".pq-to").datepicker("option", "defaultDate", new Date("12/31/1998"));
+      var $this = $j(this);
+      $this
+        //.css({ zIndex: 3, position: "relative" })
+        .datepicker({
+          yearRange: "-20:+0", //20 years prior to present.
+          changeYear: true,
+          changeMonth: true,
+          //showButtonPanel: true,
+          onClose: function (evt, ui) {
+            $j(this).focus();
+          }
+        });
+      //default From date
+      //$this.filter(".pq-from").datepicker("option", "defaultDate", new Date("01/01/1996"));
+      //default To date
+      //$this.filter(".pq-to").datepicker("option", "defaultDate", new Date("12/31/1998"));
     }
-</script>
+  </script>
 
-<body>
-    <div style="margin:0 auto; width:100%">
+  <body>
+    <div style="margin: 0 auto; width: 100%">
+      <div id="detailDiv">
+        <apex:outputPanel id="detailContainer">
+          <apex:pageMessages />
 
-        <div id="detailDiv">
-            <apex:outputPanel id="detailContainer">
-                <apex:pageMessages />
+          <apex:detail id="detail" subject="{!idTimeCardPeriod}" relatedList="false" inlineEdit="false" />
 
-                <apex:detail id="detail" subject="{!idTimeCardPeriod}" relatedList="false" inlineEdit="false"/>
-                
-                <script>
-                    var $btnPrev = jQuery(                   '<button class=\"btn\" onclick=\"goToPeriodPrev();\">&nbsp;&lt;&lt;&lt;&nbsp;Go To Prev Period&nbsp;&lt;&lt;&lt;&nbsp;</button><span>&nbsp;</span>');
-                    var $btnNext = jQuery('<span>&nbsp;</span><button class=\"btn\" onclick=\"goToPeriodNext();\">&nbsp;&gt;&gt;&gt;&nbsp;Go To Next Period&nbsp;&gt;&gt;&gt;&nbsp;</button>');
-                    jQuery('#detailDiv').find('.pbButton, .pbButtonb').prepend($btnPrev);               
-                    jQuery('#detailDiv').find('.pbButton, .pbButtonb').append($btnNext);
-                </script>
+          <script>
+            var $btnPrev = jQuery(
+              '<button class="btn" onclick="goToPeriodPrev();">&nbsp;&lt;&lt;&lt;&nbsp;Go To Prev Period&nbsp;&lt;&lt;&lt;&nbsp;</button><span>&nbsp;</span>'
+            );
+            var $btnNext = jQuery(
+              '<span>&nbsp;</span><button class="btn" onclick="goToPeriodNext();">&nbsp;&gt;&gt;&gt;&nbsp;Go To Next Period&nbsp;&gt;&gt;&gt;&nbsp;</button>'
+            );
+            jQuery("#detailDiv").find(".pbButton, .pbButtonb").prepend($btnPrev);
+            jQuery("#detailDiv").find(".pbButton, .pbButtonb").append($btnNext);
+          </script>
 
-                <script>
-                    //a controller variable named idTimeCardPeriod is initialized by the constructor
-                    //it is here translated to a javascript variable
-                    idTimeCardPeriod = '{!idTimeCardPeriod}';
-                    idTimeCard = null;
+          <script>
+            //a controller variable named idTimeCardPeriod is initialized by the constructor
+            //it is here translated to a javascript variable
+            idTimeCardPeriod = "{!idTimeCardPeriod}";
+            idTimeCard = null;
 
-                    //after using goToPeriodPrev or goToPeriodNext, the URL no longer has the Id of the time card period that the user is viewing.
-                    //if the user clicks a page refresh, they will be returned to the original time card period, which will be confusing.
-                    //so we replace the url Id parameter with the Id of the time card period that the user is currently viewing.
+            //after using goToPeriodPrev or goToPeriodNext, the URL no longer has the Id of the time card period that the user is viewing.
+            //if the user clicks a page refresh, they will be returned to the original time card period, which will be confusing.
+            //so we replace the url Id parameter with the Id of the time card period that the user is currently viewing.
 
-                    var newURL = window.location.pathname+'?id='+idTimeCardPeriod;
-                    window.history.pushState("","",newURL);
+            var newURL = window.location.pathname + "?id=" + idTimeCardPeriod;
+            window.history.pushState("", "", newURL);
 
-                    //the first time that this page section is rendered, the refreshGrid_employees function does not exist yet.
-                    //the first time that this page section is rendered, refreshGrid_employees is instead called by the document ready function
-                    if(typeof refreshGrid_employees !== 'undefined')
-                        refreshGrid_employees();
-                    if(typeof refreshColumns !== 'undefined')
-                        refreshColumns();
-                    if(typeof refreshGrid_timeCardDays !== 'undefined')
-                        refreshGrid_timeCardDays();                    
-                </script>
-            </apex:outputPanel>
-        </div>
-
-        <apex:form >
-            <apex:actionFunction name="goToPeriodNext" reRender="detailContainer,relatedListContainer" action="{!goToPeriodNext}"/>
-            <apex:actionFunction name="goToPeriodPrev" reRender="detailContainer,relatedListContainer" action="{!goToPeriodPrev}"/>
-            <apex:actionFunction name="rerenderRelatedLists" reRender="relatedListContainer"/>
-        </apex:form>
-
-        <apex:pageBlock mode="edit" title="Time Cards">
-            <apex:pageBlockButtons location="top">
-                <span style="font-style:italic; font-weight:normal;">single-click a row, to view or refresh the employee's time card lines in the grid below</span>
-            </apex:pageBlockButtons>
-            <div id="employees"></div>
-            <div style="text-align:center; font-style:italic">drag here ^^^ to resize the grid</div>
-        </apex:pageBlock>
-
-        <c:gcmpTimeCardLines_bulkEdit idTimeCardPeriod="{!idTimeCardPeriod}" />
-
-        <apex:outputPanel id="relatedListContainer">
-            <!--<apex:relatedList subject="{!idTimeCardPeriod}" list="AcctSeed__Time_Cards__r" id="listTimeCards"/>-->
-            <!--<apex:relatedList subject="{!idTimeCardPeriod}" list="Journal_Entries__r" id="listJournalEntries"/>-->
-            <!-- <apex:relatedList subject="{!idTimeCardPeriod}" list="CombinedAttachments" id="listCombinedAttachments"/> -->
-            <apex:relatedList subject="{!Id}" list="OpenActivities" />
-            <apex:relatedList subject="{!Id}" list="ActivityHistories" />
+            //the first time that this page section is rendered, the refreshGrid_employees function does not exist yet.
+            //the first time that this page section is rendered, refreshGrid_employees is instead called by the document ready function
+            if (typeof refreshGrid_employees !== "undefined") refreshGrid_employees();
+            if (typeof refreshColumns !== "undefined") refreshColumns();
+            if (typeof refreshGrid_timeCardDays !== "undefined") refreshGrid_timeCardDays();
+          </script>
         </apex:outputPanel>
+      </div>
 
-        <apex:pageBlock mode="edit" title="Payroll Export">
-            <apex:pageBlockButtons location="top">
-                <button type="button" class="btn" onclick="refreshGrid_timeCardDays();">Refresh</button>  
-            </apex:pageBlockButtons>
-            <div id="timeCardDays"></div>
-            <div style="text-align:center; font-style:italic">drag here ^^^ to resize the grid</div>
-        </apex:pageBlock>
+      <apex:form>
+        <apex:actionFunction
+          name="goToPeriodNext"
+          reRender="detailContainer,relatedListContainer"
+          action="{!goToPeriodNext}"
+        />
+        <apex:actionFunction
+          name="goToPeriodPrev"
+          reRender="detailContainer,relatedListContainer"
+          action="{!goToPeriodPrev}"
+        />
+        <apex:actionFunction name="rerenderRelatedLists" reRender="relatedListContainer" />
+      </apex:form>
 
+      <apex:pageBlock mode="edit" title="Time Cards">
+        <apex:pageBlockButtons location="top">
+          <span style="font-style: italic; font-weight: normal"
+            >single-click a row, to view or refresh the employee's time card lines in the grid below</span
+          >
+        </apex:pageBlockButtons>
+        <div id="employees"></div>
+        <div style="text-align: center; font-style: italic">drag here ^^^ to resize the grid</div>
+      </apex:pageBlock>
 
+      <c:gcmpTimeCardLines_bulkEdit idTimeCardPeriod="{!idTimeCardPeriod}" />
+
+      <apex:outputPanel id="relatedListContainer">
+        <!--<apex:relatedList subject="{!idTimeCardPeriod}" list="AcctSeed__Time_Cards__r" id="listTimeCards"/>-->
+        <!--<apex:relatedList subject="{!idTimeCardPeriod}" list="Journal_Entries__r" id="listJournalEntries"/>-->
+        <!-- <apex:relatedList subject="{!idTimeCardPeriod}" list="CombinedAttachments" id="listCombinedAttachments"/> -->
+        <apex:relatedList subject="{!Id}" list="OpenActivities" />
+        <apex:relatedList subject="{!Id}" list="ActivityHistories" />
+      </apex:outputPanel>
+
+      <apex:pageBlock mode="edit" title="Payroll Export">
+        <apex:pageBlockButtons location="top">
+          <button type="button" class="btn" onclick="refreshGrid_timeCardDays();">Refresh</button>
+        </apex:pageBlockButtons>
+        <div id="timeCardDays"></div>
+        <div style="text-align: center; font-style: italic">drag here ^^^ to resize the grid</div>
+      </apex:pageBlock>
     </div>
-</body>
+  </body>
 
-<script type="text/javascript">
+  <script type="text/javascript">
 
     function initGrid_employees()
     {
@@ -190,7 +201,7 @@ tr.pq-row-select td{
         var gridObj = { title:"",
                         collapsible:{on:false,collapsed:false,toggle:false},
                         columnTemplate: {sortable:true, minWidth:100, maxWidth:100},
-                        dataModel:{data:[], sorting:'local', location:'local', sortDir:'up', sortIndx:'userName'}, 
+                        dataModel:{data:[], sorting:'local', location:'local', sortDir:'up', sortIndx:'userName'},
                         dragColumns:{enabled:false},
                         editable:false,
                         filterModel:{on:true, mode:'AND', header:true},
@@ -225,7 +236,7 @@ tr.pq-row-select td{
                             {dataIndx:'hoursRT',        title:'Regular<br/>Hours',      align:'center',     gFormat:'number',   gTotal:true, dataType:'float'},
                             {dataIndx:'hoursOT',        title:'Overtime<br/>Hours',     align:'center',     gFormat:'number',   gTotal:true, dataType:'float'},
                             {dataIndx:'hoursDT',        title:'Double-Time<br/>Hours',  align:'center',     gFormat:'number',   gTotal:true, dataType:'float'},
-                            {dataIndx:'PTO',            title:'PTO<br/>',               align:'center',     gFormat:'number',   gTotal:true, dataType:'float'},                         
+                            {dataIndx:'PTO',            title:'PTO<br/>',               align:'center',     gFormat:'number',   gTotal:true, dataType:'float'},
                             {dataIndx:'HOLIDAY',        title:'Holiday<br/>Time',      align:'center',     gFormat:'number',   gTotal:true, dataType:'float'},
                             {dataIndx:'BEREAVEMENT',    title:'Bereavement<br/>Leave',      align:'center',     gFormat:'number',   gTotal:true, dataType:'float'},
                             {dataIndx:'hours',          title:'Total<br/>Hrs',          align:'center',     gFormat:'number',   gTotal:true, dataType:'float'},
@@ -238,7 +249,7 @@ tr.pq-row-select td{
         $j.each(gridObj.colModel, function(i,col)
         {
             var dataIndx = col.dataIndx;
-            if(dataIndx == 'hoursRT' || 
+            if(dataIndx == 'hoursRT' ||
                dataIndx == 'hoursOT' ||
                dataIndx == 'hoursDT' ||
                dataIndx == 'PTO'     ||
@@ -252,7 +263,7 @@ tr.pq-row-select td{
                         if( (!ui.rowData[dataIndx] || parseFloat(ui.rowData[dataIndx]) == 0) && !ui.rowData.isTotal) return '-';
                         return accounting.formatNumber(ui.rowData[dataIndx]);
                     }
-                });             
+                });
             }
             else if(dataIndx == 'wages')
             {
@@ -262,8 +273,8 @@ tr.pq-row-select td{
                         if( (!ui.rowData[dataIndx] || parseFloat(ui.rowData[dataIndx]) == 0) && !ui.rowData.isTotal) return '-';
                         return accounting.formatMoney(ui.rowData[dataIndx]);
                     }
-                });             
-            }  
+                });
+            }
 
             //clear the selection of any rows, whenever the filtering changes
             if(col.filter && col.filter.listeners)
@@ -332,7 +343,7 @@ tr.pq-row-select td{
                         }
                         $j('#timeCardLines').pqGrid('hideLoading');
                     },
-                    {buffer:true, escape:true, timeout:120000});                
+                    {buffer:true, escape:true, timeout:120000});
             }
         });
     }
@@ -345,7 +356,7 @@ tr.pq-row-select td{
     }
 
     function refreshGrid_employees(){
-        
+
         var $gridDiv = $j('#employees');
         $gridDiv.pqGrid('showLoading');
 
@@ -406,7 +417,7 @@ tr.pq-row-select td{
         var gridObj = { title:"",
                         collapsible:{on:false,collapsed:false,toggle:false},
                         columnTemplate: {sortable:true, minWidth:100, maxWidth:100},
-                        dataModel:{data:[], sorting:'local', location:'local'}, 
+                        dataModel:{data:[], sorting:'local', location:'local'},
                         dragColumns:{enabled:false},
                         editable:false,
                         filterModel:{on:true, mode:'AND', header:true},
@@ -441,7 +452,7 @@ tr.pq-row-select td{
                             {dataIndx:'hours',                  title:'Hours',          align:'center',     gFormat:'number', dataType:'float'},
                             {dataIndx:'inTime',                 title:'InTime',         minWidth:100, align:'center'},
                             {dataIndx:'outTime',                title:'OutTime',        minWidth:100, align:'center'},
-                            {dataIndx:'lunch',                  title:'Lunch',          minWidth:100, align:'center', hidden:true},   
+                            {dataIndx:'lunch',                  title:'Lunch',          minWidth:100, align:'center', hidden:true},
                             {dataIndx:'rate',                   title:'PayRate', dataType:'float', gFormat:'number',hidden:!showDollars},
                             {dataIndx:"scrollSpacer", minWidth:15, maxWidth:15}];
 
@@ -473,7 +484,7 @@ tr.pq-row-select td{
     }
 
     function refreshGrid_timeCardDays(){
-        
+
         var $gridDiv = $j('#timeCardDays');
         $gridDiv.pqGrid('showLoading');
 
@@ -551,7 +562,7 @@ tr.pq-row-select td{
         //create and add the detail rows
         jQuery.each(gridDiv.pqGrid('option','dataModel.data'), function(i, dataRow){
             var $newRow = $rowTemplate.clone();
-            
+
             if(dataRow.hasOwnProperty('pq_rowcls') && dataRow.pq_rowcls=='total')
             {
                 $newRow.css('font-weight','bold');
@@ -565,7 +576,7 @@ tr.pq-row-select td{
 
                     if(totals.hasOwnProperty(idTd) && !isNaN(cont))
                         totals[idTd] = totals[idTd] + parseFloat(cont);
-                    
+
                     if(jQuery.inArray(idTd,dataIndexMoney) >= 0 )
                         cont = accounting.formatMoney(cont);
                     else if(jQuery.inArray(idTd,dataIndexNumber) >= 0)
@@ -655,7 +666,5 @@ tr.pq-row-select td{
 
         gridDiv.pqGrid('hideLoading');
     }
-
-</script>
-
+  </script>
 </apex:page>

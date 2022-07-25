@@ -20,11 +20,7 @@ private class ContentDocumentLink_TriggerHandler_T {
       Visibility__c = 'Public'
     );
     insert contentVersion;
-    ContentVersion createdContentVersion = [
-      SELECT ContentDocumentId
-      FROM ContentVersion
-      WHERE Id = :contentVersion.Id
-    ];
+    ContentVersion createdContentVersion = [SELECT ContentDocumentId FROM ContentVersion WHERE Id = :contentVersion.Id];
     ContentDocumentLink randomContentDocumentLink = new ContentDocumentLink(
       ContentDocumentId = createdContentVersion.ContentDocumentId,
       LinkedEntityId = issue.Id,

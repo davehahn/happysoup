@@ -1,76 +1,78 @@
 <apex:page controller="gcLegendMRP_Items" showHeader="true" sidebar="true" cache="false" readOnly="true">
+  <head>
+    <style>
+      tr.pq-row-select td {
+        background-color: yellow;
+      }
+      tr.total td {
+        font-weight: bold;
+      }
+      div.pq-grid-footer {
+        display: none;
+      }
+      td.pq-grid-number-cell {
+        width: auto !important;
+      }
+    </style>
 
-<head>
-<style>
-tr.pq-row-select td{
-    background-color:yellow;
-}
-tr.total td{
-    font-weight: bold;
-}
-div.pq-grid-footer{
-    display:none;
-}
-td.pq-grid-number-cell
-{
-	width: auto !important;
-}
-</style>
-
-<apex:stylesheet value="{!URLFOR($Resource.GMBLJS__jQueryUI,'/jquery-ui/jquery-ui.min.css')}"/>
-<apex:stylesheet value="{!URLFOR($Resource.GMBLJS__pqGridPro241,'/pqgrid.min.css')}"/>
-
-</head>
-<body>
-    <div style="width:98%; margin:0 auto">
-        <table width="100%">
-        	<tr>
-        		<td width="15%"></td>
-        		<td width="70%" style="text-align:center">
-        			<span style="font-size:larger; font-weight:bold" id="myTitle">Create Manufacturing Work Orders by Selecting Serials</span>
-        		</td>
-        		<td  width="15%" style="text-align:right">
-                    <label>Include Pre-Rig Materials<input type="checkbox" name="addPreRig" id="addPreRig" /></label>
-        			<button type="button" onclick="buildSerials()">Build MFG Order with Selected Serials</button>
-        		</td>
-        	</tr>
-            <tr>
-                <td colspan="3">
-                    <div id="itemSerials"></div>
-                    <br/>
-                    <div id="projects"></div>
-                </td>
-            </tr>
-            <tr>
-            	<td colspan="3">
-            	<span style="font-weight:bold">INSTRUCTIONS:</span><br/>
-            	<!-- The purpose of this page is to create new Manufacturing Projects, for serials that have been received but not yet finished.<br/>
+    <apex:stylesheet value="{!URLFOR($Resource.GMBLJS__jQueryUI,'/jquery-ui/jquery-ui.min.css')}" />
+    <apex:stylesheet value="{!URLFOR($Resource.GMBLJS__pqGridPro241,'/pqgrid.min.css')}" />
+  </head>
+  <body>
+    <div style="width: 98%; margin: 0 auto">
+      <table width="100%">
+        <tr>
+          <td width="15%"></td>
+          <td width="70%" style="text-align: center">
+            <span style="font-size: larger; font-weight: bold" id="myTitle"
+              >Create Manufacturing Work Orders by Selecting Serials</span
+            >
+          </td>
+          <td width="15%" style="text-align: right">
+            <label>Include Pre-Rig Materials<input type="checkbox" name="addPreRig" id="addPreRig" /></label>
+            <button type="button" onclick="buildSerials()">Build MFG Order with Selected Serials</button>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="3">
+            <div id="itemSerials"></div>
+            <br />
+            <div id="projects"></div>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="3">
+            <span style="font-weight: bold">INSTRUCTIONS:</span><br />
+            <!-- The purpose of this page is to create new Manufacturing Projects, for serials that have been received but not yet finished.<br/>
             	The top grid lists all of the unimproved serials that are currently in inventory.<br/>
             	To create a manufacturing project out of a serial that appears in the top grid, check the checkbox in the rightmost column to highlight the row, and then click the "Build Selected Serials" button.<br/>
             	The bottom grid simply displays the manufacturing projects that have been created today.<br/>
             	For a more flexible view of existing manufacturing projects, navigate to the Projects tab, and select or create an appropriate list view of Projects. -->
-            	The top grid lists all of the serials that are currently in inventory.<br/>
-            	To create a manufacturing project out of a serial that appears in the top grid, check the checkbox in the rightmost column to highlight the row, and then click the "Build MFG Order with Selected Serials" button.<br/>
-            	For a more flexible view of existing manufacturing projects, navigate to the Projects tab, and select or create an appropriate list view of Projects.
-            	</td>
-            </tr>
-        </table>
+            The top grid lists all of the serials that are currently in inventory.<br /> To create a manufacturing
+            project out of a serial that appears in the top grid, check the checkbox in the rightmost column to
+            highlight the row, and then click the "Build MFG Order with Selected Serials" button.<br />
+            For a more flexible view of existing manufacturing projects, navigate to the Projects tab, and select or
+            create an appropriate list view of Projects.
+          </td>
+        </tr>
+      </table>
     </div>
-</body>
+  </body>
 
-<apex:includeScript value="{!$Resource.GMBLJS__jQuery}"/>
-<apex:includeScript value="{!URLFOR($Resource.GMBLJS__jQueryUI,'/jquery-ui/jquery-ui.min.js')}"/>
-<apex:includeScript value="{!$Resource.GMBLJS__accountingJS}"/>
-<apex:includeScript value="{!$Resource.GMBLJS__ExcellentExport}"/>
+  <apex:includeScript value="{!$Resource.GMBLJS__jQuery}" />
+  <apex:includeScript value="{!URLFOR($Resource.GMBLJS__jQueryUI,'/jquery-ui/jquery-ui.min.js')}" />
+  <apex:includeScript value="{!$Resource.GMBLJS__accountingJS}" />
+  <apex:includeScript value="{!$Resource.GMBLJS__ExcellentExport}" />
 
-<apex:includeScript value="{!URLFOR($Resource.GMBLJS__pqGridPro241,'/pqgrid.min.js')}"/>
+  <apex:includeScript value="{!URLFOR($Resource.GMBLJS__pqGridPro241,'/pqgrid.min.js')}" />
 
-<apex:includeScript value="{!$Resource.GMBLJS__gsrSpinner}"/>
-<apex:includeScript value="{!$Resource.GMBLJS__gsrGrid2}"/>
+  <apex:includeScript value="{!$Resource.GMBLJS__gsrSpinner}" />
+  <apex:includeScript value="{!$Resource.GMBLJS__gsrGrid2}" />
 
-
-<script>function setFocusOnLoad() {}</script>
-<script type="text/javascript">
+  <script>
+    function setFocusOnLoad() {}
+  </script>
+  <script type="text/javascript">
 
     $j = jQuery.noConflict();
 
@@ -92,7 +94,7 @@ td.pq-grid-number-cell
         var gridObj = {title:"Item Serial Inventory",
                         collapsible:{on:false,collapsed:false,toggle:false},
                         columnTemplate: {minWidth:10, sortable:true},
-                        dataModel:{data:[], sorting:'local', location:'local', sortDir:['down'], sortIndx:['dateReceived']}, 
+                        dataModel:{data:[], sorting:'local', location:'local', sortDir:['down'], sortIndx:['dateReceived']},
                         detailModel:{cache:false},
                         dragColumns:{enabled:false},
                         editable:false,
@@ -130,9 +132,9 @@ td.pq-grid-number-cell
         				  {dataIndx:"lotName",				title:"Lot",				gFilter:"text"},
         				  {dataIndx:"serialName",			title:"Serial Number",		gFilter:"text"},
         				  {dataIndx:"dateReceived",			title:"Received",			dataType:"date", align:"center"},
-						  {dataIndx:"state", title: "", minWidth:75, maxWidth:75, align: "center", cb:{header: false, all: false}, 
-						  	type: 'checkBoxSelection', resizable: false, sortable: false, editable: false},
-						  {dataIndx:"projectName",			title:"MFG Order",			dataType:"string", align:"left"},
+    		  {dataIndx:"state", title: "", minWidth:75, maxWidth:75, align: "center", cb:{header: false, all: false},
+    		  	type: 'checkBoxSelection', resizable: false, sortable: false, editable: false},
+    		  {dataIndx:"projectName",			title:"MFG Order",			dataType:"string", align:"left"},
                           {dataIndx:"scrollSpacer", minWidth:15, maxWidth:15}];
 
         gGrid.initFormat(gridObj.colModel);
@@ -148,15 +150,15 @@ td.pq-grid-number-cell
                         if (ui.rowData.isTotal || !ui.rowData.idProject) return '';
 
                         var myHTML = ui.rowData.projectName;
-                        
+
                         if({!$ObjectType.AcctSeed__Project__c.accessible})
                             return '<a href=\"/'+ui.rowData.idProject+'\" target=\"_blank\">'+myHTML+'</a>';
 
                         return myHTML;
                     }
-                });                 
+                });
             }
-            
+
             else if(col.dataIndx == 'warehouseName')
             {
                 $j.extend(col,{
@@ -165,13 +167,13 @@ td.pq-grid-number-cell
                         if (ui.rowData.isTotal || !ui.rowData.idWarehouse) return '';
 
                         var myHTML = ui.rowData.warehouseName;
-                        
+
                         if({!$ObjectType.AcctSeedERP__Warehouse__c.accessible})
                             return '<a href=\"/'+ui.rowData.idWarehouse+'\" target=\"_blank\">'+myHTML+'</a>';
 
                         return myHTML;
                     }
-                });                 
+                });
             }
 
             else if(col.dataIndx == 'productName')
@@ -182,13 +184,13 @@ td.pq-grid-number-cell
                         if (ui.rowData.isTotal || !ui.rowData.idProduct) return '';
 
                         var myHTML = ui.rowData.productName;
-                        
+
                         if({!$ObjectType.Product2.accessible})
                             return '<a href=\"/'+ui.rowData.idProduct+'\" target=\"_blank\">'+myHTML+'</a>';
 
                         return myHTML;
                     }
-                });                 
+                });
             }
 
             else if(col.dataIndx == 'productCode')
@@ -199,13 +201,13 @@ td.pq-grid-number-cell
                         if (ui.rowData.isTotal || !ui.rowData.productCode) return '';
 
                         var myHTML = ui.rowData.productCode;
-                        
+
                         if({!$ObjectType.Product2.accessible})
                             return '<a href=\"/'+ui.rowData.idProduct+'\" target=\"_blank\">'+myHTML+'</a>';
 
                         return myHTML;
                     }
-                });                 
+                });
             }
 
             else if(col.dataIndx == 'lotName')
@@ -220,7 +222,7 @@ td.pq-grid-number-cell
                         else
                             return ui.rowData.lotName;
                     }
-                });                 
+                });
             }
 
             else if(col.dataIndx == 'serialName')
@@ -229,14 +231,14 @@ td.pq-grid-number-cell
                     render:function(ui)
                     {
                         if (ui.rowData.isTotal || !ui.rowData.idSerial) return '';
-                        
+
                         if({!$ObjectType.GMBLASERP__Serial_Number__c.accessible})
                             return '<a href=\"/'+ui.rowData.idSerial+'\" target=\"_blank\">'+ui.rowData.serialName+'</a>';
                         else
                             return ui.rowData.serialName;
                     }
-                });                 
-            }  
+                });
+            }
             else if(col.dataIndx == 'state')
             {
                 $j.extend(col,{
@@ -246,7 +248,7 @@ td.pq-grid-number-cell
                         if(ui.rowData.idProject != undefined || ui.rowData.idProject != null) return ui.rowData.projectStatus;
                     }
                 });
-            }  
+            }
         });
 
         var $gridDiv = $j('#itemSerials');
@@ -264,7 +266,7 @@ td.pq-grid-number-cell
                 $j.each(ui.rows, function(i,v){
                     if(v.rowData.idProject != undefined || v.rowData.idProject != null)
                         $gridDiv.pqGrid( "selection", { type:'row', method:'remove', rowIndx: v.rowIndx });
-                });         
+                });
             }
         });
 
@@ -284,7 +286,7 @@ td.pq-grid-number-cell
                     gGrid.refreshGrid_callback($gridDiv,result);
                 }
                 else{
-                    alert(event.message); 
+                    alert(event.message);
                 }
                 $gridDiv.pqGrid('hideLoading');
             },
@@ -332,10 +334,10 @@ td.pq-grid-number-cell
             listIdSerial,includePreRig,
             function(result,event){
                 if(event.status){
-                    
+
                 }
                 else{
-                    alert(event.message); 
+                    alert(event.message);
                 }
                 refreshAll();
                 $gridDiv.pqGrid('hideLoading');
@@ -348,7 +350,7 @@ td.pq-grid-number-cell
         var gridObj = {title:"Manufacturing Work Orders Created Today",
                         collapsible:{on:false,collapsed:false,toggle:false},
                         columnTemplate: {minWidth:10, sortable:true},
-                        dataModel:{data:[], sorting:'local', location:'local', sortDir:['down'], sortIndx:['workOrderNumber']}, 
+                        dataModel:{data:[], sorting:'local', location:'local', sortDir:['down'], sortIndx:['workOrderNumber']},
                         detailModel:{cache:false},
                         dragColumns:{enabled:false},
                         editable:false,
@@ -426,12 +428,11 @@ td.pq-grid-number-cell
                     gGrid.refreshGrid_callback($gridDiv,result);
                 }
                 else{
-                    alert(event.message); 
+                    alert(event.message);
                 }
                 $gridDiv.pqGrid('hideLoading');
             },
             {buffer:true, escape:true, timeout:120000});
     }
-</script>
-
+  </script>
 </apex:page>

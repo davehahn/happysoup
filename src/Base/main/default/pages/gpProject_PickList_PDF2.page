@@ -1,180 +1,198 @@
-<apex:page StandardController="AcctSeed__Project__c" extensions="gcProject_PickList_PDF2" showHeader="false" sidebar="false" applyBodyTag="false" renderAs="pdf">
+<apex:page
+  StandardController="AcctSeed__Project__c"
+  extensions="gcProject_PickList_PDF2"
+  showHeader="false"
+  sidebar="false"
+  applyBodyTag="false"
+  renderAs="pdf"
+>
+  <head>
+    <style>
+      @page {
+        size: landscape;
+        margin-right: 0.5in;
+        margin-left: 0.5in;
+        margin-top: 1.5in;
+        margin-bottom: 0.25in;
+        border: 0;
+        padding: 0;
 
-<head>
-    <style> 
-        @page { 
-            size:landscape; 
-            margin-right:0.5in;
-            margin-left:0.5in;
-            margin-top:1.5in;
-            margin-bottom:0.25in;
-            border:0;
-            padding:0;
-            
-            @top-center{content: element(header);}
-            @bottom-center{content: element(footer);}
+        @top-center {
+          content: element(header);
         }
+        @bottom-center {
+          content: element(footer);
+        }
+      }
 
-        /*@page{
+      /*@page{
              margin-top:2.1in;
              margin-bottom:1.3in;
         }*/
 
+      body {
+        margin: 0 auto;
+        border: 1px solid white;
+        padding: 0;
+      }
 
-        body{
-            margin:0 auto;
-            border:1px solid white;
-            padding:0;
-        } 
+      .documentTitle1 small {
+        font-size: 0.5em;
+      }
 
-        .documentTitle1 small { font-size: 0.5em; }
+      .runningHeader {
+        position: running(header);
+        width: 100%;
+        border: 1px solid white;
+      }
 
-        .runningHeader{
-            position:running(header);
-            width:100%;
-            border:1px solid white;
-        }
+      .header {
+        border: 0;
+      }
+      .headerLabel {
+        font-weight: bold;
+      }
 
-        .header{
-            border:0;
-        }
-        .headerLabel{
-            font-weight:bold;
-        }
+      .tableHeading {
+        font-size: 11px;
+        vertical-align: top;
+        text-align: center;
+      }
 
-        .tableHeading {
-            font-size:11px;
-            vertical-align:top;
-            text-align:center;
-        }
+      .runningFooter {
+        position: running(footer);
+        width: 100%;
+        border: 1px solid white;
+      }
 
-        .runningFooter {
-            position: running(footer);
-            width:100%;
-            border:1px solid white;
-        }
+      table {
+        border-spacing: 0;
+      }
+      td {
+        padding: 5px;
+      }
 
-        table {
-            border-spacing: 0;
-        }
-            td {
-                padding: 5px;
-            }
+      table.projectMeta {
+        width: 100%;
+        table-layout: fixed;
+        border-collapse: collapse;
+        font-size: 12px;
+        margin-bottom: 2em;
+      }
+      table.projectMeta th,
+      table.projectMeta td {
+        vertical-align: top;
+        padding: 5px;
+      }
 
-        table.projectMeta {
-            width:100%;
-            table-layout: fixed;
-            border-collapse:collapse;
-            font-size: 12px;
-            margin-bottom: 2em;
-        }
-            table.projectMeta th,
-            table.projectMeta td {
-                vertical-align: top;
-                padding: 5px;
-            }
+      table.products {
+        font-size: 12px;
+      }
+      table.products tr {
+      }
+      table.products > tr > th,
+      table.products > tr > td {
+        vertical-align: top;
+        border-top: 1px solid #000;
+        border-width: 1px 0px 1px 1px;
+      }
+      table.products th {
+        font-weight: bold;
+      }
+      table.products td {
+      }
+      table.products td + td {
+        border-left: 1px solid #999;
+      }
 
-        table.products {
-            font-size: 12px;
-        }
-            table.products tr {
-            }
-            table.products>tr>th,
-            table.products>tr>td {
-                vertical-align: top;
-                border-top: 1px solid #000;
-                border-width: 1px 0px 1px 1px;
-            }
-            table.products th {
-                font-weight: bold;
-            }
-            table.products td {}
-            table.products td+td {
-                border-left: 1px solid #999;
-            }
+      table.locations {
+        width: 100%;
+        padding: -5px;
+      }
+      table.locations tr + tr td {
+        border-top: 1px solid #999;
+      }
+      table.locations td + td {
+        border-left: 1px solid #999;
+      }
+      table.locations td {
+        text-align: center;
+      }
 
-        table.locations {
-            width: 100%;
-            padding: -5px;
-        }
-            table.locations tr+tr td{
-                border-top: 1px solid #999;
-            }
-            table.locations td+td{
-                border-left: 1px solid #999;
-            }
-            table.locations td {
-                text-align: center;
-            }
+      table.ersatzCheckbox {
+      }
+      table.ersatzCheckbox td {
+        border: 1px solid #000;
+        max-width: 4px;
+        font-size: 4px;
+        overflow: hidden;
+      }
+      table.ersatzCheckbox.done td {
+        background: #000;
+      }
+      * {
+        font-family: sans-serif;
+      }
 
-        table.ersatzCheckbox {}
-            table.ersatzCheckbox td {
-                border: 1px solid #000;
-                max-width: 4px;
-                font-size: 4px;
-                overflow: hidden;
-            }
-            table.ersatzCheckbox.done td {
-                background: #000;
-            }
-        *{
-            font-family: sans-serif;
-        }
+      .pageNumber:before {
+        content: counter(page);
+      }
 
-        .pageNumber:before{
-            content:counter(page);
-        }
+      .pageCount:before {
+        content: counter(pages);
+      }
 
-        .pageCount:before{
-            content: counter(pages);
-        }
-
-        #statement {
-            margin-top: 10px;
-        }
-        .documentTitle1{
-            color: #000000;
-            font-size: 23px;
-        }
-        .noPadding { padding: 0 !important; }
-        .alignCentre { text-align: center; }
+      #statement {
+        margin-top: 10px;
+      }
+      .documentTitle1 {
+        color: #000000;
+        font-size: 23px;
+      }
+      .noPadding {
+        padding: 0 !important;
+      }
+      .alignCentre {
+        text-align: center;
+      }
     </style>
-</head>
+  </head>
 
-<body>
-
+  <body>
     <div class="runningHeader">
-        <div class="header">
-            <table width="100%">
-                <tr>
-                    <td  width="75%" class="documentTitle1" style="font-weight:bold; vertical-align:middle;">
-                        <small>Materials Picklist</small><br/>
-                        {!project['workOrderNumber']} : {!project['accountName']}
-                    </td>
-                    <td style="font-size:11px; vertical-align:middle; text-align:right;"  width="25%">
-                            Report Generated
-                            <br/>
-                            <apex:outputText value=" {!NOW()}"/><!--do not remove leading blank space...quirk of VF datetime formatting-->
-                            <br/>
-                    </td>           
-                </tr>
-            </table>
-        </div>
+      <div class="header">
+        <table width="100%">
+          <tr>
+            <td width="75%" class="documentTitle1" style="font-weight: bold; vertical-align: middle">
+              <small>Materials Picklist</small><br />
+              {!project['workOrderNumber']} : {!project['accountName']}
+            </td>
+            <td style="font-size: 11px; vertical-align: middle; text-align: right" width="25%">
+              Report Generated
+              <br />
+              <apex:outputText
+                value=" {!NOW()}"
+              /><!--do not remove leading blank space...quirk of VF datetime formatting-->
+              <br />
+            </td>
+          </tr>
+        </table>
+      </div>
     </div>
 
     <table class="projectMeta">
-        <tr>
-            <td width="50%">
-                <table>
-                    <!--tr>
+      <tr>
+        <td width="50%">
+          <table>
+            <!--tr>
                         <th>
                             {!$ObjectType.AcctSeed__Project__c.Label}:
                         </th>
                         <td class="col6">
                             {!project['workOrderNumber']}
                         </td>
-                    </tr-->  
-<!--                     <tr>
+                    </tr-->
+            <!--                     <tr>
                         <th>
                             {!$ObjectType.AcctSeed__Project__c.Label} Name:
                         </th>
@@ -190,157 +208,126 @@
                             {!project['accountName']}
                         </td>
                     </tr>   -->
-                    <tr>
-                        <th>
-                            Salesperson:
-                        </th>
-                        <td class="col6">
-                            {!project['salesperson']}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>
-                            Boat Specialist:
-                        </th>
-                        <td class="col6">
-                            {!project['boatSpecialist']}
-                        </td>
-                    </tr> 
-                    <tr>
-                        <th>
-                            Record Type:
-                        </th>
-                        <td class="col6">
-                            {!project['recordTypeName']}
-                        </td>
-                    </tr>      
-                </table>
-            </td>
-            <td width="50%">
-                <table>  
-                    <tr>
-                        <th>
-                            Manufactured Product:
-                        </th>
-                        <td class="col6">
-                            {!project['manufacturedProductName']}
-                        </td>
-                    </tr>    
-                    <tr>
-                        <th>
-                            Serial Number:
-                        </th>
-                        <td class="col6">
-                            {!project['serialName']}
-                        </td>
-                    </tr>    
-                    <tr>
-                        <th>
-                            Created Date:
-                        </th>
-                        <td class="col6">
-                            {!project['createdDate']}
-                        </td>
-                    </tr>    
-                </table>
-            </td>
-        </tr>
+            <tr>
+              <th>Salesperson:</th>
+              <td class="col6">{!project['salesperson']}</td>
+            </tr>
+            <tr>
+              <th>Boat Specialist:</th>
+              <td class="col6">{!project['boatSpecialist']}</td>
+            </tr>
+            <tr>
+              <th>Record Type:</th>
+              <td class="col6">{!project['recordTypeName']}</td>
+            </tr>
+          </table>
+        </td>
+        <td width="50%">
+          <table>
+            <tr>
+              <th>Manufactured Product:</th>
+              <td class="col6">{!project['manufacturedProductName']}</td>
+            </tr>
+            <tr>
+              <th>Serial Number:</th>
+              <td class="col6">{!project['serialName']}</td>
+            </tr>
+            <tr>
+              <th>Created Date:</th>
+              <td class="col6">{!project['createdDate']}</td>
+            </tr>
+          </table>
+        </td>
+      </tr>
     </table>
 
     <table class="products">
-
-        <tr>
-            <td width="3%"></td>  
-            <td width="20%">
-                <span  class="headerLabel">Project Task</span>
-            </td>       
-            <td width="57%">
-                <span  class="headerLabel">Product</span>
-            </td> 
-            <td width="20%">
-                <table class="locations">
-                    <tr>
-                        <th width="33%">Sec.</th>
-                        <th width="33%">Aisle</th>
-                        <th width="33%">Bin</th>
-                    </tr>
-                </table>
-            </td>
-<!--            <td width="5%">-->
-<!--                <span  class="headerLabel">Get</span>-->
-<!--            </td>-->
-            <td width="5%">
-                <span  class="headerLabel">Inv.</span>
-            </td>   
-<!--            <td width="5%">-->
-<!--                <span  class="headerLabel">Got</span>-->
-<!--            </td> -->
-            <td width="5%">
-                <span  class="headerLabel">Need</span>
-            </td>
-        </tr>
-
-        <apex:repeat value="{!materials}" var="matl">
-            <apex:outputText rendered="{!VALUE(matl['qtyNeeded']) != 0}">
-            <tr style="page-break-inside:avoid;">
-                <td>
-                    <apex:form >
-                        <apex:outputPanel rendered="{! matl['done'] == false }" >
-                            <img src="{!URLFOR($Resource.LegendPDF,'image/todo.png')}" width="10pt" />
-                        </apex:outputPanel>
-                        <apex:outputPanel rendered="{! matl['done'] }" >
-                            <img src="{!URLFOR($Resource.LegendPDF,'image/todone.png')}" width="10pt" />
-                        </apex:outputPanel>
-                    </apex:form>
-                </td>  
-                <td>
-                    <span>{!matl.projectTaskName}</span>
-                </td>
-                <td>
-                    <span>{!matl.productCode}</span>&nbsp;-&nbsp;<span>{!matl.productName}</span>
-                </td>
-                <td class="noPadding">
-                    <table class="locations">
-                        <apex:repeat value="{!matl.locations}" var="loc">
-                            <tr>
-                                <td width="33%">{!loc['section']}</td>
-                                <td width="33%">{!loc['aisle']}</td>
-                                <td width="33%">{!loc['bin']}</td>
-                            </tr>
-                        </apex:repeat>
-                    </table>
-                </td>
-<!--                <td class="alignCentre">-->
-<!--                    <apex:outputText value="{0, number,###,##0}">-->
-<!--                        <apex:param value="{!VALUE(matl['qtySpecified'])}"/>-->
-<!--                    </apex:outputText>-->
-<!--                </td>-->
-                <td class="alignCentre">
-                    <apex:outputText value="{0, number,###,##0}">
-                        <apex:param value="{!VALUE(matl['qtyAvailable'])}"/>
-                    </apex:outputText>
-                </td>
-<!--                <td class="alignCentre">-->
-<!--                    <apex:outputText value="{0, number,###,##0}">-->
-<!--                        <apex:param value="{!VALUE(matl['qtyAllocated'])}"/>-->
-<!--                    </apex:outputText>-->
-<!--                </td>-->
-                <td class="alignCentre">
-                    <apex:outputText value="{0, number,###,##0}">
-                        <apex:param value="{!VALUE(matl['qtyNeeded'])}"/>
-                    </apex:outputText>
-                </td>
+      <tr>
+        <td width="3%"></td>
+        <td width="20%">
+          <span class="headerLabel">Project Task</span>
+        </td>
+        <td width="57%">
+          <span class="headerLabel">Product</span>
+        </td>
+        <td width="20%">
+          <table class="locations">
+            <tr>
+              <th width="33%">Sec.</th>
+              <th width="33%">Aisle</th>
+              <th width="33%">Bin</th>
             </tr>
-            </apex:outputText>
-        </apex:repeat>
+          </table>
+        </td>
+        <!--            <td width="5%">-->
+        <!--                <span  class="headerLabel">Get</span>-->
+        <!--            </td>-->
+        <td width="5%">
+          <span class="headerLabel">Inv.</span>
+        </td>
+        <!--            <td width="5%">-->
+        <!--                <span  class="headerLabel">Got</span>-->
+        <!--            </td> -->
+        <td width="5%">
+          <span class="headerLabel">Need</span>
+        </td>
+      </tr>
 
+      <apex:repeat value="{!materials}" var="matl">
+        <apex:outputText rendered="{!VALUE(matl['qtyNeeded']) != 0}">
+          <tr style="page-break-inside: avoid">
+            <td>
+              <apex:form>
+                <apex:outputPanel rendered="{! matl['done'] == false }">
+                  <img src="{!URLFOR($Resource.LegendPDF,'image/todo.png')}" width="10pt" />
+                </apex:outputPanel>
+                <apex:outputPanel rendered="{! matl['done'] }">
+                  <img src="{!URLFOR($Resource.LegendPDF,'image/todone.png')}" width="10pt" />
+                </apex:outputPanel>
+              </apex:form>
+            </td>
+            <td>
+              <span>{!matl.projectTaskName}</span>
+            </td>
+            <td><span>{!matl.productCode}</span>&nbsp;-&nbsp;<span>{!matl.productName}</span></td>
+            <td class="noPadding">
+              <table class="locations">
+                <apex:repeat value="{!matl.locations}" var="loc">
+                  <tr>
+                    <td width="33%">{!loc['section']}</td>
+                    <td width="33%">{!loc['aisle']}</td>
+                    <td width="33%">{!loc['bin']}</td>
+                  </tr>
+                </apex:repeat>
+              </table>
+            </td>
+            <!--                <td class="alignCentre">-->
+            <!--                    <apex:outputText value="{0, number,###,##0}">-->
+            <!--                        <apex:param value="{!VALUE(matl['qtySpecified'])}"/>-->
+            <!--                    </apex:outputText>-->
+            <!--                </td>-->
+            <td class="alignCentre">
+              <apex:outputText value="{0, number,###,##0}">
+                <apex:param value="{!VALUE(matl['qtyAvailable'])}" />
+              </apex:outputText>
+            </td>
+            <!--                <td class="alignCentre">-->
+            <!--                    <apex:outputText value="{0, number,###,##0}">-->
+            <!--                        <apex:param value="{!VALUE(matl['qtyAllocated'])}"/>-->
+            <!--                    </apex:outputText>-->
+            <!--                </td>-->
+            <td class="alignCentre">
+              <apex:outputText value="{0, number,###,##0}">
+                <apex:param value="{!VALUE(matl['qtyNeeded'])}" />
+              </apex:outputText>
+            </td>
+          </tr>
+        </apex:outputText>
+      </apex:repeat>
     </table>
 
     <div class="runningFooter">
-        <div class="footer">
-        </div>
+      <div class="footer"></div>
     </div>
-
-</body>
-
+  </body>
 </apex:page>

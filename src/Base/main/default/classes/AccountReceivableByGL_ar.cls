@@ -1,1013 +1,1044 @@
 public without sharing class AccountReceivableByGL_ar {
-    public AccountReceivableByGL_ar(){}
+  public AccountReceivableByGL_ar() {
+  }
 
-    public class transactionData {
-        public Id accountId { get; set; }
-        public String accountName { get; set; }
-        public String accountGLName { get; set; }
-        public String accountType { get; set; }
-        public Decimal depositsBalance { get; set; }
-        public Decimal billingBalance { get; set; }
-        public Decimal receiptBalance { get; set; }
-        public Decimal actualBalance { get; set; }
+  public class transactionData {
+    public Id accountId { get; set; }
+    public String accountName { get; set; }
+    public String accountGLName { get; set; }
+    public String accountType { get; set; }
+    public Decimal depositsBalance { get; set; }
+    public Decimal billingBalance { get; set; }
+    public Decimal receiptBalance { get; set; }
+    public Decimal actualBalance { get; set; }
 
-        transactionData (){
-        	accountId = null;
-        	accountName = '';
-            accountGLName = '';
-			accountType = '';
-            depositsBalance = 0;
-            billingBalance = 0;
-            receiptBalance = 0;
-            actualBalance = 0;
-        }
+    transactionData() {
+      accountId = null;
+      accountName = '';
+      accountGLName = '';
+      accountType = '';
+      depositsBalance = 0;
+      billingBalance = 0;
+      receiptBalance = 0;
+      actualBalance = 0;
+    }
+  }
+
+  public class pageData {
+    public Integer pageNumber { get; set; }
+    public Integer totalRecords { get; set; }
+    public List<transactionData> listTxnData { get; set; }
+  }
+
+  @AuraEnabled
+  public static String allAccountRecordTypes() {
+    List<Map<String, String>> listOptions = new List<Map<String, String>>();
+    Map<Id, Schema.RecordTypeInfo> accountRecordTypeInfo = Schema.SObjectType.Account.getRecordTypeInfosById();
+
+    for (Id idRT : accountRecordTypeInfo.keySet()) {
+      Map<String, String> m = new Map<String, String>();
+      m.put('Id', idRT);
+      m.put('Name', accountRecordTypeInfo.get(idRT).getName());
+      listOptions.add(m);
     }
 
-    public class pageData {
-        public Integer pageNumber { get; set; }
-        public Integer totalRecords { get; set; }
-        public List<transactionData> listTxnData { get; set; }
+    return JSON.serialize(listOptions);
+  }
+
+  @AuraEnabled
+  public static list<AcctSeed__Accounting_Period__c> getPeriods() {
+    return GMBLASERP.gcAccountingPeriod.periodAll();
+  }
+
+  @RemoteAction
+  @ReadOnly
+  public static String retrieveNextPeriod(String idPeriod) {
+    if (idPeriod == null)
+      idPeriod = GMBLASERP.gcAccountingPeriod.periodCurr().Id;
+    return GMBLASERP.gcAccountingPeriod.periodNext(idPeriod).Id;
+  }
+
+  @RemoteAction
+  @ReadOnly
+  public static String retrievePreviousPeriod(String idPeriod) {
+    if (idPeriod == null)
+      idPeriod = GMBLASERP.gcAccountingPeriod.periodCurr().Id;
+    return GMBLASERP.gcAccountingPeriod.periodPrev(idPeriod).Id;
+  }
+
+  @AuraEnabled
+  @ReadOnly
+  @RemoteAction
+  public static String retrieveTxnDetailsByAccount(String idAccount, String idPeriod, String strType) {
+    List<Map<String, String>> listTxnData = new List<Map<String, String>>();
+    set<Id> setIdPayee = new Set<Id>();
+    map<Id, transactionData> mapTD = new Map<Id, transactionData>();
+    set<Id> setIdPeriods = new Set<Id>();
+    //retrieve all periods prior to and including the selected period
+    AcctSeed__Accounting_Period__c period = [
+      SELECT Id, AcctSeed__Start_Date__c, AcctSeed__End_Date__c
+      FROM AcctSeed__Accounting_Period__c
+      WHERE Id = :idPeriod
+    ][0];
+    //setIdPeriods.add(period.Id);
+    for (AcctSeed__Accounting_Period__c p : [
+      SELECT Id
+      FROM AcctSeed__Accounting_Period__c
+      WHERE AcctSeed__Start_Date__c <= :period.AcctSeed__Start_Date__c
+    ]) {
+      setIdPeriods.add(p.Id);
     }
 
-    @AuraEnabled
-    public static String allAccountRecordTypes()
-    {
-        List<Map<String,String>> listOptions = new List<Map<String,String>>();
-        Map<Id,Schema.RecordTypeInfo> accountRecordTypeInfo = Schema.SObjectType.Account.getRecordTypeInfosById();
+    AcctSeed__Accounting_Settings__c accSetting = [
+      SELECT AcctSeed__AR_Control_GL_Account__c, AcctSeed__Unapplied_Cash_GL_Account__c
+      FROM AcctSeed__Accounting_Settings__c
+      ORDER BY CreatedDate
+    ][0];
+    Id idGLAR = accSetting.AcctSeed__AR_Control_GL_Account__c;
+    Id idGLUnapplied = accSetting.AcctSeed__Unapplied_Cash_GL_Account__c;
+    Id idGlDeposit = gcConstants.idGlDeposit;
+    Set<Id> setIdGL = new Set<Id>();
+    System.debug(loggingLevel.error, 'strType:' + strType);
+    if (strType == 'arcontrol')
+      setIdGL.add(idGLAR);
+    else if (strType == 'deposits')
+      setIdGL.add(idGlDeposit);
+    else
+      setIdGL.add(idGLUnapplied);
+    System.debug(loggingLevel.error, 'setIdGL:' + setIdGL);
 
-        for(Id idRT : accountRecordTypeInfo.keySet())
-        {
-            Map<String,String> m = new Map<String,String>();
-            m.put('Id',idRT);
-            m.put('Name', accountRecordTypeInfo.get(idRT).getName());
-            listOptions.add(m);
-        }
+    for (AcctSeed__Transaction__c txn : [
+      SELECT
+        Id,
+        Name,
+        AcctSeed__Account__c,
+        AcctSeed__Billing_Line__r.AcctSeed__Billing__r.Name,
+        AcctSeed__Billing_Line__r.AcctSeed__Billing__r.AcctSeed__Customer__c,
+        AcctSeed__Billing_Cash_Receipt__r.AcctSeed__Billing__r.Name,
+        AcctSeed__Billing_Cash_Receipt__r.AcctSeed__Billing__r.AcctSeed__Customer__c,
+        AcctSeed__Scheduled_Revenue_Expense__r.AcctSeed__Billing__r.Name,
+        AcctSeed__Scheduled_Revenue_Expense__r.AcctSeed__Billing__r.AcctSeed__Customer__c,
+        AcctSeed__GL_Account_Variable_1__c,
+        AcctSeed__GL_Account_Variable_1__r.Name,
+        AcctSeed__Amount__c
+      FROM AcctSeed__Transaction__c
+      WHERE
+        AcctSeed__GL_Account__c IN :setIdGL
+        AND AcctSeed__Accounting_Period__c IN :setIdPeriods
+        AND (AcctSeed__Amount__c < 0
+        OR AcctSeed__Amount__c > 0)
+        AND (AcctSeed__Account__c = :idAccount
+        OR AcctSeed__Billing_Line__r.AcctSeed__Billing__r.AcctSeed__Customer__c = :idAccount
+        OR AcctSeed__Billing_Cash_Receipt__r.AcctSeed__Billing__r.AcctSeed__Customer__c = :idAccount
+        OR AcctSeed__Scheduled_Revenue_Expense__r.AcctSeed__Billing__r.AcctSeed__Customer__c = :idAccount)
+    ]) {
+      String typeName = 'TXN';
+      String sourceName = txn.Name;
+      Id idPayee = txn.AcctSeed__Account__c;
+      if (idPayee == null) {
+        typeName = 'Billing';
+        sourceName = txn.AcctSeed__Billing_Line__r.AcctSeed__Billing__r.Name;
+        idPayee = txn.AcctSeed__Billing_Line__r.AcctSeed__Billing__r.AcctSeed__Customer__c;
+      }
+      if (idPayee == null) {
+        typeName = 'Billing Cash Receipt';
+        sourceName = txn.AcctSeed__Billing_Cash_Receipt__r.AcctSeed__Billing__r.Name;
+        idPayee = txn.AcctSeed__Billing_Cash_Receipt__r.AcctSeed__Billing__r.AcctSeed__Customer__c;
+      }
+      if (idPayee == null) {
+        typeName = 'Scheduled Revenue Expense';
+        sourceName = txn.AcctSeed__Scheduled_Revenue_Expense__r.AcctSeed__Billing__r.Name;
+        idPayee = txn.AcctSeed__Scheduled_Revenue_Expense__r.AcctSeed__Billing__r.AcctSeed__Customer__c;
+      }
 
-        return JSON.serialize(listOptions);
+      //if(idPayee == null) continue;
+
+      Decimal amt = txn.AcctSeed__Amount__c;
+      Map<String, String> m = new Map<String, String>();
+      m.put('Id', txn.Id);
+      m.put('type', typeName);
+      m.put('sourceName', sourceName);
+      m.put('txnAmount', String.valueOf(amt));
+      listTxnData.add(m);
     }
 
-    @AuraEnabled
-    public static list<AcctSeed__Accounting_Period__c> getPeriods()
-    {
-        return GMBLASERP.gcAccountingPeriod.periodAll();
+    return JSON.serialize(listTxnData);
+  }
+
+  @RemoteAction
+  @ReadOnly
+  public static List<transactionData> retrieveAccountTxnDetails(String idPeriod) {
+    List<transactionData> listTxnData = new List<transactionData>();
+    set<Id> setIdAccounts = new Set<Id>();
+    set<Id> setIdPayee = new Set<Id>();
+    map<Id, transactionData> mapTD = new Map<Id, transactionData>();
+
+    set<Id> setIdPeriods = new Set<Id>();
+    //retrieve all periods prior to and including the selected period
+    AcctSeed__Accounting_Period__c period = [
+      SELECT Id, AcctSeed__Start_Date__c, AcctSeed__End_Date__c
+      FROM AcctSeed__Accounting_Period__c
+      WHERE Id = :idPeriod
+    ][0];
+    //setIdPeriods.add(period.Id);
+    for (AcctSeed__Accounting_Period__c p : [
+      SELECT Id
+      FROM AcctSeed__Accounting_Period__c
+      WHERE AcctSeed__Start_Date__c <= :period.AcctSeed__Start_Date__c
+    ]) {
+      setIdPeriods.add(p.Id);
     }
-    
-    @RemoteAction @ReadOnly
-    public static String retrieveNextPeriod(String idPeriod)
-    {
-        if(idPeriod == null) idPeriod = GMBLASERP.gcAccountingPeriod.periodCurr().Id;
-        return GMBLASERP.gcAccountingPeriod.periodNext(idPeriod).Id;
-    }
+    System.debug(loggingLevel.error, 'setIdPeriods:' + setIdPeriods);
+    AcctSeed__Accounting_Settings__c accSetting = [
+      SELECT AcctSeed__AR_Control_GL_Account__c, AcctSeed__Unapplied_Cash_GL_Account__c
+      FROM AcctSeed__Accounting_Settings__c
+      ORDER BY CreatedDate
+    ][0];
+    Id idGLAR = accSetting.AcctSeed__AR_Control_GL_Account__c;
+    Id idGLUnapplied = accSetting.AcctSeed__Unapplied_Cash_GL_Account__c;
+    Id idGlDeposit = gcConstants.idGlDeposit;
+    Set<Id> setIdGL = new Set<Id>{ idGLAR, idGLUnapplied, idGlDeposit };
+    //retrieve the AR control account
+    list<sObject> listAggObj = new List<sObject>();
+    String soql;
+    soql = ' SELECT ';
+    soql += ' AcctSeed__Account__c idAccount, ';
+    soql += ' AcctSeed__GL_Account__c idGL, ';
+    soql += ' AcctSeed__Billing_Line__r.AcctSeed__Billing__r.AcctSeed__Customer__c idAccountB, ';
+    soql += ' AcctSeed__Billing_Cash_Receipt__r.AcctSeed__Billing__r.AcctSeed__Customer__c idAccountBcr, ';
+    soql += ' AcctSeed__Scheduled_Revenue_Expense__r.AcctSeed__Billing__r.AcctSeed__Customer__c idAccountSre, ';
+    soql += ' sum(AcctSeed__Amount__c) amt ';
+    soql += ' FROM AcctSeed__Transaction__c ';
+    soql += ' WHERE AcctSeed__GL_Account__c IN :setIdGL ';
+    soql += ' AND AcctSeed__Accounting_Period__c IN :setIdPeriods ';
+    soql += ' AND (AcctSeed__Amount__c < 0 OR AcctSeed__Amount__c > 0) ';
+    soql += ' GROUP BY ';
+    soql += ' AcctSeed__Account__c, ';
+    soql += ' AcctSeed__GL_Account__c, ';
+    soql += ' AcctSeed__Billing_Line__r.AcctSeed__Billing__r.AcctSeed__Customer__c, ';
+    soql += ' AcctSeed__Billing_Cash_Receipt__r.AcctSeed__Billing__r.AcctSeed__Customer__c, ';
+    soql += ' AcctSeed__Scheduled_Revenue_Expense__r.AcctSeed__Billing__r.AcctSeed__Customer__c ';
 
-    @RemoteAction @ReadOnly
-    public static String retrievePreviousPeriod(String idPeriod)
-    {
-        if(idPeriod == null) idPeriod = GMBLASERP.gcAccountingPeriod.periodCurr().Id;
-        return GMBLASERP.gcAccountingPeriod.periodPrev(idPeriod).Id;
-    }
+    soql += ' HAVING (sum(AcctSeed__Amount__c) < 0 OR sum(AcctSeed__Amount__c) > 0)';
 
-    @AuraEnabled @ReadOnly @RemoteAction
-    public static String retrieveTxnDetailsByAccount(String idAccount, String idPeriod, String strType)
-    {
-        List<Map<String,String>> listTxnData = new List<Map<String,String>>();
-        set<Id> setIdPayee = new set<Id>();
-        map<Id,transactionData> mapTD = new map<Id,transactionData>();
-        set<Id> setIdPeriods = new set<Id>();
-        //retrieve all periods prior to and including the selected period
-        AcctSeed__Accounting_Period__c period = [SELECT Id, AcctSeed__Start_Date__c, AcctSeed__End_Date__c FROM AcctSeed__Accounting_Period__c WHERE Id = :idPeriod][0];
-        //setIdPeriods.add(period.Id);
-        for(AcctSeed__Accounting_Period__c p : [SELECT Id FROM AcctSeed__Accounting_Period__c WHERE AcctSeed__Start_Date__c <= :period.AcctSeed__Start_Date__c])
-        {
-            setIdPeriods.add(p.Id);
-        }
+    listAggObj.addAll(Database.query(soql));
+    System.debug(loggingLevel.error, 'soql:' + soql);
+    System.debug(loggingLevel.error, 'listAggObj:' + listAggObj);
 
-        AcctSeed__Accounting_Settings__c accSetting = [SELECT AcctSeed__AR_Control_GL_Account__c, AcctSeed__Unapplied_Cash_GL_Account__c FROM AcctSeed__Accounting_Settings__c ORDER BY CreatedDate][0];
-        Id idGLAR = accSetting.AcctSeed__AR_Control_GL_Account__c;
-        Id idGLUnapplied = accSetting.AcctSeed__Unapplied_Cash_GL_Account__c;
-        Id idGlDeposit = gcConstants.idGlDeposit;
-        Set<Id> setIdGL = new Set<Id>();
-        System.debug(loggingLevel.error,'strType:'+strType);
-        if(strType == 'arcontrol')
-            setIdGL.add(idGLAR);
-        else if(strType == 'deposits')
-            setIdGL.add(idGlDeposit);
-        else
-            setIdGL.add(idGLUnapplied);
-        System.debug(loggingLevel.error,'setIdGL:'+setIdGL);
+    for (sObject aggRes : listAggObj) {
+      Id idPayee = (Id) aggRes.get('idAccount');
+      if (idPayee == null)
+        idPayee = (Id) aggRes.get('idAccountB');
+      if (idPayee == null)
+        idPayee = (Id) aggRes.get('idAccountBcr');
+      if (idPayee == null)
+        idPayee = (Id) aggRes.get('idAccountSre');
 
-        for(AcctSeed__Transaction__c txn :
-            [SELECT Id, Name, AcctSeed__Account__c,
-                AcctSeed__Billing_Line__r.AcctSeed__Billing__r.Name,
-                AcctSeed__Billing_Line__r.AcctSeed__Billing__r.AcctSeed__Customer__c,
-                AcctSeed__Billing_Cash_Receipt__r.AcctSeed__Billing__r.Name,
-                AcctSeed__Billing_Cash_Receipt__r.AcctSeed__Billing__r.AcctSeed__Customer__c,
-                AcctSeed__Scheduled_Revenue_Expense__r.AcctSeed__Billing__r.Name,
-                AcctSeed__Scheduled_Revenue_Expense__r.AcctSeed__Billing__r.AcctSeed__Customer__c,
-                AcctSeed__GL_Account_Variable_1__c,
-                AcctSeed__GL_Account_Variable_1__r.Name,
-                AcctSeed__Amount__c
-            FROM AcctSeed__Transaction__c
-            WHERE AcctSeed__GL_Account__c IN :setIdGL
-                AND AcctSeed__Accounting_Period__c IN :setIdPeriods
-                AND (AcctSeed__Amount__c < 0 OR AcctSeed__Amount__c > 0)
-                AND (AcctSeed__Account__c =:idAccount
-                    OR AcctSeed__Billing_Line__r.AcctSeed__Billing__r.AcctSeed__Customer__c =: idAccount
-                    OR AcctSeed__Billing_Cash_Receipt__r.AcctSeed__Billing__r.AcctSeed__Customer__c =:idAccount
-                    OR AcctSeed__Scheduled_Revenue_Expense__r.AcctSeed__Billing__r.AcctSeed__Customer__c =:idAccount)])
-        {
-            String typeName = 'TXN';
-            String sourceName = txn.Name;
-            Id idPayee = txn.AcctSeed__Account__c;
-            if(idPayee == null){
-               typeName = 'Billing';
-               sourceName = txn.AcctSeed__Billing_Line__r.AcctSeed__Billing__r.Name;
-               idPayee = txn.AcctSeed__Billing_Line__r.AcctSeed__Billing__r.AcctSeed__Customer__c;
-            }
-            if(idPayee == null){
-               typeName = 'Billing Cash Receipt';
-               sourceName = txn.AcctSeed__Billing_Cash_Receipt__r.AcctSeed__Billing__r.Name;
-               idPayee = txn.AcctSeed__Billing_Cash_Receipt__r.AcctSeed__Billing__r.AcctSeed__Customer__c;
-            }
-            if(idPayee == null){
-               typeName = 'Scheduled Revenue Expense';
-               sourceName = txn.AcctSeed__Scheduled_Revenue_Expense__r.AcctSeed__Billing__r.Name;
-               idPayee = txn.AcctSeed__Scheduled_Revenue_Expense__r.AcctSeed__Billing__r.AcctSeed__Customer__c;
-            }
-            
-            //if(idPayee == null) continue;
+      Decimal amt = (Decimal) aggRes.get('amt');
+      Id idGL = (Id) aggRes.get('idGL');
 
-            Decimal amt = txn.AcctSeed__Amount__c;
-            Map<String,String> m = new Map<String,String>();
-            m.put('Id', txn.Id);
-            m.put('type', typeName);
-            m.put('sourceName', sourceName);
-            m.put('txnAmount', String.valueOf(amt));
-            listTxnData.add(m);
-        }
-        
-        return JSON.serialize( listTxnData );        
+      if (!mapTD.containsKey(idPayee))
+        mapTD.put(idPayee, new transactionData());
+
+      transactionData txnData = mapTD.get(idPayee);
+      if (idGL == idGLAR)
+        txnData.billingBalance += amt;
+
+      if (idGL == idGLUnapplied)
+        txnData.receiptBalance += amt;
+
+      if (idGL == idGlDeposit)
+        txnData.depositsBalance += amt;
     }
 
-    @RemoteAction @ReadOnly
-    public static List<transactionData> retrieveAccountTxnDetails(String idPeriod)
-    {
-        List<transactionData> listTxnData = new List<transactionData>();
-        set<Id> setIdAccounts = new set<Id>();
-        set<Id> setIdPayee = new set<Id>();
-        map<Id,transactionData> mapTD = new map<Id,transactionData>();
+    for (Account a : [
+      SELECT Id, Name, GL_Account_Variable_1__c, GL_Account_Variable_1__r.Name, RecordType.Name
+      FROM Account
+      WHERE Id IN :mapTD.keySet()
+    ]) {
+      if (!mapTD.containsKey(a.Id))
+        mapTD.put(a.Id, new transactionData());
 
-        set<Id> setIdPeriods = new set<Id>();
-        //retrieve all periods prior to and including the selected period
-        AcctSeed__Accounting_Period__c period = [SELECT Id, AcctSeed__Start_Date__c, AcctSeed__End_Date__c FROM AcctSeed__Accounting_Period__c WHERE Id = :idPeriod][0];
-        //setIdPeriods.add(period.Id);
-        for(AcctSeed__Accounting_Period__c p : [SELECT Id FROM AcctSeed__Accounting_Period__c WHERE AcctSeed__Start_Date__c <= :period.AcctSeed__Start_Date__c])
-        {
-            setIdPeriods.add(p.Id);
-        }
-        System.debug(loggingLevel.error,'setIdPeriods:'+setIdPeriods);
-        AcctSeed__Accounting_Settings__c accSetting = [SELECT AcctSeed__AR_Control_GL_Account__c, AcctSeed__Unapplied_Cash_GL_Account__c FROM AcctSeed__Accounting_Settings__c ORDER BY CreatedDate][0];
-        Id idGLAR = accSetting.AcctSeed__AR_Control_GL_Account__c;
-        Id idGLUnapplied = accSetting.AcctSeed__Unapplied_Cash_GL_Account__c;
-        Id idGlDeposit = gcConstants.idGlDeposit;
-        Set<Id> setIdGL = new Set<Id>{idGLAR,idGLUnapplied,idGlDeposit};
-        //retrieve the AR control account
-        list<sObject> listAggObj = new list<sObject>();
-        String soql;
-        soql  = ' SELECT ';
-        soql += ' AcctSeed__Account__c idAccount, ';
-        soql += ' AcctSeed__GL_Account__c idGL, ';
-        soql += ' AcctSeed__Billing_Line__r.AcctSeed__Billing__r.AcctSeed__Customer__c idAccountB, ';
-        soql += ' AcctSeed__Billing_Cash_Receipt__r.AcctSeed__Billing__r.AcctSeed__Customer__c idAccountBcr, ';
-        soql += ' AcctSeed__Scheduled_Revenue_Expense__r.AcctSeed__Billing__r.AcctSeed__Customer__c idAccountSre, ';
-        soql += ' sum(AcctSeed__Amount__c) amt ';
-        soql += ' FROM AcctSeed__Transaction__c ';
-        soql += ' WHERE AcctSeed__GL_Account__c IN :setIdGL ';
-        soql += ' AND AcctSeed__Accounting_Period__c IN :setIdPeriods ';
-        soql += ' AND (AcctSeed__Amount__c < 0 OR AcctSeed__Amount__c > 0) ';
-        soql += ' GROUP BY ';
-        soql += ' AcctSeed__Account__c, ';
-        soql += ' AcctSeed__GL_Account__c, ';
-        soql += ' AcctSeed__Billing_Line__r.AcctSeed__Billing__r.AcctSeed__Customer__c, ';
-        soql += ' AcctSeed__Billing_Cash_Receipt__r.AcctSeed__Billing__r.AcctSeed__Customer__c, ';
-        soql += ' AcctSeed__Scheduled_Revenue_Expense__r.AcctSeed__Billing__r.AcctSeed__Customer__c ';
-
-        soql += ' HAVING (sum(AcctSeed__Amount__c) < 0 OR sum(AcctSeed__Amount__c) > 0)';
-
-        listAggObj.addAll(Database.query(soql));
-        System.debug(loggingLevel.error,'soql:'+soql);
-        System.debug(loggingLevel.error,'listAggObj:'+listAggObj);
-
-        for(sObject aggRes : listAggObj)
-        {
-            Id idPayee = (Id)aggRes.get('idAccount');
-            if(idPayee == null)
-               idPayee = (Id)aggRes.get('idAccountB');
-            if(idPayee == null)
-               idPayee = (Id)aggRes.get('idAccountBcr');
-            if(idPayee == null)
-               idPayee = (Id)aggRes.get('idAccountSre');
-            
-            Decimal amt = (Decimal)aggRes.get('amt');
-            Id idGL = (Id)aggRes.get('idGL');
-
-            if(!mapTD.containsKey(idPayee))
-                mapTD.put(idPayee, new transactionData());
-
-            transactionData txnData = mapTD.get(idPayee);
-            if(idGL == idGLAR)
-                txnData.billingBalance += amt;
-                
-            if(idGL == idGLUnapplied)
-                txnData.receiptBalance += amt;
-
-            if(idGL == idGlDeposit)
-                txnData.depositsBalance += amt;
-        }
-
-        for(Account a : [SELECT Id, Name, GL_Account_Variable_1__c, GL_Account_Variable_1__r.Name, RecordType.Name FROM Account WHERE Id IN:mapTD.keySet()])
-        {
-            if(!mapTD.containsKey(a.Id))
-                mapTD.put(a.Id, new transactionData());
-            
-            transactionData txnData = mapTD.get(a.Id);
-            txnData.accountId = a.Id;
-            txnData.accountName = a.Name;
-            txnData.accountGLName = a.GL_Account_Variable_1__r.Name;
-            txnData.accountType = a.RecordType.Name;
-            txnData.actualBalance = txnData.billingBalance + txnData.receiptBalance + txnData.depositsBalance;
-            if(txnData.billingBalance == 0 && txnData.receiptBalance == 0 && txnData.depositsBalance == 0) continue;
-            listTxnData.add(txnData);
-        }
-        
-        return listTxnData;
+      transactionData txnData = mapTD.get(a.Id);
+      txnData.accountId = a.Id;
+      txnData.accountName = a.Name;
+      txnData.accountGLName = a.GL_Account_Variable_1__r.Name;
+      txnData.accountType = a.RecordType.Name;
+      txnData.actualBalance = txnData.billingBalance + txnData.receiptBalance + txnData.depositsBalance;
+      if (txnData.billingBalance == 0 && txnData.receiptBalance == 0 && txnData.depositsBalance == 0)
+        continue;
+      listTxnData.add(txnData);
     }
 
-    public static void coverage(){
-        integer i;  
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-        i=1;
-    }
+    return listTxnData;
+  }
+
+  public static void coverage() {
+    integer i;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+  }
 }

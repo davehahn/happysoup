@@ -1,68 +1,66 @@
 <apex:page controller="InventoryMovementReport_ar" showHeader="true" sidebar="true" cache="false" readOnly="true">
-
-<head>
-<style>
-tr.pq-row-select td{
-    background-color:yellow;
-}
-tr.total td{
-    font-weight: bold;
-}
-/*div.pq-grid-footer{
+  <head>
+    <style>
+      tr.pq-row-select td {
+        background-color: yellow;
+      }
+      tr.total td {
+        font-weight: bold;
+      }
+      /*div.pq-grid-footer{
     display:none;
 }*/
-.colHighlight{
-    background-color: yellow;
-}
-</style>
+      .colHighlight {
+        background-color: yellow;
+      }
+    </style>
 
-<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css" />
-<apex:stylesheet value="{!URLFOR($Resource.GMBLJS__jQueryUI,'/jquery-ui/jquery-ui.min.css')}"/>
-<apex:stylesheet value="{!URLFOR($Resource.GMBLJS__pqGridPro241,'/pqgrid.min.css')}"/>
-
-</head>
-<body>
-    <div style="width:98%; margin:0 auto">
-        <table width="100%">
-            <tr style="text-align:center;" id="datepickerContainer">
-                <td colspan="2">
-                    Inventory as of:&nbsp;&nbsp;<input type="text" id="datepicker" readonly="true"/>
-                </td>
-            </tr>
-            <tr>
-                <td width="25%">
-                    <div><div id="warehouse"></div></div>
-                </td>
-                <td width="75%">
-                    <div><div id="product"></div></div>
-                </td>
-            </tr>
-            <tr>
-                <td colspan="2">
-                    <div><div id="detail"></div></div>
-                </td>
-            </tr>
-            <tr>
-                <td colspan="2">
-                    <div id="maps"></div>
-                </td>
-            </tr>
-        </table>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css" />
+    <apex:stylesheet value="{!URLFOR($Resource.GMBLJS__jQueryUI,'/jquery-ui/jquery-ui.min.css')}" />
+    <apex:stylesheet value="{!URLFOR($Resource.GMBLJS__pqGridPro241,'/pqgrid.min.css')}" />
+  </head>
+  <body>
+    <div style="width: 98%; margin: 0 auto">
+      <table width="100%">
+        <tr style="text-align: center" id="datepickerContainer">
+          <td colspan="2">Inventory as of:&nbsp;&nbsp;<input type="text" id="datepicker" readonly="true" /></td>
+        </tr>
+        <tr>
+          <td width="25%">
+            <div><div id="warehouse"></div></div>
+          </td>
+          <td width="75%">
+            <div><div id="product"></div></div>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2">
+            <div><div id="detail"></div></div>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2">
+            <div id="maps"></div>
+          </td>
+        </tr>
+      </table>
     </div>
-</body>
+  </body>
 
-<apex:includeScript value="{!$Resource.GMBLJS__jQuery}"/>
-<apex:includeScript value="{!URLFOR($Resource.GMBLJS__jQueryUI,'/jquery-ui/jquery-ui.min.js')}"/>
-<apex:includeScript value="{!$Resource.GMBLJS__accountingJS}"/>
-<apex:includeScript value="{!$Resource.GMBLJS__ExcellentExport}"/>
+  <apex:includeScript value="{!$Resource.GMBLJS__jQuery}" />
+  <apex:includeScript value="{!URLFOR($Resource.GMBLJS__jQueryUI,'/jquery-ui/jquery-ui.min.js')}" />
+  <apex:includeScript value="{!$Resource.GMBLJS__accountingJS}" />
+  <apex:includeScript value="{!$Resource.GMBLJS__ExcellentExport}" />
 
-<apex:includeScript value="{!URLFOR($Resource.GMBLJS__pqGridPro241,'/pqgrid.min.js')}"/>
+  <apex:includeScript value="{!URLFOR($Resource.GMBLJS__pqGridPro241,'/pqgrid.min.js')}" />
 
-<apex:includeScript value="{!$Resource.GMBLJS__gsrSpinner}"/>
-<apex:includeScript value="{!$Resource.GMBLJS__gsrGrid2}"/>
+  <apex:includeScript value="{!$Resource.GMBLJS__gsrSpinner}" />
+  <apex:includeScript value="{!$Resource.GMBLJS__gsrGrid2}" />
 
-<script>function setFocusOnLoad() {}</script>
-<script type="text/javascript">
+  <script>
+    function setFocusOnLoad() {}
+  </script>
+  <script type="text/javascript">
 
     $j = jQuery.noConflict();
     var currentTheme = "{!$User.UITheme}";
@@ -526,6 +524,5 @@ tr.total td{
         idProductArray = null;
         idWarehouseArray = null;
     }
-</script>
-
+  </script>
 </apex:page>

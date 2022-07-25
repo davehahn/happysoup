@@ -1,11 +1,6 @@
 @isTest
 public with sharing class Factory_PurchaseOrder {
-
-  public static AcctSeedERP__Purchase_Order__c buildMinimalPO(
-    Id vendorId,
-    Id shipToId
-  )
-  {
+  public static AcctSeedERP__Purchase_Order__c buildMinimalPO(Id vendorId, Id shipToId) {
     return new AcctSeedERP__Purchase_Order__c(
       AcctSeedERP__Shipping_Company__c = shipToId,
       AcctSeedERP__Vendor__c = vendorId,
@@ -17,38 +12,19 @@ public with sharing class Factory_PurchaseOrder {
     );
   }
 
-  public static AcctSeedERP__Purchase_Order__c createMinimalPO( Id vendorId,
-    Id shipToId )
-  {
-    AcctSeedERP__Purchase_Order__c po  = buildMinimalPO(
-      vendorId,
-      shipToId
-    );
+  public static AcctSeedERP__Purchase_Order__c createMinimalPO(Id vendorId, Id shipToId) {
+    AcctSeedERP__Purchase_Order__c po = buildMinimalPO(vendorId, shipToId);
     insert po;
     return po;
   }
 
-  public static AcctSeedERP__Purchase_Order_Line__c createLineItem(
-    Id poId,
-    Id prodId,
-    Integer count
-  )
-  {
-    AcctSeedERP__Purchase_Order_Line__c pol = buildLineItem(
-      poId,
-      prodId,
-      count
-    );
+  public static AcctSeedERP__Purchase_Order_Line__c createLineItem(Id poId, Id prodId, Integer count) {
+    AcctSeedERP__Purchase_Order_Line__c pol = buildLineItem(poId, prodId, count);
     insert pol;
     return pol;
   }
 
-  public static AcctSeedERP__Purchase_Order_Line__c buildLineItem(
-    Id poId,
-    Id prodId,
-    Integer count
-  )
-  {
+  public static AcctSeedERP__Purchase_Order_Line__c buildLineItem(Id poId, Id prodId, Integer count) {
     return new AcctSeedERP__Purchase_Order_Line__c(
       AcctSeedERP__Purchase_Order__c = poId,
       AcctSeedERP__Product__c = prodId,
@@ -57,16 +33,13 @@ public with sharing class Factory_PurchaseOrder {
     );
   }
 
-  public static void addPOLines( Integer count,  Id poId )
-  {
+  public static void addPOLines(Integer count, Id poId) {
     AcctSeedERP__Purchase_Order_Line__c[] pols = new List<AcctSeedERP__Purchase_Order_Line__c>();
-    Product2[] parts = Factory_Product.buildNonSerializedProducts( 'Part', 'Hardware', count );
+    Product2[] parts = Factory_Product.buildNonSerializedProducts('Part', 'Hardware', count);
     insert parts;
-    for( Product2 p : parts )
-    {
-      pols.add( buildLineItem( poId, p.Id, 1 ) );
+    for (Product2 p : parts) {
+      pols.add(buildLineItem(poId, p.Id, 1));
     }
     insert pols;
   }
-
 }

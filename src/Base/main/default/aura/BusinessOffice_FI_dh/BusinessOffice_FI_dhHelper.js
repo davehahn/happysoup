@@ -1,28 +1,27 @@
 ({
-  fetchFinancialInstitutionOptions: function( component )
-  {
-    var action = component.get('c.fetchFinancialInstitutionOptions'), la;
+  fetchFinancialInstitutionOptions: function (component) {
+    var action = component.get("c.fetchFinancialInstitutionOptions"),
+      la;
     action.setParams({
-      recordId: component.get('v.recordId')
+      recordId: component.get("v.recordId")
     });
-    la = new LightningApex( this, action )
+    la = new LightningApex(this, action);
     return la.fire();
   },
 
-  updateFinancialInstitution: function( component )
-  {
-    var action = component.get('c.updateFinancialInstitution'), la;
+  updateFinancialInstitution: function (component) {
+    var action = component.get("c.updateFinancialInstitution"),
+      la;
     action.setParams({
-      recordId: component.get('v.recordId'),
-      fi_value: component.get('v.financingInstitution')
+      recordId: component.get("v.recordId"),
+      fi_value: component.get("v.financingInstitution")
     });
-    la = new LightningApex( this, action );
+    la = new LightningApex(this, action);
     return la.fire();
   },
 
-	toggleSpinner: function( component )
-  {
-    var spinner = component.find('fi-spinner');
-    $A.util.toggleClass( spinner, 'slds-hide' );
-	}
-})
+  toggleSpinner: function (component) {
+    var spinner = component.find("fi-spinner");
+    $A.util.toggleClass(spinner, "slds-hide");
+  }
+});

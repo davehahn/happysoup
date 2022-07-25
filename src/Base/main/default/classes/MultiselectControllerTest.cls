@@ -21,31 +21,29 @@
  */
 @isTest
 private class MultiselectControllerTest {
-    static testMethod void testMultiselectController() {
-        MultiselectController c = new MultiselectController();
+  static testMethod void testMultiselectController() {
+    MultiselectController c = new MultiselectController();
 
-        c.leftOptions = new List<SelectOption>();
-        c.rightOptions = new List<SelectOption>();
+    c.leftOptions = new List<SelectOption>();
+    c.rightOptions = new List<SelectOption>();
 
-        c.leftOptionsHidden = 'A&a&b&b&C&c';
-        c.rightOptionsHidden = '';
+    c.leftOptionsHidden = 'A&a&b&b&C&c';
+    c.rightOptionsHidden = '';
 
-        System.assertEquals(c.leftOptions.size(), 3);
-        System.assertEquals(c.rightOptions.size(), 0);
+    System.assertEquals(c.leftOptions.size(), 3);
+    System.assertEquals(c.rightOptions.size(), 0);
+  }
+
+  static testMethod void set_get_Test() {
+    SelectOption[] leftOptions = new List<SelectOption>();
+    for (Integer i = 0; i < 5; i++) {
+      leftOptions.add(new SelectOption(String.valueOf(i), 'test-' + String.valueOf(i)));
     }
+    MultiselectController msc = new MultiselectController();
+    msc.setLeftOptions(leftOptions);
 
-    static testMethod void set_get_Test()
-    {
-      SelectOption[] leftOptions = new List<SelectOption>();
-      for( Integer i=0; i < 5; i++ )
-      {
-        leftOptions.add( new SelectOption( String.valueOf(i), 'test-'+String.valueOf(i) ) );
-      }
-      MultiselectController msc = new MultiselectController();
-      msc.setLeftOptions( leftOptions );
-
-      System.assertEquals( 5, msc.leftOptions.size() );
-      System.assertEquals( 5, msc.leftOptionsCount );
-      System.assertEquals( 5, msc.getLeftOptions().size() );
-    }
+    System.assertEquals(5, msc.leftOptions.size());
+    System.assertEquals(5, msc.leftOptionsCount);
+    System.assertEquals(5, msc.getLeftOptions().size());
+  }
 }

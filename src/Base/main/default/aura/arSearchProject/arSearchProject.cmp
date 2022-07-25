@@ -1,35 +1,54 @@
-<aura:component controller="arSearchProject"
-								implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome"
-								access="global">
+<aura:component
+  controller="arSearchProject"
+  implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome"
+  access="global"
+>
+  <aura:attribute name="searchQuery" type="String" />
+  <aura:attribute name="accountList" type="Object" access="public" />
+  <aura:attribute name="selectionMade" type="Boolean" default="false" />
+  <aura:attribute name="filterId" type="String" />
+  <aura:attribute name="fieldLabel" type="String" default="Customer Name, ERP Order Name or ERP Order Number" />
 
-<aura:attribute name="searchQuery" 		type="String" />
-<aura:attribute name="accountList" 		type="Object" access="public"/>
-<aura:attribute name="selectionMade" 	type="Boolean" default="false" />
-<aura:attribute name="filterId" 		type="String" />
-<aura:attribute name="fieldLabel"      	type="String"  default="Customer Name, ERP Order Name or ERP Order Number" />
+  <aura:handler name="change" value="{!v.searchQuery}" action="{!c.lookupProjects}" />
+  <aura:handler name="change" value="{!v.accountList}" action="{!c.close}" />
+  <aura:registerEvent name="filterSelectedEvent" type="c:filterSelectedEvent" />
 
-<aura:handler name="change" value="{!v.searchQuery}" action="{!c.lookupProjects}" />
-<aura:handler name="change" value="{!v.accountList}" action="{!c.close}" />
-<aura:registerEvent name="filterSelectedEvent" type="c:filterSelectedEvent" />
-
-<div class="slds-form-element">
-  <div class="slds-combobox_container">
-  	<div class="slds-combobox slds-dropdown-trigger slds-dropdown-trigger--click slds-is-closed" aria-expanded="true" aria-haspopup="listbox" role="combobox" aura:id="name_combobox">
-      <div class="slds-form-element">
-      	<lightning:input type="search" name="Search" label="{!v.fieldLabel}" placeholder="Start typing" value="{!v.searchQuery}" aura:id="search" />
-      </div>
-      <div id="listbox-unique-id" role="listbox">
-        <ul class="slds-listbox slds-listbox_vertical slds-dropdown slds-dropdown_fluid" role="presentation">
+  <div class="slds-form-element">
+    <div class="slds-combobox_container">
+      <div
+        class="slds-combobox slds-dropdown-trigger slds-dropdown-trigger--click slds-is-closed"
+        aria-expanded="true"
+        aria-haspopup="listbox"
+        role="combobox"
+        aura:id="name_combobox"
+      >
+        <div class="slds-form-element">
+          <lightning:input
+            type="search"
+            name="Search"
+            label="{!v.fieldLabel}"
+            placeholder="Start typing"
+            value="{!v.searchQuery}"
+            aura:id="search"
+          />
+        </div>
+        <div id="listbox-unique-id" role="listbox">
+          <ul class="slds-listbox slds-listbox_vertical slds-dropdown slds-dropdown_fluid" role="presentation">
             <aura:iteration items="{!v.accountList}" var="item" indexVar="i">
               <li role="option" class="slds-listbox__item" data-address-id="{!i}">
-                <a  href="javascript:void(0);"
+                <a
+                  href="javascript:void(0);"
+                  role="option"
+                  id="{!'listbox-option-unique-id-' + i}"
+                  onclick="{!c.clickDropDown}"
+                  data-name="{!item.projectName}"
+                  data-filterid="{!item.idProject}"
+                  data-type="{!item.RecordType.Name}"
+                >
+                  <span
+                    class="slds-media slds-listbox__option slds-listbox__option_entity slds-listbox__option_has-meta"
                     role="option"
-                    id="{!'listbox-option-unique-id-' + i}"
-                    onclick="{!c.clickDropDown}"
-                    data-name="{!item.projectName}"
-                    data-filterid="{!item.idProject}"
-                    data-type="{!item.RecordType.Name}">
-                  <span class="slds-media slds-listbox__option slds-listbox__option_entity slds-listbox__option_has-meta" role="option">
+                  >
                     <span class="slds-media__figure">
                       <span class="slds-icon_container slds-icon-standard-account" title="Account">
                         <lightning:icon iconName="custom:custom68" />
@@ -37,22 +56,34 @@
                       </span>
                     </span>
                     <span class="slds-media__body">
-                      <span class="slds-listbox__option-text slds-listbox__option-text_entity">{!item.projectName}</span>
-                      <span class="slds-listbox__option-meta slds-listbox__option-meta_entity">{!item.projectType}</span>
-                      <span class="slds-listbox__option-meta slds-listbox__option-meta_entity">{!item.projectCreated}</span>
+                      <span class="slds-listbox__option-text slds-listbox__option-text_entity"
+                        >{!item.projectName}</span
+                      >
+                      <span class="slds-listbox__option-meta slds-listbox__option-meta_entity"
+                        >{!item.projectType}</span
+                      >
+                      <span class="slds-listbox__option-meta slds-listbox__option-meta_entity"
+                        >{!item.projectCreated}</span
+                      >
                     </span>
                     <span class="slds-media_small">
-                      <span class="slds-listbox__option-text slds-listbox__option-text_entity">{!item.accountName}</span>
-                      <span class="slds-listbox__option-meta slds-listbox__option-meta_entity">{!item.accountType}</span>
-                      <span class="slds-listbox__option-meta slds-listbox__option-meta_entity">{!item.accountBillingStreet}</span>
+                      <span class="slds-listbox__option-text slds-listbox__option-text_entity"
+                        >{!item.accountName}</span
+                      >
+                      <span class="slds-listbox__option-meta slds-listbox__option-meta_entity"
+                        >{!item.accountType}</span
+                      >
+                      <span class="slds-listbox__option-meta slds-listbox__option-meta_entity"
+                        >{!item.accountBillingStreet}</span
+                      >
                     </span>
                   </span>
                 </a>
               </li>
             </aura:iteration>
-        </ul>
+          </ul>
+        </div>
       </div>
     </div>
   </div>
-</div>
 </aura:component>

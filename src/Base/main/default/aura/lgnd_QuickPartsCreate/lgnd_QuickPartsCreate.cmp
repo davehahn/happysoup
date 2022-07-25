@@ -1,9 +1,12 @@
-<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,force:lightningQuickActionWithoutHeader,force:hasRecordId"
-                controller="lgnd_QuickPartsCreateController">
-
-  <ltng:require scripts="{!join(',', $Resource.Libraries +'/js/LightningApex.js',
+<aura:component
+  implements="force:appHostable,flexipage:availableForAllPageTypes,force:lightningQuickActionWithoutHeader,force:hasRecordId"
+  controller="lgnd_QuickPartsCreateController"
+>
+  <ltng:require
+    scripts="{!join(',', $Resource.Libraries +'/js/LightningApex.js',
                                      $Resource.Libraries +'/js/LightningUtils.js') }"
-                afterScriptsLoaded="{!c.doInit}" />
+    afterScriptsLoaded="{!c.doInit}"
+  />
 
   <!-- ATTRIBUTES -->
   <aura:attribute name="recordId" type="String" />
@@ -25,11 +28,9 @@
   <lightning:utilityBarAPI aura:id="utilitybar" />
 
   <div class="{!v.componentContext}">
-
     <div class="slds-page-header" role="banner">
       <p class="slds-text-heading_label">Mercury Product</p>
-      <h1 class="slds-page-header__title slds-m-right_small
-                 slds-truncate slds-align-left">
+      <h1 class="slds-page-header__title slds-m-right_small slds-truncate slds-align-left">
         Create Salesforce Product
       </h1>
     </div>
@@ -38,61 +39,64 @@
 
     <c:toast content="{!v.toastContent}" isThemeReverse="false" containerId="toast" isToast="true" />
 
-
-      <div class="slds-progress">
-        <ol class="slds-progress__list">
-          <li class="{!if(equals(v.currentStep, 1), 'slds-is-active ', '') + 'slds-progress__item'  }">
-            <button class="{!if(v.currentStep > 1, 'slds-button_icon slds-progress__marker_icon ', '') + 'slds-button slds-progress__marker'}">
-              <aura:if isTrue="{!v.currentStep > 1}">
-                <lightning:icon iconName="utility:success" size="x-small" />
-              </aura:if>
-            </button>
-          </li>
-          <li class="{!if(equals(v.currentStep, 2), 'slds-is-active ', '') + 'slds-progress__item'  }">
-            <button class="{!if(v.currentStep > 2, 'slds-button_icon slds-progress__marker_icon ', '') + 'slds-button slds-progress__marker'}">
-              <aura:if isTrue="{!v.currentStep > 2}">
-                <lightning:icon iconName="utility:success" size="x-small" />
-              </aura:if>
-            </button>
-          </li>
-          <li class="{!if(equals(v.currentStep, 3), 'slds-is-active ', '') + 'slds-progress__item'  }">
-            <button class="{!if(v.currentStep > 3, 'slds-button_icon slds-progress__marker_icon ', '') + 'slds-button slds-progress__marker'}">
-
-            </button>
-          </li>
-        </ol>
-        <div class="slds-progress-bar slds-progress-bar_x-small"
-             role="progressbar">
-          <span class="slds-progress-bar__value"
-                style="{!'width:' + mult( div( sub(v.currentStep,1), 2), 100) +'%'}"></span>
-        </div>
+    <div class="slds-progress">
+      <ol class="slds-progress__list">
+        <li class="{!if(equals(v.currentStep, 1), 'slds-is-active ', '') + 'slds-progress__item' }">
+          <button
+            class="{!if(v.currentStep > 1, 'slds-button_icon slds-progress__marker_icon ', '') + 'slds-button slds-progress__marker'}"
+          >
+            <aura:if isTrue="{!v.currentStep > 1}">
+              <lightning:icon iconName="utility:success" size="x-small" />
+            </aura:if>
+          </button>
+        </li>
+        <li class="{!if(equals(v.currentStep, 2), 'slds-is-active ', '') + 'slds-progress__item' }">
+          <button
+            class="{!if(v.currentStep > 2, 'slds-button_icon slds-progress__marker_icon ', '') + 'slds-button slds-progress__marker'}"
+          >
+            <aura:if isTrue="{!v.currentStep > 2}">
+              <lightning:icon iconName="utility:success" size="x-small" />
+            </aura:if>
+          </button>
+        </li>
+        <li class="{!if(equals(v.currentStep, 3), 'slds-is-active ', '') + 'slds-progress__item' }">
+          <button
+            class="{!if(v.currentStep > 3, 'slds-button_icon slds-progress__marker_icon ', '') + 'slds-button slds-progress__marker'}"
+          ></button>
+        </li>
+      </ol>
+      <div class="slds-progress-bar slds-progress-bar_x-small" role="progressbar">
+        <span
+          class="slds-progress-bar__value"
+          style="{!'width:' + mult( div( sub(v.currentStep,1), 2), 100) +'%'}"
+        ></span>
       </div>
-
+    </div>
 
     <!-- ++++ STEP ONE FIELDS ++++ -->
     <div id="step-one" class="{!'step-'+v.currentStep}">
-      <lightning:input label="Name"
-                       name="Name"
-                       class="slds-m-top--medium slds-m-bottom--medium"
-                       value="{!v.part.Name}"
-                       required="true"
-                       aura:id="required-step1"
-                       messageWhenValueMissing="Name is Required" />
+      <lightning:input
+        label="Name"
+        name="Name"
+        class="slds-m-top--medium slds-m-bottom--medium"
+        value="{!v.part.Name}"
+        required="true"
+        aura:id="required-step1"
+        messageWhenValueMissing="Name is Required"
+      />
 
-      <lightning:input label="Name (french)"
-                       name="NameFrench"
-                       class="slds-m-top--medium slds-m-bottom--medium"
-                       value="{!v.part.Name_FR__c}" />
+      <lightning:input
+        label="Name (french)"
+        name="NameFrench"
+        class="slds-m-top--medium slds-m-bottom--medium"
+        value="{!v.part.Name_FR__c}"
+      />
 
-      <lightning:textarea label='Description'
-                          name='description'
-                          value="{!v.part.Description}" />
+      <lightning:textarea label="Description" name="description" value="{!v.part.Description}" />
 
-      <lightning:textarea label='Description (french)'
-                          name='description'
-                          value="{!v.part.Description_FR__c}" />
+      <lightning:textarea label="Description (french)" name="description" value="{!v.part.Description_FR__c}" />
 
-     <!--  <lightning:button label="Next"
+      <!--  <lightning:button label="Next"
                       onclick="{! c.goToNextStep }"
                       class="btm-right-button submit-button" /> -->
     </div>
@@ -100,130 +104,136 @@
 
     <!-- ++++ STEP TWO FIELDS ++++ -->
     <div id="step-two" class="{!'step-'+v.currentStep}">
+      <lightning:input
+        label="Product Code"
+        name="productCode"
+        class="slds-m-top--medium slds-m-bottom--medium"
+        value="{!v.part.ProductCode}"
+        required="true"
+        aura:id="required-step2"
+        messageWhenValueMissing="Product Code is Required"
+      />
 
-      <lightning:input label="Product Code"
-                       name="productCode"
-                       class="slds-m-top--medium slds-m-bottom--medium"
-                       value="{!v.part.ProductCode}"
-                       required="true"
-                       aura:id="required-step2"
-                       messageWhenValueMissing="Product Code is Required" />
-
-      <lightning:select name="family"
-                        label="Family"
-                        class="slds-m-top--medium slds-m-bottom--medium"
-                        value="{!v.part.Family}"
-                        required="true"
-                        aura:id="required-step2"
-                        messageWhenValueMissing="Family is Required">
-        <option value=''>-- Select --</option>
+      <lightning:select
+        name="family"
+        label="Family"
+        class="slds-m-top--medium slds-m-bottom--medium"
+        value="{!v.part.Family}"
+        required="true"
+        aura:id="required-step2"
+        messageWhenValueMissing="Family is Required"
+      >
+        <option value="">-- Select --</option>
         <aura:iteration items="{!v.familySelectOptions}" var="opt">
           <option text="{!opt}" value="{!opt}" selected="{!equals(opt, v.part.Family)}" />
         </aura:iteration>
       </lightning:select>
 
-      <lightning:select name="vendor"
-                        label="Vendor"
-                        class="slds-m-top--medium slds-m-bottom--medium"
-                        value="{!v.part.AcctSeedERP__Default_Vendor__c}"
-                        required="{!v.part.AcctSeed__Inventory_Product__c}"
-                        aura:id="required-step2"
-                        messageWhenValueMissing="Vendor is Required">
-        <option value=''>-- Select --</option>
+      <lightning:select
+        name="vendor"
+        label="Vendor"
+        class="slds-m-top--medium slds-m-bottom--medium"
+        value="{!v.part.AcctSeedERP__Default_Vendor__c}"
+        required="{!v.part.AcctSeed__Inventory_Product__c}"
+        aura:id="required-step2"
+        messageWhenValueMissing="Vendor is Required"
+      >
+        <option value="">-- Select --</option>
         <aura:iteration items="{!v.suppliers}" var="supp">
-          <option text="{!supp.Name}"
-                  value="{!supp.Id}"
-                  selected="{!equals(supp.Id, v.part.AcctSeedERP__Default_Vendor__c)}" />
+          <option
+            text="{!supp.Name}"
+            value="{!supp.Id}"
+            selected="{!equals(supp.Id, v.part.AcctSeedERP__Default_Vendor__c)}"
+          />
         </aura:iteration>
       </lightning:select>
 
-      <lightning:input type="toggle"
-                     label="Is this an inventory product?"
-                     name="inventoryProduct"
-                     class="slds-m-top--x-large"
-                     checked="{!v.part.AcctSeed__Inventory_Product__c}"
-                     messageToggleActive="yes"
-                     messageToggleInactive="no" />
+      <lightning:input
+        type="toggle"
+        label="Is this an inventory product?"
+        name="inventoryProduct"
+        class="slds-m-top--x-large"
+        checked="{!v.part.AcctSeed__Inventory_Product__c}"
+        messageToggleActive="yes"
+        messageToggleInactive="no"
+      />
 
-      <lightning:input type="toggle"
-                     label="Is this a Taxable product?"
-                     name="inventoryProduct"
-                     class="slds-m-top_large"
-                     checked="{!v.part.Taxable__c}"
-                     messageToggleActive="yes"
-                     messageToggleInactive="no" />
-
+      <lightning:input
+        type="toggle"
+        label="Is this a Taxable product?"
+        name="inventoryProduct"
+        class="slds-m-top_large"
+        checked="{!v.part.Taxable__c}"
+        messageToggleActive="yes"
+        messageToggleInactive="no"
+      />
     </div>
     <!-- === STEP TWO FIELDS === -->
 
     <!-- ++++ STEP THREE FIELDS ++++ -->
     <div id="step-three" class="{!'step-'+v.currentStep}">
+      <lightning:select
+        name="unit_of_measure"
+        label="Unit of Measure"
+        class="slds-m-top--medium slds-m-bottom--medium"
+        value="{!v.part.Unit_of_Measurement__c}"
+      >
+        <option value="">-- Select --</option>
+        <aura:iteration items="{!v.unitsOfMeasurmentOptions}" var="unit">
+          <option text="{!unit}" value="{!unit}" selected="{!equals(unit, v.part.Unit_of_Measurement__c)}" />
+        </aura:iteration>
+      </lightning:select>
 
-        <lightning:select name="unit_of_measure"
-                          label="Unit of Measure"
-                          class="slds-m-top--medium slds-m-bottom--medium"
-                          value="{!v.part.Unit_of_Measurement__c}">
-          <option value=''>-- Select --</option>
-          <aura:iteration items="{!v.unitsOfMeasurmentOptions}" var="unit">
-            <option text="{!unit}" value="{!unit}" selected="{!equals(unit, v.part.Unit_of_Measurement__c)}" />
-          </aura:iteration>
-        </lightning:select>
+      <lightning:input
+        type="number"
+        value="{!v.part.AcctSeed__Unit_Cost__c}"
+        name="retailPrice"
+        class="slds-m-top--medium"
+        label="Unit Price"
+        formatter="currency"
+        step="0.01"
+      />
 
-        <lightning:input type="number"
-                         value="{!v.part.AcctSeed__Unit_Cost__c}"
-                         name="retailPrice"
-                         class="slds-m-top--medium"
-                         label="Unit Price"
-                         formatter="currency"
-                         step="0.01" />
+      <lightning:input
+        type="number"
+        value="{!v.retailPrice}"
+        name="retailPrice"
+        class="slds-m-top--medium show-message"
+        label="Retail Sale Price"
+        formatter="currency"
+        required="{!empty(v.partnerPrice)}"
+        messageWhenValueMissing="You mus at least specify either Retail or Partner Price"
+        aura:id="required-step3"
+        step="0.01"
+      />
 
-      <lightning:input type="number"
-                       value="{!v.retailPrice}"
-                       name="retailPrice"
-                       class="slds-m-top--medium show-message"
-                       label="Retail Sale Price"
-                       formatter="currency"
-                       required="{!empty(v.partnerPrice)}"
-                       messageWhenValueMissing="You mus at least specify either Retail or Partner Price"
-                       aura:id="required-step3"
-                       step="0.01" />
-
-      <lightning:input type="number"
-                       value="{!v.partnerPrice}"
-                       name="partnerPrice"
-                       class="slds-m-top--medium show-message"
-                       label="Partner Sale Price"
-                       formatter="currency"
-                       required="{!empty(v.retailPrice)}"
-                       messageWhenValueMissing="You must at least specify either Retail or Partner Price"
-                       aura:id="required-step3"
-                       step="0.01" />
-
+      <lightning:input
+        type="number"
+        value="{!v.partnerPrice}"
+        name="partnerPrice"
+        class="slds-m-top--medium show-message"
+        label="Partner Sale Price"
+        formatter="currency"
+        required="{!empty(v.retailPrice)}"
+        messageWhenValueMissing="You must at least specify either Retail or Partner Price"
+        aura:id="required-step3"
+        step="0.01"
+      />
     </div>
 
     <!-- buttons -->
     <div class="slds-clearfix slds-m-top_medium slds-p-around_small slds-border_top button-container">
       <aura:if isTrue="{! not(equals( v.currentStep, 3)) }">
-        <lightning:button label="Next"
-                          onclick="{! c.goToNextStep }"
-                          class="slds-float_right" />
+        <lightning:button label="Next" onclick="{! c.goToNextStep }" class="slds-float_right" />
       </aura:if>
 
       <aura:if isTrue="{! equals( v.currentStep, 3 )}">
-        <lightning:button variant="brand"
-                          label="Create"
-                          onclick="{! c.submitPart }"
-                          class="slds-float_right" />
+        <lightning:button variant="brand" label="Create" onclick="{! c.submitPart }" class="slds-float_right" />
       </aura:if>
 
       <aura:if isTrue="{! not( equals(v.currentStep, 1)) }">
-        <lightning:button label="Back"
-                          onclick="{! c.goToPrevStep }"
-                          class="slds-float_left" />
+        <lightning:button label="Back" onclick="{! c.goToPrevStep }" class="slds-float_left" />
       </aura:if>
     </div>
-
   </div>
-
-
 </aura:component>

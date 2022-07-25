@@ -3,11 +3,9 @@
  */
 
 ({
-  doNextPromise: function( component, step )
-  {
-    let cmp = component.find('backOrderCreator');
-    switch( step )
-    {
+  doNextPromise: function (component, step) {
+    let cmp = component.find("backOrderCreator");
+    switch (step) {
       case 0:
         return cmp.stageTransferredMaterials();
       case 1:

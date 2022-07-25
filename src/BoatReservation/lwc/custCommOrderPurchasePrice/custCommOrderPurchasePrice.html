@@ -6,14 +6,18 @@
 <template>
   <div class="config-footer_price">
     <div class="amount" if:true={displayCashData}>
-      <lightning-formatted-number value={totalPrice}
-                                  format-style="currency"
-                                  currency-code="CAD"></lightning-formatted-number>
+      <lightning-formatted-number
+        value={totalPrice}
+        format-style="currency"
+        currency-code="CAD"
+      ></lightning-formatted-number>
     </div>
     <div class="amount" if:true={displayLoanData}>
-      <lightning-formatted-number value={payments.weekly}
-                                  format-style="currency"
-                                  currency-code="CAD"></lightning-formatted-number>
+      <lightning-formatted-number
+        value={payments.weekly}
+        format-style="currency"
+        currency-code="CAD"
+      ></lightning-formatted-number>
       <span>
         <template if:true={isEN}>/week</template>
         <template if:true={isFR}>/semaine</template>

@@ -1,25 +1,25 @@
-<apex:page showHeader="false"
-           standardStylesheets="false"
-           sidebar="false"
-           docType="html-5.0"
-           applyBodyTag="False"
-           applyHtmlTag="False"
-           controller="ERP_Partner_Invoice_Viewer_Controller">
-
-  <apex:outputPanel rendered="{!!hasInvoice}">
-    Invoice has not been created yet
-  </apex:outputPanel>
-
+<apex:page
+  showHeader="false"
+  standardStylesheets="false"
+  sidebar="false"
+  docType="html-5.0"
+  applyBodyTag="False"
+  applyHtmlTag="False"
+  controller="ERP_Partner_Invoice_Viewer_Controller"
+>
+  <apex:outputPanel rendered="{!!hasInvoice}"> Invoice has not been created yet </apex:outputPanel>
 
   <apex:outputPanel rendered="{!hasInvoice}">
-    <div style="width: 850px !important; margin:0 auto 3rem auto">
-      <div style="width: 100% !important;" >
-        <iframe height="700px"
-                id="pdfIframe"
-                name="InvoicePDF"
-                width="100%"
-                src="/servlet/servlet.FileDownload?file={!currentDocId}"
-                style="margin-bottom:3rem">
+    <div style="width: 850px !important; margin: 0 auto 3rem auto">
+      <div style="width: 100% !important">
+        <iframe
+          height="700px"
+          id="pdfIframe"
+          name="InvoicePDF"
+          width="100%"
+          src="/servlet/servlet.FileDownload?file={!currentDocId}"
+          style="margin-bottom: 3rem"
+        >
         </iframe>
       </div>
     </div>

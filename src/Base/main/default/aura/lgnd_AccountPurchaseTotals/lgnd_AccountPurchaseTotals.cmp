@@ -1,6 +1,7 @@
-<aura:component controller="lgnd_AccountPurchaseSummary"
-                implements="force:appHostable,flexipage:availableForAllPageTypes,force:hasRecordId">
-
+<aura:component
+  controller="lgnd_AccountPurchaseSummary"
+  implements="force:appHostable,flexipage:availableForAllPageTypes,force:hasRecordId"
+>
   <!-- attributes -->
   <aura:attribute name="recordId" type="Id" />
   <aura:attribute name="salesData" type="Object" />
@@ -9,7 +10,6 @@
   <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
 
   <div>
-
     <div class="slds-spinner_container hidden" aura:id="busy-indicator">
       <div role="status" class="slds-spinner slds-spinner--medium">
         <span class="slds-assistive-text">Loading</span>
@@ -18,133 +18,100 @@
       </div>
     </div>
 
-    <h1 class="slds-text-align_center
-               slds-text-heading_medium
-               slds-p-top_small
-               slds-p-bottom_small
-               slds-m-bottom_small
-               slds-border_bottom">
+    <h1
+      class="slds-text-align_center slds-text-heading_medium slds-p-top_small slds-p-bottom_small slds-m-bottom_small slds-border_bottom"
+    >
       Sales vs Payments
     </h1>
 
     <div class="content-container">
-
       <lightning:layout class="slds-m-bottom_small slds-border_bottom">
         <lightning:layoutItem size="7">
-          <div class="sale-label">
-            Boat Sales
-          </div>
+          <div class="sale-label">Boat Sales</div>
         </lightning:layoutItem>
         <lightning:layoutItem size="5">
           <div class="sale-label amount slds-text-align_right">
-            <lightning:formattedNumber value="{!v.salesData.boatSalesTotal}"
-                                     style="currency"
-                                     currencyCode="CAD" />
+            <lightning:formattedNumber value="{!v.salesData.boatSalesTotal}" style="currency" currencyCode="CAD" />
           </div>
         </lightning:layoutItem>
       </lightning:layout>
 
       <lightning:layout class="slds-m-bottom_small slds-border_bottom">
         <lightning:layoutItem size="7">
-          <div class="sale-label">
-            Part Sales
-          </div>
+          <div class="sale-label">Part Sales</div>
         </lightning:layoutItem>
         <lightning:layoutItem size="5">
           <div class="sale-label amount slds-text-align_right">
-            <lightning:formattedNumber value="{!v.salesData.partsSalesTotal}"
-                                     style="currency"
-                                     currencyCode="CAD" />
+            <lightning:formattedNumber value="{!v.salesData.partsSalesTotal}" style="currency" currencyCode="CAD" />
           </div>
         </lightning:layoutItem>
       </lightning:layout>
 
       <lightning:layout class="slds-m-bottom_small slds-border_bottom">
         <lightning:layoutItem size="7">
-          <div class="sale-label">
-            Service Sales
-          </div>
+          <div class="sale-label">Service Sales</div>
         </lightning:layoutItem>
         <lightning:layoutItem size="5">
           <div class="sale-label amount slds-text-align_right">
-            <lightning:formattedNumber value="{!v.salesData.serviceSalesTotal}"
-                                     style="currency"
-                                     currencyCode="CAD" />
+            <lightning:formattedNumber value="{!v.salesData.serviceSalesTotal}" style="currency" currencyCode="CAD" />
           </div>
         </lightning:layoutItem>
       </lightning:layout>
 
       <lightning:layout class="slds-m-bottom_small slds-border_bottom">
         <lightning:layoutItem size="7">
-          <div class="sale-label">
-            Warranty Sales
-          </div>
+          <div class="sale-label">Warranty Sales</div>
         </lightning:layoutItem>
         <lightning:layoutItem size="5">
           <div class="sale-label amount slds-text-align_right">
-            <lightning:formattedNumber value="{!v.salesData.warrantySalesTotal}"
-                                     style="currency"
-                                     currencyCode="CAD" />
+            <lightning:formattedNumber value="{!v.salesData.warrantySalesTotal}" style="currency" currencyCode="CAD" />
           </div>
         </lightning:layoutItem>
       </lightning:layout>
 
       <lightning:layout class="slds-m-bottom_small">
-        <lightning:layoutItem size="7">
-        </lightning:layoutItem>
-        <lightning:layoutItem size="5" class=" slds-border_bottom">
+        <lightning:layoutItem size="7"> </lightning:layoutItem>
+        <lightning:layoutItem size="5" class="slds-border_bottom">
           <div class="sale-label amount total slds-text-align_right">
-            <lightning:formattedNumber value="{!v.salesData.totalSales}"
-                                     style="currency"
-                                     currencyCode="CAD" />
+            <lightning:formattedNumber value="{!v.salesData.totalSales}" style="currency" currencyCode="CAD" />
           </div>
         </lightning:layoutItem>
       </lightning:layout>
 
       <lightning:layout class="slds-m-bottom_small slds-border_bottom">
         <lightning:layoutItem size="7">
-          <div class="sale-label">
-            Payment Total
-          </div>
+          <div class="sale-label">Payment Total</div>
         </lightning:layoutItem>
         <lightning:layoutItem size="5">
           <div class="sale-label amount slds-text-align_right">
-            <lightning:formattedNumber value="{!v.salesData.paymentsTotal}"
-                                     style="currency"
-                                     currencyCode="CAD" />
+            <lightning:formattedNumber value="{!v.salesData.paymentsTotal}" style="currency" currencyCode="CAD" />
           </div>
         </lightning:layoutItem>
       </lightning:layout>
 
       <lightning:layout class="slds-m-bottom_small slds-border_bottom">
         <lightning:layoutItem size="7">
-          <div class="sale-label">
-            Cash Dispursements
-          </div>
+          <div class="sale-label">Cash Dispursements</div>
         </lightning:layoutItem>
         <lightning:layoutItem size="5">
           <div class="sale-label amount slds-text-align_right">
-            <lightning:formattedNumber value="{!v.salesData.cashDispursementTotal}"
-                                     style="currency"
-                                     currencyCode="CAD" />
+            <lightning:formattedNumber
+              value="{!v.salesData.cashDispursementTotal}"
+              style="currency"
+              currencyCode="CAD"
+            />
           </div>
         </lightning:layoutItem>
       </lightning:layout>
 
-      <lightning:layout >
-        <lightning:layoutItem size="7">
-        </lightning:layoutItem>
+      <lightning:layout>
+        <lightning:layoutItem size="7"> </lightning:layoutItem>
         <lightning:layoutItem size="5">
           <div class="result-label amount slds-text-align_right">
-            <lightning:formattedNumber value="{!v.salesData.summaryTotal}"
-                                     style="currency"
-                                     currencyCode="CAD" />
+            <lightning:formattedNumber value="{!v.salesData.summaryTotal}" style="currency" currencyCode="CAD" />
           </div>
         </lightning:layoutItem>
       </lightning:layout>
-
     </div>
-
   </div>
-
 </aura:component>

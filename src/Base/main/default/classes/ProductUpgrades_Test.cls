@@ -36,15 +36,9 @@ private class ProductUpgrades_Test {
     Test.startTest();
     init();
     doSelect();
-    Product_Upgrade_Cost__c motorUpgradeCost = puExt.getMotorUpgrades()[0]
-      .Product_Upgrade_Costs__r[0];
-    Map<String, String> motorJsonData = new Map<String, String>{
-      'Cost__c' => '300',
-      'Id' => motorUpgradeCost.Id
-    };
-    Product_Upgrade_Cost__c motorUpgradeCost_after = ProductUpgrades.updateCost(
-      JSON.serialize(motorJsonData)
-    );
+    Product_Upgrade_Cost__c motorUpgradeCost = puExt.getMotorUpgrades()[0].Product_Upgrade_Costs__r[0];
+    Map<String, String> motorJsonData = new Map<String, String>{ 'Cost__c' => '300', 'Id' => motorUpgradeCost.Id };
+    Product_Upgrade_Cost__c motorUpgradeCost_after = ProductUpgrades.updateCost(JSON.serialize(motorJsonData));
     Test.stopTest();
     System.assertEquals(100, motorUpgradeCost.Cost__c);
     System.assertEquals(300, motorUpgradeCost_after.Cost__c);
@@ -61,9 +55,7 @@ private class ProductUpgrades_Test {
       'Pricebook_Id' => pricebooks[0].Id,
       'Cost' => '200'
     };
-    Product_Upgrade_Cost__c puc = ProductUpgrades.createCost(
-      JSON.serialize(jsonData)
-    );
+    Product_Upgrade_Cost__c puc = ProductUpgrades.createCost(JSON.serialize(jsonData));
     //Lets just refresh the upgrade List
     puExt.selectedIdMap.put('Motor', motors[0].Id);
     puExt.motorSelectChanged();
@@ -73,14 +65,10 @@ private class ProductUpgrades_Test {
   }
 
   private static void init() {
-    puExt = new ProductUpgrades(
-      new ApexPages.StandardController(new Product_Upgrade__c())
-    );
+    puExt = new ProductUpgrades(new ApexPages.StandardController(new Product_Upgrade__c()));
     factory = new BoatTestFactory();
     pricebooks = new List<Pricebook2>();
-    Id salesRtId = new Application_RecordType()
-      .getPricebookRecordTypes()
-      .getSalesId();
+    Id salesRtId = new Application_RecordType().getPricebookRecordTypes().getSalesId();
     pricebooks.add(
       new Pricebook2(
         Name = 'Test PB 1',
@@ -102,11 +90,7 @@ private class ProductUpgrades_Test {
     insert pricebooks;
     motors = factory.insertTestProducts(10, 'Motor', pricebooks[0]);
     trailers = factory.insertTestProducts(10, 'Trailer', pricebooks[0]);
-    trolling_motors = factory.insertTestProducts(
-      10,
-      'Trolling Motor',
-      pricebooks[0]
-    );
+    trolling_motors = factory.insertTestProducts(10, 'Trolling Motor', pricebooks[0]);
     buildUpgrades(motors, pricebooks[0]);
     buildUpgrades(trailers, pricebooks[0]);
     buildUpgrades(trolling_motors, pricebooks[0]);
@@ -136,22 +120,11 @@ private class ProductUpgrades_Test {
     Product_Upgrade_Cost__c[] upgradeCosts = new List<Product_Upgrade_Cost__c>();
 
     for (Integer i = 2; i < prods.size(); i++) {
-      upgrades.add(
-        new Product_Upgrade__c(
-          From_Product__c = prods[0].Id,
-          To_Product__c = prods[i].Id
-        )
-      );
+      upgrades.add(new Product_Upgrade__c(From_Product__c = prods[0].Id, To_Product__c = prods[i].Id));
     }
     insert upgrades;
     for (Product_Upgrade__c pu : upgrades) {
-      upgradeCosts.add(
-        new Product_Upgrade_Cost__c(
-          Product_Upgrade__c = pu.Id,
-          Price_Book__c = pb.Id,
-          Cost__c = 100
-        )
-      );
+      upgradeCosts.add(new Product_Upgrade_Cost__c(Product_Upgrade__c = pu.Id, Price_Book__c = pb.Id, Cost__c = 100));
     }
     insert upgradeCosts;
   }

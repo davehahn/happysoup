@@ -1,11 +1,11 @@
 <aura:component implements="forceCommunity:availableForAllPageTypes" access="global">
-  <aura:attribute name="title" type="String" access="global"/>
+  <aura:attribute name="title" type="String" access="global" />
   <aura:attribute name="iconName" type="String" access="global" />
-  <aura:attribute name="newURL" type="String" access="global"/>
-  <aura:attribute name="listNames" type="String" access="global"/>
+  <aura:attribute name="newURL" type="String" access="global" />
+  <aura:attribute name="listNames" type="String" access="global" />
 
-  <aura:attribute name="selectedList" type="String"  access="global"/>
-  <aura:attribute name="availableLists" type="String[]"  access="global"/>
+  <aura:attribute name="selectedList" type="String" access="global" />
+  <aura:attribute name="availableLists" type="String[]" access="global" />
 
   <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
 
@@ -20,9 +20,11 @@
             <div class="slds-media__body">
               <div class="slds-picklist slds-dropdown-trigger slds-dropdown-trigger--click">
                 <p class="slds-text-title--caps slds-line-height--reset">{!v.title}</p>
-                <c:lgnd_ListSelector value="{!v.selectedList}"
-                                     listOptions="{!v.availableLists}"
-                                     aura:id="listSelector--Cmp" />
+                <c:lgnd_ListSelector
+                  value="{!v.selectedList}"
+                  listOptions="{!v.availableLists}"
+                  aura:id="listSelector--Cmp"
+                />
               </div>
             </div>
           </div>
@@ -33,5 +35,4 @@
       </div>
     </div>
   </div>
-
 </aura:component>

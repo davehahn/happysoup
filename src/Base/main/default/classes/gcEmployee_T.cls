@@ -16,11 +16,7 @@ private class gcEmployee_T {
       LIMIT 1
     ][0]
     .Id;
-    Employee__c employee = new Employee__c(
-      GL_Account_Variable_2__c = idGLV2,
-      Name = 'Test Employee',
-      User__c = u.Id
-    );
+    Employee__c employee = new Employee__c(GL_Account_Variable_2__c = idGLV2, Name = 'Test Employee', User__c = u.Id);
 
     insert employee;
 
@@ -31,8 +27,7 @@ private class gcEmployee_T {
     ];
     AcctSeed__Time_Card_Period__c tcp = new AcctSeed__Time_Card_Period__c(
       AcctSeed__End_Date__c = period.AcctSeed__End_Date__c,
-      AcctSeed__Start_Date__c = period.AcctSeed__Start_Date__c.toStartOfWeek()
-        .addDays(7),
+      AcctSeed__Start_Date__c = period.AcctSeed__Start_Date__c.toStartOfWeek().addDays(7),
       AcctSeed__Status__c = 'Open'
     );
     insert tcp;
@@ -49,11 +44,7 @@ private class gcEmployee_T {
   static void testUpdateEmployeeName() {
     Test.startTest();
 
-    Employee__c employee = [
-      SELECT Name, User__c, GL_Account_Variable_2__c
-      FROM Employee__c
-      LIMIT 1
-    ];
+    Employee__c employee = [SELECT Name, User__c, GL_Account_Variable_2__c FROM Employee__c LIMIT 1];
     employee.Name = employee.Name + 'updated';
     update employee;
 
@@ -72,11 +63,7 @@ private class gcEmployee_T {
   @IsTest
   static void testUpdateUser() {
     Test.startTest();
-    Employee__c employee = [
-      SELECT Name, User__c, GL_Account_Variable_2__c
-      FROM Employee__c
-      LIMIT 1
-    ];
+    Employee__c employee = [SELECT Name, User__c, GL_Account_Variable_2__c FROM Employee__c LIMIT 1];
 
     User u = Factory_User.buildUser(
       LGND_Utilities.generateRandomString(5),
@@ -99,11 +86,7 @@ private class gcEmployee_T {
   static void testUpdateWithoutUser() {
     Test.startTest();
 
-    Employee__c employee = [
-      SELECT Name, User__c, GL_Account_Variable_2__c
-      FROM Employee__c
-      LIMIT 1
-    ];
+    Employee__c employee = [SELECT Name, User__c, GL_Account_Variable_2__c FROM Employee__c LIMIT 1];
 
     employee.User__c = null;
     try {
@@ -119,11 +102,7 @@ private class gcEmployee_T {
   static void testInsertWithoutUser() {
     Test.startTest();
 
-    Employee__c employee = [
-      SELECT Name, User__c, GL_Account_Variable_2__c
-      FROM Employee__c
-      LIMIT 1
-    ];
+    Employee__c employee = [SELECT Name, User__c, GL_Account_Variable_2__c FROM Employee__c LIMIT 1];
 
     Employee__c cloneEmp = employee.clone();
     cloneEmp.User__c = null;
@@ -141,11 +120,7 @@ private class gcEmployee_T {
   static void testDeleteEmployee() {
     Test.startTest();
 
-    Employee__c employee = [
-      SELECT Id, Name, User__c, GL_Account_Variable_2__c
-      FROM Employee__c
-      LIMIT 1
-    ];
+    Employee__c employee = [SELECT Id, Name, User__c, GL_Account_Variable_2__c FROM Employee__c LIMIT 1];
 
     delete employee;
 
@@ -162,11 +137,7 @@ private class gcEmployee_T {
   @isTest
   static void testUpdateGLV2() {
     Test.startTest();
-    Employee__c employee = [
-      SELECT Name, User__c, GL_Account_Variable_2__c
-      FROM Employee__c
-      LIMIT 1
-    ];
+    Employee__c employee = [SELECT Name, User__c, GL_Account_Variable_2__c FROM Employee__c LIMIT 1];
     Factory_AccountingVariables factoryAV = new Factory_AccountingVariables();
 
     employee.GL_Account_Variable_2__c = factoryAV.glv2s.get('Production').Id;

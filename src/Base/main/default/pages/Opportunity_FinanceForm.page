@@ -1,20 +1,20 @@
-<apex:page standardController="Opportunity"
-           extensions="OpportunityExt_FI"
-           tabStyle="opportunity"
-           showHeader="true"
-           sidebar="true">
-
-  <c:LegendFormResources includeFontAwesome="true" includeHandlebars="true" includeSFFD="true"/>
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<apex:page
+  standardController="Opportunity"
+  extensions="OpportunityExt_FI"
+  tabStyle="opportunity"
+  showHeader="true"
+  sidebar="true"
+>
+  <c:LegendFormResources includeFontAwesome="true" includeHandlebars="true" includeSFFD="true" />
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
   <style type="text/css">
-
     #error_box {
       position: absolute;
       width: 50%;
       left: 50%;
       margin-left: -25%;
       top: -200px;
-      text-align:center;
+      text-align: center;
       /*-webkit-transition:all; 1.5s ease-in-out;
       -moz-transition:all; 1.5s ease-in-out;
       -o-transition:all; 1.5s ease-in-out;
@@ -22,27 +22,26 @@
     }
 
     #error_box.open {
-      top:30px;
+      top: 30px;
     }
 
     td.w45 {
-      width:45%;
+      width: 45%;
     }
     td.60 {
-      width:60%;
+      width: 60%;
     }
     td.w20 {
-      width:20%;
+      width: 20%;
       text-align: center;
     }
     td.w15 {
-      width:15%;
+      width: 15%;
       text-align: center;
     }
     td.center {
       text-align: center !important;
     }
-
 
     .prefix i {
       line-height: inherit;
@@ -50,24 +49,24 @@
 
     .war_table > thead > tr > td,
     .war_table > tbody > tr > td {
-      line-height:1.8rem !important;
+      line-height: 1.8rem !important;
     }
 
     .war_table > tbody > tr > td:last-child {
-      text-align:right;
+      text-align: right;
     }
 
     #itemsTable td {
       vertical-align: middle;
     }
 
-    #itemsTable > thead > tr > td{
+    #itemsTable > thead > tr > td {
       line-height: 1.8rem;
     }
 
     #itemsTable tr.formRow {
-      border-top: 1px solid #DDD;
-      background: #FFF;
+      border-top: 1px solid #ddd;
+      background: #fff;
     }
 
     #itemsTable > tbody > tr > td > a {
@@ -77,24 +76,24 @@
       margin-right: 10px;
       padding-right: 1rem;
       padding-left: 1rem;
-      padding-bottom: .625rem;
+      padding-bottom: 0.625rem;
     }
 
     #itemsTable > tbody > tr > td > a > i {
-      padding:0;
-      font-size:1rem;
+      padding: 0;
+      font-size: 1rem;
     }
 
-     #itemsTable > tbody > tr > td  a i.fa-spin{
-      display:none;
-     }
-
-     #itemsTable > tbody > tr td a.busy i {
-      display:none;
+    #itemsTable > tbody > tr > td a i.fa-spin {
+      display: none;
     }
 
-     #itemsTable > tbody > tr td a.busy i.fa-spin {
-      display:inline-block;
+    #itemsTable > tbody > tr td a.busy i {
+      display: none;
+    }
+
+    #itemsTable > tbody > tr td a.busy i.fa-spin {
+      display: inline-block;
     }
 
     .headerNav {
@@ -103,28 +102,28 @@
       line-height: 5rem;
       padding: 0;
       margin: 0;
-      background: #FFF;
+      background: #fff;
       text-align: center;
       margin-bottom: 10px;
-      position:relative;
-      z-index:10;
+      position: relative;
+      z-index: 10;
     }
 
     .headerNav .title {
       color: #00aae9;
       font-size: 2.5rem;
-      font-family: 'Lato', serif;
-      font-weight:300;
+      font-family: "Lato", serif;
+      font-weight: 300;
     }
 
-    .headerNav  a {
-      float:right;
-      margin-right:20px;
-      margin-top:1rem;
+    .headerNav a {
+      float: right;
+      margin-right: 20px;
+      margin-top: 1rem;
     }
 
     select {
-      margin:0;
+      margin: 0;
     }
 
     #PPSA_Fee {
@@ -138,16 +137,16 @@
     #PPSA_Fee a {
       padding-right: 1rem;
       padding-left: 1rem;
-      padding-bottom: .625rem;
+      padding-bottom: 0.625rem;
     }
 
     #PPSA_Fee .row a > i {
-      padding:0;
+      padding: 0;
       font-size: 1rem;
     }
 
     #PPSA_Fee .row a > i.fa-spin {
-      display:none;
+      display: none;
     }
 
     #PPSA_Fee .row.busy label,
@@ -157,32 +156,32 @@
 
     #PPSA_Fee .row.busy a,
     #PPSA_Fee .row.unchanged a {
-      color: #CCC;
-      border-color: #CCC;
+      color: #ccc;
+      border-color: #ccc;
       pointer-events: none;
     }
 
     #PPSA_Fee .row.busy a i {
-      display:none;
+      display: none;
     }
 
     #PPSA_Fee .row.busy a i.fa-spin {
-      display:inline-block;
+      display: inline-block;
     }
-
   </style>
   <c:LegendMainAjaxIndicator id="ajaxInd" />
-  <apex:form style="background: #FFF; height: 102%; margin: -10px -20px 0px -20px;">
+  <apex:form style="background: #fff; height: 102%; margin: -10px -20px 0px -20px">
     <div class="headerNav">
       <!-- <span class="title">Insurance Items for {!Opportunity.Name}</span> -->
       <span class="title">Business Office Items</span>
-      <apex:outputLink value="/{!Opportunity.Id}"
-                       styleClass="fd_button radius small invert cancelLink">
+      <apex:outputLink value="/{!Opportunity.Id}" styleClass="fd_button radius small invert cancelLink">
         Return to Opportunity
       </apex:outputLink>
-      <apex:commandLink action="{!updateInvoiceAndReturn}"
-                       styleClass="fd_button radius small success invert addSelectedButton"
-                       rendered="{!hasInvoice}">
+      <apex:commandLink
+        action="{!updateInvoiceAndReturn}"
+        styleClass="fd_button radius small success invert addSelectedButton"
+        rendered="{!hasInvoice}"
+      >
         Update Invoice and Return
       </apex:commandLink>
     </div>
@@ -190,11 +189,13 @@
     <div id="error_box" class="alert-box alert"></div>
     <apex:messages />
 
-    <apex:actionFunction name="planChanged"
-                          rerender="theTable"
-                          action="{!planChanged}"
-                          immediate="true"
-                          oncomplete="InsuranceTable.planSelected()">
+    <apex:actionFunction
+      name="planChanged"
+      rerender="theTable"
+      action="{!planChanged}"
+      immediate="true"
+      oncomplete="InsuranceTable.planSelected()"
+    >
       <apex:param name="planId" value="" />
     </apex:actionFunction>
 
@@ -207,13 +208,12 @@
     <div class="tabs-content">
       <!-- ++++++++++++++++++++++++++ PPSA FEE ++++++++++++++++++++++ -->
       <div class="content active" id="PPSA_Fee">
-
         <apex:outputPanel layout="none" rendered="{!ppsaFeePricebookEntryId == null}">
-          <sffd:row >
+          <sffd:row>
             <sffd:column cols="large-6 large-offset-3 end">
-              <p style="color: red; text-align: center; font-size: 1.2rem;">
-              There is no PPSA Fee entry in pricebook {!pbName}.  <br />
-              Please contact an administrator to help resolve this issue
+              <p style="color: red; text-align: center; font-size: 1.2rem">
+                There is no PPSA Fee entry in pricebook {!pbName}. <br />
+                Please contact an administrator to help resolve this issue
               </p>
             </sffd:column>
           </sffd:row>
@@ -225,15 +225,9 @@
               <label class="right">PPSA Fee</label>
             </sffd:column>
             <sffd:column cols="large-2">
-              <input type="hidden"
-                     data-field-name="Id"
-                     value="{!ppsaFee.Id}" />
-              <input type="hidden"
-                     data-field-name="OpportunityId"
-                     value="{!ppsaFee.OpportunityId}" />
-              <input type="hidden"
-                     data-field-name="PricebookEntryId"
-                     value="{!ppsaFee.PricebookEntryId}" />
+              <input type="hidden" data-field-name="Id" value="{!ppsaFee.Id}" />
+              <input type="hidden" data-field-name="OpportunityId" value="{!ppsaFee.OpportunityId}" />
+              <input type="hidden" data-field-name="PricebookEntryId" value="{!ppsaFee.PricebookEntryId}" />
 
               <div class="row collapse">
                 <div class="large-2 column">
@@ -242,15 +236,16 @@
                   </span>
                 </div>
                 <div class="large-10 column">
-                  <input type="number"
-                     step="0.01"
-                     id="ppsaFeeValue"
-                     style="width:95%;margin:0;text-align:right"
-                     data-field-name="UnitPrice"
-                     value="{!ppsaFee.UnitPrice}" />
+                  <input
+                    type="number"
+                    step="0.01"
+                    id="ppsaFeeValue"
+                    style="width: 95%; margin: 0; text-align: right"
+                    data-field-name="UnitPrice"
+                    value="{!ppsaFee.UnitPrice}"
+                  />
                 </div>
               </div>
-
             </sffd:column>
             <sffd:column cols="large-1 end">
               <a href="#" class="fd_button radius tiny invert" id="savePPSA">
@@ -265,14 +260,14 @@
 
       <!-- ++++++++++++++++++++++++++ Insurance +++++++++++++++++++++ -->
       <div class="content" id="insurance">
-        <sffd:row >
+        <sffd:row>
           <sffd:column cols="large-6 large-offset-3 end">
             <select id="plan_select">
-              <option value=''>Select A Plan</option>
-                <apex:repeat value="{!plans}" var="planId">
-                  <option value="{!planId}">{!plans[planId].Name}</option>
-                </apex:repeat>
-             <!--  <apex:repeat value="{!plans}" var="label">
+              <option value="">Select A Plan</option>
+              <apex:repeat value="{!plans}" var="planId">
+                <option value="{!planId}">{!plans[planId].Name}</option>
+              </apex:repeat>
+              <!--  <apex:repeat value="{!plans}" var="label">
                 <option value="{!plans[label]}">{!label}</option>
               </apex:repeat> -->
             </select>
@@ -280,12 +275,14 @@
         </sffd:row>
 
         <apex:outputPanel id="theTable">
-            <apex:outputPanel rendered="{!renderTable}">
-            <sffd:row >
+          <apex:outputPanel rendered="{!renderTable}">
+            <sffd:row>
               <sffd:column cols="large-12">
-
-                <table id="itemsTable" class="fd_table" style="width:100%;border-collapse:collapse;margin-top:20px;">
-
+                <table
+                  id="itemsTable"
+                  class="fd_table"
+                  style="width: 100%; border-collapse: collapse; margin-top: 20px"
+                >
                   <thead>
                     <tr>
                       <td class="w45">Product Name</td>
@@ -296,42 +293,48 @@
                   </thead>
 
                   <tbody>
-                   <apex:repeat value="{!fiItems}" var="fiItem">
-
-                    <tr>
+                    <apex:repeat value="{!fiItems}" var="fiItem">
+                      <tr>
                         <!--<td>
                             {!fiItem.PricebookEntry.Product2.Name}
                         </td>-->
-                      <td class="data_cell" data-field-name="PricebookEntryId" data-field-value="{!fiItem.PricebookEntryId}">
-                        {!fiItem.PricebookEntry.Product2.Name}
-                      </td>
-                      <td class="data_cell" data-field-name="InsuranceCoverage__c" data-field-value="{!fiItem.InsuranceCoverage__c}">
-                        {!fiItem.InsuranceCoverage__c}
-                      </td>
-                      <td class="data_cell" data-field-name="UnitPrice" data-field-value="{!fiItem.UnitPrice}">
-                        <!-- $ {!fiItem.UnitPrice} -->
-                        <apex:outputText value="{0, number, Currency}">
+                        <td
+                          class="data_cell"
+                          data-field-name="PricebookEntryId"
+                          data-field-value="{!fiItem.PricebookEntryId}"
+                        >
+                          {!fiItem.PricebookEntry.Product2.Name}
+                        </td>
+                        <td
+                          class="data_cell"
+                          data-field-name="InsuranceCoverage__c"
+                          data-field-value="{!fiItem.InsuranceCoverage__c}"
+                        >
+                          {!fiItem.InsuranceCoverage__c}
+                        </td>
+                        <td class="data_cell" data-field-name="UnitPrice" data-field-value="{!fiItem.UnitPrice}">
+                          <!-- $ {!fiItem.UnitPrice} -->
+                          <apex:outputText value="{0, number, Currency}">
                             <apex:param value="{!fiItem.UnitPrice}" />
-                        </apex:outputText>
-                      </td>
-                      <td>
-                        <a href="#" class="fd_button alert radius tiny invert removeItem" data-id="{!fiItem.Id}">
-                          <i class="fa fa-trash-o"></i>
-                          <i class="fa fa-circle-o-notch fa-spin"></i>
-                        </a>
-                        <a href="#" class="fd_button radius tiny invert editItem" data-id="{!fiItem.Id}">
-                          <i class="fa fa-edit"></i>
-                        </a>
-                      </td>
-                    </tr>
-
+                          </apex:outputText>
+                        </td>
+                        <td>
+                          <a href="#" class="fd_button alert radius tiny invert removeItem" data-id="{!fiItem.Id}">
+                            <i class="fa fa-trash-o"></i>
+                            <i class="fa fa-circle-o-notch fa-spin"></i>
+                          </a>
+                          <a href="#" class="fd_button radius tiny invert editItem" data-id="{!fiItem.Id}">
+                            <i class="fa fa-edit"></i>
+                          </a>
+                        </td>
+                      </tr>
                     </apex:repeat>
 
                     <tr class="formRow">
                       <td>
                         <!-- <input type="text" data-field-name="Name" style="width:95%;margin:0;" value='{!plan}'></input> -->
                         <select data-field-name="PricebookEntryId" onchange="populateAmount('new')" id="priceBookName">
-                          <option value='_blank' selected="selected">Select Option</option>
+                          <option value="_blank" selected="selected">Select Option</option>
                           <apex:repeat value="{!planOptions}" var="key">
                             <optgroup label="{!key}">
                               <apex:repeat value="{!planOptions[key]}" var="opt">
@@ -340,7 +343,7 @@
                             </optgroup>
                           </apex:repeat>
                         </select>
-                        <input type="hidden" data-field-name="OpportunityId" value="{!Opportunity.Id}"></input>
+                        <input type="hidden" data-field-name="OpportunityId" value="{!Opportunity.Id}" />
                       </td>
                       <td>
                         <select data-field-name="InsuranceCoverage__c" onchange="populateAmount('new')" id="coverage">
@@ -357,13 +360,13 @@
                             </span>
                           </div>
                           <div class="large-10 column">
-                            <input type="text" data-field-name="UnitPrice" style="width:95%;margin:0;" id="Amount" ></input>
+                            <input type="text" data-field-name="UnitPrice" style="width: 95%; margin: 0" id="Amount" />
                           </div>
                         </div>
                       </td>
 
                       <td>
-                        <a href="#" id="save_item" class="fd_button success radius tiny invert" >
+                        <a href="#" id="save_item" class="fd_button success radius tiny invert">
                           <i class="fa fa-plus"></i>
                           <i class="fa fa-circle-o-notch fa-spin"></i>
                         </a>
@@ -371,30 +374,24 @@
                     </tr>
                   </tbody>
                 </table>
-
               </sffd:column>
             </sffd:row>
-
-
-            </apex:outputPanel>
+          </apex:outputPanel>
         </apex:outputPanel>
-      </div><!-- /#insurance -->
+      </div>
+      <!-- /#insurance -->
       <!-- ========================= /Insurance ===================== -->
 
       <!-- ++++++++++++++++++++++++ Warranty and Service ++++++++++++ -->
       <div class="content" id="warranty">
-
-        <sffd:row >
-
+        <sffd:row>
           <sffd:column cols="large-12">
-
             <apex:outputPanel rendered="{!warAndServItems.size == 0}">
               There are no Warranty or Service Products Available for this deal
             </apex:outputPanel>
 
             <apex:outputPanel rendered="{!warAndServItems.size > 0}">
-
-              <table class="fd_table war_table" style="width:100%;border-collapse:collapse;margin-top:20px;">
+              <table class="fd_table war_table" style="width: 100%; border-collapse: collapse; margin-top: 20px">
                 <thead>
                   <tr>
                     <td>Product Name</td>
@@ -406,16 +403,18 @@
                   <apex:repeat value="{!warAndServItems}" var="item">
                     <tr>
                       <td>{!item.ProductName}</td>
-                      <td class="center"> $ {!item.UnitPrice}</td>
+                      <td class="center">$ {!item.UnitPrice}</td>
                       <td>
                         <div class="legend_switch">
-                          <input id="lg-toggle-{!item.PricebookEntryId}"
-                                 class="lg-toggle lg-toggle-round"
-                                 type="checkbox"
-                                 data-selected="{!item.isSelected}"
-                                 data-id="{!item.PricebookEntryId}"
-                                 data-opp-id="{!item.OpportunityId}"
-                                 data-oli-id="{!item.OpportunityLineItemId}" />
+                          <input
+                            id="lg-toggle-{!item.PricebookEntryId}"
+                            class="lg-toggle lg-toggle-round"
+                            type="checkbox"
+                            data-selected="{!item.isSelected}"
+                            data-id="{!item.PricebookEntryId}"
+                            data-opp-id="{!item.OpportunityId}"
+                            data-oli-id="{!item.OpportunityLineItemId}"
+                          />
                           <label for="lg-toggle-{!item.PricebookEntryId}">
                             <i class="fa fa-spin fa-circle-o-notch"></i>
                           </label>
@@ -425,60 +424,59 @@
                   </apex:repeat>
                 </tbody>
               </table>
-
             </apex:outputPanel>
-
           </sffd:column>
-
         </sffd:row>
-
       </div>
       <!-- ======================== /Warranty and Service =========== -->
     </div>
-
-
-
   </apex:form>
 
-
   <script>
-    function populateAmount(oppProductId){
-        console.log(oppProductId);
-        // var priceBookName;
-        // var coverage;
-        // var amountId;
-        // if(oppProductId == 'new'){
-        //     priceBookName = document.getElementById("priceBookName").value;
-        //     coverage = document.getElementById("coverage").value;
-        //     amountId = "Amount";
-        // }else{
-        //     priceBookName = document.getElementById("priceBookName-"+oppProductId).value;
-        //     coverage = document.getElementById("coverage-"+oppProductId).value;
-        //     amountId = "Amount-"+oppProductId;
-        // }
+    function populateAmount(oppProductId) {
+      console.log(oppProductId);
+      // var priceBookName;
+      // var coverage;
+      // var amountId;
+      // if(oppProductId == 'new'){
+      //     priceBookName = document.getElementById("priceBookName").value;
+      //     coverage = document.getElementById("coverage").value;
+      //     amountId = "Amount";
+      // }else{
+      //     priceBookName = document.getElementById("priceBookName-"+oppProductId).value;
+      //     coverage = document.getElementById("coverage-"+oppProductId).value;
+      //     amountId = "Amount-"+oppProductId;
+      // }
 
-        // var oppId = '{!$CurrentPage.parameters.id}';
-        // Visualforce.remoting.Manager.invokeAction(
-        //     '{!$RemoteAction.OpportunityExt_FI.populateAmount}',
-        //   priceBookName,
-        //   coverage,
-        //   oppId,
-        //   oppProductId,
-        //   function(result, event) {
-        //     if (event.status) {
-        //         var res = parseFloat(result).toFixed(2);
-        //         console.log(res);
-        //         document.getElementById(amountId).value = res;
-        //     }
-        //   });
-        }
-
+      // var oppId = '{!$CurrentPage.parameters.id}';
+      // Visualforce.remoting.Manager.invokeAction(
+      //     '{!$RemoteAction.OpportunityExt_FI.populateAmount}',
+      //   priceBookName,
+      //   coverage,
+      //   oppId,
+      //   oppProductId,
+      //   function(result, event) {
+      //     if (event.status) {
+      //         var res = parseFloat(result).toFixed(2);
+      //         console.log(res);
+      //         document.getElementById(amountId).value = res;
+      //     }
+      //   });
+    }
   </script>
 
   <script id="rowTemplate" type="text/x-handlebars-template">
     <tr>
-      <td class="data_cell" data-field-name="PricebookEntryId" data-field-value="{{this.PricebookEntryId}}">{{this.PricebookEntry.Product2.Name}}</td>
-      <td class="data_cell" data-field-name="InsuranceCoverage__c" data-field-value="{{this.InsuranceCoverage__c}}">{{this.InsuranceCoverage__c}}</td>
+      <td
+        class="data_cell"
+        data-field-name="PricebookEntryId"
+        data-field-value="{{this.PricebookEntryId}}"
+      >{{this.PricebookEntry.Product2.Name}}</td>
+      <td
+        class="data_cell"
+        data-field-name="InsuranceCoverage__c"
+        data-field-value="{{this.InsuranceCoverage__c}}"
+      >{{this.InsuranceCoverage__c}}</td>
       <td class="data_cell" data-field-name="UnitPrice" data-field-value="{{this.UnitPrice}}">$ {{this.UnitPrice}}</td>
       <td>
         <a href="#" class="fd_button alert radius tiny invert removeItem" data-id="{{this.Id}}">
@@ -493,443 +491,438 @@
   </script>
 
   <script id="editTemplate" type="text/x-handlebars-template">
-      <tr id="editForm">
-        <td>
-          <select data-field-name="PricebookEntryId" tabindex="1" onchange="populateAmount('{{this.Id}}')" id="priceBookName-{{this.Id}}">
-            {{#each this.selectOptions}}
-              {{grouped_options @key this ../this.PricebookEntryId}}
-            {{/each}}
-          </select>
-          <input type="hidden" data-field-name="Id" value="{{this.Id}}"></input>
-          <input type="hidden" data-field-name="Quantity" value="{{this.Quantity}}" />
-        </td>
-        <td>
-        <select data-field-name="InsuranceCoverage__c" tabindex="2" onchange="populateAmount('{{this.Id}}')"  id="coverage-{{this.Id}}">
-          {{coverage_options this.InsuranceCoverage__c}}
+    <tr id="editForm">
+      <td>
+        <select data-field-name="PricebookEntryId" tabindex="1" onchange="populateAmount('{{this.Id}}')" id="priceBookName-{{this.Id}}">
+          {{#each this.selectOptions}}
+            {{grouped_options @key this ../this.PricebookEntryId}}
+          {{/each}}
         </select>
-        </td>
-        <td>
-          <div class="row collapse">
-            <div class="large-2 column">
-              <span class="prefix">
-                <i class="fa fa-dollar"></i>
-              </span>
-            </div>
-            <div class="large-10 column">
-              <input tabindex="3" type="text" data-field-name="UnitPrice" style="width:95%;margin:0;" value="{{this.UnitPrice}}" id="Amount-{{this.Id}}"></input>
-            </div>
+        <input type="hidden" data-field-name="Id" value="{{this.Id}}"></input>
+        <input type="hidden" data-field-name="Quantity" value="{{this.Quantity}}" />
+      </td>
+      <td>
+      <select data-field-name="InsuranceCoverage__c" tabindex="2" onchange="populateAmount('{{this.Id}}')"  id="coverage-{{this.Id}}">
+        {{coverage_options this.InsuranceCoverage__c}}
+      </select>
+      </td>
+      <td>
+        <div class="row collapse">
+          <div class="large-2 column">
+            <span class="prefix">
+              <i class="fa fa-dollar"></i>
+            </span>
           </div>
-        </td>
+          <div class="large-10 column">
+            <input tabindex="3" type="text" data-field-name="UnitPrice" style="width:95%;margin:0;" value="{{this.UnitPrice}}" id="Amount-{{this.Id}}"></input>
+          </div>
+        </div>
+      </td>
 
-        <td>
-          <a href="#" class="fd_button radius tiny invert cancelEdit" tabindex="5">
-            <i class="fa fa-times"></i>
-          </a>
-          <a href="#" class="fd_button success radius tiny invert updateItem" tabindex="4">
-            <i class="fa fa-save" ></i>
-            <i class="fa fa-circle-o-notch fa-spin"></i>
-          </a>
-        </td>
-      </tr>
+      <td>
+        <a href="#" class="fd_button radius tiny invert cancelEdit" tabindex="5">
+          <i class="fa fa-times"></i>
+        </a>
+        <a href="#" class="fd_button success radius tiny invert updateItem" tabindex="4">
+          <i class="fa fa-save" ></i>
+          <i class="fa fa-circle-o-notch fa-spin"></i>
+        </a>
+      </td>
+    </tr>
   </script>
-
-
 
   <script type="text/javascript">
 
-  (function($, document, window, undefined)
-  {
-    var oppId = "{!Opportunity.Id}",
-      planId = "{!planId}",
-      pricebookId = "{!oppPricebookId}",
-      ppsaCurrentValue = $('#ppsaFeeValue').val(),
-      $itemsTable = $('[id*="theTable"]'),//$('#itemsTable'),
-      editTemplate = Handlebars.compile( $('#editTemplate').html() ),
-      rowTemplate = Handlebars.compile( $('#rowTemplate').html() );
-
-    Handlebars.registerHelper('grouped_options', function(optGroup, options, selectedValue) {
-      var htmlString, selectedProperty;
-      htmlString = '<optgroup label="' + optGroup + '">';
-      $.each(options, function(key, value){
-        selectedProperty = key == selectedValue ? 'selected="selected"' : '';
-        htmlString += '<option value="' + key +'"' + selectedProperty + '>' + value + '</option>';
-      });
-      htmlString += '</optgroup>';
-      return new Handlebars.SafeString(htmlString);
-    });
-
-    Handlebars.registerHelper('coverage_options', function(selectedValue) {
-      var htmlString = '',
-        selectedProperty,
-        options = {!JSONcoverageOptions};
-      $.each(options, function(idx, value) {
-        selectedProperty = value == selectedValue ? 'selected="selected"' : '';
-        htmlString += '<option value="' + value + '"' + selectedProperty + '>' + value + '</option>';
-      });
-      return new Handlebars.SafeString(htmlString);
-    });
-
-    $('#plan_select').on('change', function(e){
-      if( planId.length > 0 )
-      {
-        if( confirm('This will permenently delete all items! Are you sure this what you want to do?') )
-        {
-          $('#ajaxInd').show();
-          planId = $(this).val();
-          planChanged( planId );
-        }
-        else
-        {
-          return false;
-        }
-      }
-      else
-      {
-        $('#ajaxInd').show();
-        planId = $(this).val();
-        console.log(planId)
-        planChanged( planId );
-      }
-    });
-
-
-  window.InsuranceTable = {
-
-    planSelected: function()
+    (function($, document, window, undefined)
     {
-      $('#ajaxInd').hide();
-      this.initTable.call(this, planId);
-    },
+      var oppId = "{!Opportunity.Id}",
+        planId = "{!planId}",
+        pricebookId = "{!oppPricebookId}",
+        ppsaCurrentValue = $('#ppsaFeeValue').val(),
+        $itemsTable = $('[id*="theTable"]'),//$('#itemsTable'),
+        editTemplate = Handlebars.compile( $('#editTemplate').html() ),
+        rowTemplate = Handlebars.compile( $('#rowTemplate').html() );
 
-    initTable: function(planId)
-    {
-      var selectOptions;
-      OpportunityExt_FI.planSelectOptions( planId, pricebookId, function(events, result) {
-        if(result.statusCode === 200)
-        {
-          selectOptions = result.result;
-        }
+      Handlebars.registerHelper('grouped_options', function(optGroup, options, selectedValue) {
+        var htmlString, selectedProperty;
+        htmlString = '<optgroup label="' + optGroup + '">';
+        $.each(options, function(key, value){
+          selectedProperty = key == selectedValue ? 'selected="selected"' : '';
+          htmlString += '<option value="' + key +'"' + selectedProperty + '>' + value + '</option>';
+        });
+        htmlString += '</optgroup>';
+        return new Handlebars.SafeString(htmlString);
       });
-      $(document).off('click.tableEvents')
-       //Save Item Click Handler
-      .on('click.tableEvents', '#save_item', function(e){
-        e.preventDefault();
-        var $this = $(this),
-            $row = $this.closest('tr.formRow');
-        if( !$this.hasClass('busy') )
+
+      Handlebars.registerHelper('coverage_options', function(selectedValue) {
+        var htmlString = '',
+          selectedProperty,
+          options = {!JSONcoverageOptions};
+        $.each(options, function(idx, value) {
+          selectedProperty = value == selectedValue ? 'selected="selected"' : '';
+          htmlString += '<option value="' + value + '"' + selectedProperty + '>' + value + '</option>';
+        });
+        return new Handlebars.SafeString(htmlString);
+      });
+
+      $('#plan_select').on('change', function(e){
+        if( planId.length > 0 )
         {
-         $this.addClass('busy');
-          $.when ( submitItem($row) ).done( function(result) {
-            $this.removeClass('busy');
-            if(result != null)
-            {
-              if(result.statusCode === 200)
-              {
-                console.log(result.result);
-                createItemComplete($row, result.result);
-              }
-              else
-              {
-                LGND.alert('There was an error', result.message);
-                //showError(result.message);
-              }
-            }
-          });
-        }
-      })
-      //Edit Item Click handler
-      .on('click', '.editItem', function(e){
-        e.preventDefault();
-        var $this = $(this),
-          $row = $this.closest('tr'),
-          data = {};
-        data['selectOptions'] = selectOptions;
-        $row.find('.data_cell')
-        .each( function(idx, ele){
-          var $ele = $(ele);
-          data[$ele.data('field-name')] = $ele.data('field-value');
-          if($ele.data('field-name') === 'PricebookEntryId')
+          if( confirm('This will permenently delete all items! Are you sure this what you want to do?') )
           {
-            data['PricebookEntry'] = {Product2: { Name: $ele.text().trim()}};
-          }
-        });
-        data['Id'] = $this.data('id');
-        data['Quantity'] = 1;
-
-        console.log('in edit::',data.UnitPrice);
-        //if(data.Unitprice != undefined)
-        data.UnitPrice = parseFloat(data.UnitPrice.toFixed(2));
-
-        $row.replaceWith( editTemplate(data) );
-        $('#editForm').data('old-data', data);
-      })
-      //Cancel Edit Click Handler
-      .on('click', '.cancelEdit', function(e){
-        e.preventDefault();
-         var $this = $(this),
-            $row = $this.closest('tr'),
-             oldData = $row.data('old-data');
-             //console.log('in cancel::',oldData.UnitPrice);
-             if(oldData.UnitPrice != undefined)
-             oldData.UnitPrice = parseFloat(oldData.UnitPrice.toFixed(2));
-             //console.log(oldData);
-
-        if( !$this.siblings().hasClass('busy') )
-        {
-          $row.replaceWith( rowTemplate( oldData ) );
-        }
-      })
-      //Update Item Click Handler
-      .on('click', '.updateItem', function(e){
-        e.preventDefault();
-        var $this = $(this),
-            $row = $this.closest('tr');
-        if( !$this.hasClass('busy') )
-        {
-          $this.addClass('busy');
-          $.when( submitItem($row) ).done( function(result) {
-            $this.removeClass('busy');
-            if(result != null)
-            {
-
-              if(result.statusCode === 200)
-              {
-                console.log('in updata::',result.result);
-                //if(result.result.UnitPrice != undefined)
-                result.result.UnitPrice = parseFloat(result.result.UnitPrice.toFixed(2));
-                $row.replaceWith( rowTemplate(result.result) );
-              }
-              else
-              {
-                //showError(result.message);
-                LGND.alert('There was an error', result.message);
-              }
-
-            }
-          });
-        }
-      })
-      //Remove Item Click handler
-      .on('click', '.removeItem', function(e){
-        e.preventDefault();
-        if( confirm('Are Sure you want to delete this item?') )
-        {
-          var $this = $(this),
-            $row = $this.closest('tr'),
-            id = $this.data('id');
-            $this.addClass('busy');
-           OpportunityExt_FI.deleteItem(id, function(events, result){
-            $this.removeClass('busy');
-            if(result.statusCode == '200')
-            {
-              $row.remove();
-            }
-            else
-            {
-              //showError(result.message);
-              LGND.alert('There was an error', result.message);
-            }
-          });
-        }
-      });
-    }
-
-  }
-
-    function submitItem($row)
-    {
-      var data = {},
-      planName, prodName,
-      description = '',
-      dfd = new $.Deferred(),
-      $inputs = $row.find('input, select').removeClass('error');
-      if( validForm($inputs) )
-      {
-        $inputs.attr('disabled', 'disabled')
-        .each(function(idx, ele){
-          data[ $(ele).data('field-name') ] = $(ele).val();
-        });
-        //data['isInsurance__c'] = true;
-        planName = $('option[value="'+planId+'"]').html();
-        prodName = $('option[value="'+ data.PricebookEntryId + '"]').html();
-        data.Description = planName + ' - ' + prodName + ' - ' + data.InsuranceCoverage__c;
-        data['Quantity'] = 1;
-
-        console.log($('option[value="'+ data.PricebookEntryId + '"]').val());
-
-
-        OpportunityExt_FI.saveItem(JSON.stringify(data), function(events, result){
-          console.log(result.result)
-          dfd.resolve(result);
-        });
-      }
-      else
-      {
-        dfd.resolve();
-      }
-      return dfd.promise();
-    }
-
-    function validForm($inputs)
-    {
-      var result = true;
-      $inputs.each(function(idx, ele){
-        var $ele = $(ele);
-        if( $ele.val() === '' || $ele.val() === '_blank')
-        {
-          $ele.addClass('error');
-          result = false;
-        }
-      });
-      return result;
-    }
-
-    function createItemComplete($row, data)
-    {
-      var $inputs =  $row.removeClass('busy')
-      .find('input[type != "hidden"], select')
-      .removeAttr('disabled');
-      $inputs.each(function(i,e){
-        if( $(e).is("select") )
-        {
-          $(e).find('option:first').attr('selected', 'selected');
-        }
-        else
-        {
-          $(e).val('');
-        }
-      })
-      $row.before( rowTemplate(data) );
-    }
-
-    function showError(msg)
-    {
-      $('#error_box').html(msg).animate({'top': '30px'}, 500);
-    }
-
-    function removeError()
-    {
-      $('#error_box').animate({'top': '-200px'}, 500);
-    }
-
-    if(planId.length > 0)
-    {
-      $('#plan_select').val(planId);
-      InsuranceTable.initTable(planId);
-    }
-
-    $('input.lg-toggle').each( function(idx, ele) {
-      var $ele = $(ele);
-
-      if( $ele.data('selected') === true ){
-        $ele.prop('checked', true);
-      }
-
-      $ele.on('click', function(e) {
-        e.preventDefault();
-        var $this = $(this),
-          message;
-        $this.addClass('busy');
-        console.log( $this[0].checked );
-
-
-        if( !$this.prop('checked') )
-        {
-          console.log('remove record');
-           OpportunityExt_FI.removeWarrantyOrServiceItem( $this.data('oli-id'), function(result, event){
-            if(event.status)
-            {
-              console.log(event);
-              $this.data('oli-id', '');
-              $this.prop('checked', false);
-            }
-            else
-            {
-              message = event.message.indexOf('Logged in?') !== -1 ?
-              ' Your session has expired.  Please refresh your browser and log in.' :
-              event.message;
-              LGND.alert('There was an error!', message);
-            }
-            $this.removeClass('busy');
-          });
-        }
-        else
-        {
-          console.log('create record');
-          OpportunityExt_FI.selectWarrantyOrServiceItem( $this.data('id'), $this.data('opp-id'), function(result, event) {
-            if(event.status)
-            {
-              console.log(result);
-              $this.data('oli-id', result.Id);
-              $this.prop('checked', true);
-            }
-            else
-            {
-              message = event.message.indexOf('Logged in?') !== -1 ?
-              ' Your session has expired.  Please refresh your browser and log in.' :
-              event.message;
-              LGND.alert('There was an error!', message);
-            }
-            $this.removeClass('busy');
-          })
-        }
-      });
-    });
-
-    $('#savePPSA').on('click', function(e) {
-      e.preventDefault();
-      var $this = $(this),
-          $parent = $this.closest('div.ppsa-form')
-          $inputs = $parent.find('input'),
-          inputsMap = {},
-          data = {};
-
-      if( !$parent.hasClass('busy') )
-      {
-        $parent.addClass('busy');
-        $.each($inputs, function(indx, ele) {
-          var $ele = $(ele);
-          inputsMap[$ele.data('field-name')] = $ele;
-          if(  $ele.val().length > 0 )
-          {
-            data[$ele.data('field-name')] = $ele.val();
-          }
-        });
-        OpportunityExt_FI.savePPSA( JSON.stringify(data), function(event, result) {
-          console.log(result);
-          if(result.result == null )
-          {
-            inputsMap['Id'].val('');
-            inputsMap['UnitPrice'].val('');
-            ppsaCurrentValue = null;
+            $('#ajaxInd').show();
+            planId = $(this).val();
+            planChanged( planId );
           }
           else
           {
-            $.each(result.result, function(k,v) {
-              if( inputsMap[k] ) inputsMap[k].val(v);
-              ppsaCurrentValue = result.result.UnitPrice;
+            return false;
+          }
+        }
+        else
+        {
+          $('#ajaxInd').show();
+          planId = $(this).val();
+          console.log(planId)
+          planChanged( planId );
+        }
+      });
+
+
+    window.InsuranceTable = {
+
+      planSelected: function()
+      {
+        $('#ajaxInd').hide();
+        this.initTable.call(this, planId);
+      },
+
+      initTable: function(planId)
+      {
+        var selectOptions;
+        OpportunityExt_FI.planSelectOptions( planId, pricebookId, function(events, result) {
+          if(result.statusCode === 200)
+          {
+            selectOptions = result.result;
+          }
+        });
+        $(document).off('click.tableEvents')
+         //Save Item Click Handler
+        .on('click.tableEvents', '#save_item', function(e){
+          e.preventDefault();
+          var $this = $(this),
+              $row = $this.closest('tr.formRow');
+          if( !$this.hasClass('busy') )
+          {
+           $this.addClass('busy');
+            $.when ( submitItem($row) ).done( function(result) {
+              $this.removeClass('busy');
+              if(result != null)
+              {
+                if(result.statusCode === 200)
+                {
+                  console.log(result.result);
+                  createItemComplete($row, result.result);
+                }
+                else
+                {
+                  LGND.alert('There was an error', result.message);
+                  //showError(result.message);
+                }
+              }
             });
           }
-          $parent.removeClass('busy')
-          .addClass('unchanged');
+        })
+        //Edit Item Click handler
+        .on('click', '.editItem', function(e){
+          e.preventDefault();
+          var $this = $(this),
+            $row = $this.closest('tr'),
+            data = {};
+          data['selectOptions'] = selectOptions;
+          $row.find('.data_cell')
+          .each( function(idx, ele){
+            var $ele = $(ele);
+            data[$ele.data('field-name')] = $ele.data('field-value');
+            if($ele.data('field-name') === 'PricebookEntryId')
+            {
+              data['PricebookEntry'] = {Product2: { Name: $ele.text().trim()}};
+            }
+          });
+          data['Id'] = $this.data('id');
+          data['Quantity'] = 1;
+
+          console.log('in edit::',data.UnitPrice);
+          //if(data.Unitprice != undefined)
+          data.UnitPrice = parseFloat(data.UnitPrice.toFixed(2));
+
+          $row.replaceWith( editTemplate(data) );
+          $('#editForm').data('old-data', data);
+        })
+        //Cancel Edit Click Handler
+        .on('click', '.cancelEdit', function(e){
+          e.preventDefault();
+           var $this = $(this),
+              $row = $this.closest('tr'),
+               oldData = $row.data('old-data');
+               //console.log('in cancel::',oldData.UnitPrice);
+               if(oldData.UnitPrice != undefined)
+               oldData.UnitPrice = parseFloat(oldData.UnitPrice.toFixed(2));
+               //console.log(oldData);
+
+          if( !$this.siblings().hasClass('busy') )
+          {
+            $row.replaceWith( rowTemplate( oldData ) );
+          }
+        })
+        //Update Item Click Handler
+        .on('click', '.updateItem', function(e){
+          e.preventDefault();
+          var $this = $(this),
+              $row = $this.closest('tr');
+          if( !$this.hasClass('busy') )
+          {
+            $this.addClass('busy');
+            $.when( submitItem($row) ).done( function(result) {
+              $this.removeClass('busy');
+              if(result != null)
+              {
+
+                if(result.statusCode === 200)
+                {
+                  console.log('in updata::',result.result);
+                  //if(result.result.UnitPrice != undefined)
+                  result.result.UnitPrice = parseFloat(result.result.UnitPrice.toFixed(2));
+                  $row.replaceWith( rowTemplate(result.result) );
+                }
+                else
+                {
+                  //showError(result.message);
+                  LGND.alert('There was an error', result.message);
+                }
+
+              }
+            });
+          }
+        })
+        //Remove Item Click handler
+        .on('click', '.removeItem', function(e){
+          e.preventDefault();
+          if( confirm('Are Sure you want to delete this item?') )
+          {
+            var $this = $(this),
+              $row = $this.closest('tr'),
+              id = $this.data('id');
+              $this.addClass('busy');
+             OpportunityExt_FI.deleteItem(id, function(events, result){
+              $this.removeClass('busy');
+              if(result.statusCode == '200')
+              {
+                $row.remove();
+              }
+              else
+              {
+                //showError(result.message);
+                LGND.alert('There was an error', result.message);
+              }
+            });
+          }
         });
       }
 
-    });/* /#savePPSA.on('click') */
+    }
 
-    $('#ppsaFeeValue').on('keyup', function(e) {
+      function submitItem($row)
+      {
+        var data = {},
+        planName, prodName,
+        description = '',
+        dfd = new $.Deferred(),
+        $inputs = $row.find('input, select').removeClass('error');
+        if( validForm($inputs) )
+        {
+          $inputs.attr('disabled', 'disabled')
+          .each(function(idx, ele){
+            data[ $(ele).data('field-name') ] = $(ele).val();
+          });
+          //data['isInsurance__c'] = true;
+          planName = $('option[value="'+planId+'"]').html();
+          prodName = $('option[value="'+ data.PricebookEntryId + '"]').html();
+          data.Description = planName + ' - ' + prodName + ' - ' + data.InsuranceCoverage__c;
+          data['Quantity'] = 1;
+
+          console.log($('option[value="'+ data.PricebookEntryId + '"]').val());
+
+
+          OpportunityExt_FI.saveItem(JSON.stringify(data), function(events, result){
+            console.log(result.result)
+            dfd.resolve(result);
+          });
+        }
+        else
+        {
+          dfd.resolve();
+        }
+        return dfd.promise();
+      }
+
+      function validForm($inputs)
+      {
+        var result = true;
+        $inputs.each(function(idx, ele){
+          var $ele = $(ele);
+          if( $ele.val() === '' || $ele.val() === '_blank')
+          {
+            $ele.addClass('error');
+            result = false;
+          }
+        });
+        return result;
+      }
+
+      function createItemComplete($row, data)
+      {
+        var $inputs =  $row.removeClass('busy')
+        .find('input[type != "hidden"], select')
+        .removeAttr('disabled');
+        $inputs.each(function(i,e){
+          if( $(e).is("select") )
+          {
+            $(e).find('option:first').attr('selected', 'selected');
+          }
+          else
+          {
+            $(e).val('');
+          }
+        })
+        $row.before( rowTemplate(data) );
+      }
+
+      function showError(msg)
+      {
+        $('#error_box').html(msg).animate({'top': '30px'}, 500);
+      }
+
+      function removeError()
+      {
+        $('#error_box').animate({'top': '-200px'}, 500);
+      }
+
+      if(planId.length > 0)
+      {
+        $('#plan_select').val(planId);
+        InsuranceTable.initTable(planId);
+      }
+
+      $('input.lg-toggle').each( function(idx, ele) {
+        var $ele = $(ele);
+
+        if( $ele.data('selected') === true ){
+          $ele.prop('checked', true);
+        }
+
+        $ele.on('click', function(e) {
+          e.preventDefault();
+          var $this = $(this),
+            message;
+          $this.addClass('busy');
+          console.log( $this[0].checked );
+
+
+          if( !$this.prop('checked') )
+          {
+            console.log('remove record');
+             OpportunityExt_FI.removeWarrantyOrServiceItem( $this.data('oli-id'), function(result, event){
+              if(event.status)
+              {
+                console.log(event);
+                $this.data('oli-id', '');
+                $this.prop('checked', false);
+              }
+              else
+              {
+                message = event.message.indexOf('Logged in?') !== -1 ?
+                ' Your session has expired.  Please refresh your browser and log in.' :
+                event.message;
+                LGND.alert('There was an error!', message);
+              }
+              $this.removeClass('busy');
+            });
+          }
+          else
+          {
+            console.log('create record');
+            OpportunityExt_FI.selectWarrantyOrServiceItem( $this.data('id'), $this.data('opp-id'), function(result, event) {
+              if(event.status)
+              {
+                console.log(result);
+                $this.data('oli-id', result.Id);
+                $this.prop('checked', true);
+              }
+              else
+              {
+                message = event.message.indexOf('Logged in?') !== -1 ?
+                ' Your session has expired.  Please refresh your browser and log in.' :
+                event.message;
+                LGND.alert('There was an error!', message);
+              }
+              $this.removeClass('busy');
+            })
+          }
+        });
+      });
+
+      $('#savePPSA').on('click', function(e) {
+        e.preventDefault();
         var $this = $(this),
-          $parent = $this.closest('div.ppsa-form');
+            $parent = $this.closest('div.ppsa-form')
+            $inputs = $parent.find('input'),
+            inputsMap = {},
+            data = {};
 
-        $this.val() === ppsaCurrentValue ?
-          $parent.addClass('unchanged') :
-          $parent.removeClass('unchanged');
+        if( !$parent.hasClass('busy') )
+        {
+          $parent.addClass('busy');
+          $.each($inputs, function(indx, ele) {
+            var $ele = $(ele);
+            inputsMap[$ele.data('field-name')] = $ele;
+            if(  $ele.val().length > 0 )
+            {
+              data[$ele.data('field-name')] = $ele.val();
+            }
+          });
+          OpportunityExt_FI.savePPSA( JSON.stringify(data), function(event, result) {
+            console.log(result);
+            if(result.result == null )
+            {
+              inputsMap['Id'].val('');
+              inputsMap['UnitPrice'].val('');
+              ppsaCurrentValue = null;
+            }
+            else
+            {
+              $.each(result.result, function(k,v) {
+                if( inputsMap[k] ) inputsMap[k].val(v);
+                ppsaCurrentValue = result.result.UnitPrice;
+              });
+            }
+            $parent.removeClass('busy')
+            .addClass('unchanged');
+          });
+        }
 
-    });
+      });/* /#savePPSA.on('click') */
 
-  })(jQuery.noConflict(), document, window);
+      $('#ppsaFeeValue').on('keyup', function(e) {
+          var $this = $(this),
+            $parent = $this.closest('div.ppsa-form');
 
+          $this.val() === ppsaCurrentValue ?
+            $parent.addClass('unchanged') :
+            $parent.removeClass('unchanged');
 
+      });
 
+    })(jQuery.noConflict(), document, window);
   </script>
 </apex:page>

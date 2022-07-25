@@ -1,17 +1,26 @@
-<aura:component implements="forceCommunity:availableForAllPageTypes" access="global" controller="lgnd_CommunityContactList_Controller">
-  <aura:attribute name="title" type="String" default="My Customers" access="global"/>
+<aura:component
+  implements="forceCommunity:availableForAllPageTypes"
+  access="global"
+  controller="lgnd_CommunityContactList_Controller"
+>
+  <aura:attribute name="title" type="String" default="My Customers" access="global" />
   <aura:attribute name="iconName" type="String" default="standard:contact" access="global" />
-  <aura:attribute name="newURL" type="String" default="/" access="global"/>
-  <aura:attribute name="listNames" type="String" default="All Customers" access="global"/>
+  <aura:attribute name="newURL" type="String" default="/" access="global" />
+  <aura:attribute name="listNames" type="String" default="All Customers" access="global" />
   <aura:attribute name="sObjectName" type="String" default="Partner_Customer__c" access="global" />
-  <aura:attribute name="fields" type="String" default="Name:Customer__r.Name:STRING,Phone:Customer__r.Phone:STRING,Mobile:Customer__r.PersonMobilePhone:STRING,Email:Customer__r.PersonEmail:STRING,Street:Customer__r.BillingStreet:STRING,City:Customer__r.BillingCity:STRING" access="global" />
+  <aura:attribute
+    name="fields"
+    type="String"
+    default="Name:Customer__r.Name:STRING,Phone:Customer__r.Phone:STRING,Mobile:Customer__r.PersonMobilePhone:STRING,Email:Customer__r.PersonEmail:STRING,Street:Customer__r.BillingStreet:STRING,City:Customer__r.BillingCity:STRING"
+    access="global"
+  />
   <aura:attribute name="globalFilter" type="String" default="Id != null" access="global" />
   <aura:attribute name="accountIdentityField" type="String" default="Partner__c" access="global" />
   <aura:attribute name="viewURL" type="String" access="global" />
   <aura:attribute name="editURL" type="String" default="/" access="global" />
 
-  <aura:attribute name="selectedList" type="String"  access="global"/>
-  <aura:attribute name="availableLists" type="String[]"  access="global"/>
+  <aura:attribute name="selectedList" type="String" access="global" />
+  <aura:attribute name="availableLists" type="String[]" access="global" />
 
   <aura:attribute name="fieldLabels" type="String[]" />
   <aura:attribute name="fieldNames" type="String[]" />
@@ -34,8 +43,7 @@
 
   <!-- Events -->
   <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
-  <aura:handler event="c:lgnd_ListSelector_Event"
-                action="{!c.handleListChange}" />
+  <aura:handler event="c:lgnd_ListSelector_Event" action="{!c.handleListChange}" />
 
   <div>
     <div class="slds-page-header">
@@ -48,15 +56,24 @@
             <div class="slds-media__body">
               <div class="slds-picklist slds-dropdown-trigger slds-dropdown-trigger--click">
                 <p class="slds-text-title--caps slds-line-height--reset">{!v.title}</p>
-                <c:lgnd_ListSelector value="{!v.selectedList}"
-                                     listOptions="{!v.availableLists}"
-                                     aura:id="listSelector--Cmp" />
+                <c:lgnd_ListSelector
+                  value="{!v.selectedList}"
+                  listOptions="{!v.availableLists}"
+                  aura:id="listSelector--Cmp"
+                />
               </div>
             </div>
           </div>
         </div>
         <div class="slds-col slds-has-flexi-truncate searchFilter">
-          <lightning:input type="search" name="searchFilter" label="Filter" placeholder="Filter by name, phone, email, etc." onchange="{!c.filter}" value="{!v.searchFilter}" />
+          <lightning:input
+            type="search"
+            name="searchFilter"
+            label="Filter"
+            placeholder="Filter by name, phone, email, etc."
+            onchange="{!c.filter}"
+            value="{!v.searchFilter}"
+          />
         </div>
       </div>
     </div>
@@ -67,23 +84,31 @@
       </aura:iteration>
     </ul> -->
 
-    <table class="slds-table slds-table_bordered slds-table_cell-buffer slds-max-medium-table--stacked " aura:id="listTable">
+    <table
+      class="slds-table slds-table_bordered slds-table_cell-buffer slds-max-medium-table--stacked"
+      aura:id="listTable"
+    >
       <thead>
         <tr class="slds-text-title_caps slds-line-height_reset">
           <aura:iteration items="{!v.fieldDetails}" var="field">
             <th scope="col" class="slds-is-sortable slds-text-align_center">
-              <a href="javascript:void(0);"
-                 data-field-name="{!field.name}"
-                 onclick="{!c.handleSort}"
-                 class="{!'slds-th__action slds-text-link_reset' + if( equals(v.sortedCol,field.name), ' isSorted','')}">
+              <a
+                href="javascript:void(0);"
+                data-field-name="{!field.name}"
+                onclick="{!c.handleSort}"
+                class="{!'slds-th__action slds-text-link_reset' + if( equals(v.sortedCol,field.name), ' isSorted','')}"
+              >
                 <span class="slds-assistive-text">Sort </span>
                 <span class="slds-truncate" title="{!field.name}">{!field.name}</span>
-                <lightning:icon iconName="{!if( equals(v.sortDir, 'DESC'), 'utility:arrowdown', 'utility:arrowup')}" size="x-small" />
+                <lightning:icon
+                  iconName="{!if( equals(v.sortDir, 'DESC'), 'utility:arrowdown', 'utility:arrowup')}"
+                  size="x-small"
+                />
                 <span class="slds-assistive-text" aria-live="assertive" aria-atomic="true"></span>
               </a>
             </th>
           </aura:iteration>
-          <th scope="col" style="width:3.25rem;">
+          <th scope="col" style="width: 3.25rem">
             <div class="slds-th__action">
               <span class="slds-assistive-text">Actions</span>
             </div>
@@ -94,30 +119,35 @@
         <aura:iteration items="{!v.records}" var="rec">
           <tr>
             <aura:iteration items="{!v.fieldDetails}" var="field" indexVar="idx">
-              <c:lgnd_CommunityObjectTableCell record="{!rec}"
-                                               field="{!field.apiName}"
-                                               fieldType="{!field.type}"
-                                               fieldName="{!field.name}"
-                                               isViewLink="{! equals(idx,0)}"
-                                               viewRecordId="{!rec.Customer__c}" />
+              <c:lgnd_CommunityObjectTableCell
+                record="{!rec}"
+                field="{!field.apiName}"
+                fieldType="{!field.type}"
+                fieldName="{!field.name}"
+                isViewLink="{! equals(idx,0)}"
+                viewRecordId="{!rec.Customer__c}"
+              />
             </aura:iteration>
             <td role="gridcell" class="action-cell">
-              <lightning:buttonMenu menuAlignment="right"
-                                    onselect="{!c.handleTableAction }">
-                  <lightning:menuItem label="View" value="{! 'view:' + rec.Customer__c }" />
-                  <!-- <lightning:menuItem label="Edit" value="{! 'edit:' + rec.Id }" />
+              <lightning:buttonMenu menuAlignment="right" onselect="{!c.handleTableAction }">
+                <lightning:menuItem label="View" value="{! 'view:' + rec.Customer__c }" />
+                <!-- <lightning:menuItem label="Edit" value="{! 'edit:' + rec.Id }" />
                   <lightning:menuItem label="Delete" value="{! 'delete:' + rec.Id }" /> -->
               </lightning:buttonMenu>
             </td>
           </tr>
         </aura:iteration>
       </tbody>
-
     </table>
 
     <div class="pagination slds-grid loading" aura:id="paginationRow">
       <div class="slds-col slds-large-size_4-of-12">
-        <lightning:select name="pageSelect" label="Records per page" value="{!v.perPage}" onchange="{!c.perPageChanged}">
+        <lightning:select
+          name="pageSelect"
+          label="Records per page"
+          value="{!v.perPage}"
+          onchange="{!c.perPageChanged}"
+        >
           <option value="15">15</option>
           <option value="25">25</option>
           <option value="50">50</option>
@@ -130,30 +160,25 @@
             <option value="{!po}">{!po}</option>
           </aura:iteration>
         </lightning:select>
-        <label class="slds-form-element__label">
-          of {!v.totalPages}
-        </label>
+        <label class="slds-form-element__label"> of {!v.totalPages} </label>
       </div>
       <div class="slds-col slds-large-size_4-of-12">
-        <lightning:buttonGroup >
+        <lightning:buttonGroup>
           <aura:if isTrue="{!v.pageNumber gt 1}">
-            <lightning:button iconName="utility:chevronleft"
-                              iconPosition="left"
-                              label="Prev"
-                              onclick="{!c.prevPage}"/>
+            <lightning:button iconName="utility:chevronleft" iconPosition="left" label="Prev" onclick="{!c.prevPage}" />
           </aura:if>
           <aura:if isTrue="{! and( v.totalPages gt 1, v.pageNumber lt v.totalPages)}">
-            <lightning:button iconName="utility:chevronright"
-                              iconPosition="right"
-                              label="Next"
-                              onclick="{!c.nextPage}" />
+            <lightning:button
+              iconName="utility:chevronright"
+              iconPosition="right"
+              label="Next"
+              onclick="{!c.nextPage}"
+            />
           </aura:if>
         </lightning:buttonGroup>
       </div>
     </div>
   </div>
-  <br/>
-  <br/>
-
-
+  <br />
+  <br />
 </aura:component>

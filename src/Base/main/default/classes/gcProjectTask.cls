@@ -60,32 +60,14 @@ global without sharing class gcProjectTask {
     if (listNew == null)
       listNew = new List<AcctSeed__Project_Task__c>();
 
-    updateAndValidate(
-      oldMap,
-      newMap,
-      listNew,
-      boolIsBefore,
-      boolIsInsert,
-      boolIsUpdate,
-      boolIsDelete
-    );
+    updateAndValidate(oldMap, newMap, listNew, boolIsBefore, boolIsInsert, boolIsUpdate, boolIsDelete);
 
     if (boolIsBefore) {
       if (boolIsInsert) {
-        gcTransactionParent.setFinancialAttributes(
-          listNew,
-          'AcctSeed__Project__c',
-          null,
-          null
-        );
+        gcTransactionParent.setFinancialAttributes(listNew, 'AcctSeed__Project__c', null, null);
       }
       if (boolIsUpdate) {
-        gcTransactionParent.setFinancialAttributes(
-          listNew,
-          'AcctSeed__Project__c',
-          null,
-          null
-        );
+        gcTransactionParent.setFinancialAttributes(listNew, 'AcctSeed__Project__c', null, null);
       }
       if (boolIsDelete) {
         for (AcctSeed__Project_Task__c task : oldMap.values()) {
@@ -107,7 +89,7 @@ global without sharing class gcProjectTask {
       }
       if (boolIsUpdate) {
         reName(newMap.keySet());
-				handleCommissionRecords(listNew, oldMap);
+        handleCommissionRecords(listNew, oldMap);
         handleDisplayOnInvoiceChange(listNew, oldMap);
       }
       if (boolIsDelete) {
@@ -131,30 +113,18 @@ global without sharing class gcProjectTask {
         if (t.Id != null && oldMap.containsKey(t.Id)) {
           //Update taking place
           AcctSeed__Project_Task__c oldTask = oldMap.get(t.Id);
-          if (
-            t.DisplayOnCustomerInvoice__c == true &&
-            oldTask.DisplayOnCustomerInvoice__c == false
-          ) {
+          if (t.DisplayOnCustomerInvoice__c == true && oldTask.DisplayOnCustomerInvoice__c == false) {
             addTask = true;
           }
-          if (
-            t.DisplayOnCustomerInvoice__c == false &&
-            oldTask.DisplayOnCustomerInvoice__c == true
-          ) {
+          if (t.DisplayOnCustomerInvoice__c == false && oldTask.DisplayOnCustomerInvoice__c == true) {
             service.addTaskToRemove(t);
           }
-          if (
-            t.Commission_Calculation_Method__c !=
-            oldTask.Commission_Calculation_Method__c
-          ) {
+          if (t.Commission_Calculation_Method__c != oldTask.Commission_Calculation_Method__c) {
             addTask = true;
           }
         } else {
           //Insert taking place
-          if (
-            t.DisplayOnCustomerInvoice__c &&
-            acceptableProjectRecordTypes.contains(t.Project_RecordTypeId__c)
-          ) {
+          if (t.DisplayOnCustomerInvoice__c && acceptableProjectRecordTypes.contains(t.Project_RecordTypeId__c)) {
             addTask = true;
           }
         }
@@ -173,30 +143,17 @@ global without sharing class gcProjectTask {
     Map<Id, Boolean> displayedOnInvoiceByTaskId = new Map<Id, Boolean>();
     for (AcctSeed__Project_Task__c task : newList) {
       AcctSeed__Project_Task__c oldTask = oldMap.get(task.Id);
-      if (
-        task.DisplayOnCustomerInvoice__c != oldTask.DisplayOnCustomerInvoice__c
-      ) {
-        displayedOnInvoiceByTaskId.put(
-          task.Id,
-          task.DisplayOnCustomerInvoice__c
-        );
+      if (task.DisplayOnCustomerInvoice__c != oldTask.DisplayOnCustomerInvoice__c) {
+        displayedOnInvoiceByTaskId.put(task.Id, task.DisplayOnCustomerInvoice__c);
       }
     }
     if (displayedOnInvoiceByTaskId.keySet().size() > 0) {
-      List<AcctSeedERP__Material__c> mats = Material_Selector.selectAllByTaskId(
-        displayedOnInvoiceByTaskId.keySet()
-      );
+      List<AcctSeedERP__Material__c> mats = Material_Selector.selectAllByTaskId(displayedOnInvoiceByTaskId.keySet());
       for (AcctSeedERP__Material__c mat : mats) {
-        if (
-          displayedOnInvoiceByTaskId.get(mat.AcctSeedERP__Project_Task__c) ==
-          true
-        ) {
+        if (displayedOnInvoiceByTaskId.get(mat.AcctSeedERP__Project_Task__c) == true) {
           mat.GMBLASERP__Price_Override__c = false;
         }
-        if (
-          displayedOnInvoiceByTaskId.get(mat.AcctSeedERP__Project_Task__c) ==
-          false
-        ) {
+        if (displayedOnInvoiceByTaskId.get(mat.AcctSeedERP__Project_Task__c) == false) {
           mat.GMBLASERP__Price_Override__c = true;
           mat.GMBLASERP__Unit_Price__c = 0;
         }
@@ -228,9 +185,7 @@ global without sharing class gcProjectTask {
       delete [
         SELECT Id
         FROM AcctSeedERP__Material__c
-        WHERE
-          AcctSeedERP__Project_Task__c != NULL
-          AND AcctSeedERP__Project_Task__c IN :oldMap.keySet()
+        WHERE AcctSeedERP__Project_Task__c != NULL AND AcctSeedERP__Project_Task__c IN :oldMap.keySet()
       ];
     }
     if (boolIsBefore && (boolIsUpdate || boolIsInsert)) {
@@ -239,20 +194,12 @@ global without sharing class gcProjectTask {
       if (boolIsUpdate) {
         for (AcctSeed__Project_Task__c pt : listNew) {
           AcctSeed__Project_Task__c oldRec = oldMap.get(pt.Id);
-          AcctSeed__Project__c project = mapProject.get(
-            pt.AcctSeed__Project__c
-          );
-          if (
-            (project.Locked__c && !gcProject.disableLockedCheck) ||
-            (oldRec.Locked__c && pt.Locked__c)
-          ) {
+          AcctSeed__Project__c project = mapProject.get(pt.AcctSeed__Project__c);
+          if ((project.Locked__c && !gcProject.disableLockedCheck) || (oldRec.Locked__c && pt.Locked__c)) {
             if (
-              pt.AcctSeed__GL_Account_Variable_1__c !=
-              oldRec.AcctSeed__GL_Account_Variable_1__c ||
-              pt.AcctSeed__GL_Account_Variable_2__c !=
-              oldRec.AcctSeed__GL_Account_Variable_2__c ||
-              pt.AcctSeed__GL_Account_Variable_3__c !=
-              oldRec.AcctSeed__GL_Account_Variable_3__c ||
+              pt.AcctSeed__GL_Account_Variable_1__c != oldRec.AcctSeed__GL_Account_Variable_1__c ||
+              pt.AcctSeed__GL_Account_Variable_2__c != oldRec.AcctSeed__GL_Account_Variable_2__c ||
+              pt.AcctSeed__GL_Account_Variable_3__c != oldRec.AcctSeed__GL_Account_Variable_3__c ||
               pt.Product__c != oldRec.Product__c
             )
               pt.addError(
@@ -269,13 +216,9 @@ global without sharing class gcProjectTask {
               'The Actual cannot be manipulated; it is calculated from the underlying Transactions.'
             );
           if (pt.Cash__c != oldRec.Cash__c)
-            pt.Cash__c.addError(
-              'The Cash cannot be manipulated; it is calculated from the underlying Transactions.'
-            );
+            pt.Cash__c.addError('The Cash cannot be manipulated; it is calculated from the underlying Transactions.');
           if (pt.WIP__c != oldRec.WIP__c)
-            pt.WIP__c.addError(
-              'The WIP cannot be manipulated; it is calculated from the underlying Transactions.'
-            );
+            pt.WIP__c.addError('The WIP cannot be manipulated; it is calculated from the underlying Transactions.');
           if (pt.Finished_Goods__c != oldRec.Finished_Goods__c)
             pt.Finished_Goods__c.addError(
               'The Finished Goods field cannot be manipulated; it is calculated from the underlying Transactions.'
@@ -285,9 +228,7 @@ global without sharing class gcProjectTask {
             pt.Order_Item_Total__c.addError(
               'The Order Item Total field cannot be manipulated; it is calculated from the underlying Materials.'
             );
-          if (
-            pt.Order_Taxable_Provincial__c != oldRec.Order_Taxable_Provincial__c
-          )
+          if (pt.Order_Taxable_Provincial__c != oldRec.Order_Taxable_Provincial__c)
             pt.Order_Taxable_Provincial__c.addError(
               'The Order Taxable Provincial field cannot be manipulated; it is calculated from the underlying Materials.'
             );
@@ -310,12 +251,8 @@ global without sharing class gcProjectTask {
           pt.addError('Cannot add new task. The parent ERP Order is locked.');
 
         if (boolIsInsert) {
-         pt.Task_Order__c =
-          pt.Index__c =
-            mapProjectIndex.get(pt.AcctSeed__Project__c).setScale(0) + 1;
-            mapProjectIndex.put(pt.AcctSeed__Project__c, pt.Index__c);
-
-
+          pt.Task_Order__c = pt.Index__c = mapProjectIndex.get(pt.AcctSeed__Project__c).setScale(0) + 1;
+          mapProjectIndex.put(pt.AcctSeed__Project__c, pt.Index__c);
         }
 
         if (pt.Expense__c == null)
@@ -344,18 +281,12 @@ global without sharing class gcProjectTask {
       set<Id> setIdProjectTaskUpdateMaterialSpec = new Set<Id>();
       set<Id> setIdProject = new Set<Id>();
       for (AcctSeed__Project_Task__c pt : listNew) {
-        if (
-          (boolIsInsert && pt.Product__c != null) ||
-          (boolIsUpdate && pt.Product__c != oldMap.get(pt.Id).Product__c)
-        )
+        if ((boolIsInsert && pt.Product__c != null) || (boolIsUpdate && pt.Product__c != oldMap.get(pt.Id).Product__c))
           setIdProjectTaskUpdateMaterialSpec.add(pt.Id);
 
         setIdProject.add(pt.AcctSeed__Project__c);
       }
-      if (
-        !setIdProjectTaskUpdateMaterialSpec.isEmpty() &&
-        !disableUpdateMaterialSpec
-      )
+      if (!setIdProjectTaskUpdateMaterialSpec.isEmpty() && !disableUpdateMaterialSpec)
         updateMaterialSpec(setIdProjectTaskUpdateMaterialSpec);
 
       //check for duplicate parts lists
@@ -370,13 +301,8 @@ global without sharing class gcProjectTask {
         Id idProduct = (Id) aggRes.get('idProduct');
 
         for (AcctSeed__Project_Task__c pt : listNew) {
-          if (
-            pt.AcctSeed__Project__c == idProject &&
-            pt.Product__c == idProduct
-          )
-            pt.addError(
-              'There cannot be two project tasks for the same parts list.'
-            );
+          if (pt.AcctSeed__Project__c == idProject && pt.Product__c == idProduct)
+            pt.addError('There cannot be two project tasks for the same parts list.');
         }
       }
     }
@@ -394,10 +320,7 @@ global without sharing class gcProjectTask {
     }
 
     for (AcctSeed__Project_Task__c cr : listNew) {
-      if (
-        cr.AcctSeed__Project__c != null &&
-        !mapProject.containsKey(cr.AcctSeed__Project__c)
-      )
+      if (cr.AcctSeed__Project__c != null && !mapProject.containsKey(cr.AcctSeed__Project__c))
         setIdProject.add(cr.AcctSeed__Project__c);
     }
 
@@ -408,26 +331,15 @@ global without sharing class gcProjectTask {
           Name,
           Locked__c,
           AcctSeed__Status__c,
-          (
-            SELECT Id, Index__c
-            FROM AcctSeed__Project_Tasks__r
-            ORDER BY Index__c DESC
-            LIMIT 1
-          )
+          (SELECT Id, Index__c FROM AcctSeed__Project_Tasks__r ORDER BY Index__c DESC LIMIT 1)
         FROM AcctSeed__Project__c
         WHERE Id IN :setIdProject
       ]) {
         mapProject.put(project.Id, project);
-        if (
-          project.AcctSeed__Project_Tasks__r.isEmpty() ||
-          project.AcctSeed__Project_Tasks__r[0].Index__c == null
-        )
+        if (project.AcctSeed__Project_Tasks__r.isEmpty() || project.AcctSeed__Project_Tasks__r[0].Index__c == null)
           mapProjectIndex.put(project.Id, 0);
         else
-          mapProjectIndex.put(
-            project.Id,
-            project.AcctSeed__Project_Tasks__r[0].Index__c
-          );
+          mapProjectIndex.put(project.Id, project.AcctSeed__Project_Tasks__r[0].Index__c);
       }
   }
 
@@ -435,23 +347,14 @@ global without sharing class gcProjectTask {
     list<AcctSeed__Project_Task__c> listProjectTaskUpdate = new List<AcctSeed__Project_Task__c>();
 
     for (AcctSeed__Project_Task__c pt : [
-      SELECT
-        Id,
-        Name,
-        Index__c,
-        AcctSeed__Project__r.AcctSeedERP__Work_Order_Number__c
+      SELECT Id, Name, Index__c, AcctSeed__Project__r.AcctSeedERP__Work_Order_Number__c
       FROM AcctSeed__Project_Task__c
       WHERE Id IN :setIdProjectTask
     ]) {
       String prefix = '';
       if (pt.AcctSeed__Project__r.AcctSeedERP__Work_Order_Number__c != null)
         prefix = String.valueOf(
-          Integer.valueOf(
-            pt.AcctSeed__Project__r.AcctSeedERP__Work_Order_Number__c.replaceAll(
-              '[^0-9]',
-              ''
-            )
-          )
+          Integer.valueOf(pt.AcctSeed__Project__r.AcctSeedERP__Work_Order_Number__c.replaceAll('[^0-9]', ''))
         );
       if (pt.Index__c != null)
         prefix = prefix + '.' + string.valueOf(pt.Index__c);
@@ -495,11 +398,7 @@ global without sharing class gcProjectTask {
         Product__c,
         Partslist_Generated__c,
         (
-          SELECT
-            Id,
-            AcctSeedERP__Product__c,
-            AcctSeedERP__Quantity_per_Unit__c,
-            Quantity_Specified_Override__c
+          SELECT Id, AcctSeedERP__Product__c, AcctSeedERP__Quantity_per_Unit__c, Quantity_Specified_Override__c
           FROM AcctSeedERP__Materials__r
           ORDER BY CreatedDate
         )
@@ -516,10 +415,7 @@ global without sharing class gcProjectTask {
     //collect the Product Parts for the Products that are specified in ProjectTask.Product
     //this is effectively the bill of materials
     for (AcctSeed__Product_Part__c part : [
-      SELECT
-        AcctSeed__Product__c,
-        AcctSeed__Product_Part__c,
-        AcctSeed__Quantity__c
+      SELECT AcctSeed__Product__c, AcctSeed__Product_Part__c, AcctSeed__Quantity__c
       FROM AcctSeed__Product_Part__c
       WHERE
         AcctSeed__Product__c IN :mapProductParts.keySet()
@@ -527,14 +423,12 @@ global without sharing class gcProjectTask {
         AND (AcctSeed__Quantity__c < 0
         OR AcctSeed__Quantity__c > 0)
     ]) {
-      Decimal qty = mapProductParts.get(part.AcctSeed__Product__c)
-        .get(part.AcctSeed__Product_Part__c);
+      Decimal qty = mapProductParts.get(part.AcctSeed__Product__c).get(part.AcctSeed__Product_Part__c);
       qty = (qty == null ? 0 : qty);
 
       qty += part.AcctSeed__Quantity__c;
 
-      mapProductParts.get(part.AcctSeed__Product__c)
-        .put(part.AcctSeed__Product_Part__c, qty);
+      mapProductParts.get(part.AcctSeed__Product__c).put(part.AcctSeed__Product_Part__c, qty);
     }
 
     list<AcctSeedERP__Material__c> listMatlUpsert = new List<AcctSeedERP__Material__c>();
@@ -553,9 +447,7 @@ global without sharing class gcProjectTask {
         if (idProduct == null)
           continue;
 
-        list<AcctSeedERP__Material__c> listMatl = mapProductMaterials.get(
-          idProduct
-        );
+        list<AcctSeedERP__Material__c> listMatl = mapProductMaterials.get(idProduct);
         if (listMatl == null) {
           listMatl = new List<AcctSeedERP__Material__c>();
           mapProductMaterials.put(idProduct, listMatl);
@@ -572,9 +464,7 @@ global without sharing class gcProjectTask {
         //if the product is not in the bom, then all material records for that product should have [Qty Specified Override] = true
         if (!bom.containsKey(idProduct)) {
           if (mapProductMaterials.containsKey(idProduct)) {
-            for (
-              AcctSeedERP__Material__c matl : mapProductMaterials.get(idProduct)
-            ) {
+            for (AcctSeedERP__Material__c matl : mapProductMaterials.get(idProduct)) {
               if (!matl.Quantity_Specified_Override__c) {
                 matl.Quantity_Specified_Override__c = true;
                 listMatlUpsert.add(matl);
@@ -590,15 +480,10 @@ global without sharing class gcProjectTask {
           Boolean matlFound = false;
 
           if (mapProductMaterials.containsKey(idProduct))
-            for (
-              AcctSeedERP__Material__c matl : mapProductMaterials.get(idProduct)
-            ) {
+            for (AcctSeedERP__Material__c matl : mapProductMaterials.get(idProduct)) {
               //if this is the OLDEST material for this product, set the spec quantity to the bom quantity.
               if (!matlFound) {
-                if (
-                  matl.AcctSeedERP__Quantity_per_Unit__c != qtyBom ||
-                  matl.Quantity_Specified_Override__c
-                ) {
+                if (matl.AcctSeedERP__Quantity_per_Unit__c != qtyBom || matl.Quantity_Specified_Override__c) {
                   matl.AcctSeedERP__Quantity_per_Unit__c = qtyBom;
                   matl.Quantity_Specified_Override__c = false;
                   listMatlUpsert.add(matl);
@@ -667,10 +552,7 @@ global without sharing class gcProjectTask {
             AcctSeed__GL_Account__c IN (
               SELECT Id
               FROM AcctSeed__GL_Account__c
-              WHERE
-                AcctSeed__Type__c IN ('Revenue', 'Expense')
-                OR AcctSeed__Bank__c = TRUE
-                OR Id = :idGlWip
+              WHERE AcctSeed__Type__c IN ('Revenue', 'Expense') OR AcctSeed__Bank__c = TRUE OR Id = :idGlWip
             )
             AND (AcctSeed__Amount__c < 0
             OR AcctSeed__Amount__c > 0)
@@ -683,9 +565,7 @@ global without sharing class gcProjectTask {
       Decimal cash = 0;
       Decimal wip = 0;
 
-      for (
-        AcctSeed__Transaction__c txn : pt.AcctSeed__Project_Transactions__r
-      ) {
+      for (AcctSeed__Transaction__c txn : pt.AcctSeed__Project_Transactions__r) {
         if (txn.AcctSeed__GL_Account__r.AcctSeed__Type__c == 'Expense')
           expense += txn.AcctSeed__Amount__c;
         else if (txn.AcctSeed__GL_Account__r.AcctSeed__Type__c == 'Revenue')
@@ -761,40 +641,24 @@ global without sharing class gcProjectTask {
       Decimal insurance = 0;
       Decimal preFeesDiscounts = 0;
       for (AcctSeedERP__Material__c m : pt.AcctSeedERP__Materials__r) {
-        amt += (m.GMBLASERP__Total_Price__c == null
-          ? 0
-          : m.GMBLASERP__Total_Price__c);
+        amt += (m.GMBLASERP__Total_Price__c == null ? 0 : m.GMBLASERP__Total_Price__c);
         if (m.Taxable_Provincial__c)
-          taxableProvincial += (m.GMBLASERP__Total_Price__c == null
-            ? 0
-            : m.GMBLASERP__Total_Price__c);
+          taxableProvincial += (m.GMBLASERP__Total_Price__c == null ? 0 : m.GMBLASERP__Total_Price__c);
         if (m.Taxable_Federal__c)
-          taxableFederal += (m.GMBLASERP__Total_Price__c == null
-            ? 0
-            : m.GMBLASERP__Total_Price__c);
+          taxableFederal += (m.GMBLASERP__Total_Price__c == null ? 0 : m.GMBLASERP__Total_Price__c);
         if (m.Taxable_Retail__c)
-          taxableRetail += (m.GMBLASERP__Total_Price__c == null
-            ? 0
-            : m.GMBLASERP__Total_Price__c);
+          taxableRetail += (m.GMBLASERP__Total_Price__c == null ? 0 : m.GMBLASERP__Total_Price__c);
         if (m.isInsuranceItem__c)
-          insurance += (m.GMBLASERP__Total_Price__c == null
-            ? 0
-            : m.GMBLASERP__Total_Price__c);
-        if (
-          m.AcctSeedERP__Product__c != discountProdId &&
-          m.AcctSeedERP__Product__r.RecordTypeId != feeRtId
-        )
-          preFeesDiscounts += (m.GMBLASERP__Total_Price__c == null
-            ? 0
-            : m.GMBLASERP__Total_Price__c);
+          insurance += (m.GMBLASERP__Total_Price__c == null ? 0 : m.GMBLASERP__Total_Price__c);
+        if (m.AcctSeedERP__Product__c != discountProdId && m.AcctSeedERP__Product__r.RecordTypeId != feeRtId)
+          preFeesDiscounts += (m.GMBLASERP__Total_Price__c == null ? 0 : m.GMBLASERP__Total_Price__c);
       }
       System.debug('gcProjectTrigger 627');
       if (
         pt.Order_Item_Total__c == null ||
         pt.Order_Item_Total__c.setScale(2) != amt.setScale(2) ||
         pt.Order_Taxable_Provincial__c == null ||
-        pt.Order_Taxable_Provincial__c.setScale(2) !=
-        taxableProvincial.setScale(2) ||
+        pt.Order_Taxable_Provincial__c.setScale(2) != taxableProvincial.setScale(2) ||
         pt.Order_Taxable_Federal__c == null ||
         pt.Order_Taxable_Federal__c.setScale(2) != taxableFederal.setScale(2) ||
         pt.Order_Taxable_Retail__c == null ||
@@ -802,8 +666,7 @@ global without sharing class gcProjectTask {
         pt.Order_Insurance_Total__c == null ||
         pt.Order_Insurance_Total__c.setScale(2) != insurance.setScale(2) ||
         pt.Order_Item_Total_BeforeFeesAndDiscounts__c == null ||
-        pt.Order_Item_Total_BeforeFeesAndDiscounts__c.setScale(2) !=
-        preFeesDiscounts.setScale(2)
+        pt.Order_Item_Total_BeforeFeesAndDiscounts__c.setScale(2) != preFeesDiscounts.setScale(2)
       ) {
         pt.Order_Item_Total__c = amt;
         pt.Order_Taxable_Provincial__c = taxableProvincial;
@@ -834,10 +697,7 @@ global without sharing class gcProjectTask {
         GMBLASERP__Product__c,
         GMBLASERP__Quantity_Filled__c,
         (
-          SELECT
-            Id,
-            AcctSeedERP__Inventory_Balance__r.AcctSeedERP__Product__c,
-            AcctSeedERP__Quantity__c
+          SELECT Id, AcctSeedERP__Inventory_Balance__r.AcctSeedERP__Product__c, AcctSeedERP__Quantity__c
           FROM AcctSeedERP__Outbound_Inventory_Movements__r
           WHERE AcctSeedERP__Quantity__c < 0 OR AcctSeedERP__Quantity__c > 0
         )
@@ -845,19 +705,13 @@ global without sharing class gcProjectTask {
       WHERE Id IN :setIdProjectTask AND GMBLASERP__Product__c != NULL
     ]) {
       Decimal qty = 0;
-      for (
-        AcctSeedERP__Outbound_Inventory_Movement__c move : pt.AcctSeedERP__Outbound_Inventory_Movements__r
-      ) {
-        if (
-          pt.GMBLASERP__Product__c ==
-          move.AcctSeedERP__Inventory_Balance__r.AcctSeedERP__Product__c
-        )
+      for (AcctSeedERP__Outbound_Inventory_Movement__c move : pt.AcctSeedERP__Outbound_Inventory_Movements__r) {
+        if (pt.GMBLASERP__Product__c == move.AcctSeedERP__Inventory_Balance__r.AcctSeedERP__Product__c)
           qty += move.AcctSeedERP__Quantity__c;
       }
 
       if (
-        pt.GMBLASERP__Quantity_Filled__c == null ||
-        (qty.setScale(6) != pt.GMBLASERP__Quantity_Filled__c.setScale(6))
+        pt.GMBLASERP__Quantity_Filled__c == null || (qty.setScale(6) != pt.GMBLASERP__Quantity_Filled__c.setScale(6))
       ) {
         pt.GMBLASERP__Quantity_Filled__c = qty.setScale(6);
         listTaskUpdate.add(pt);

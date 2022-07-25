@@ -1,7 +1,8 @@
-<aura:component controller="Product_BinLocations_Controller_dh"
-                implements="force:appHostable,flexipage:availableForAllPageTypes,force:hasRecordId">
-
-<!--   <ltng:require scripts="{!$Resource.UtilJS + '/LightningApex.js'}" afterScriptsLoaded="{!c.doScripts}" /> -->
+<aura:component
+  controller="Product_BinLocations_Controller_dh"
+  implements="force:appHostable,flexipage:availableForAllPageTypes,force:hasRecordId"
+>
+  <!--   <ltng:require scripts="{!$Resource.UtilJS + '/LightningApex.js'}" afterScriptsLoaded="{!c.doScripts}" /> -->
 
   <aura:attribute name="loaded" type="Boolean" default="false" />
   <aura:attribute name="recordId" type="String" />
@@ -23,48 +24,37 @@
 
   <div class="slds-card">
     <aura:if isTrue="{! not(v.loaded) }">
-
-      <div style="width: 100%; height: 200px;">
+      <div style="width: 100%; height: 200px">
         <div role="status" class="slds-spinner slds-spinner_medium">
           <span class="slds-assistive-text">Loading</span>
           <div class="slds-spinner__dot-a"></div>
           <div class="slds-spinner__dot-b"></div>
         </div>
       </div>
-
     </aura:if>
 
     <div style="{! 'display:' + if( v.loaded, 'initial', 'none') }">
       <div class="slds-grid slds-wrap slds-grid_vertical-align-center slds-p-around_medium search-result">
-
         <div class="slds-col slds-size_2-of-6 slds-m-bottom_medium" id="product-image">
-            <!-- <img class="product-image" src="{!v.productImageURL}" alt="No Product Image"/> -->
+          <!-- <img class="product-image" src="{!v.productImageURL}" alt="No Product Image"/> -->
         </div>
 
         <div class="slds-col slds-size_4-of-6 slds-m-bottom_medium">
           <div class="slds-clearfix">
-              <span class='slds-pill slds-float_left'>{!v.productFamily}</span>
+            <span class="slds-pill slds-float_left">{!v.productFamily}</span>
           </div>
-          <div class='slds-grid slds-wrap slds-m-top_medium'>
-            <div class="slds-col slds-size_10-of-12 bold">
-              {!v.productName}
-            </div>
+          <div class="slds-grid slds-wrap slds-m-top_medium">
+            <div class="slds-col slds-size_10-of-12 bold">{!v.productName}</div>
             <div class="slds-col slds-size_2-of-12 slds-text-align_right bold">
               <!-- <c:lgnd_currencyDisplay value="{!pdt.unitPrice}" zeroLabel="0.00" /> -->
             </div>
           </div>
-          <div class="slds-text-body_small slds-text-color_weak">
-            {!v.productCode}
-          </div>
-          <div class="slds-m-top_small slds-text-body_small slds-text-color_weak">
-            {!v.productDescription}
-          </div>
+          <div class="slds-text-body_small slds-text-color_weak">{!v.productCode}</div>
+          <div class="slds-m-top_small slds-text-body_small slds-text-color_weak">{!v.productDescription}</div>
         </div>
 
         <div class="slds-col slds-size_3-of-12 slds-m-bottom_small">
-          <lightning:select name="warehouse-select"
-                            label="Select Warehouse"
-                            value="{!v.selectedWarehouse}">
+          <lightning:select name="warehouse-select" label="Select Warehouse" value="{!v.selectedWarehouse}">
             <aura:iteration items="{!v.warehouseOptions}" var="warehouse">
               <option value="{!warehouse}" selected="{! equals(warehouse, v.selectedWarehouse)}">{!warehouse}</option>
             </aura:iteration>
@@ -73,8 +63,7 @@
 
         <div class="slds-col slds-size_9-of-12 slds-m-bottom_small slds-text-align_center">
           <div class="slds-grid slds-wrap slds-grid_vertical-align-center slds-p-around_medium">
-
-            <div class='slds-col slds-size_3-of-12'>
+            <div class="slds-col slds-size_3-of-12">
               <div class="slds-form-element__label slds-m-right_none">Total on Hand</div>
               <div>
                 <span class="slds-pill pill-blue">
@@ -86,7 +75,7 @@
               </div>
             </div>
 
-            <div class='slds-col slds-size_3-of-12'>
+            <div class="slds-col slds-size_3-of-12">
               <div class="slds-form-element__label slds-m-right_none">Required</div>
               <div>
                 <span class="slds-pill pill-yellow">
@@ -97,10 +86,12 @@
               </div>
             </div>
 
-            <div class='slds-col slds-size_3-of-12'>
+            <div class="slds-col slds-size_3-of-12">
               <div class="slds-form-element__label slds-m-right_none">Available</div>
               <div>
-                <span class="{! 'slds-pill ' + if( v.selectedInventoryDetail.available > 0, 'pill-green', 'pill-red') }">
+                <span
+                  class="{! 'slds-pill ' + if( v.selectedInventoryDetail.available > 0, 'pill-green', 'pill-red') }"
+                >
                   <span class="slds-pill__label slds-p-left_small slds-p-right_small">
                     {!v.selectedInventoryDetail.available}
                   </span>
@@ -108,7 +99,7 @@
               </div>
             </div>
 
-            <div class='slds-col slds-size_3-of-12'>
+            <div class="slds-col slds-size_3-of-12">
               <div class="slds-form-element__label slds-m-right_none">On Order</div>
               <div>
                 <span class="{! 'slds-pill ' + if( v.selectedInventoryDetail.onOrder > 0, 'pill-green', 'pill-red') }">
@@ -118,7 +109,6 @@
                 </span>
               </div>
             </div>
-
           </div>
         </div>
 
@@ -140,9 +130,7 @@
             <tbody>
               <aura:if isTrue="{! empty(v.selectedBinLocations) }">
                 <tr>
-                  <td colspan="3" style="text-align:center;">
-                    {!'No Bin Locations setup in ' + v.selectedWarehouse}
-                  </td>
+                  <td colspan="3" style="text-align: center">{!'No Bin Locations setup in ' + v.selectedWarehouse}</td>
                 </tr>
               </aura:if>
               <aura:if isTrue="{! not( empty(v.selectedBinLocations) )}">
@@ -166,5 +154,4 @@
       </div>
     </div>
   </div>
-
 </aura:component>

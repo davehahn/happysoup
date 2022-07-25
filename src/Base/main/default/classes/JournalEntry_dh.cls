@@ -1,90 +1,91 @@
 public inherited sharing class JournalEntry_dh {
-
-	public static Boolean disableTrigger{
-    get{
-      if(disableTrigger == null) return false;
-      else return disableTrigger;
+  public static Boolean disableTrigger {
+    get {
+      if (disableTrigger == null)
+        return false;
+      else
+        return disableTrigger;
     }
-    set{
-      if(value == null) disableTrigger = false;
-      else disableTrigger = value;
+    set {
+      if (value == null)
+        disableTrigger = false;
+      else
+        disableTrigger = value;
     }
   }
 
-  public static void triggerHandler
-    (Map<Id,AcctSeed__Journal_Entry__c> oldMap,
-     Map<Id,AcctSeed__Journal_Entry__c> newMap,
-     List<AcctSeed__Journal_Entry__c> listNew,
-     Boolean boolIsBefore,
-     Boolean boolIsInsert,
-     Boolean boolIsUpdate,
-     Boolean boolIsDelete)
-  {
-    if(oldMap == NULL) oldMap = new Map<Id,AcctSeed__Journal_Entry__c>();
-    if(newMap == NULL) newMap = new Map<Id,AcctSeed__Journal_Entry__c>();
-    if(listNew == NULL) listNew = new List<AcctSeed__Journal_Entry__c>();
+  public static void triggerHandler(
+    Map<Id, AcctSeed__Journal_Entry__c> oldMap,
+    Map<Id, AcctSeed__Journal_Entry__c> newMap,
+    List<AcctSeed__Journal_Entry__c> listNew,
+    Boolean boolIsBefore,
+    Boolean boolIsInsert,
+    Boolean boolIsUpdate,
+    Boolean boolIsDelete
+  ) {
+    if (oldMap == null)
+      oldMap = new Map<Id, AcctSeed__Journal_Entry__c>();
+    if (newMap == null)
+      newMap = new Map<Id, AcctSeed__Journal_Entry__c>();
+    if (listNew == null)
+      listNew = new List<AcctSeed__Journal_Entry__c>();
 
-    updateAndValidate(oldMap,newMap,listNew,boolIsBefore,boolIsInsert,boolIsUpdate,boolIsDelete);
+    updateAndValidate(oldMap, newMap, listNew, boolIsBefore, boolIsInsert, boolIsUpdate, boolIsDelete);
 
-    if(boolIsBefore)
+    if (boolIsBefore) {
+      if (boolIsInsert) {
+      }
+      if (boolIsUpdate) {
+      }
+      if (boolIsDelete) {
+      }
+    } else //i.e. trigger.isAfter
     {
-      if(boolIsInsert)
-      {
+      if (boolIsInsert) {
       }
-      if(boolIsUpdate)
-      {
-      }
-      if(boolIsDelete)
-      {
-      }
-    }
-    else //i.e. trigger.isAfter
-    {
-      if(boolIsInsert)
-      {
-      }
-      if(boolIsUpdate)
-      {
+      if (boolIsUpdate) {
         Map<Id, Date> dateMap = new Map<Id, Date>();
-        for( AcctSeed__Journal_Entry__c je : listNew )
-        {
+        for (AcctSeed__Journal_Entry__c je : listNew) {
           AcctSeed__Journal_Entry__c oldJE = oldMap.get(je.Id);
-          if( je.AcctSeed__Journal_Date__c != oldJE.AcctSeed__Journal_Date__c )
-            dateMap.put( je.Id, je.AcctSeed__Journal_Date__c);
+          if (je.AcctSeed__Journal_Date__c != oldJE.AcctSeed__Journal_Date__c)
+            dateMap.put(je.Id, je.AcctSeed__Journal_Date__c);
         }
-        if( dateMap.size() > 0 )
-          updateJournalEntryDates( dateMap );
+        if (dateMap.size() > 0)
+          updateJournalEntryDates(dateMap);
 
-          /// Lock Project
-          list<AcctSeed__Journal_Entry__c> listAll = new list<AcctSeed__Journal_Entry__c>();
-          listAll.addAll(listNew);
-          listAll.addAll(oldMap.values());
-          Set<Id> setIdProject = new Set<Id>();
-          /// We do not need to run this from a future context.
-          if(!System.isFuture()) {
-            for (AcctSeed__Journal_Entry__c je : listAll) {
-              if (je.Project__c != null && je.AcctSeed__Status__c == 'Posted' && oldMap.get(je.Id).AcctSeed__Status__c != je.AcctSeed__Status__c)
-                setIdProject.add(je.Project__c);
-            }
-            if (!setIdProject.isEmpty()) {
-              gcProject.lockIfNoBalanceDueFuture(setIdProject);
-            }
+        /// Lock Project
+        list<AcctSeed__Journal_Entry__c> listAll = new List<AcctSeed__Journal_Entry__c>();
+        listAll.addAll(listNew);
+        listAll.addAll(oldMap.values());
+        Set<Id> setIdProject = new Set<Id>();
+        /// We do not need to run this from a future context.
+        if (!System.isFuture()) {
+          for (AcctSeed__Journal_Entry__c je : listAll) {
+            if (
+              je.Project__c != null &&
+              je.AcctSeed__Status__c == 'Posted' &&
+              oldMap.get(je.Id).AcctSeed__Status__c != je.AcctSeed__Status__c
+            )
+              setIdProject.add(je.Project__c);
           }
+          if (!setIdProject.isEmpty()) {
+            gcProject.lockIfNoBalanceDueFuture(setIdProject);
+          }
+        }
       }
-      if(boolIsDelete)
-      {
+      if (boolIsDelete) {
       }
     }
   }
 
-  private static void updateJournalEntryDates( Map<Id, Date> dateMap )
-  {
-    AcctSeed__Journal_Entry_Line__c[] jels = [SELECT Id, AcctSeed__Journal_Entry__c
-                                              FROM AcctSeed__Journal_Entry_Line__c
-                                              WHERE AcctSeed__Journal_Entry__c IN :dateMap.keySet()];
-    for( AcctSeed__Journal_Entry_Line__c jel : jels )
-    {
-      jel.AcctSeed__Date__c = dateMap.get( jel.AcctSeed__Journal_Entry__c );
+  private static void updateJournalEntryDates(Map<Id, Date> dateMap) {
+    AcctSeed__Journal_Entry_Line__c[] jels = [
+      SELECT Id, AcctSeed__Journal_Entry__c
+      FROM AcctSeed__Journal_Entry_Line__c
+      WHERE AcctSeed__Journal_Entry__c IN :dateMap.keySet()
+    ];
+    for (AcctSeed__Journal_Entry_Line__c jel : jels) {
+      jel.AcctSeed__Date__c = dateMap.get(jel.AcctSeed__Journal_Entry__c);
     }
     Boolean origTriggerState = gcJournalEntryLine.disableTrigger;
     gcJournalEntryLine.disableTrigger = true;
@@ -92,35 +93,38 @@ public inherited sharing class JournalEntry_dh {
     gcJournalEntryLine.disableTrigger = origTriggerState;
   }
 
-  private static void updateAndValidate
-    (map<Id,AcctSeed__Journal_Entry__c> oldMap,
-      map<Id,AcctSeed__Journal_Entry__c> newMap,
-      list<AcctSeed__Journal_Entry__c> listNew,
-      Boolean boolIsBefore,
-      Boolean boolIsInsert,
-      Boolean boolIsUpdate,
-      Boolean boolIsDelete)
-  {
-    if(boolIsBefore && (boolIsUpdate || boolIsInsert)) {
+  private static void updateAndValidate(
+    map<Id, AcctSeed__Journal_Entry__c> oldMap,
+    map<Id, AcctSeed__Journal_Entry__c> newMap,
+    list<AcctSeed__Journal_Entry__c> listNew,
+    Boolean boolIsBefore,
+    Boolean boolIsInsert,
+    Boolean boolIsUpdate,
+    Boolean boolIsDelete
+  ) {
+    if (boolIsBefore && (boolIsUpdate || boolIsInsert)) {
       for (AcctSeed__Journal_Entry__c je : listNew) {
         je.AcctSeed__Ledger__c = gcConstants.idActualLedger;
       }
     }
-    if(!boolIsBefore && (boolIsUpdate || boolIsInsert))
-    {
+    if (!boolIsBefore && (boolIsUpdate || boolIsInsert)) {
       Set<Id> setIdJE = new Set<Id>();
-      for(AcctSeed__Journal_Entry__c je : listNew){
+      for (AcctSeed__Journal_Entry__c je : listNew) {
         String journalName = je.Name;
-        if(je.Project__c != null && (boolIsInsert || (boolIsUpdate && je.Project__c != oldMap.get(je.Id).Project__c)))
+        if (je.Project__c != null && (boolIsInsert || (boolIsUpdate && je.Project__c != oldMap.get(je.Id).Project__c)))
           setIdJE.add(je.Id);
       }
 
-      if(!setIdJE.isEmpty()){
+      if (!setIdJE.isEmpty()) {
         List<AcctSeed__Journal_Entry_Line__c> listJEL = new List<AcctSeed__Journal_Entry_Line__c>();
-        for(AcctSeed__Journal_Entry_Line__c jel : [SELECT Id FROM AcctSeed__Journal_Entry_Line__c WHERE AcctSeed__Journal_Entry__c IN:setIdJE]){
+        for (AcctSeed__Journal_Entry_Line__c jel : [
+          SELECT Id
+          FROM AcctSeed__Journal_Entry_Line__c
+          WHERE AcctSeed__Journal_Entry__c IN :setIdJE
+        ]) {
           listJEL.add(jel);
         }
-        if(!listJEL.isEmpty()){
+        if (!listJEL.isEmpty()) {
           Boolean oldV = gcJournalEntryLine.allowProjectAndTask;
           gcJournalEntryLine.allowProjectAndTask = true;
           update listJEL;
@@ -130,211 +134,210 @@ public inherited sharing class JournalEntry_dh {
     }
   }
 
-  public static void coverage(){
+  public static void coverage() {
     integer i;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
-    i=1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
+    i = 1;
   }
-
 }

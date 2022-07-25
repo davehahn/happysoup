@@ -4,7 +4,6 @@
 
 @IsTest
 private class Task_Service_T {
-
   static Id boatSaleId;
 
   @testSetup
@@ -21,11 +20,11 @@ private class Task_Service_T {
     Integer beforeTaskCount = tasks.size();
 
     Test.startTest();
-    Task_Service.createRetailSaleFundedTasks( new Set<Id>{boatSaleId} );
+    Task_Service.createRetailSaleFundedTasks(new Set<Id>{ boatSaleId });
     Test.stopTest();
 
     tasks = [SELECT Id FROM Task WHERE WhatId = :boatSaleId];
 
-    System.assertEquals( 2, tasks.size() - beforeTaskCount );
+    System.assertEquals(2, tasks.size() - beforeTaskCount);
   }
 }

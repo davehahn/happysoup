@@ -1,5 +1,5 @@
 ({
-	doInit : function(component, event, helper) {
-		helper.init(component);
-	}
-})
+  doInit: function (component, event, helper) {
+    helper.init(component);
+  }
+});

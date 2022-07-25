@@ -7,11 +7,11 @@ public class QueueableUtil implements Queueable, Database.AllowsCallouts {
   static QueueableUtil self;
 
   QueueableUtil(Queueable item) {
-    payload = new Queueable[] { item };
+    payload = new List<Queueable>{ item };
   }
 
   public static Id enqueueJob(Queueable item) {
-    if(!System.isQueueable()) {
+    if (!System.isQueueable()) {
       return System.enqueueJob(new QueueableUtil(item));
     } else {
       self.payload.add(item);
@@ -22,7 +22,7 @@ public class QueueableUtil implements Queueable, Database.AllowsCallouts {
   public void execute(QueueableContext context) {
     self = this;
     payload.remove(0).execute(context);
-    if(!payload.isEmpty()) {
+    if (!payload.isEmpty()) {
       System.enqueueJob(this);
     }
   }

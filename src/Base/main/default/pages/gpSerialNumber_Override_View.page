@@ -1,54 +1,63 @@
-<apex:page title="{!GMBLASERP__Serial_Number__c.Name}" standardController="GMBLASERP__Serial_Number__c" extensions="gcSerialNumber_Ext" cache="false" docType="html-5.0" showChat="false" showHeader="true" sidebar="false">
-<head>
-<style>
-.link{
-    cursor:pointer;
-    text-decoration:underline;
-}
-table{
-    /*width:100%;*/
-    border-collapse:collapse;
-}
-tr.total td{
-    font-weight: bold;
-}
-div.pq-grid-footer{
-    display:none;
-}
-.ui-autocomplete {
-    z-index: 101 !important;
-    height: 80px;
-    overflow-y: scroll;
-}
-</style>
+<apex:page
+  title="{!GMBLASERP__Serial_Number__c.Name}"
+  standardController="GMBLASERP__Serial_Number__c"
+  extensions="gcSerialNumber_Ext"
+  cache="false"
+  docType="html-5.0"
+  showChat="false"
+  showHeader="true"
+  sidebar="false"
+>
+  <head>
+    <style>
+      .link {
+        cursor: pointer;
+        text-decoration: underline;
+      }
+      table {
+        /*width:100%;*/
+        border-collapse: collapse;
+      }
+      tr.total td {
+        font-weight: bold;
+      }
+      div.pq-grid-footer {
+        display: none;
+      }
+      .ui-autocomplete {
+        z-index: 101 !important;
+        height: 80px;
+        overflow-y: scroll;
+      }
+    </style>
 
-<apex:stylesheet value="{!URLFOR($Resource.GMBLJS__jQueryUI,'/jquery-ui/jquery-ui.min.css')}"/>
-<apex:stylesheet value="{!URLFOR($Resource.GMBLJS__pqGridPro241,'/pqgrid.min.css')}"/>
-</head>
+    <apex:stylesheet value="{!URLFOR($Resource.GMBLJS__jQueryUI,'/jquery-ui/jquery-ui.min.css')}" />
+    <apex:stylesheet value="{!URLFOR($Resource.GMBLJS__pqGridPro241,'/pqgrid.min.css')}" />
+  </head>
 
-<body>
+  <body>
     <apex:outputPanel id="detailContainer">
-        <apex:detail subject="{!Id}" relatedList="false" id="theDetail" inlineEdit="true"/>
+      <apex:detail subject="{!Id}" relatedList="false" id="theDetail" inlineEdit="true" />
     </apex:outputPanel>
 
-    <div id="thePageBlock" style="display:none;">
-        <apex:pageBlock title="Nested Serials (Motors, Trailers, etc.)">
-            
-            <apex:pageBlockButtons location="top">
-                <button type="button" class="btn" id="btnLaunchSearch" onclick="launchSearchSerial();">Nest an Existing Motor, Trailer etc.</button>                
-            </apex:pageBlockButtons>
+    <div id="thePageBlock" style="display: none">
+      <apex:pageBlock title="Nested Serials (Motors, Trailers, etc.)">
+        <apex:pageBlockButtons location="top">
+          <button type="button" class="btn" id="btnLaunchSearch" onclick="launchSearchSerial();">
+            Nest an Existing Motor, Trailer etc.
+          </button>
+        </apex:pageBlockButtons>
 
-            <div><div id="lines"></div></div>
-
-        </apex:pageBlock>
-        <br /><br />
+        <div><div id="lines"></div></div>
+      </apex:pageBlock>
+      <br /><br />
     </div>
-    <div id="theSecondPageBlock" style="display:none;">
-        <apex:pageBlock title="ERP Order Items">
-            <div><div id="materials"></div></div>
-        </apex:pageBlock>
+    <div id="theSecondPageBlock" style="display: none">
+      <apex:pageBlock title="ERP Order Items">
+        <div><div id="materials"></div></div>
+      </apex:pageBlock>
     </div>
-    <div id="theMessageDiv" style="display:none;"></div>
+    <div id="theMessageDiv" style="display: none"></div>
     <br /><br />
     <apex:relatedList subject="{!Id}" list="Projects__r" />
     <apex:relatedList subject="{!Id}" list="GMBLASERP__Outbound_Inventory_Movements__r" />
@@ -56,24 +65,26 @@ div.pq-grid-footer{
     <apex:relatedList subject="{!Id}" list="GMBLASERP__Manufacturing_Inventory_Movements__r" />
     <apex:relatedList subject="{!Id}" list="GMBLASERP__Purchase_Order_Inventory_Movements__r" />
     <apex:relatedList subject="{!Id}" list="GMBLASERP__Materials__r" />
-</body>
+  </body>
 
-<apex:includeScript value="{!$Resource.GMBLJS__jQuery}"/>
-<apex:includeScript value="{!URLFOR($Resource.GMBLJS__jQueryUI,'/jquery-ui/jquery-ui.min.js')}"/>
-<apex:includeScript value="{!URLFOR($Resource.GMBLJS__pqGridPro241,'/pqgrid.min.js')}"/>
-<apex:includeScript value="{!URLFOR($Resource.GMBLJS__pqGridPro241,'/touch-punch/touch-punch.min.js')}"/>
-<apex:includeScript value="{!$Resource.GMBLJS__accountingJS}"/>
-<apex:includeScript value="{!$Resource.GMBLJS__gsrSpinner}"/>
-<apex:includeScript value="{!$Resource.GMBLJS__gsrGrid2}"/>
+  <apex:includeScript value="{!$Resource.GMBLJS__jQuery}" />
+  <apex:includeScript value="{!URLFOR($Resource.GMBLJS__jQueryUI,'/jquery-ui/jquery-ui.min.js')}" />
+  <apex:includeScript value="{!URLFOR($Resource.GMBLJS__pqGridPro241,'/pqgrid.min.js')}" />
+  <apex:includeScript value="{!URLFOR($Resource.GMBLJS__pqGridPro241,'/touch-punch/touch-punch.min.js')}" />
+  <apex:includeScript value="{!$Resource.GMBLJS__accountingJS}" />
+  <apex:includeScript value="{!$Resource.GMBLJS__gsrSpinner}" />
+  <apex:includeScript value="{!$Resource.GMBLJS__gsrGrid2}" />
 
-<script>function setFocusOnLoad() {}</script>
-<script type="text/javascript">
+  <script>
+    function setFocusOnLoad() {}
+  </script>
+  <script type="text/javascript">
     $j = jQuery.noConflict();
 
     $j(document).ready(function()
     {
         checkCanBeNest();
-        initGrid_materials();   
+        initGrid_materials();
 
         $j(document).on( "focus", 'input#inputProduct', function( event ) {
             $inputField = $j(this);
@@ -91,7 +102,7 @@ div.pq-grid-footer{
                                         result[k].label = item.Name;
                                     if(item.value == undefined)
                                         result[k].value = item.Id;
-                                })  
+                                })
                                 response(result);
                             } else {
                                 alert(event.message);
@@ -148,7 +159,7 @@ div.pq-grid-footer{
                         $j('#inputLot').val($select.val());
                     });
                 }
-                else 
+                else
                 {
                     alert(event.message);
                 }
@@ -190,7 +201,7 @@ div.pq-grid-footer{
                         {
                             jQuery('#thePageBlock').show();
                             initGrid_lines();
-                            refreshAll(); 
+                            refreshAll();
                         }
                         else
                         {
@@ -201,7 +212,7 @@ div.pq-grid-footer{
                 }
                 else
                 {
-                    alert(event.message); 
+                    alert(event.message);
                 }
             },
             {buffer:true, escape:true, timeout:120000});
@@ -213,7 +224,7 @@ div.pq-grid-footer{
         var gridObj = { title:"",
                         collapsible:{on:false,collapsed:false,toggle:false},
                         columnTemplate: {sortable:true,editable:false, minWidth:80},
-                        dataModel:{data:[], sorting:'local', location:'local'}, 
+                        dataModel:{data:[], sorting:'local', location:'local'},
                         dragColumns:{enabled:false},
                         editable:false,
                         editModel: {clicksToEdit:1, saveKey: jQuery.ui.keyCode.ENTER, keyUpDown: false, onSave:null, onBlur:'save'},
@@ -276,9 +287,9 @@ div.pq-grid-footer{
 
                         return myHTML;
                     }
-                });             
+                });
             }
-            
+
             else if(col.dataIndx == 'productName')
             {
                 $j.extend(col,{
@@ -287,13 +298,13 @@ div.pq-grid-footer{
                         if (ui.rowData.isTotal || !ui.rowData.idProduct) return '';
 
                         var myHTML = ui.rowData.productName;
-                        
+
                         if({!$ObjectType.Product2.accessible})
                             return '<a href=\"/'+ui.rowData.idProduct+'\" target=\"_blank\">'+myHTML+'</a>';
 
                         return myHTML;
                     }
-                });                 
+                });
             }
 
             else if(col.dataIndx == 'productCode')
@@ -304,13 +315,13 @@ div.pq-grid-footer{
                         if (ui.rowData.isTotal || !ui.rowData.productCode) return '';
 
                         var myHTML = ui.rowData.productCode;
-                        
+
                         if({!$ObjectType.Product2.accessible})
                             return '<a href=\"/'+ui.rowData.idProduct+'\" target=\"_blank\">'+myHTML+'</a>';
 
                         return myHTML;
                     }
-                });                 
+                });
             }
 
             else if(col.dataIndx == 'lotName')
@@ -325,7 +336,7 @@ div.pq-grid-footer{
                         else
                             return ui.rowData.lotName;
                     }
-                });                 
+                });
             }
 
             else if(col.dataIndx == 'serialName')
@@ -334,14 +345,14 @@ div.pq-grid-footer{
                     render:function(ui)
                     {
                         if (ui.rowData.isTotal || !ui.rowData.idSerial) return '';
-                        
+
                         if({!$ObjectType.GMBLASERP__Serial_Number__c.accessible})
                             return '<a href=\"/'+ui.rowData.idSerial+'\" target=\"_blank\">'+ui.rowData.serialName+'</a>';
                         else
                             return ui.rowData.serialName;
                     }
-                });                 
-            }  
+                });
+            }
             else if(col.dataIndx == 'status')
             {
                 $j.extend(col,{
@@ -352,7 +363,7 @@ div.pq-grid-footer{
                         else return 'out';
                     }
                 });
-            }  
+            }
         });
 
         var $gridDiv = $j('#lines');
@@ -375,7 +386,7 @@ div.pq-grid-footer{
                 }
                 else
                 {
-                    alert(event.message); 
+                    alert(event.message);
                 }
                 $gridDiv.pqGrid('hideLoading');
             },
@@ -399,11 +410,11 @@ div.pq-grid-footer{
                 }
                 else
                 {
-                    alert(event.message); 
+                    alert(event.message);
                 }
                 $gridDiv.pqGrid('hideLoading');
             },
-            {buffer:true, escape:true, timeout:120000});        
+            {buffer:true, escape:true, timeout:120000});
     }
 
     function nest(idSerial, rowIndx)
@@ -424,11 +435,11 @@ div.pq-grid-footer{
                 }
                 else
                 {
-                    alert(event.message); 
+                    alert(event.message);
                 }
                 $gridDiv.pqGrid('hideLoading');
             },
-            {buffer:true, escape:true, timeout:120000});        
+            {buffer:true, escape:true, timeout:120000});
     }
 
     function launchSearchSerial()
@@ -461,7 +472,7 @@ div.pq-grid-footer{
     }
 
     function searchSerial()
-    {   
+    {
         var searchString = $j('#inputSearchString').val();
         if(searchString.trim().length > 0){
             refreshGrid_searchSerial(searchString);
@@ -474,7 +485,7 @@ div.pq-grid-footer{
         var gridObj = { title:"",
                         collapsible:{on:false,collapsed:false,toggle:false},
                         columnTemplate: {sortable:true, minWidth:80},
-                        dataModel:{data:[], sorting:'local', location:'local', sortDir:'up', sortIndx:'productName'}, 
+                        dataModel:{data:[], sorting:'local', location:'local', sortDir:'up', sortIndx:'productName'},
                         dragColumns:{enabled:false},
                         editable:false,
                         filterModel:{on:true, mode:'AND', header:true},
@@ -526,14 +537,14 @@ div.pq-grid-footer{
                     render:function(ui)
                     {
                         if (ui.rowData.isTotal || !ui.rowData.idSerial) return '';
-                        
+
                         if({!$ObjectType.GMBLASERP__Serial_Number__c.accessible})
                             return '<a href=\"/'+ui.rowData.idSerial+'\" target=\"_blank\">'+ui.rowData.serialName+'</a>';
                         else
                             return ui.rowData.serialName;
                     }
-                });                 
-            } 
+                });
+            }
 
             else if(col.dataIndx == 'nestName')
             {
@@ -541,14 +552,14 @@ div.pq-grid-footer{
                     render:function(ui)
                     {
                         if (ui.rowData.isTotal || !ui.rowData.idNest) return '';
-                        
+
                         if({!$ObjectType.GMBLASERP__Serial_Number__c.accessible})
                             return '<a href=\"/'+ui.rowData.idNest+'\" target=\"_blank\">'+ui.rowData.nestName+'</a>';
                         else
                             return ui.rowData.nestName;
                     }
-                });                 
-            } 
+                });
+            }
 
             else if(col.dataIndx == 'action')
             {
@@ -556,14 +567,14 @@ div.pq-grid-footer{
                     render:function(ui)
                     {
                         if(ui.rowData.isTotal) return '';
-                        if(ui.rowData.idNest == '{!Id}') return 'nested here';                       
+                        if(ui.rowData.idNest == '{!Id}') return 'nested here';
                         return '<button type="button" class="btn" onclick=\"nest(\''+ui.rowData.idSerial+'\','+ui.rowIndx+')\">Nest Here</button>';
                     }
                 });
             }
         });
 
-        $gridDiv.pqGrid(gridObj);    
+        $gridDiv.pqGrid(gridObj);
     }
 
     function refreshGrid_searchSerial(searchString){
@@ -579,7 +590,7 @@ div.pq-grid-footer{
                 {
                     gGrid.refreshGrid_callback($gridDiv,result);
                 }
-                else 
+                else
                 {
                     alert(event.message);
                 }
@@ -594,7 +605,7 @@ div.pq-grid-footer{
         var gridObj = { title:"",
                         collapsible:{on:false,collapsed:false,toggle:false},
                         columnTemplate: {sortable:true,editable:false, minWidth:80},
-                        dataModel:{data:[], sorting:'local', location:'local'}, 
+                        dataModel:{data:[], sorting:'local', location:'local'},
                         dragColumns:{enabled:false},
                         editable:false,
                         editModel: {clicksToEdit:1, saveKey: jQuery.ui.keyCode.ENTER, keyUpDown: false, onSave:null, onBlur:'save'},
@@ -653,15 +664,15 @@ div.pq-grid-footer{
                         if (ui.rowData.isTotal || !ui.rowData.idProject) return '';
 
                         var myHTML = ui.rowData.projectName;
-                        
+
                         if({!$ObjectType.AcctSeed__Project__c.accessible})
                             return '<a href=\"/'+ui.rowData.idProject+'\" target=\"_blank\">'+myHTML+'</a>';
 
                         return myHTML;
                     }
-                });                 
+                });
             }
-            
+
             else if(col.dataIndx == 'productName')
             {
                 $j.extend(col,{
@@ -670,13 +681,13 @@ div.pq-grid-footer{
                         if (ui.rowData.isTotal || !ui.rowData.idProduct) return '';
 
                         var myHTML = ui.rowData.productName;
-                        
+
                         if({!$ObjectType.Product2.accessible})
                             return '<a href=\"/'+ui.rowData.idProduct+'\" target=\"_blank\">'+myHTML+'</a>';
 
                         return myHTML;
                     }
-                });                 
+                });
             }
 
             else if(col.dataIndx == 'productCode')
@@ -687,13 +698,13 @@ div.pq-grid-footer{
                         if (ui.rowData.isTotal || !ui.rowData.productCode) return '';
 
                         var myHTML = ui.rowData.productCode;
-                        
+
                         if({!$ObjectType.Product2.accessible})
                             return '<a href=\"/'+ui.rowData.idProduct+'\" target=\"_blank\">'+myHTML+'</a>';
 
                         return myHTML;
                     }
-                });                 
+                });
             }
 
             else if(col.dataIndx == 'lotName')
@@ -708,7 +719,7 @@ div.pq-grid-footer{
                         else
                             return ui.rowData.lotName;
                     }
-                });                 
+                });
             }
 
             else if(col.dataIndx == 'serialName')
@@ -717,14 +728,14 @@ div.pq-grid-footer{
                     render:function(ui)
                     {
                         if (ui.rowData.isTotal || !ui.rowData.idSerial) return '';
-                        
+
                         if({!$ObjectType.GMBLASERP__Serial_Number__c.accessible})
                             return '<a href=\"/'+ui.rowData.idSerial+'\" target=\"_blank\">'+ui.rowData.serialName+'</a>';
                         else
                             return ui.rowData.serialName;
                     }
-                });                 
-            }  
+                });
+            }
             else if(col.dataIndx == 'status')
             {
                 $j.extend(col,{
@@ -735,7 +746,7 @@ div.pq-grid-footer{
                         else return '';
                     }
                 });
-            }  
+            }
         });
 
         var $gridDiv = $j('#materials');
@@ -764,7 +775,7 @@ div.pq-grid-footer{
                 }
                 else
                 {
-                    alert(event.message); 
+                    alert(event.message);
                 }
                 $gridDiv.pqGrid('hideLoading');
             },
@@ -787,7 +798,7 @@ div.pq-grid-footer{
         myHTML +=   '<tr>';
         myHTML +=       '<th style=\"text-align:center\" class=\"product\">Product</th>';
         myHTML +=       '<th style=\"text-align:center\" class=\"lot\">Lot</th>';
-        myHTML +=       '<th></th>';        
+        myHTML +=       '<th></th>';
         myHTML +=   '</tr>';
         myHTML +=   '<tr>';
         myHTML +=       '<td style=\"text-align:center;vertical-align:top;\" class=\"product\">';
@@ -797,7 +808,7 @@ div.pq-grid-footer{
         myHTML +=           '<input type=\"text\" id=\"inputLot\"  tabindex=2   placeholder=\"enter lot #\" style=\"text-align:center\"/>';
         myHTML +=           '<br/><select id=\"selectLot\" tabindex=0></select></td>';
         myHTML +=       '<td style=\"text-align:center;vertical-align:top;\">';
-        myHTML +=           '<button type=\"button\" id="btnReceive" tabindex=0 onclick=\"createExchange()\">Exchange</button></td>';      
+        myHTML +=           '<button type=\"button\" id="btnReceive" tabindex=0 onclick=\"createExchange()\">Exchange</button></td>';
         myHTML +=   '</tr>';
         myHTML += '</table>';
         myHTML += '</div><br/>';
@@ -837,12 +848,11 @@ div.pq-grid-footer{
                 }
                 else
                 {
-                    alert(event.message); 
+                    alert(event.message);
                 }
                 gSpinner.hide();
             },
-            {buffer:true, escape:true, timeout:120000});        
+            {buffer:true, escape:true, timeout:120000});
     }
-
-</script>
+  </script>
 </apex:page>

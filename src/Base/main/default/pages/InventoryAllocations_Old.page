@@ -1,476 +1,578 @@
-<apex:page showHeader="true" sidebar="false" controller="InventoryAllocations_Old" standardStylesheets="false" readOnly="true" docType="html-5.0">
-    <apex:slds />
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <!-- <link rel="stylesheet" href="{!URLFOR($Resource.slds16, '/assets/styles/salesforce-lightning-design-system.min.css')}"/> -->
-    <!-- <apex:stylesheet value="{!URLFOR($Resource.LGND_SLDS_214, 'assets/styles/salesforce-lightning-design-system-vf.css')}" /> -->
-    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script> -->
-    <apex:includeScript value="{!URLFOR($Resource.Libraries, 'js/jquery-3.1.1.min.js')}"/>
-    <apex:includeScript value="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0/handlebars.min.js"/>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.0/moment.min.js"></script>
-    <script src="{!URLFOR($Resource.aljs, 'jquery.aljs-all.min.js')}"></script>
+<apex:page
+  showHeader="true"
+  sidebar="false"
+  controller="InventoryAllocations_Old"
+  standardStylesheets="false"
+  readOnly="true"
+  docType="html-5.0"
+>
+  <apex:slds />
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <!-- <link rel="stylesheet" href="{!URLFOR($Resource.slds16, '/assets/styles/salesforce-lightning-design-system.min.css')}"/> -->
+  <!-- <apex:stylesheet value="{!URLFOR($Resource.LGND_SLDS_214, 'assets/styles/salesforce-lightning-design-system-vf.css')}" /> -->
+  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script> -->
+  <apex:includeScript value="{!URLFOR($Resource.Libraries, 'js/jquery-3.1.1.min.js')}" />
+  <apex:includeScript value="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0/handlebars.min.js" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.0/moment.min.js"></script>
+  <script src="{!URLFOR($Resource.aljs, 'jquery.aljs-all.min.js')}"></script>
 
-    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-    <script src="https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/fixedcolumns/3.2.2/js/dataTables.fixedColumns.min.js"></script>
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/fixedcolumns/3.2.2/js/dataTables.fixedColumns.min.js"></script>
+
+  <script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/fixedcolumns/3.2.2/css/fixedColumns.dataTables.min.css"></script>
+  <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tooltipster/3.3.0/js/jquery.tooltipster.min.js"></script>
+  <link
+    rel="stylesheet"
+    type="text/css"
+    href="https://cdnjs.cloudflare.com/ajax/libs/tooltipster/3.3.0/css/tooltipster.min.css"
+  />
+
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" />
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+  <style>
+    .homeTab .bPageBlock {
+        border-top: 3px solid #f6f6f6;
+    }
+    .TableTitle {
+        color: #fff !important;
+        height: 40px;
+        font-size: 18px;
+        text-align: center;
+    }
+    .TableTitleBlue {
+        background-color: #008CBA !important;
+        color: #fff !important;
+        height: 40px;
+        font-size: 18px;
+        text-align: center;
+    }
+
+    .TableTitleNormal {
+        height: 40px;
+        font-size: 18px;
+        text-align: center;
+
+    }
+    .circle{
+        width:20px;
+        height:20px;
+        border-radius:50%;
+        font-size:11px;
+        color:#fff;
+        line-height:20px;
+        text-align:center;
+        background:#43AC6A;
+        margin: auto
+    }
+
+    h1.ex1:hover {background: #008CBA !important; color:#fff !important;}
+    h3.ex1:hover {background: #008CBA !important; color:#fff !important;}
+
+    .inventaryAllocation {
+        font-weight: 400 !important;
+        font-size: .875rem !important;
+        line-height: 1.4rem !important;
+        color: #555 !important;
+        display: block;
+        margin-bottom: 10px !important;
+        text-transform: uppercase;
+     }
+
+    .dataTables_length {
+        position: relative;
+        float: left;
+        margin-left: 1rem;
+    }
+
+    .dataTables_length select {
+        background-color: #FFF;
+        color: #16325C;
+        border: 1px solid #D8DDE6;
+        border-radius: 0.25rem;
+        transition: border 0.1s linear, background-color 0.1s linear;
+        height: 2.125rem;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        padding-left: 0.5rem;
+        padding-right: 1.5rem;
+    }
+
+    .dataTables_filter {
+        position: relative;
+        float: left;
+        margin-left: 1rem;
+    }
+
+    .dataTables_filter {
+        float: right;
+        margin-bottom: 10px;
+    }
+
+    .dataTables_filter input {
+        background-color: #FFF;
+        color: #16325C;
+        border: 1px solid #D8DDE6;
+        border-radius: 0.25rem;
+        transition: border 0.1s linear, background-color 0.1s linear;
+        display: inline-block;
+        padding: 0 1rem 0 0.75rem;
+        line-height: 2.125rem;
+        min-height: calc(2.125rem + 2px);
+        margin-left: 0.5rem;
+        margin-right: 1rem;
+        Note: for IE;
+        width: 200px;
+    }
+    .dataTables_info {
+        margin: 1rem;
+        float: left;
+    }
+
+    .dataTables_paginate {
+        margin: 1rem !important;
+        float: right !important;
+    }
+
+    .dataTables_paginate a {
+        background: #fff !important;
+        border: 1px solid #ddd !important;
+        padding: 0.5rem 0.75rem !important;
+    }
+    .dataTables_paginate .paginate_button {
+        margin-left: 0px !important;
+        color: #1589ee !important;
+    }
+
+    .dataTables_paginate .paginate_button.current {
+        background: #0070d2 !important;
+        color: #fff !important;
+        border-color: #0070d2 !important;
+        border-radius: 0 !important;
+    }
+
+    .dataTables_paginate a:hover,
+    .dataTables_paginate a:active,
+    .dataTables_paginate a:focus {
+        outline: 0;
+    }
+
+    .dataTables_paginate a:first-child {
+        border-radius: 4px 0 0 4px;
+    }
+    .dataTables_paginate a:last-child {
+        border-radius: 0 4px 4px 0;
+    }
+    .dataTables_paginate span>a {
+        border-radius: 0;
+    }
+    .tableTitleStyle {
+        max-width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        font-weight: 400;
+        text-align: left;
+        text-transform: uppercase;
+        letter-spacing: .0625rem;
+        border-collapse: separate;
+    }
+
+    table.dataTable thead .sorting {
+        background-image: none;
+    }
+
+    .tableTileStyleHover:hover {
+        background-image: url("/resource/SLDS/assets/icons/utility/arrowup_60.png") !important;
+        background-color: #E7F7F8 !important;
+        background-size: 20px 15px !important;
+    }
+
+    table.dataTable thead .sorting_desc {
+        background-image: url("/resource/SLDS/assets/icons/utility/arrowdown_60.png") !important;
+        background-size: 20px 15px;
+    }
+
+    table.dataTable thead .sorting_asc {
+        background-image: url("/resource/SLDS/assets/icons/utility/arrowup_60.png") !important;
+        background-size: 20px 15px;
+    }
+
+    /*table.dataTable thead .sorting {
+        background-image: url("/resource/SLDS/assets/icons/standard-sprite/svg/symbols.svg#aarrowup_60");
+        background-size: 20px 15px;
+    }*/
+
+    .slds-spinner_container{
+        position : fixed;
+    }
+
+    /*table.dataTable thead .sorting {
+        background-image: url(/resource/SLDS/assets/icons/standard-sprite/svg/symbols.svg#aarrowup_60);
+        background-size: 20px 15px;
+    }*/
+    .slds-media__body {
+        flex: 1;
+        min-width: 0;
+        max-width: 754px;
+    }
+
+    .custom-pills {
+        display: -ms-inline-flexbox;
+        display: inline-flex;
+        -ms-flex-align: center;
+        align-items: center;
+        -ms-flex-pack: justify;
+        justify-content: space-between;
+        width: 80px;
+        padding: .125rem;
+        border: 1px solid #d8dde6;
+        border-radius: .25rem;
+        background-color: #fff;
+        position: relative;
+        min-height: 1.625rem;
+        color: #0070d2;
+        font-size: 12px;
+        text-align: center;
+        margin-top: 0.125rem;
+    }
+
+    .custom-pills.red {
+        background-color: #f04124;
+        border-color: #f04124;
+    }
+
+    .custom-pills.yellow {
+        background-color: yellow;
+        border-color: yellow;
+    }
+
+    .custom-badge {
+        background-color: #e0e5ee;
+        padding: .25rem .5rem;
+        border-radius: 15rem;
+        font-size: 12px;
+        line-height: 1.25;
+        letter-spacing: .0625em;
+        color: #16325c !important;
+        vertical-align: middle;
+        white-space: nowrap;
+        border: 1px solid #e0e5ee;
+        text-align: center;
+        width: 80px;
+    }
+
+    table.dataTable thead th {
+        background-color: #f6f6f6;
+    }
+
+    table#bodyTable {table-layout: fixed !important}
+    .dataTables_filter {
+        float: right;
+        margin-top: -53px;
+    }
+    .dataTables_length_year{
+        position: relative;
+        float: left;
+        margin-left: -120px;
+    }
+    }
+    .dataTables_length {
+        position: relative;
+        float: left;
+        margin-left: 15px !important;
+    }
+    .dataTables_length_year select {
+        background-color: #FFF;
+        color: #16325C;
+        border: 1px solid #D8DDE6;
+        border-radius: 0.25rem;
+        transition: border 0.1s linear, background-color 0.1s linear;
+        height: 2.125rem;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        padding-left: 0.5rem;
+        padding-right: 1.5rem;
+    }
+    .lgnd {overflow: hidden;}
+    html body.sfdcBody {overflow: hidden; padding: 0}
+    .lgnd .slds-spinner_container {
+        background-color: rgba(255, 255, 255, 1);
+    }
+
+    html,body,.lgnd:not(html), .lgnd body {
+        height: 100%;
+    }
+    html.ext-strict {
+        overflow: hidden;
+    }
+    .DTFC_LeftHeadWrapper table tr{
+        height: 100%;
+    }
+    table.dataTable thead th, table.dataTable thead td {
+        padding: 0px 18px;
+        border-bottom: 1px solid #111;
+    }
+    table.dataTable thead th {
+        background-color: #f6f6f6;
+        line-height: 12px;
+    }
+    table.dataTable thead th {
+        font-size: 10px;
+    }
+    .lgnd input {
+        margin: 2px auto;
+    }
+    table#tableData{
+      margin: 0 auto;
+      width: 100%;
+      clear: both;
+      border-collapse: collapse;
+
+      word-wrap:break-word;
+    }
+    table.dataTable tbody th:nth-child(2), table.dataTable tbody td:nth-child(2) {
+        padding: 8px 0px !important;
+    }
+    .tooltip_templates { display: none; }
+    table.dataTable.no-footer {
+        border-bottom: none;
+    }
+     table.dataTable thead th, table.dataTable thead td {border-bottom:1px solid #ddd}
+    .dataTables_wrapper.no-footer .dataTables_scrollBody {
+        border-bottom: none;
+       }
+
+    .subTable-busy {
+        position:absolute;
+        background: rgba(208, 208, 208, 0.7);
+        left:0;
+        top: 0;
+        height:100%;
+        width:100%;
+        z-index: 100;
+    }
+
+    .subTable-busy + table {
+        filter: blur(2px);
+    }
+
+    .dataTables_wrapper .dataTables_scroll div.dataTables_scrollBody th, .dataTables_wrapper .dataTables_scroll div.dataTables_scrollBody td {
+      text-align: center;
+    }
 
 
+    .dynamic-details:before {
+      position: absolute;
+      content: '';
+      background: transparent;
+      height: 20px;
+      width: 100%;
+      top: -20px;
+    }
 
-    <script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/fixedcolumns/3.2.2/css/fixedColumns.dataTables.min.css"></script>
-    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tooltipster/3.3.0/js/jquery.tooltipster.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/tooltipster/3.3.0/css/tooltipster.min.css" />
+    .dynamic-details .slds-popover__body {
+      max-height: 25rem;
+      overflow-y: auto;
+    }
 
-    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" />
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    .count {
+        display: inline-block;
+        float: right;
+        background: #ffffff;
+        color: #556a8d;
+        padding: 0.25rem 0.5rem;
+        border-radius: 4rem;
+        border: 1px solid #d7dde6;
+    }
+  </style>
 
-
-    <style>
-        .homeTab .bPageBlock {
-            border-top: 3px solid #f6f6f6;
-        }
-        .TableTitle {
-            color: #fff !important;
-            height: 40px;
-            font-size: 18px;
-            text-align: center;
-        }
-        .TableTitleBlue {
-            background-color: #008CBA !important;
-            color: #fff !important;
-            height: 40px;
-            font-size: 18px;
-            text-align: center;
-        }
-
-        .TableTitleNormal {
-            height: 40px;
-            font-size: 18px;
-            text-align: center;
-
-        }
-        .circle{
-            width:20px;
-            height:20px;
-            border-radius:50%;
-            font-size:11px;
-            color:#fff;
-            line-height:20px;
-            text-align:center;
-            background:#43AC6A;
-            margin: auto
-        }
-
-        h1.ex1:hover {background: #008CBA !important; color:#fff !important;}
-        h3.ex1:hover {background: #008CBA !important; color:#fff !important;}
-
-        .inventaryAllocation {
-            font-weight: 400 !important;
-            font-size: .875rem !important;
-            line-height: 1.4rem !important;
-            color: #555 !important;
-            display: block;
-            margin-bottom: 10px !important;
-            text-transform: uppercase;
-         }
-
-        .dataTables_length {
-            position: relative;
-            float: left;
-            margin-left: 1rem;
-        }
-
-        .dataTables_length select {
-            background-color: #FFF;
-            color: #16325C;
-            border: 1px solid #D8DDE6;
-            border-radius: 0.25rem;
-            transition: border 0.1s linear, background-color 0.1s linear;
-            height: 2.125rem;
-            -moz-appearance: none;
-            -webkit-appearance: none;
-            padding-left: 0.5rem;
-            padding-right: 1.5rem;
-        }
-
-        .dataTables_filter {
-            position: relative;
-            float: left;
-            margin-left: 1rem;
-        }
-
-        .dataTables_filter {
-            float: right;
-            margin-bottom: 10px;
-        }
-
-        .dataTables_filter input {
-            background-color: #FFF;
-            color: #16325C;
-            border: 1px solid #D8DDE6;
-            border-radius: 0.25rem;
-            transition: border 0.1s linear, background-color 0.1s linear;
-            display: inline-block;
-            padding: 0 1rem 0 0.75rem;
-            line-height: 2.125rem;
-            min-height: calc(2.125rem + 2px);
-            margin-left: 0.5rem;
-            margin-right: 1rem;
-            Note: for IE;
-            width: 200px;
-        }
-        .dataTables_info {
-            margin: 1rem;
-            float: left;
-        }
-
-        .dataTables_paginate {
-            margin: 1rem !important;
-            float: right !important;
-        }
-
-        .dataTables_paginate a {
-            background: #fff !important;
-            border: 1px solid #ddd !important;
-            padding: 0.5rem 0.75rem !important;
-        }
-        .dataTables_paginate .paginate_button {
-            margin-left: 0px !important;
-            color: #1589ee !important;
-        }
-
-        .dataTables_paginate .paginate_button.current {
-            background: #0070d2 !important;
-            color: #fff !important;
-            border-color: #0070d2 !important;
-            border-radius: 0 !important;
-        }
-
-        .dataTables_paginate a:hover,
-        .dataTables_paginate a:active,
-        .dataTables_paginate a:focus {
-            outline: 0;
-        }
-
-        .dataTables_paginate a:first-child {
-            border-radius: 4px 0 0 4px;
-        }
-        .dataTables_paginate a:last-child {
-            border-radius: 0 4px 4px 0;
-        }
-        .dataTables_paginate span>a {
-            border-radius: 0;
-        }
-        .tableTitleStyle {
-            max-width: 100%;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            font-weight: 400;
-            text-align: left;
-            text-transform: uppercase;
-            letter-spacing: .0625rem;
-            border-collapse: separate;
-        }
-
-        table.dataTable thead .sorting {
-            background-image: none;
-        }
-
-        .tableTileStyleHover:hover {
-            background-image: url("/resource/SLDS/assets/icons/utility/arrowup_60.png") !important;
-            background-color: #E7F7F8 !important;
-            background-size: 20px 15px !important;
-        }
-
-        table.dataTable thead .sorting_desc {
-            background-image: url("/resource/SLDS/assets/icons/utility/arrowdown_60.png") !important;
-            background-size: 20px 15px;
-        }
-
-        table.dataTable thead .sorting_asc {
-            background-image: url("/resource/SLDS/assets/icons/utility/arrowup_60.png") !important;
-            background-size: 20px 15px;
-        }
-
-        /*table.dataTable thead .sorting {
-            background-image: url("/resource/SLDS/assets/icons/standard-sprite/svg/symbols.svg#aarrowup_60");
-            background-size: 20px 15px;
-        }*/
-
-        .slds-spinner_container{
-            position : fixed;
-        }
-
-        /*table.dataTable thead .sorting {
-            background-image: url(/resource/SLDS/assets/icons/standard-sprite/svg/symbols.svg#aarrowup_60);
-            background-size: 20px 15px;
-        }*/
-        .slds-media__body {
-            flex: 1;
-            min-width: 0;
-            max-width: 754px;
-        }
-
-        .custom-pills {
-            display: -ms-inline-flexbox;
-            display: inline-flex;
-            -ms-flex-align: center;
-            align-items: center;
-            -ms-flex-pack: justify;
-            justify-content: space-between;
-            width: 80px;
-            padding: .125rem;
-            border: 1px solid #d8dde6;
-            border-radius: .25rem;
-            background-color: #fff;
-            position: relative;
-            min-height: 1.625rem;
-            color: #0070d2;
-            font-size: 12px;
-            text-align: center;
-            margin-top: 0.125rem;
-        }
-
-        .custom-pills.red {
-            background-color: #f04124;
-            border-color: #f04124;
-        }
-
-        .custom-pills.yellow {
-            background-color: yellow;
-            border-color: yellow;
-        }
-
-        .custom-badge {
-            background-color: #e0e5ee;
-            padding: .25rem .5rem;
-            border-radius: 15rem;
-            font-size: 12px;
-            line-height: 1.25;
-            letter-spacing: .0625em;
-            color: #16325c !important;
-            vertical-align: middle;
-            white-space: nowrap;
-            border: 1px solid #e0e5ee;
-            text-align: center;
-            width: 80px;
-        }
-
-        table.dataTable thead th {
-            background-color: #f6f6f6;
-        }
-
-        table#bodyTable {table-layout: fixed !important}
-        .dataTables_filter {
-            float: right;
-            margin-top: -53px;
-        }
-        .dataTables_length_year{
-            position: relative;
-            float: left;
-            margin-left: -120px;
-        }
-        }
-        .dataTables_length {
-            position: relative;
-            float: left;
-            margin-left: 15px !important;
-        }
-        .dataTables_length_year select {
-            background-color: #FFF;
-            color: #16325C;
-            border: 1px solid #D8DDE6;
-            border-radius: 0.25rem;
-            transition: border 0.1s linear, background-color 0.1s linear;
-            height: 2.125rem;
-            -moz-appearance: none;
-            -webkit-appearance: none;
-            padding-left: 0.5rem;
-            padding-right: 1.5rem;
-        }
-        .lgnd {overflow: hidden;}
-        html body.sfdcBody {overflow: hidden; padding: 0}
-        .lgnd .slds-spinner_container {
-            background-color: rgba(255, 255, 255, 1);
-        }
-
-        html,body,.lgnd:not(html), .lgnd body {
-            height: 100%;
-        }
-        html.ext-strict {
-            overflow: hidden;
-        }
-        .DTFC_LeftHeadWrapper table tr{
-            height: 100%;
-        }
-        table.dataTable thead th, table.dataTable thead td {
-            padding: 0px 18px;
-            border-bottom: 1px solid #111;
-        }
-        table.dataTable thead th {
-            background-color: #f6f6f6;
-            line-height: 12px;
-        }
-        table.dataTable thead th {
-            font-size: 10px;
-        }
-        .lgnd input {
-            margin: 2px auto;
-        }
-        table#tableData{
-          margin: 0 auto;
-          width: 100%;
-          clear: both;
-          border-collapse: collapse;
-
-          word-wrap:break-word;
-        }
-        table.dataTable tbody th:nth-child(2), table.dataTable tbody td:nth-child(2) {
-            padding: 8px 0px !important;
-        }
-        .tooltip_templates { display: none; }
-        table.dataTable.no-footer {
-            border-bottom: none;
-        }
-         table.dataTable thead th, table.dataTable thead td {border-bottom:1px solid #ddd}
-        .dataTables_wrapper.no-footer .dataTables_scrollBody {
-            border-bottom: none;
-           }
-
-        .subTable-busy {
-            position:absolute;
-            background: rgba(208, 208, 208, 0.7);
-            left:0;
-            top: 0;
-            height:100%;
-            width:100%;
-            z-index: 100;
-        }
-
-        .subTable-busy + table {
-            filter: blur(2px);
-        }
-
-        .dataTables_wrapper .dataTables_scroll div.dataTables_scrollBody th, .dataTables_wrapper .dataTables_scroll div.dataTables_scrollBody td {
-          text-align: center;
-        }
-
-
-        .dynamic-details:before {
-          position: absolute;
-          content: '';
-          background: transparent;
-          height: 20px;
-          width: 100%;
-          top: -20px;
-        }
-
-        .dynamic-details .slds-popover__body {
-          max-height: 25rem;
-          overflow-y: auto;
-        }
-
-        .count {
-            display: inline-block;
-            float: right;
-            background: #ffffff;
-            color: #556a8d;
-            padding: 0.25rem 0.5rem;
-            border-radius: 4rem;
-            border: 1px solid #d7dde6;
-        }
-
-        </style>
-
-    <div class="lgnd" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="max-height:180px;overflow:hidden">
-        <div class="slds-spinner_container">
-            <div role="status" class="slds-spinner slds-spinner--medium">
-                <span class="slds-assistive-text">Loading</span>
-                <div class="slds-spinner__dot-a"></div>
-                <div class="slds-spinner__dot-b"></div>
+  <div
+    class="lgnd"
+    xmlns="http://www.w3.org/2000/svg"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    style="max-height: 180px; overflow: hidden"
+  >
+    <div class="slds-spinner_container">
+      <div role="status" class="slds-spinner slds-spinner--medium">
+        <span class="slds-assistive-text">Loading</span>
+        <div class="slds-spinner__dot-a"></div>
+        <div class="slds-spinner__dot-b"></div>
+      </div>
+    </div>
+    <div id="testabc">
+      <apex:form id="theForm" style="background-color: rgb(246, 246, 246)" styleClass="">
+        <div class="slds-page-header" role="banner">
+          <div class="slds-media">
+            <div class="slds-media__figure">
+              <!--<apex:image url="/resource/slds16/assets/icons/standard-sprite/svg/symbols.svg#opportunity" width="50" height="50"/>-->
+              <!-- <apex:image value="{!$Resource.user}" style="border-bottom:0px solid #ddd"  /> -->
+              <span class="slds-icon_container" title="description of icon when needed">
+                <svg class="slds-icon slds-icon-text-default" aria-hidden="true">
+                  <use
+                    xlink:href="{!URLFOR($Resource.LGND_SLDS_214, '/assets/icons/utility-sprite/svg/symbols.svg#kanban')}"
+                  ></use>
+                </svg>
+              </span>
             </div>
+            <div class="slds-media__body">
+              <p
+                class="slds-page-header__title slds-truncate inventaryAllocation slds-p-top--none"
+                style="font-size: 35px"
+              >
+                Inventory Allocations
+              </p>
+            </div>
+
+            <div class="dataTables_length_year" id="tableData_length">
+              <label
+                >YEAR&nbsp;&nbsp;
+                <select
+                  name="tableData_length"
+                  id="selectedLot"
+                  aria-controls="tableData"
+                  class=""
+                  onchange="changeColorYears(this)"
+                >
+                  <option value="-1" id="All">
+                    <h1
+                      id="All"
+                      class="ex1"
+                      onClick="changeColorYears(this)"
+                      style="
+                        font-size: 16px;
+                        cursor: pointer;
+                        margin-left: 15px;
+                        color: #fff;
+                        float: left;
+                        background-color: #008cba;
+                      "
+                    >
+                      &nbsp; &nbsp; All &nbsp; &nbsp;
+                    </h1>
+                  </option>
+                  <option value="{!year(today()) + 1}" id="{!year(today()) + 1}">
+                    <h1 id="{!year(today()) + 1}" class="ex1">&nbsp;&nbsp;{!year(today()) + 1}&nbsp;&nbsp;</h1>
+                  </option>
+                  <option value="{!year(today())}" id="{!year(today())}">
+                    <h1 id="{!year(today())}" class="ex1">&nbsp;&nbsp;{!year(today())}&nbsp;&nbsp;</h1>
+                  </option>
+                  <option value="{!year(today()) - 1}" id="{!year(today()) - 1}">
+                    <h1
+                      id="{!year(today()) - 1}"
+                      class="ex1"
+                      style="font-size: 16px; cursor: pointer; margin-left: 15px; float: left"
+                    >
+                      &nbsp;&nbsp;{!year(today()) - 1}&nbsp;&nbsp;
+                    </h1>
+                  </option>
+                  <option value="{!year(today()) - 2}" id="{!year(today()) - 2}">
+                    <h1
+                      id="{!year(today()) - 2}"
+                      class="ex1"
+                      onClick="changeColorYears(this)"
+                      style="font-size: 16px; cursor: pointer; margin-left: 15px; float: left"
+                    >
+                      &nbsp;&nbsp;{!year(today()) - 2}&nbsp;&nbsp;
+                    </h1>
+                  </option>
+                  <option value="{!year(today()) - 3}" id="{!year(today()) - 3}">
+                    <h1
+                      id="{!year(today()) - 3}"
+                      class="ex1"
+                      onClick="changeColorYears(this)"
+                      style="font-size: 16px; cursor: pointer; margin-left: 15px; float: left"
+                    >
+                      &nbsp;&nbsp;{!year(today()) - 3}&nbsp;&nbsp;
+                    </h1>
+                  </option>
+                  <option value="{!year(today()) - 4}" id="{!year(today()) - 4}">
+                    <h1
+                      id="{!year(today()) - 4}"
+                      class="ex1"
+                      onClick="changeColorYears(this)"
+                      style="font-size: 16px; cursor: pointer; margin-left: 15px; float: left"
+                    >
+                      &nbsp;&nbsp;{!year(today()) - 4}&nbsp;&nbsp;
+                    </h1>
+                  </option>
+                </select>
+              </label>
+            </div>
+
+            <div class="dataTables_length" id="tableData_length">
+              <label
+                >TYPES &nbsp;&nbsp;
+                <select name="tableData_length" aria-controls="tableData" class="" onChange="changeColorType(this)">
+                  <option value="-1" id="All">
+                    <h3
+                      id="All"
+                      class="ex1"
+                      onClick="changeColorType(this)"
+                      style="
+                        font-size: 16px;
+                        cursor: pointer;
+                        margin-left: 15px;
+                        color: #fff;
+                        float: left;
+                        background-color: #008cba;
+                      "
+                    >
+                      &nbsp; &nbsp; All &nbsp; &nbsp;
+                    </h3>
+                  </option>
+                  <option value="Boat" id="Boat" selected="true">
+                    <h3
+                      id="Boat"
+                      class="ex1"
+                      onClick="changeColorType(this)"
+                      style="font-size: 16px; cursor: pointer; margin-left: 15px; float: left"
+                    >
+                      &nbsp;&nbsp;Boat&nbsp;&nbsp;
+                    </h3>
+                  </option>
+                  <option value="Motor" id="Motor">
+                    <h3
+                      id="Motor"
+                      class="ex1"
+                      onClick="changeColorType(this)"
+                      style="font-size: 16px; cursor: pointer; margin-left: 15px; float: left"
+                    >
+                      &nbsp;&nbsp;Motor&nbsp;&nbsp;
+                    </h3>
+                  </option>
+                  <option value="Trailer" id="Trailer">
+                    <h3
+                      id="Trailer"
+                      class="ex1"
+                      onClick="changeColorType(this)"
+                      style="font-size: 16px; cursor: pointer; margin-left: 15px; float: left"
+                    >
+                      &nbsp;&nbsp;Trailer&nbsp;&nbsp;
+                    </h3>
+                  </option>
+                  <option value="Trolling Motor" id="Trolling Motor">
+                    <h3
+                      id="Trolling Motor"
+                      class="ex1"
+                      onClick="changeColorType(this)"
+                      style="font-size: 16px; cursor: pointer; margin-left: 15px; float: left"
+                    >
+                      &nbsp;&nbsp;Trolling Motor&nbsp;&nbsp;
+                    </h3>
+                  </option>
+                </select>
+              </label>
+            </div>
+          </div>
         </div>
-        <div id="testabc">
-        <apex:form id="theForm" style="background-color: rgb(246, 246, 246)" styleClass="">
-            <div class="slds-page-header" role="banner">
-                <div class="slds-media">
-                    <div class="slds-media__figure">
-                        <!--<apex:image url="/resource/slds16/assets/icons/standard-sprite/svg/symbols.svg#opportunity" width="50" height="50"/>-->
-                        <!-- <apex:image value="{!$Resource.user}" style="border-bottom:0px solid #ddd"  /> -->
-                        <span class="slds-icon_container" title="description of icon when needed">
-                          <svg class="slds-icon slds-icon-text-default" aria-hidden="true">
-                            <use xlink:href="{!URLFOR($Resource.LGND_SLDS_214, '/assets/icons/utility-sprite/svg/symbols.svg#kanban')}"></use>
-                          </svg>
-                        </span>
-                    </div>
-                    <div class="slds-media__body">
-                        <p class="slds-page-header__title slds-truncate inventaryAllocation slds-p-top--none" style="font-size:35px;">Inventory Allocations</p>
-                    </div>
-
-                    <div class="dataTables_length_year" id="tableData_length">
-                        <label>YEAR&nbsp;&nbsp;
-                            <select name="tableData_length" id="selectedLot" aria-controls="tableData" class="" onchange="changeColorYears(this)">
-                                <option value="-1" id="All">
-                                    <h1 id="All" class="ex1" onClick="changeColorYears(this)"  style="font-size: 16px; cursor: pointer; margin-left: 15px;color: #fff;float: left; background-color: #008CBA">&nbsp; &nbsp; All &nbsp;  &nbsp; </h1></option>
-                                <option value="{!year(today()) + 1}" id="{!year(today()) + 1}">
-                                    <h1 id="{!year(today()) + 1}" class="ex1">&nbsp;&nbsp;{!year(today()) + 1}&nbsp;&nbsp;</h1>
-                                </option>
-                                <option value="{!year(today())}" id="{!year(today())}">
-                                    <h1 id="{!year(today())}" class="ex1">&nbsp;&nbsp;{!year(today())}&nbsp;&nbsp;</h1>
-                                </option>
-                                <option value="{!year(today()) - 1}" id="{!year(today()) - 1}">
-                                    <h1 id="{!year(today()) - 1}" class="ex1" style="font-size: 16px; cursor: pointer; margin-left: 15px;float: left">&nbsp;&nbsp;{!year(today()) - 1}&nbsp;&nbsp;
-                                    </h1>
-                                </option>
-                                <option value="{!year(today()) - 2}" id="{!year(today()) - 2}">
-                                    <h1 id="{!year(today()) - 2}" class="ex1" onClick="changeColorYears(this)" style="font-size: 16px; cursor: pointer; margin-left: 15px;float: left"> &nbsp;&nbsp;{!year(today()) - 2}&nbsp;&nbsp;
-                                    </h1>
-                                </option>
-                                <option value="{!year(today()) - 3}" id="{!year(today()) - 3}">
-                                    <h1 id="{!year(today()) - 3}" class="ex1" onClick="changeColorYears(this)" style="font-size: 16px; cursor: pointer; margin-left: 15px;float: left"> &nbsp;&nbsp;{!year(today()) - 3}&nbsp;&nbsp;
-                                    </h1>
-                                </option>
-                                <option value="{!year(today()) - 4}" id="{!year(today()) - 4}">
-                                    <h1 id="{!year(today()) - 4}" class="ex1" onClick="changeColorYears(this)" style="font-size: 16px; cursor: pointer; margin-left: 15px;float: left"> &nbsp;&nbsp;{!year(today()) - 4}&nbsp;&nbsp;
-                                    </h1>
-                                </option>
-                            </select>
-                        </label>
-                    </div>
-
-                    <div class="dataTables_length" id="tableData_length">
-                        <label>TYPES &nbsp;&nbsp;
-                            <select name="tableData_length" aria-controls="tableData" class="" onChange="changeColorType(this)">
-                                <option value="-1" Id="All">
-                                    <h3 id="All" class="ex1" onClick="changeColorType(this)" style="font-size: 16px; cursor: pointer; margin-left:15px;color:#fff;float: left;background-color:#008CBA">&nbsp; &nbsp; All &nbsp;  &nbsp;
-                                    </h3>
-                                </option>
-                                <option value="Boat" id="Boat" selected="true">
-                                    <h3 id="Boat" class="ex1" onClick="changeColorType(this)" style="font-size: 16px; cursor: pointer; margin-left: 15px;float: left"> &nbsp;&nbsp;Boat&nbsp;&nbsp;
-                                    </h3>
-                                </option>
-                                <option value="Motor" id="Motor">
-                                    <h3 id="Motor" class="ex1" onClick="changeColorType(this)" style="font-size: 16px; cursor: pointer; margin-left: 15px;float: left"> &nbsp;&nbsp;Motor&nbsp;&nbsp;
-                                    </h3>
-                                </option>
-                                <option value="Trailer" id="Trailer">
-                                    <h3 id="Trailer" class="ex1" onClick="changeColorType(this)" style="font-size: 16px; cursor: pointer; margin-left: 15px;float: left"> &nbsp;&nbsp;Trailer&nbsp;&nbsp;
-                                    </h3>
-                                </option>
-                                <option value="Trolling Motor" id="Trolling Motor">
-                                    <h3 id="Trolling Motor" class="ex1" onClick="changeColorType(this)" style="font-size: 16px; cursor: pointer; margin-left: 15px;float: left"> &nbsp;&nbsp;Trolling Motor&nbsp;&nbsp;
-                                    </h3>
-                                </option>
-                            </select>
-                        </label>
-                    </div>
-                </div>
-            </div>
-            <!--<apex:pageBlock mode="edit">-->
-                <!--<div style="background-color: rgb(246, 246, 246); ">
+        <!--<apex:pageBlock mode="edit">-->
+        <!--<div style="background-color: rgb(246, 246, 246); ">
                     <br></br>
                     <h2 style="font-size: 16px; float:left; margin-left: 10%">YEAR: </h2>
                     <h1 id="All" class="ex1" onClick="changeColorYears(this)"  style="font-size: 16px; cursor: pointer; margin-left: 15px;color: #fff;float: left; background-color: #008CBA">&nbsp; &nbsp; All &nbsp;  &nbsp;  </h1>
@@ -494,825 +596,1102 @@
                     <br></br>
                 </div>
                 -->
-                <apex:actionStatus id="counterStatus" startText="Loading Table, please wait..." stopText="" onstart="showLoading()" onstop="hideLoading()"/>
+        <apex:actionStatus
+          id="counterStatus"
+          startText="Loading Table, please wait..."
+          stopText=""
+          onstart="showLoading()"
+          onstop="hideLoading()"
+        />
 
-                <div class="table-responsive" >
-                    <apex:outputPanel id="table">
-                        <table id="tableData" >
-                            <thead >
-                                <th class="TableTitleNormal tableTitleStyle tableTileStyleHover" style="color: #54698d;border-bottom: 1px solid #ddd;border-right:1px solid #ddd;border-collapse:collapse;" styleClass="tableTitleStyle">Model
-                                </th>
-                                <th class="TableTitleNormal tableTitleStyle tableTileStyleHover" style="width:50px;color: #54698d;border-bottom: 1px solid #ddd;border-right:1px solid #ddd;">Stock
-                                </th>
-                                <th class="TableTitleNormal tableTileStyleHover" style="color: #54698d;">
-                                    <apex:outputPanel >
-                                        <apex:outputText value="Reserved" style="display:block;font-size: 12px;"   styleClass="tableTitleStyle "/>
-                                        <apex:outputText value="For Display" style="font-size: 09px;" styleClass="tableTitleStyle "></apex:outputText>
-                                    </apex:outputPanel>
-                                </th>
-                                <th class="TableTitleNormal tableTileStyleHover" style="color: #54698d;">
-                                    <apex:outputText value="Reserved" style="font-size: 12px;" styleClass="tableTitleStyle "/><br/>
-                                    <apex:outputText value="For Retail Sale" style="font-size: 09px" styleClass="tableTitleStyle"></apex:outputText>
-                                </th>
+        <div class="table-responsive">
+          <apex:outputPanel id="table">
+            <table id="tableData">
+              <thead>
+                <th
+                  class="TableTitleNormal tableTitleStyle tableTileStyleHover"
+                  style="
+                    color: #54698d;
+                    border-bottom: 1px solid #ddd;
+                    border-right: 1px solid #ddd;
+                    border-collapse: collapse;
+                  "
+                  styleClass="tableTitleStyle"
+                >
+                  Model
+                </th>
+                <th
+                  class="TableTitleNormal tableTitleStyle tableTileStyleHover"
+                  style="width: 50px; color: #54698d; border-bottom: 1px solid #ddd; border-right: 1px solid #ddd"
+                >
+                  Stock
+                </th>
+                <th class="TableTitleNormal tableTileStyleHover" style="color: #54698d">
+                  <apex:outputPanel>
+                    <apex:outputText
+                      value="Reserved"
+                      style="display: block; font-size: 12px"
+                      styleClass="tableTitleStyle "
+                    />
+                    <apex:outputText
+                      value="For Display"
+                      style="font-size: 09px"
+                      styleClass="tableTitleStyle "
+                    ></apex:outputText>
+                  </apex:outputPanel>
+                </th>
+                <th class="TableTitleNormal tableTileStyleHover" style="color: #54698d">
+                  <apex:outputText value="Reserved" style="font-size: 12px" styleClass="tableTitleStyle " /><br />
+                  <apex:outputText
+                    value="For Retail Sale"
+                    style="font-size: 09px"
+                    styleClass="tableTitleStyle"
+                  ></apex:outputText>
+                </th>
 
-                                <th class="TableTitleNormal tableTileStyleHover" style="color: #54698d;">
-                                    <apex:outputText value="Specials" style="font-size: 12px;" styleClass="tableTitleStyle "/><br/>
-                                    <apex:outputText value="Damaged" style="font-size: 09px;" styleClass="tableTitleStyle"/><br/>
-                                </th>
+                <th class="TableTitleNormal tableTileStyleHover" style="color: #54698d">
+                  <apex:outputText value="Specials" style="font-size: 12px" styleClass="tableTitleStyle " /><br />
+                  <apex:outputText value="Damaged" style="font-size: 09px" styleClass="tableTitleStyle" /><br />
+                </th>
 
-                                <th class="TableTitleNormal tableTileStyleHover" style="color: #54698d;">
-                                    <apex:outputText value="Retail Sold" style="font-size: 12px;" styleClass="tableTitleStyle "/><br/>
-                                    <apex:outputText value="To Be Tagged" style="font-size: 09px" styleClass="tableTitleStyle"></apex:outputText>
-                                </th>
+                <th class="TableTitleNormal tableTileStyleHover" style="color: #54698d">
+                  <apex:outputText value="Retail Sold" style="font-size: 12px" styleClass="tableTitleStyle " /><br />
+                  <apex:outputText
+                    value="To Be Tagged"
+                    style="font-size: 09px"
+                    styleClass="tableTitleStyle"
+                  ></apex:outputText>
+                </th>
 
-                                <th class="TableTitleNormal tableTileStyleHover" style="color: #54698d;">
-                                    <apex:outputText value="Available" style="font-size: 12px;" styleClass="tableTitleStyle "/><br/>
-                                    <apex:outputText value="For Retail" style="font-size: 09px" styleClass="tableTitleStyle"></apex:outputText>
-                                </th>
+                <th class="TableTitleNormal tableTileStyleHover" style="color: #54698d">
+                  <apex:outputText value="Available" style="font-size: 12px" styleClass="tableTitleStyle " /><br />
+                  <apex:outputText
+                    value="For Retail"
+                    style="font-size: 09px"
+                    styleClass="tableTitleStyle"
+                  ></apex:outputText>
+                </th>
 
-                                <th class="TableTitleNormal tableTileStyleHover" style="color: #54698d;">
-                                    <apex:outputText value="Available" style="font-size: 12px;" styleClass="tableTitleStyle "/><br/>
-                                    <apex:outputText value="To Ship Dealers" style="font-size: 09px" styleClass="tableTitleStyle"></apex:outputText>
-                                </th>
+                <th class="TableTitleNormal tableTileStyleHover" style="color: #54698d">
+                  <apex:outputText value="Available" style="font-size: 12px" styleClass="tableTitleStyle " /><br />
+                  <apex:outputText
+                    value="To Ship Dealers"
+                    style="font-size: 09px"
+                    styleClass="tableTitleStyle"
+                  ></apex:outputText>
+                </th>
 
-                                <th class="TableTitleNormal tableTileStyleHover" style="color: #54698d;">
-                                    <apex:outputText value="Dealer Orders" style="font-size: 12px;" styleClass="tableTitleStyle"/><br/>
-                                    <apex:outputText value="To Be Filled" style="font-size: 09px" styleClass="tableTitleStyle "></apex:outputText>
-                                </th>
+                <th class="TableTitleNormal tableTileStyleHover" style="color: #54698d">
+                  <apex:outputText value="Dealer Orders" style="font-size: 12px" styleClass="tableTitleStyle" /><br />
+                  <apex:outputText
+                    value="To Be Filled"
+                    style="font-size: 09px"
+                    styleClass="tableTitleStyle "
+                  ></apex:outputText>
+                </th>
 
-                                <th class="TableTitleNormal tableTileStyleHover" style="color: #54698d;">
-                                    <apex:outputText value="Net Available" style="font-size: 12px;" styleClass="tableTitleStyle "/><br/>
-                                    <apex:outputText value="For Dealer Order" style="font-size: 09px" styleClass="tableTitleStyle"></apex:outputText>
-                                </th>
+                <th class="TableTitleNormal tableTileStyleHover" style="color: #54698d">
+                  <apex:outputText value="Net Available" style="font-size: 12px" styleClass="tableTitleStyle " /><br />
+                  <apex:outputText
+                    value="For Dealer Order"
+                    style="font-size: 09px"
+                    styleClass="tableTitleStyle"
+                  ></apex:outputText>
+                </th>
 
-                                <th class="TableTitleNormal tableTileStyleHover" style="color: #54698d;">
-                                    <apex:outputText value="Next Shipments" style="font-size: 12px;" styleClass="tableTitleStyle "/>
-                                </th>
-                            </thead>
-                            <tbody>
-                                <apex:variable var="loopCounter" value="{!0}"/>
-                                <apex:repeat value="{!inventory}" var="item">
-                                    <apex:variable var="loopCounter" value="{!loopCounter + 1}"/>
-                                    <tr style="border-bottom-style: 1px;">
-                                        <td style="border-bottom: 1px solid #ddd;border-right:1px solid #ddd; font-size: 10px; color: #16325c;">
-                                            <apex:outputtext value="{!item.productName}"/>
-                                        </td>
-                                        <td style="border-bottom: 1px solid #ddd;border-right:1px solid #ddd; font-size: 10px; color: #16325c;">
-                                            <table class="none">
-                                                <tr>
-                                                    <td style="padding: 0px 10px">
-                                                        <input id="stock-{!item.product.Id}-{!item.lotName}" value="{!item.inStock}" class="custom-badge" readonly="true"/>
-                                                    </td>
-                                                </tr>
-                                                <tr  style="display:{!IF(!item.showWhitefish,'none','')};">
-                                                    <td style="padding: 0px 10px">
-                                                        <input id="stock-{!item.product.Id}-{!item.lotName}" value="Whitefish ( {!item.locationWhitefish} )" class="custom-pills"  readonly="true"/>
-                                                    </td>
-                                                </tr>
-                                                <tr  style="display:{!IF(!item.showMontreal,'none','')};">
-                                                    <td style="padding: 0px 10px">
-                                                        <input id="stock-{!item.product.Id}-{!item.lotName}" value="Montreal ( {!item.locationMontreal} )" class="custom-pills" readonly="true"/>
-                                                    </td>
-                                                </tr>
-                                                <tr style="display:{!IF(!item.showBarrie,'none','')};">
-                                                    <td style="padding: 0px 10px">
-                                                        <input id="stock-{!item.product.Id}-{!item.lotName}" value="Barrie ( {!item.locationBarrie} )" class="custom-pills" readonly="true"/>
-                                                    </td>
-                                                </tr>
-                                                <tr style="display:{!IF(!item.showOUT,'none','')};" >
-                                                    <td style="padding: 0px 10px">
-                                                        <input id="stock-{!item.product.Id}-{!item.lotName}" value="OUT ( {!item.locationOUT} )" class="custom-pills" readonly="true"/>
-                                                    </td>
-                                                </tr>
-                                            </table>
-                                        </td>
-                                        <td style="border-bottom: 1px solid #ddd;border-right:1px solid #ddd ; font-size: 10px; color: #16325c;">
-                                             <input id="reservedForDisplay-{!item.product.Id}-{!item.lotName}" type="number" onchange="updateReservedForDisplay('{!item.product.Id}', this.value,'{!item.productName}','{!item.lotName}')" styleClass="reservedDisplay" value="{!item.reservedForDisplayed}" style="width:60px; border:0px;"/>
-                                        </td>
-                                        <td style=" border-bottom: 1px solid #ddd;border-right:1px solid #ddd; font-size: 10px; color: #16325c;">
-                                            <input id="reservedForRetail-{!item.product.Id}-{!item.lotName}" onchange="updateAvailableForRetail('{!item.product.Id}','{!item.productName}','{!item.lotName}');"  type="number" styleClass="reserveRetail" value="{!item.reservedForRetail}" style="width:60px;border:0px;"/>
-                                        </td>
-                                        <td style="border-bottom: 1px solid #ddd;border-right:1px solid #ddd; font-size: 10px; color: #16325c;">
-                                            <table class="none">
-                                                <tr style="display:{!IF(!item.showSpecials,'none','')};">
-                                                    <td>
-                                                        <input id="specials-{!item.product.Id}-{!item.lotName}" value="Specials ( {!item.specials} )" class="{!item.specials} custom-pills" readonly="true"/>
-                                                    </td>
-                                                </tr>
-                                                <tr style="display:{!IF(!item.showDamages,'none','')};">
-                                                    <td>
-                                                        <input id="damaged-{!item.product.Id}-{!item.lotName}" value=" Damaged ( {!item.damages} )" class="{!item.damages} custom-pills red" style="font-size: 12px; border-radius: 5px; color: #fff;  background: #f04124; text-align: center; padding: 5px; width: 100px !important"  readonly="true"/>
-                                                    </td>
-                                                </tr>
+                <th class="TableTitleNormal tableTileStyleHover" style="color: #54698d">
+                  <apex:outputText value="Next Shipments" style="font-size: 12px" styleClass="tableTitleStyle " />
+                </th>
+              </thead>
+              <tbody>
+                <apex:variable var="loopCounter" value="{!0}" />
+                <apex:repeat value="{!inventory}" var="item">
+                  <apex:variable var="loopCounter" value="{!loopCounter + 1}" />
+                  <tr style="border-bottom-style: 1px">
+                    <td
+                      style="
+                        border-bottom: 1px solid #ddd;
+                        border-right: 1px solid #ddd;
+                        font-size: 10px;
+                        color: #16325c;
+                      "
+                    >
+                      <apex:outputtext value="{!item.productName}" />
+                    </td>
+                    <td
+                      style="
+                        border-bottom: 1px solid #ddd;
+                        border-right: 1px solid #ddd;
+                        font-size: 10px;
+                        color: #16325c;
+                      "
+                    >
+                      <table class="none">
+                        <tr>
+                          <td style="padding: 0px 10px">
+                            <input
+                              id="stock-{!item.product.Id}-{!item.lotName}"
+                              value="{!item.inStock}"
+                              class="custom-badge"
+                              readonly="true"
+                            />
+                          </td>
+                        </tr>
+                        <tr style="display:{!IF(!item.showWhitefish,'none','')};">
+                          <td style="padding: 0px 10px">
+                            <input
+                              id="stock-{!item.product.Id}-{!item.lotName}"
+                              value="Whitefish ( {!item.locationWhitefish} )"
+                              class="custom-pills"
+                              readonly="true"
+                            />
+                          </td>
+                        </tr>
+                        <tr style="display:{!IF(!item.showMontreal,'none','')};">
+                          <td style="padding: 0px 10px">
+                            <input
+                              id="stock-{!item.product.Id}-{!item.lotName}"
+                              value="Montreal ( {!item.locationMontreal} )"
+                              class="custom-pills"
+                              readonly="true"
+                            />
+                          </td>
+                        </tr>
+                        <tr style="display:{!IF(!item.showBarrie,'none','')};">
+                          <td style="padding: 0px 10px">
+                            <input
+                              id="stock-{!item.product.Id}-{!item.lotName}"
+                              value="Barrie ( {!item.locationBarrie} )"
+                              class="custom-pills"
+                              readonly="true"
+                            />
+                          </td>
+                        </tr>
+                        <tr style="display:{!IF(!item.showOUT,'none','')};">
+                          <td style="padding: 0px 10px">
+                            <input
+                              id="stock-{!item.product.Id}-{!item.lotName}"
+                              value="OUT ( {!item.locationOUT} )"
+                              class="custom-pills"
+                              readonly="true"
+                            />
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                    <td
+                      style="
+                        border-bottom: 1px solid #ddd;
+                        border-right: 1px solid #ddd;
+                        font-size: 10px;
+                        color: #16325c;
+                      "
+                    >
+                      <input
+                        id="reservedForDisplay-{!item.product.Id}-{!item.lotName}"
+                        type="number"
+                        onchange="updateReservedForDisplay('{!item.product.Id}', this.value,'{!item.productName}','{!item.lotName}')"
+                        styleClass="reservedDisplay"
+                        value="{!item.reservedForDisplayed}"
+                        style="width: 60px; border: 0px"
+                      />
+                    </td>
+                    <td
+                      style="
+                        border-bottom: 1px solid #ddd;
+                        border-right: 1px solid #ddd;
+                        font-size: 10px;
+                        color: #16325c;
+                      "
+                    >
+                      <input
+                        id="reservedForRetail-{!item.product.Id}-{!item.lotName}"
+                        onchange="updateAvailableForRetail('{!item.product.Id}','{!item.productName}','{!item.lotName}');"
+                        type="number"
+                        styleClass="reserveRetail"
+                        value="{!item.reservedForRetail}"
+                        style="width: 60px; border: 0px"
+                      />
+                    </td>
+                    <td
+                      style="
+                        border-bottom: 1px solid #ddd;
+                        border-right: 1px solid #ddd;
+                        font-size: 10px;
+                        color: #16325c;
+                      "
+                    >
+                      <table class="none">
+                        <tr style="display:{!IF(!item.showSpecials,'none','')};">
+                          <td>
+                            <input
+                              id="specials-{!item.product.Id}-{!item.lotName}"
+                              value="Specials ( {!item.specials} )"
+                              class="{!item.specials} custom-pills"
+                              readonly="true"
+                            />
+                          </td>
+                        </tr>
+                        <tr style="display:{!IF(!item.showDamages,'none','')};">
+                          <td>
+                            <input
+                              id="damaged-{!item.product.Id}-{!item.lotName}"
+                              value=" Damaged ( {!item.damages} )"
+                              class="{!item.damages} custom-pills red"
+                              style="
+                                font-size: 12px;
+                                border-radius: 5px;
+                                color: #fff;
+                                background: #f04124;
+                                text-align: center;
+                                padding: 5px;
+                                width: 100px !important;
+                              "
+                              readonly="true"
+                            />
+                          </td>
+                        </tr>
 
-                                                <tr style="display:{!IF(!item.showDemos,'none','')};">
-                                                    <td>
-                                                        <input id="damaged-{!item.product.Id}-{!item.lotName}" value=" Demo ( {!item.demos} )" class="{!item.demos} custom-pills yellow" style="font-size: 12px; border-radius: 5px; color: ##848484;  background: yellow; text-align: center; padding: 5px; width: 100px !important"  readonly="true"/>
-                                                    </td>
-                                                </tr>
+                        <tr style="display:{!IF(!item.showDemos,'none','')};">
+                          <td>
+                            <input
+                              id="damaged-{!item.product.Id}-{!item.lotName}"
+                              value=" Demo ( {!item.demos} )"
+                              class="{!item.demos} custom-pills yellow"
+                              style="
+                                font-size: 12px;
+                                border-radius: 5px;
+                                color: ##848484;
+                                background: yellow;
+                                text-align: center;
+                                padding: 5px;
+                                width: 100px !important;
+                              "
+                              readonly="true"
+                            />
+                          </td>
+                        </tr>
 
-                                                <tr style="display:{!IF(!item.showUsed,'none','')};">
-                                                    <td>
-                                                        <input id="used-{!item.product.Id}-{!item.lotName}" value=" Used ( {!item.useds} )" class="{!item.useds} custom-pills" style="font-size: 12px; border-radius: 5px; color: #fff;  background: #00aeF9; text-align: center; padding: 5px; width: 100px !important; border-color:#FFF"  readonly="true"/>
-                                                    </td>
-                                                </tr>
-
-                                           </table>
-                                        </td>
-                                        <td style="border-bottom: 1px solid #ddd;border-right:1px solid #ddd; font-size: 10px; color: #16325c; " >
-<!-- replaced retailSold here -->
-                                            <div id="retailSold-{!item.product.Id}-{!item.lotName}"
-                                                 class="popup-orders"
-                                                 style="cursor:pointer;position:relative"
-                                                 data-placement="bottom"
-                                                 data-acct-type="retail"
-                                                 data-dealer-orders="{!item.retailSoldDetails}">
-                                                {!item.retailSold}
-                                            </div>
-                                           <!--  <div id="retailSold-{!item.product.Id}-{!item.lotName}" class=" retail-sold tooltip" style="cursor:pointer;" data-toggle="tooltip" data-placement="bottom" title="{!item.customer}">
+                        <tr style="display:{!IF(!item.showUsed,'none','')};">
+                          <td>
+                            <input
+                              id="used-{!item.product.Id}-{!item.lotName}"
+                              value=" Used ( {!item.useds} )"
+                              class="{!item.useds} custom-pills"
+                              style="
+                                font-size: 12px;
+                                border-radius: 5px;
+                                color: #fff;
+                                background: #00aef9;
+                                text-align: center;
+                                padding: 5px;
+                                width: 100px !important;
+                                border-color: #fff;
+                              "
+                              readonly="true"
+                            />
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                    <td
+                      style="
+                        border-bottom: 1px solid #ddd;
+                        border-right: 1px solid #ddd;
+                        font-size: 10px;
+                        color: #16325c;
+                      "
+                    >
+                      <!-- replaced retailSold here -->
+                      <div
+                        id="retailSold-{!item.product.Id}-{!item.lotName}"
+                        class="popup-orders"
+                        style="cursor: pointer; position: relative"
+                        data-placement="bottom"
+                        data-acct-type="retail"
+                        data-dealer-orders="{!item.retailSoldDetails}"
+                      >
+                        {!item.retailSold}
+                      </div>
+                      <!--  <div id="retailSold-{!item.product.Id}-{!item.lotName}" class=" retail-sold tooltip" style="cursor:pointer;" data-toggle="tooltip" data-placement="bottom" title="{!item.customer}">
 
                                                 {!item.retailSold}
                                             </div> -->
-                                        </td>
-                                        <td style="border-bottom: 1px solid #ddd;border-right:1px solid #ddd; font-size: 10px; color: #16325c; ">
-                                            <span id="availableForRetail-{!item.product.Id}-{!item.lotName}" data-field-value="{!item.availabeForRetail}">
-                                                {!item.availabeForRetail}
-                                            </span>
-                                        </td>
-                                        <td style="border-bottom: 1px solid #ddd;border-right:1px solid #ddd; font-size: 10px; color: #16325c; ">
-                                            <div id="availableToshipDelears-{!item.product.Id}-{!item.lotName}">
-                                                {!item.availabeToShipDelears}
-                                            </div>
-                                        </td>
-<!-- HERE -->
-                                        <td style="border-bottom: 1px solid #ddd;border-right:1px solid #ddd; font-size: 10px; color: #16325c; ">
-                                            <div id="dealerOrders-{!item.product.Id}-{!item.lotName}"
-                                                 class="popup-orders"
-                                                 style="cursor:pointer;position:relative"
-                                                 data-placement="bottom"
-                                                 data-acct-type="partner"
-                                                 data-dealer-orders="{!item.dealerOrderDetails}">
-                                                 <!-- title="{!item.customerNameDelearOrder}"> -->
-                                                {!item.dealerOrders}
+                    </td>
+                    <td
+                      style="
+                        border-bottom: 1px solid #ddd;
+                        border-right: 1px solid #ddd;
+                        font-size: 10px;
+                        color: #16325c;
+                      "
+                    >
+                      <span
+                        id="availableForRetail-{!item.product.Id}-{!item.lotName}"
+                        data-field-value="{!item.availabeForRetail}"
+                      >
+                        {!item.availabeForRetail}
+                      </span>
+                    </td>
+                    <td
+                      style="
+                        border-bottom: 1px solid #ddd;
+                        border-right: 1px solid #ddd;
+                        font-size: 10px;
+                        color: #16325c;
+                      "
+                    >
+                      <div id="availableToshipDelears-{!item.product.Id}-{!item.lotName}">
+                        {!item.availabeToShipDelears}
+                      </div>
+                    </td>
+                    <!-- HERE -->
+                    <td
+                      style="
+                        border-bottom: 1px solid #ddd;
+                        border-right: 1px solid #ddd;
+                        font-size: 10px;
+                        color: #16325c;
+                      "
+                    >
+                      <div
+                        id="dealerOrders-{!item.product.Id}-{!item.lotName}"
+                        class="popup-orders"
+                        style="cursor: pointer; position: relative"
+                        data-placement="bottom"
+                        data-acct-type="partner"
+                        data-dealer-orders="{!item.dealerOrderDetails}"
+                      >
+                        <!-- title="{!item.customerNameDelearOrder}"> -->
+                        {!item.dealerOrders}
 
-                                                <!--
+                        <!--
                                                 <div class="tooltip_templates">
                                                     <span id="tooltip_content{!loopCounter}">
                                                         {!item.customerNameDelearOrder}
                                                     </span>
                                                 </div>
                                                 -->
-                                            </div>
-                                        </td>
-                                        <td style="border-bottom: 1px solid #ddd;border-right:1px solid #ddd; font-size: 10px; color: #16325c; ">
-                                            <div id="netAvailable-{!item.product.Id}-{!item.lotName}" class="" data-field-value="{!item.netAvailable}">
-                                                {!item.netAvailable}
-                                            </div>
-                                        </td>
-                                        <td style="border-bottom: 1px solid #ddd;border-right:1px solid #ddd; font-size: 10px; color: #16325c;">
-                                            <apex:outputText rendered="{!!item.existNextShipments}" value="Currently no shipments are scheduled" style="font-size: 10px"/>
-                                            <apex:outputPanel rendered="{!item.existNextShipments}">
-                                                <div style="position:relative">
-                                                    <table id="subTable-{!item.product.Id}-{!item.lotName}" class="slds-table slds-table--bordered slds-table--cell-buffer">
-                                                        <thead>
-                                                            <tr class="slds-text-title--caps">
-                                                                <th scope="col" style="font-size: 10px;">
-                                                                    <div class="slds-truncate" title="Arrival">Arrival</div>
-                                                                </th>
-                                                                <th scope="col" style="font-size: 10px;">
-                                                                    <div class="slds-truncate" title="Quantity">Qty</div>
-                                                                </th>
-                                                                <th scope="col" style="font-size: 10px;">
-                                                                    <div class="slds-truncate" title="Allocated">Alloc</div>
-                                                                </th>
-                                                                <th scope="col" style="font-size: 10px;">
-                                                                    <div class="slds-truncate" title="Reserved">Res R</div>
-                                                                </th>
-                                                                <th scope="col" style="font-size: 10px;">
-                                                                    <div class="slds-truncate" title="Available">Avl D</div>
-                                                                </th>
-                                                                <th scope="col" style="font-size: 10px;">
-                                                                    <div class="slds-truncate" title="Available">Avl R</div>
-                                                                </th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            <apex:repeat value="{!item.shipments}" var="shipment" >
-                                                                <tr>
-                                                                    <th scope="row" data-label="Arrival" style="font-size: 10px;">
-                                                                        <div class="slds-truncate" title="Arrival">
-                                                                            <apex:outputText value="{0,date,MM/dd/yy}">
-                                                                                <apex:param value="{!shipment.deliverDate}" />
-                                                                            </apex:outputText>
-                                                                        </div>
-                                                                    </th>
-                                                                    <th scope="row" data-label="Quantity" style="font-size: 10px;">
-                                                                        <div class="slds-truncate" title="Quantity">
-                                                                            <div id="shipQuant-{!shipment.shipID}" data-value="{!shipment.quantity}" style="text-align:center;">
-                                                                                {!shipment.quantity}
-                                                                            </div>
-                                                                        </div>
-                                                                    </th>
-                                                                    <th scope="row" data-label="Allocated" style="font-size: 10px;">
-                                                                        <div class="slds-truncate" title="Allocated" style="text-align:center;">
-                                                                            0
-                                                                        </div>
-                                                                    </th>
-                                                                    <th scope="row" data-label="Reserved" style="font-size: 10px;">
-                                                                        <div class="slds-truncate" title="Reserved">
-                                                                            <input id="reservedShipment-{!shipment.shipID}"
-                                                                                    class="reservedShipment"
-                                                                                    data-ship-id="{!shipment.shipID}"
-                                                                                    data-product-id="{!item.product.id}"
-                                                                                    data-lot="{!item.lotName}"
-                                                                                    type="number"
-                                                                                    styleClass="reservedShipment"
-                                                                                    value="{!shipment.reserved}"
-                                                                                    style="width:40px; border:0px; text-align:center;"/>
-                                                                        </div>
-                                                                    </th>
-                                                                    <th scope="row" data-label="Available" style="font-size: 10px;">
-                                                                        <div class="slds-truncate" title="Available">
-                                                                            <input  id="availableShipment-{!shipment.shipID}"  styleClass="availableShipment" class="custom-badge" value="{!shipment.available}" type="text"  readonly="true" style="background-color: #e0e5ee;padding: .25rem .5rem;border-radius: 15rem;font-size: 10px;line-height: 1.25;letter-spacing: .0625em;color: #16325c;vertical-align: middle;white-space: nowrap;border: 1px solid #e0e5ee;text-align: center;max-width: 35px;"/>
-                                                                        </div>
-                                                                    </th>
-                                                                    <th scope="row" data-label="AvailableRetail" style="font-size: 10px;">
-                                                                        <div class="slds-truncate" title="AvailableRetail">
-                                                                            <input  id="availableShipment-{!shipment.shipID}"  styleClass="availableShipment" class="custom-badge" value="{!shipment.available_retail}" type="text"  readonly="true" style="background-color: #e0e5ee;padding: .25rem .5rem;border-radius: 15rem;font-size: 10px;line-height: 1.25;letter-spacing: .0625em;color: #16325c;vertical-align: middle;white-space: nowrap;border: 1px solid #e0e5ee;text-align: center;max-width: 35px;"/>
-                                                                        </div>
-                                                                    </th>
-                                                                </tr>
-                                                            </apex:repeat>
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                            </apex:outputPanel>
-                                        </td>
-                                    </tr>
-                                </apex:repeat>
+                      </div>
+                    </td>
+                    <td
+                      style="
+                        border-bottom: 1px solid #ddd;
+                        border-right: 1px solid #ddd;
+                        font-size: 10px;
+                        color: #16325c;
+                      "
+                    >
+                      <div
+                        id="netAvailable-{!item.product.Id}-{!item.lotName}"
+                        class=""
+                        data-field-value="{!item.netAvailable}"
+                      >
+                        {!item.netAvailable}
+                      </div>
+                    </td>
+                    <td
+                      style="
+                        border-bottom: 1px solid #ddd;
+                        border-right: 1px solid #ddd;
+                        font-size: 10px;
+                        color: #16325c;
+                      "
+                    >
+                      <apex:outputText
+                        rendered="{!!item.existNextShipments}"
+                        value="Currently no shipments are scheduled"
+                        style="font-size: 10px"
+                      />
+                      <apex:outputPanel rendered="{!item.existNextShipments}">
+                        <div style="position: relative">
+                          <table
+                            id="subTable-{!item.product.Id}-{!item.lotName}"
+                            class="slds-table slds-table--bordered slds-table--cell-buffer"
+                          >
+                            <thead>
+                              <tr class="slds-text-title--caps">
+                                <th scope="col" style="font-size: 10px">
+                                  <div class="slds-truncate" title="Arrival">Arrival</div>
+                                </th>
+                                <th scope="col" style="font-size: 10px">
+                                  <div class="slds-truncate" title="Quantity">Qty</div>
+                                </th>
+                                <th scope="col" style="font-size: 10px">
+                                  <div class="slds-truncate" title="Allocated">Alloc</div>
+                                </th>
+                                <th scope="col" style="font-size: 10px">
+                                  <div class="slds-truncate" title="Reserved">Res R</div>
+                                </th>
+                                <th scope="col" style="font-size: 10px">
+                                  <div class="slds-truncate" title="Available">Avl D</div>
+                                </th>
+                                <th scope="col" style="font-size: 10px">
+                                  <div class="slds-truncate" title="Available">Avl R</div>
+                                </th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <apex:repeat value="{!item.shipments}" var="shipment">
+                                <tr>
+                                  <th scope="row" data-label="Arrival" style="font-size: 10px">
+                                    <div class="slds-truncate" title="Arrival">
+                                      <apex:outputText value="{0,date,MM/dd/yy}">
+                                        <apex:param value="{!shipment.deliverDate}" />
+                                      </apex:outputText>
+                                    </div>
+                                  </th>
+                                  <th scope="row" data-label="Quantity" style="font-size: 10px">
+                                    <div class="slds-truncate" title="Quantity">
+                                      <div
+                                        id="shipQuant-{!shipment.shipID}"
+                                        data-value="{!shipment.quantity}"
+                                        style="text-align: center"
+                                      >
+                                        {!shipment.quantity}
+                                      </div>
+                                    </div>
+                                  </th>
+                                  <th scope="row" data-label="Allocated" style="font-size: 10px">
+                                    <div class="slds-truncate" title="Allocated" style="text-align: center">0</div>
+                                  </th>
+                                  <th scope="row" data-label="Reserved" style="font-size: 10px">
+                                    <div class="slds-truncate" title="Reserved">
+                                      <input
+                                        id="reservedShipment-{!shipment.shipID}"
+                                        class="reservedShipment"
+                                        data-ship-id="{!shipment.shipID}"
+                                        data-product-id="{!item.product.id}"
+                                        data-lot="{!item.lotName}"
+                                        type="number"
+                                        styleClass="reservedShipment"
+                                        value="{!shipment.reserved}"
+                                        style="width: 40px; border: 0px; text-align: center"
+                                      />
+                                    </div>
+                                  </th>
+                                  <th scope="row" data-label="Available" style="font-size: 10px">
+                                    <div class="slds-truncate" title="Available">
+                                      <input
+                                        id="availableShipment-{!shipment.shipID}"
+                                        styleClass="availableShipment"
+                                        class="custom-badge"
+                                        value="{!shipment.available}"
+                                        type="text"
+                                        readonly="true"
+                                        style="
+                                          background-color: #e0e5ee;
+                                          padding: 0.25rem 0.5rem;
+                                          border-radius: 15rem;
+                                          font-size: 10px;
+                                          line-height: 1.25;
+                                          letter-spacing: 0.0625em;
+                                          color: #16325c;
+                                          vertical-align: middle;
+                                          white-space: nowrap;
+                                          border: 1px solid #e0e5ee;
+                                          text-align: center;
+                                          max-width: 35px;
+                                        "
+                                      />
+                                    </div>
+                                  </th>
+                                  <th scope="row" data-label="AvailableRetail" style="font-size: 10px">
+                                    <div class="slds-truncate" title="AvailableRetail">
+                                      <input
+                                        id="availableShipment-{!shipment.shipID}"
+                                        styleClass="availableShipment"
+                                        class="custom-badge"
+                                        value="{!shipment.available_retail}"
+                                        type="text"
+                                        readonly="true"
+                                        style="
+                                          background-color: #e0e5ee;
+                                          padding: 0.25rem 0.5rem;
+                                          border-radius: 15rem;
+                                          font-size: 10px;
+                                          line-height: 1.25;
+                                          letter-spacing: 0.0625em;
+                                          color: #16325c;
+                                          vertical-align: middle;
+                                          white-space: nowrap;
+                                          border: 1px solid #e0e5ee;
+                                          text-align: center;
+                                          max-width: 35px;
+                                        "
+                                      />
+                                    </div>
+                                  </th>
+                                </tr>
+                              </apex:repeat>
                             </tbody>
-                        </table>
-                    </apex:outputPanel>
+                          </table>
+                        </div>
+                      </apex:outputPanel>
+                    </td>
+                  </tr>
+                </apex:repeat>
+              </tbody>
+            </table>
+          </apex:outputPanel>
+        </div>
+
+        <!--</apex:pageBlock>-->
+
+        <apex:actionFunction
+          action="{!filterMethod}"
+          name="filterYearJS"
+          rerender="table"
+          status="counterStatus"
+          oncomplete="initTab()"
+        >
+          <apex:param name="year" assignTo="{!filterYear}" value="" />
+        </apex:actionFunction>
+        <apex:actionFunction
+          action="{!filterMethod}"
+          name="filterTypeJS"
+          rerender="table"
+          status="counterStatus"
+          oncomplete="initTab()"
+        >
+          <apex:param name="type" assignTo="{!filterType}" value="" />
+        </apex:actionFunction>
+      </apex:form>
+    </div>
+  </div>
+
+  <!-- +++++++++++++++++++ Dealer Orders ++++++++++++++++++++++++++++ -->
+  <script id="dealer-order-details-tmpl" type="text/handlebars-template">
+    <section class="slds-popover slds-nubbin_top" role="dialog" style="width:35rem;">
+      <div class="slds-popover__body">
+        {{#each data}}
+          <article class="slds-card">
+            <div class="slds-card__header slds-grid">
+              <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                <div class="slds-media__figure">
+                  <span class="slds-icon_container slds-icon-standard-contact">
+                    <svg aria-hidden="true" class="slds-icon slds-icon_small">
+                        <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/standard-sprite/svg/symbols.svg#account')}"></use>
+                    </svg>
+                  </span>
                 </div>
-
-            <!--</apex:pageBlock>-->
-
-            <apex:actionFunction action="{!filterMethod}" name="filterYearJS" rerender="table" status="counterStatus" oncomplete="initTab()">
-                <apex:param name="year" assignTo="{!filterYear}" value="" />
-            </apex:actionFunction>
-            <apex:actionFunction action="{!filterMethod}" name="filterTypeJS" rerender="table" status="counterStatus" oncomplete="initTab()">
-                <apex:param name="type" assignTo="{!filterType}" value="" />
-            </apex:actionFunction>
-        </apex:form>
-    </div>
-    </div>
-
-    <!-- +++++++++++++++++++ Dealer Orders ++++++++++++++++++++++++++++ -->
-    <script id="dealer-order-details-tmpl" type="text/handlebars-template">
-      <section class="slds-popover slds-nubbin_top" role="dialog" style="width:35rem;">
-        <div class="slds-popover__body">
-          {{#each data}}
-            <article class="slds-card">
-              <div class="slds-card__header slds-grid">
-                <header class="slds-media slds-media_center slds-has-flexi-truncate">
-                  <div class="slds-media__figure">
-                    <span class="slds-icon_container slds-icon-standard-contact">
-                      <svg aria-hidden="true" class="slds-icon slds-icon_small">
-                          <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/standard-sprite/svg/symbols.svg#account')}"></use>
-                      </svg>
-                    </span>
-                  </div>
-                  <div class="slds-media__body">
-                    <h2>
-                      <div class="slds-card__header-link slds-truncate slds-text-align_left" title="{{@key}}" style="line-height:0;">
-                        <div class="slds-text-title_caps slds-truncate" style="display:inline-block; max-width: 25rem">
-                            {{@key}}
-                        </div>
+                <div class="slds-media__body">
+                  <h2>
+                    <div class="slds-card__header-link slds-truncate slds-text-align_left" title="{{@key}}" style="line-height:0;">
+                      <div class="slds-text-title_caps slds-truncate" style="display:inline-block; max-width: 25rem">
+                          {{@key}}
                       </div>
-                    </h2>
-                  </div>
-                  <div class="count">
-                    {{recordSize this}}
-                  </div>
-                </header>
-              </div>
-              <div class="slds-card__body">
-                <table class="slds-table slds-table_bordered slds-table_cell-buffer">
-                  <thead>
-                    <tr class="slds-text-title_caps">
-                      <th scope="col">
-                        Order #
-                      </th>
-                      <th scope="col">
-                        Stage
-                      </th>
-                      <th scope="col">
-                        Created Date
-                      </th>
-                      <th scope="col">
-                        Delivery Date
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {{#each this}}
-                    <tr>
-                      <th scope="row">
-                        <a href="javascript:void(0);" class="erp-link" data-record-id="{{this.Id}}">
-                          {{ this.Name }}
-                        </a>
-                      </th>
-                      <th scope="row">
-                        {{this.Stage}}
-                      </th>
-                      <th scope="row">
-                        {{this.CreatedDate}}
-                      </th>
-                      <th scope="row">
-                        {{this.DeliveryDate}}
-                      </th>
-                    </tr>
-                    {{/each}}
-                  </tbody>
-                </table>
-              </div>
+                    </div>
+                  </h2>
+                </div>
+                <div class="count">
+                  {{recordSize this}}
+                </div>
+              </header>
+            </div>
+            <div class="slds-card__body">
+              <table class="slds-table slds-table_bordered slds-table_cell-buffer">
+                <thead>
+                  <tr class="slds-text-title_caps">
+                    <th scope="col">
+                      Order #
+                    </th>
+                    <th scope="col">
+                      Stage
+                    </th>
+                    <th scope="col">
+                      Created Date
+                    </th>
+                    <th scope="col">
+                      Delivery Date
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {{#each this}}
+                  <tr>
+                    <th scope="row">
+                      <a href="javascript:void(0);" class="erp-link" data-record-id="{{this.Id}}">
+                        {{ this.Name }}
+                      </a>
+                    </th>
+                    <th scope="row">
+                      {{this.Stage}}
+                    </th>
+                    <th scope="row">
+                      {{this.CreatedDate}}
+                    </th>
+                    <th scope="row">
+                      {{this.DeliveryDate}}
+                    </th>
+                  </tr>
+                  {{/each}}
+                </tbody>
+              </table>
+            </div>
 
-            </article>
-          {{/each}}
-        </div>
-      </section>
-    </script>
+          </article>
+        {{/each}}
+      </div>
+    </section>
+  </script>
 
-    <!-- +++++++++++++++++++ Retail Orders ++++++++++++++++++++++++++++ -->
-    <script id="retail-order-details-tmpl" type="text/handlebars-template">
-      <section class="slds-popover slds-nubbin_top" role="dialog" style="width:40rem;">
-        <div class="slds-popover__body">
-            {{#if opps}}
-            <article class="slds-card">
-              <div class="slds-card__header slds-grid">
-                <header class="slds-media slds-media_center slds-has-flexi-truncate">
-                  <div class="slds-media__figure">
-                    <span class="slds-icon_container slds-icon-standard-opportunity">
-                      <svg aria-hidden="true" class="slds-icon slds-icon_small">
-                          <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/standard-sprite/svg/symbols.svg#opportunity')}"></use>
-                      </svg>
-                    </span>
-                  </div>
-                  <div class="slds-media__body">
-                    <h2>
-                      <div class="slds-card__header-link slds-truncate slds-text-align_left" title="Opportunities" style="line-height:0;">
-                        <div class="slds-text-title_caps slds-truncate" style="display:inline-block; max-width: 25rem">
-                            Opportunities
-                        </div>
+  <!-- +++++++++++++++++++ Retail Orders ++++++++++++++++++++++++++++ -->
+  <script id="retail-order-details-tmpl" type="text/handlebars-template">
+    <section class="slds-popover slds-nubbin_top" role="dialog" style="width:40rem;">
+      <div class="slds-popover__body">
+          {{#if opps}}
+          <article class="slds-card">
+            <div class="slds-card__header slds-grid">
+              <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                <div class="slds-media__figure">
+                  <span class="slds-icon_container slds-icon-standard-opportunity">
+                    <svg aria-hidden="true" class="slds-icon slds-icon_small">
+                        <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/standard-sprite/svg/symbols.svg#opportunity')}"></use>
+                    </svg>
+                  </span>
+                </div>
+                <div class="slds-media__body">
+                  <h2>
+                    <div class="slds-card__header-link slds-truncate slds-text-align_left" title="Opportunities" style="line-height:0;">
+                      <div class="slds-text-title_caps slds-truncate" style="display:inline-block; max-width: 25rem">
+                          Opportunities
                       </div>
-                    </h2>
-                  </div>
-                  <div class="count">
-                    {{recordSize opps}}
-                  </div>
-                </header>
-              </div>
-              <div class="slds-card__body">
-                <table class="slds-table slds-table_bordered slds-table_cell-buffer slds-table_fixed-layout">
-                  <thead>
-                    <tr class="slds-text-title_caps">
-                      <th scope="col">
-                        Opp Name
-                      </th>
-                      <th scope="col">
-                        Account
-                      </th>
-                      <th scope="col">
-                        Stage
-                      </th>
-                      <th scope="col">
-                        Created Date
-                      </th>
-                      <th scope="col">
-                        Delivery Date
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {{#each opps}}
-                    <tr>
-                      <td scope="row">
-                        <a href="javascript:void(0);" class="erp-link" data-record-id="{{this.Id}}">
-                          <div class="slds-truncate">{{ this.Name }}</div>
-                        </a>
-                      </td>
-                      <td scope="row">
-                        {{this.AccountName}}
-                      </td>
-                      <td scope="row">
-                        <div class="slds-truncate">{{this.Stage}}</div>
-                      </td>
-                      <td scope="row">
-                        {{this.CreatedDate}}
-                      </td>
-                      <td scope="row">
-                        {{this.DeliveryDate}}
-                      </td>
-                    </tr>
-                    {{/each}}
-                  </tbody>
-                </table>
-              </div>
+                    </div>
+                  </h2>
+                </div>
+                <div class="count">
+                  {{recordSize opps}}
+                </div>
+              </header>
+            </div>
+            <div class="slds-card__body">
+              <table class="slds-table slds-table_bordered slds-table_cell-buffer slds-table_fixed-layout">
+                <thead>
+                  <tr class="slds-text-title_caps">
+                    <th scope="col">
+                      Opp Name
+                    </th>
+                    <th scope="col">
+                      Account
+                    </th>
+                    <th scope="col">
+                      Stage
+                    </th>
+                    <th scope="col">
+                      Created Date
+                    </th>
+                    <th scope="col">
+                      Delivery Date
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {{#each opps}}
+                  <tr>
+                    <td scope="row">
+                      <a href="javascript:void(0);" class="erp-link" data-record-id="{{this.Id}}">
+                        <div class="slds-truncate">{{ this.Name }}</div>
+                      </a>
+                    </td>
+                    <td scope="row">
+                      {{this.AccountName}}
+                    </td>
+                    <td scope="row">
+                      <div class="slds-truncate">{{this.Stage}}</div>
+                    </td>
+                    <td scope="row">
+                      {{this.CreatedDate}}
+                    </td>
+                    <td scope="row">
+                      {{this.DeliveryDate}}
+                    </td>
+                  </tr>
+                  {{/each}}
+                </tbody>
+              </table>
+            </div>
 
-            </article>
-            {{/if}}
-            {{#if erps}}
-            <article class="slds-card">
-              <div class="slds-card__header slds-grid">
-                <header class="slds-media slds-media_center slds-has-flexi-truncate">
-                  <div class="slds-media__figure">
-                    <span class="slds-icon_container slds-icon-custom-custom68">
-                      <svg aria-hidden="true" class="slds-icon slds-icon_small">
-                          <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/custom-sprite/svg/symbols.svg#custom68')}"></use>
-                      </svg>
-                    </span>
-                  </div>
-                  <div class="slds-media__body">
-                    <h2>
-                      <div class="slds-card__header-link slds-truncate slds-text-align_left" title="Erp Orders" style="line-height:0;">
-                        <div class="slds-text-title_caps slds-truncate" style="display:inline-block; max-width: 25rem">
-                            ERP Orders
-                        </div>
+          </article>
+          {{/if}}
+          {{#if erps}}
+          <article class="slds-card">
+            <div class="slds-card__header slds-grid">
+              <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                <div class="slds-media__figure">
+                  <span class="slds-icon_container slds-icon-custom-custom68">
+                    <svg aria-hidden="true" class="slds-icon slds-icon_small">
+                        <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/custom-sprite/svg/symbols.svg#custom68')}"></use>
+                    </svg>
+                  </span>
+                </div>
+                <div class="slds-media__body">
+                  <h2>
+                    <div class="slds-card__header-link slds-truncate slds-text-align_left" title="Erp Orders" style="line-height:0;">
+                      <div class="slds-text-title_caps slds-truncate" style="display:inline-block; max-width: 25rem">
+                          ERP Orders
                       </div>
-                    </h2>
-                  </div>
-                  <div class="count">
-                    {{recordSize erps}}
-                  </div>
-                </header>
-              </div>
-              <div class="slds-card__body">
-                <table class="slds-table slds-table_bordered slds-table_cell-buffer slds-table_fixed-layout">
-                  <thead>
-                    <tr class="slds-text-title_caps">
-                      <th scope="col">
-                        Order Number
-                      </th>
-                      <th scope="col">
-                        Account
-                      </th>
-                      <th scope="col" style="width: 15%">
-                        Stage
-                      </th>
-                      <th scope="col">
-                        Created Date
-                      </th>
-                      <th scope="col">
-                        Delivery Date
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {{#each erps}}
-                    <tr>
-                      <th scope="row">
-                        <a href="javascript:void(0);" class="erp-link" data-record-id="{{this.Id}}">
-                          {{ this.Name }}
-                        </a>
-                      </th>
-                      <th scope="row">
-                        <div class="slds-truncate">{{this.AccountName}}</div>
-                      </th>
-                      <th scope="row">
-                        <div class="slds-truncate">{{this.Stage}}</div>
-                      </th>
-                      <th scope="row">
-                        {{this.CreatedDate}}
-                      </th>
-                      <th scope="row">
-                        {{this.DeliveryDate}}
-                      </th>
-                    </tr>
-                    {{/each}}
-                  </tbody>
-                </table>
-              </div>
+                    </div>
+                  </h2>
+                </div>
+                <div class="count">
+                  {{recordSize erps}}
+                </div>
+              </header>
+            </div>
+            <div class="slds-card__body">
+              <table class="slds-table slds-table_bordered slds-table_cell-buffer slds-table_fixed-layout">
+                <thead>
+                  <tr class="slds-text-title_caps">
+                    <th scope="col">
+                      Order Number
+                    </th>
+                    <th scope="col">
+                      Account
+                    </th>
+                    <th scope="col" style="width: 15%">
+                      Stage
+                    </th>
+                    <th scope="col">
+                      Created Date
+                    </th>
+                    <th scope="col">
+                      Delivery Date
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {{#each erps}}
+                  <tr>
+                    <th scope="row">
+                      <a href="javascript:void(0);" class="erp-link" data-record-id="{{this.Id}}">
+                        {{ this.Name }}
+                      </a>
+                    </th>
+                    <th scope="row">
+                      <div class="slds-truncate">{{this.AccountName}}</div>
+                    </th>
+                    <th scope="row">
+                      <div class="slds-truncate">{{this.Stage}}</div>
+                    </th>
+                    <th scope="row">
+                      {{this.CreatedDate}}
+                    </th>
+                    <th scope="row">
+                      {{this.DeliveryDate}}
+                    </th>
+                  </tr>
+                  {{/each}}
+                </tbody>
+              </table>
+            </div>
 
-            </article>
-            {{/if}}
-        </div>
-      </section>
-    </script>
+          </article>
+          {{/if}}
+      </div>
+    </section>
+  </script>
 
-    <script>
-        $(document).ready(function() {
-            $('.lgnd').css({
-                'max-height' : '100%',
-                'overflow' : 'none'
-            })
-            $('.lgnd').show();
-            initTab();
-        });
+  <script>
+    $(document).ready(function () {
+      $(".lgnd").css({
+        "max-height": "100%",
+        overflow: "none"
+      });
+      $(".lgnd").show();
+      initTab();
+    });
 
-        var dealerOrderTemplate = Handlebars.compile( $('#dealer-order-details-tmpl').html() ),
-            retailOrderTemplate = Handlebars.compile( $('#retail-order-details-tmpl').html() );
-        var iconMap = {
-          partnerERP: "{!URLFOR($Asset.SLDS, 'assets/icons/standard-sprite/svg/symbols.svg#account')}",
-          retailERP: "{!URLFOR($Asset.SLDS, 'assets/icons/standard-sprite/svg/symbols.svg#person_account')}",
-          opportunity: "{!URLFOR($Asset.SLDS, 'assets/icons/standard-sprite/svg/symbols.svg#opportunity')}"
-        };
+    var dealerOrderTemplate = Handlebars.compile($("#dealer-order-details-tmpl").html()),
+      retailOrderTemplate = Handlebars.compile($("#retail-order-details-tmpl").html());
+    var iconMap = {
+      partnerERP: "{!URLFOR($Asset.SLDS, 'assets/icons/standard-sprite/svg/symbols.svg#account')}",
+      retailERP: "{!URLFOR($Asset.SLDS, 'assets/icons/standard-sprite/svg/symbols.svg#person_account')}",
+      opportunity: "{!URLFOR($Asset.SLDS, 'assets/icons/standard-sprite/svg/symbols.svg#opportunity')}"
+    };
 
-        Handlebars.registerHelper( 'recordSize', function(records) {
-          return new Handlebars.SafeString( records.length)
-        });
+    Handlebars.registerHelper("recordSize", function (records) {
+      return new Handlebars.SafeString(records.length);
+    });
 
-        Handlebars.registerHelper( 'recordIcon', function( saleType) {
-          return new Handlebars.SafeString( iconMap[saleType]);
-        });
+    Handlebars.registerHelper("recordIcon", function (saleType) {
+      return new Handlebars.SafeString(iconMap[saleType]);
+    });
 
-        $('.lgnd').on('change', '.reservedShipment', function(e) {
-            var $this = $(this),
-                shipId = $this.data('ship-id'),
-                prodId = $this.data('product-id'),
-                lot = $this.data('lot'),
-                resv = $this.val();
-            updateReservedShipment( shipId, resv, prodId, lot )
-            .then(
-                function() {
-                    updateShipmentsTable(shipId, prodId,lot);
-                },
-                function(err) {
-                    alert(err);
-                }
-            );
-        });
+    $(".lgnd").on("change", ".reservedShipment", function (e) {
+      var $this = $(this),
+        shipId = $this.data("ship-id"),
+        prodId = $this.data("product-id"),
+        lot = $this.data("lot"),
+        resv = $this.val();
+      updateReservedShipment(shipId, resv, prodId, lot).then(
+        function () {
+          updateShipmentsTable(shipId, prodId, lot);
+        },
+        function (err) {
+          alert(err);
+        }
+      );
+    });
 
-        $('.lgnd').on('mouseenter', '.popup-orders', function(e) {
-          e.preventDefault();
-          showpopupOrders( $(this) );
-        })
-        .on( 'mouseleave', '.popup-orders', function(e) {
-          $(this).find('.dynamic-details').remove();
-        });
+    $(".lgnd")
+      .on("mouseenter", ".popup-orders", function (e) {
+        e.preventDefault();
+        showpopupOrders($(this));
+      })
+      .on("mouseleave", ".popup-orders", function (e) {
+        $(this).find(".dynamic-details").remove();
+      });
 
-        $('.lgnd').on('click', '.erp-link', function(e) {
-          e.preventDefault();
-          var recId = $(this).data('record-id');
-          sforce.one.navigateToSObject(recId);
-        });
+    $(".lgnd").on("click", ".erp-link", function (e) {
+      e.preventDefault();
+      var recId = $(this).data("record-id");
+      sforce.one.navigateToSObject(recId);
+    });
 
-        function showpopupOrders( $ele )
-        {
-          var data = $ele.data('dealer-orders'),
-              acctType = $ele.data('acct-type'),
-              $td = $ele.parent(),
-              h = $ele.outerHeight(),
-              w = $ele.outerWidth(),
-              $cont = $('<div></div>');
-console.log(acctType);
-console.log( data );
-          if( Object.keys(data).length > 0 )
-          {
-            $cont.addClass('dynamic-details');
-            $cont.css({ display:'none',
-                        top: (h*2) + 'px',
-                        position:'absolute' });
+    function showpopupOrders($ele) {
+      var data = $ele.data("dealer-orders"),
+        acctType = $ele.data("acct-type"),
+        $td = $ele.parent(),
+        h = $ele.outerHeight(),
+        w = $ele.outerWidth(),
+        $cont = $("<div></div>");
+      console.log(acctType);
+      console.log(data);
+      if (Object.keys(data).length > 0) {
+        $cont.addClass("dynamic-details");
+        $cont.css({ display: "none", top: h * 2 + "px", position: "absolute" });
 
-            if( acctType == 'partner')
-            {
-              $cont.append( dealerOrderTemplate( {data: data} ) );
-            }
-            if( acctType == 'retail')
-            {
-              var opps = data['Opportunities'],
-                  erps = data['ERP Orders'];
-                  console.log('opps');
-                  console.log(opps);
-                  console.log('erps');
-                  console.log(erps);
-              $cont.append( retailOrderTemplate( {opps: opps, erps: erps} ) );
-            }
-            $ele.append( $cont );
-            var popupW = $ele.find('.slds-popover').outerWidth();
-            console.log(popupW);
-            $cont.css('left', ( ((popupW/2)-(w/2)) * -1 ) + 'px');
-            $ele.find('.dynamic-details').show();
+        if (acctType == "partner") {
+          $cont.append(dealerOrderTemplate({ data: data }));
+        }
+        if (acctType == "retail") {
+          var opps = data["Opportunities"],
+            erps = data["ERP Orders"];
+          console.log("opps");
+          console.log(opps);
+          console.log("erps");
+          console.log(erps);
+          $cont.append(retailOrderTemplate({ opps: opps, erps: erps }));
+        }
+        $ele.append($cont);
+        var popupW = $ele.find(".slds-popover").outerWidth();
+        console.log(popupW);
+        $cont.css("left", (popupW / 2 - w / 2) * -1 + "px");
+        $ele.find(".dynamic-details").show();
+      }
+    }
+
+    function showLoading() {
+      $(".slds-spinner_container").show();
+    }
+    function hideLoading() {
+      $(".slds-spinner_container").hide();
+    }
+    function initTab() {
+      //$("#testabc").css("height", calcDataTableHeight() + 150);
+
+      // var height = $('#testabc').height();
+      // height = (height - 200) +'px';
+      // style="height: calc(100vh - 300px);"
+      var height;
+      function isLightningExperienceOrSalesforce1() {
+        return typeof sforce != "undefined" && sforce && !!sforce.one;
+      }
+
+      if (isLightningExperienceOrSalesforce1()) {
+        height = window.innerHeight - 170;
+      } else {
+        height = window.innerHeight - 320;
+      }
+
+      if (height <= 50) {
+        height = 100;
+      }
+
+      $("#tableData").DataTable({
+        scrollY: height,
+
+        scrollCollapse: false,
+        destroy: true,
+        scrollX: true,
+        bPaginate: false,
+        bInfo: false,
+        lengthMenu: [
+          [10, 25, 50, -1],
+          [10, 25, 50, "All"]
+        ],
+
+        bAutoWidth: false,
+
+        columnDefs: [{ targets: 2, width: "100px" }],
+
+        fixedColumns: {
+          leftColumns: 2
+        }
+      });
+      $(".tooltip").tooltip({
+        content: function () {
+          return $(this).attr("title");
+        }
+      });
+      hideLoading();
+    }
+
+    function updateReservedForDisplay(productID, quantity, productName, lotName) {
+      this.updateAvailableToShipDealer(productID, lotName);
+
+      var lotVal = document.getElementById("selectedLot").value;
+
+      Visualforce.remoting.Manager.invokeAction(
+        "{!$RemoteAction.InventoryAllocations_Old.saveForDisplay}",
+        productID,
+        quantity,
+        productName,
+        lotVal,
+        function (result, event) {
+          if (event.status) {
+            //var availableToshipDelears = $('#availableToshipDelears')[0];
+            updateShipmentsTable("", productID, lotName);
+          } else {
+            alert(event.message);
           }
         }
+      );
+    }
 
-        function showLoading(){
-            $('.slds-spinner_container').show();
-        }
-        function hideLoading(){
-            $('.slds-spinner_container').hide();
-        }
-        function initTab() {
-            //$("#testabc").css("height", calcDataTableHeight() + 150);
+    function updateAvailableForRetail(productID, productName, lotName) {
+      var itemToUpdate = $("#availableForRetail-" + productID + "-" + lotName);
+      var itemOriginal = $("#reservedForRetail-" + productID + "-" + lotName);
+      var itemSpecial = $("#specials-" + productID + "-" + lotName)[0];
+      var retailSold = $("#retailSold-" + productID + "-" + lotName)[0];
+      var lotVal = document.getElementById("selectedLot").value;
+      var self = this;
+      console.log("1::", parseInt(itemOriginal.val()));
+      console.log("2::", parseInt(itemSpecial.className));
+      console.log("3::", parseInt(retailSold.innerHTML));
 
-            // var height = $('#testabc').height();
-            // height = (height - 200) +'px';
-            // style="height: calc(100vh - 300px);"
-            var height;
-            function isLightningExperienceOrSalesforce1() {
-                return((typeof sforce != 'undefined') && sforce && (!!sforce.one));
+      //itemToToUpdate.innerHTML = parseInt(itemOriginal.value) + parseInt(itemSpecial.className) -  parseInt(retailSold.innerHTML);
+
+      Visualforce.remoting.Manager.invokeAction(
+        "{!$RemoteAction.InventoryAllocations_Old.saveForRetail}",
+        productID,
+        itemOriginal.val(),
+        productName,
+        lotVal,
+        function (result, event) {
+          if (event.status) {
+            /* changed by Dave Hahn Jun 07/17 */
+            var v = parseInt(itemOriginal.val()) - parseInt(retailSold.innerHTML);
+            itemToUpdate.html(v);
+            itemToUpdate.data("field-value", v);
+            self.updateAvailableToShipDealer(productID, lotName);
+            updateShipmentsTable("", productID, lotName);
+          } else {
+            alert(event.message);
+          }
+        },
+        { escape: true }
+      );
+    }
+
+    function updateAvailableToShipDealer(productID, lotName) {
+      var itemShipDealer = $("#availableToshipDelears-" + productID + "-" + lotName)[0];
+      //console.log(itemShipDealer);
+      var itemForDisplay = $("#reservedForDisplay-" + productID + "-" + lotName)[0];
+      var itemForRetail = $("#reservedForRetail-" + productID + "-" + lotName)[0];
+
+      var itemStock = $("#stock-" + productID + "-" + lotName)[0];
+      var itemSpecial = $("#specials-" + productID + "-" + lotName)[0];
+      var itemDamaged = $("#damaged-" + productID + "-" + lotName)[0];
+      var dealerOrder = $("#dealerOrders-" + productID + "-" + lotName)[0];
+      var netAvailable = $("#netAvailable-" + productID + "-" + lotName);
+      //console.log('#netAvailable-' + productID+'-'+lotName);
+      //itemShipDealer.innerHTML = itemStock.value - itemForDisplay.value - itemForRetail.value - parseInt(itemDamaged.className) - parseInt(itemSpecial.className);
+      //console.log(netAvailable);
+      //console.log(dealerOrder);
+      itemShipDealer.innerHTML = itemStock.value - itemForDisplay.value - itemForRetail.value;
+      var netAvailableVal = itemStock.value - itemForRetail.value - itemForDisplay.value - dealerOrder.innerHTML;
+      netAvailable.html(netAvailableVal);
+      netAvailable.data("field-value", netAvailableVal);
+      //console.log(itemStock.value - itemForRetail.value - itemForDisplay.value - dealerOrder.innerHTML);
+    }
+
+    function updateReservedShipment(shipID, quantity, productID, lotName) {
+      //this.updateAvailableShipment(shipID,productID,lotName);
+      return new Promise(function (resolve, reject) {
+        var $ind = $('<div class="subTable-busy"></div>');
+        $ind.insertBefore($("#subTable-" + productID + "-" + lotName));
+        Visualforce.remoting.Manager.invokeAction(
+          "{!$RemoteAction.InventoryAllocations_Old.saveShipmentReseved}",
+          shipID,
+          quantity,
+          function (result, event) {
+            if (event.status) {
+              //var reservedShipment = $('#reservedShipment')[0];
+              $ind.remove();
+              resolve();
             }
+          }
+        );
+      });
+    }
 
-            if( isLightningExperienceOrSalesforce1() ) {
-                height = window.innerHeight- 170;
-            }
-            else {
-                height = window.innerHeight-320;
-            }
+    function updateShipmentsTable(shipID, productID, lotName) {
+      console.log("productId = " + productID);
+      console.log("lotName = " + lotName);
+      var netAvailable = $("#netAvailable-" + productID + "-" + lotName).data("field-value"),
+        retailAvailable = $("#availableForRetail-" + productID + "-" + lotName).data("field-value"),
+        rows = $("#subTable-" + productID + "-" + lotName)
+          .find("tbody")
+          .children("tr");
 
-            if(height <= 50) {
-                height = 100;
-            }
+      for (var i = 0; i < rows.length; i++) {
+        var $availDealer = $(rows[i]).find('[data-label="Available"] div input'),
+          $availRetail = $(rows[i]).find('[data-label="AvailableRetail"] div input'),
+          shipmentQuantity = $(rows[i]).find('[data-label="Quantity"] div div').data("value"),
+          reservedQuantity = $(rows[i]).find('[data-label="Reserved"] div input').val(),
+          availDealerValue = parseInt(netAvailable) + parseInt(shipmentQuantity) - parseInt(reservedQuantity),
+          availRetailValue = parseInt(retailAvailable) + parseInt(reservedQuantity);
+        $availDealer.val(availDealerValue);
+        $availRetail.val(availRetailValue);
+        netAvailable = availDealerValue;
+        retailAvailable = availRetailValue;
+      }
+    }
 
-            $('#tableData').DataTable( {
+    function changeColorYears(header) {
+      var h1s = document.getElementsByTagName("h1");
+      for (var i = 0; i < h1s.length; i++) {
+        var h1 = h1s[i];
+        //h1.style.background = "rgb(246, 246, 246)";
+        //h1.style.color = "#222";
+      }
+      //header.style.background = "#008CBA";
+      //header.style.color = "#fff";
+      console.log(header);
+      console.log("22::" + header[header.selectedIndex].value);
+      console.log("Header id::" + header[header.selectedIndex].id);
+      //this.filterYearJS(header.id);
+      this.filterYearJS(header[header.selectedIndex].id);
+    }
 
-                "scrollY": height,
+    function changeColorType(header) {
+      var h3s = document.getElementsByTagName("h3");
+      for (var i = 0; i < h3s.length; i++) {
+        var h3 = h3s[i];
+        //h3.style.background = "rgb(246, 246, 246)";
+        //h3.style.color = "#222";
+      }
 
-                "scrollCollapse": false,
-                "destroy": true,
-                "scrollX": true,
-                "bPaginate" : false,
-                "bInfo": false,
-                "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+      //header.style.background = "#008CBA";
+      //header.style.color = "#fff";
+      //this.filterTypeJS(header.id);
+      console.log("22::" + header[header.selectedIndex].value);
+      console.log("Header id::" + header[header.selectedIndex].id);
+      this.filterTypeJS(header[header.selectedIndex].id);
+    }
 
-                "bAutoWidth": false,
-
-                "columnDefs": [{ targets: 2, width: '100px'}],
-
-                fixedColumns:   {
-                    leftColumns: 2
-                }
-
-            });
-            $('.tooltip').tooltip({
-                content : function(){
-                    return $(this).attr('title');
-                }
-            });
-            hideLoading();
-        }
-
-
-
-
-        function updateReservedForDisplay(productID,quantity,productName,lotName) {
-            this.updateAvailableToShipDealer(productID,lotName);
-
-            var lotVal = document.getElementById("selectedLot").value;
-
-            Visualforce.remoting.Manager.invokeAction(
-                '{!$RemoteAction.InventoryAllocations_Old.saveForDisplay}',
-                productID,
-                quantity,
-                productName,
-                lotVal,
-                function(result, event) {
-                    if (event.status) {
-                        //var availableToshipDelears = $('#availableToshipDelears')[0];
-                        updateShipmentsTable('', productID,lotName);
-                    }
-                    else {
-                        alert( event.message );
-                    }
-                }
-            );
-        }
-
-        function updateAvailableForRetail(productID,productName,lotName) {
-
-            var itemToUpdate = $('#availableForRetail-' + productID+'-'+lotName);
-            var itemOriginal = $('#reservedForRetail-' + productID+'-'+lotName);
-            var itemSpecial = $('#specials-' + productID+'-'+lotName)[0];
-            var retailSold = $('#retailSold-' + productID+'-'+lotName)[0];
-            var lotVal = document.getElementById("selectedLot").value;
-            var self = this;
-            console.log('1::',parseInt(itemOriginal.val()));
-            console.log('2::',parseInt(itemSpecial.className));
-            console.log('3::',parseInt(retailSold.innerHTML));
-
-            //itemToToUpdate.innerHTML = parseInt(itemOriginal.value) + parseInt(itemSpecial.className) -  parseInt(retailSold.innerHTML);
-
-
-            Visualforce.remoting.Manager.invokeAction(
-                '{!$RemoteAction.InventoryAllocations_Old.saveForRetail}',
-                productID,
-                itemOriginal.val(),
-                productName,
-                lotVal,
-                function(result, event){
-                    if (event.status) {
-                        /* changed by Dave Hahn Jun 07/17 */
-                        var v = parseInt(itemOriginal.val())  -  parseInt(retailSold.innerHTML);
-                        itemToUpdate.html( v );
-                        itemToUpdate.data('field-value', v);
-                        self.updateAvailableToShipDealer(productID,lotName);
-                        updateShipmentsTable('', productID,lotName);
-                    }
-                    else {
-                        alert( event.message );
-                    }
-                },
-                {escape: true}
-            );
-        }
-
-        function updateAvailableToShipDealer(productID,lotName) {
-            var itemShipDealer = $('#availableToshipDelears-' + productID+'-'+lotName)[0];
-            //console.log(itemShipDealer);
-            var itemForDisplay = $('#reservedForDisplay-' + productID+'-'+lotName)[0];
-            var itemForRetail = $('#reservedForRetail-' + productID+'-'+lotName)[0];
-
-            var itemStock = $('#stock-' + productID+'-'+lotName)[0];
-            var itemSpecial = $('#specials-' + productID+'-'+lotName)[0];
-            var itemDamaged = $('#damaged-' + productID+'-'+lotName)[0];
-            var dealerOrder = $('#dealerOrders-'+productID+'-'+lotName)[0];
-            var netAvailable = $('#netAvailable-' + productID+'-'+lotName);
-            //console.log('#netAvailable-' + productID+'-'+lotName);
-            //itemShipDealer.innerHTML = itemStock.value - itemForDisplay.value - itemForRetail.value - parseInt(itemDamaged.className) - parseInt(itemSpecial.className);
-            //console.log(netAvailable);
-            //console.log(dealerOrder);
-            itemShipDealer.innerHTML = itemStock.value - itemForDisplay.value - itemForRetail.value;
-            var netAvailableVal = itemStock.value - itemForRetail.value - itemForDisplay.value - dealerOrder.innerHTML;
-            netAvailable.html( netAvailableVal );
-            netAvailable.data('field-value', netAvailableVal);
-            //console.log(itemStock.value - itemForRetail.value - itemForDisplay.value - dealerOrder.innerHTML);
-        }
-
-        function updateReservedShipment(shipID,quantity,productID,lotName) {
-
-            //this.updateAvailableShipment(shipID,productID,lotName);
-            return new Promise( function( resolve, reject ) {
-                var $ind = $('<div class="subTable-busy"></div>');
-                $ind.insertBefore( $('#subTable-'+productID+'-'+lotName) );
-                Visualforce.remoting.Manager.invokeAction(
-                    '{!$RemoteAction.InventoryAllocations_Old.saveShipmentReseved}',
-                    shipID,
-                    quantity,
-                    function(result, event){
-                        if (event.status) {
-                           //var reservedShipment = $('#reservedShipment')[0];
-                           $ind.remove();
-                           resolve();
-                        }
-                    }
-                );
-            });
-        }
-
-        function updateShipmentsTable(shipID,productID,lotName) {
-            console.log( 'productId = ' + productID );
-            console.log( 'lotName = ' + lotName );
-            var netAvailable = $('#netAvailable-' + productID+'-'+lotName).data('field-value'),
-                retailAvailable = $('#availableForRetail-' + productID+'-'+lotName).data('field-value'),
-                rows = $('#subTable-'+productID+'-'+lotName).find('tbody').children('tr');
-
-            for( var i=0; i < rows.length; i++ )
-            {
-                var $availDealer = $(rows[i]).find('[data-label="Available"] div input'),
-                    $availRetail = $(rows[i]).find('[data-label="AvailableRetail"] div input'),
-                    shipmentQuantity = $(rows[i]).find('[data-label="Quantity"] div div').data('value'),
-                    reservedQuantity = $(rows[i]).find('[data-label="Reserved"] div input').val(),
-                    availDealerValue = parseInt( netAvailable ) + parseInt( shipmentQuantity ) - parseInt( reservedQuantity ),
-                    availRetailValue = parseInt( retailAvailable ) + parseInt( reservedQuantity );
-                    $availDealer.val( availDealerValue );
-                    $availRetail.val( availRetailValue );
-                    netAvailable = availDealerValue;
-                    retailAvailable = availRetailValue;
-            }
-        }
-
-        function changeColorYears(header) {
-            var h1s = document.getElementsByTagName("h1");
-            for (var i = 0; i < h1s.length; i++) {
-                var h1 = h1s[i];
-                //h1.style.background = "rgb(246, 246, 246)";
-                //h1.style.color = "#222";
-            }
-                //header.style.background = "#008CBA";
-                //header.style.color = "#fff";
-            console.log(header);
-            console.log("22::"+header[header.selectedIndex].value);
-            console.log("Header id::"+header[header.selectedIndex].id);
-            //this.filterYearJS(header.id);
-            this.filterYearJS(header[header.selectedIndex].id);
-        }
-
-        function changeColorType(header) {
-            var h3s = document.getElementsByTagName("h3");
-            for (var i = 0; i < h3s.length; i++) {
-                var h3 = h3s[i];
-                //h3.style.background = "rgb(246, 246, 246)";
-                //h3.style.color = "#222";
-            }
-
-            //header.style.background = "#008CBA";
-            //header.style.color = "#fff";
-            //this.filterTypeJS(header.id);
-            console.log("22::"+header[header.selectedIndex].value);
-            console.log("Header id::"+header[header.selectedIndex].id);
-            this.filterTypeJS(header[header.selectedIndex].id);
-        }
-
-
-        //$('.slds-spinner_container').hide();
-    </script>
+    //$('.slds-spinner_container').hide();
+  </script>
 </apex:page>

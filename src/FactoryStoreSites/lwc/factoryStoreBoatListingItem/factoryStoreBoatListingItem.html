@@ -6,16 +6,19 @@
 <template>
   <li>
     <article class="modelListing">
-
       <header class="modelListing__intro">
         <h3 class="modelListing__name heading heading--special" data-series-class={seriesClass}>{boatName}</h3>
         <span class="modelListing__photo" style={modelListingPhoto}></span>
       </header>
 
       <div class="modelListing__outlineWrapper">
-        <c-factory-store-current-inventory-list boat={boat} boat-id={boat.Base.Id} location-name={locationName} onupdatestockvalue={handleUpdateStockValue}></c-factory-store-current-inventory-list>
+        <c-factory-store-current-inventory-list
+          boat={boat}
+          boat-id={boat.Base.Id}
+          location-name={locationName}
+          onupdatestockvalue={handleUpdateStockValue}
+        ></c-factory-store-current-inventory-list>
       </div>
-
     </article>
   </li>
 </template>

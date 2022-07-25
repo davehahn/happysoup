@@ -2,29 +2,24 @@
  - Created by dave on 2020-04-15.
  -->
 
-<apex:page showHeader="false"
-           sidebar="false"
-           applyHtmlTag="true"
-           applyBodyTag="false"
-           docType="html-5.0">
-
+<apex:page showHeader="false" sidebar="false" applyHtmlTag="true" applyBodyTag="false" docType="html-5.0">
   <style>
     html {
-      background: #F4F4F4;
+      background: #f4f4f4;
     }
 
     .sqr-payment-container {
-      background: #F4F4F4;
+      background: #f4f4f4;
     }
 
     .sqr-payment-input {
-      background: #FFF;
+      background: #fff;
       border: 1px solid transparent;
       padding: 10px 20px;
       border-radius: 20px;
       font-size: 14px;
       color: #666;
-      width:calc( 100% - 1.5rem );
+      width: calc(100% - 1.5rem);
       height: 39px;
       margin: 0 0.75rem 24px 0.75rem;
       box-sizing: border-box;
@@ -36,7 +31,7 @@
 
     .sqr-payment-input--focus {
       outline: none;
-      border: 1px solid #CCC;
+      border: 1px solid #ccc;
     }
 
     .sqr-payment-container label {
@@ -45,39 +40,32 @@
       margin: 0 33px 8px;
       display: block;
     }
-
   </style>
 
   <c:Square_PaymentForm />
 
   <script>
-
-    window.addEventListener('message', function(event) {
-      if( event.origin === window.location.origin &&
-          event.data.messageType === 'doPayment' )
-      {
-        console.log( event.data );
-        doPostPayment( event.data.paymentAmount, event.data.reference_id )
-        .then( (result) =>
-        {
-          console.log( 'visualforce page' );
-          console.log( result )
-          const message = {
-            status: 'success',
-            response: result
-          };
-          window.parent.postMessage(message, window.location.origin );
-        })
-        .catch( (errors) => {
-          const message = {
-            status: 'error',
-            errors: errors
-          };
-          window.parent.postMessage(message, window.location.origin );
-        });
+    window.addEventListener("message", function (event) {
+      if (event.origin === window.location.origin && event.data.messageType === "doPayment") {
+        console.log(event.data);
+        doPostPayment(event.data.paymentAmount, event.data.reference_id)
+          .then((result) => {
+            console.log("visualforce page");
+            console.log(result);
+            const message = {
+              status: "success",
+              response: result
+            };
+            window.parent.postMessage(message, window.location.origin);
+          })
+          .catch((errors) => {
+            const message = {
+              status: "error",
+              errors: errors
+            };
+            window.parent.postMessage(message, window.location.origin);
+          });
       }
     });
-
   </script>
-
 </apex:page>

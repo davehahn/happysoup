@@ -16,9 +16,7 @@ private class arInsuranceDocuments_Test {
 
   private static void initPB() {
     if (customPb == null) {
-      Id salesRtId = new Application_RecordType()
-        .getPricebookRecordTypes()
-        .getSalesId();
+      Id salesRtId = new Application_RecordType().getPricebookRecordTypes().getSalesId();
       customPb = new Pricebook2(
         Name = 'CustomPb',
         isActive = true,
@@ -41,16 +39,8 @@ private class arInsuranceDocuments_Test {
   }
 
   private static void erpInit() {
-    GMBLASERP__Serial_Number__c serial = Factory_SerialNumber.insertFullSerial(
-      'Boat',
-      'Pontoon',
-      '1234567890'
-    );
-    erp = Factory_ERPOrder.buildERP(
-      personAccount,
-      serial.Id,
-      gcConstants.idRtProjectBoatSale
-    );
+    GMBLASERP__Serial_Number__c serial = Factory_SerialNumber.insertFullSerial('Boat', 'Pontoon', '1234567890');
+    erp = Factory_ERPOrder.buildERP(personAccount, serial.Id, gcConstants.idRtProjectBoatSale);
     erp.GMBLASERP__Pricebook__c = customPb.Id;
     gcProject.disableTrigger = true;
     insert erp;
@@ -71,16 +61,8 @@ private class arInsuranceDocuments_Test {
       insert listContacts;
 
       List<OpportunityContactRole> listOCR = new List<OpportunityContactRole>{
-        new OpportunityContactRole(
-          OpportunityId = opp.Id,
-          ContactId = buyer.Id,
-          Role = 'Buyer'
-        ),
-        new OpportunityContactRole(
-          OpportunityId = opp.Id,
-          ContactId = coBuyer.Id,
-          Role = 'Co-Buyer'
-        )
+        new OpportunityContactRole(OpportunityId = opp.Id, ContactId = buyer.Id, Role = 'Buyer'),
+        new OpportunityContactRole(OpportunityId = opp.Id, ContactId = coBuyer.Id, Role = 'Co-Buyer')
       };
       insert listOCR;
     }
@@ -119,9 +101,7 @@ private class arInsuranceDocuments_Test {
     initPB();
     insuranceProductsByPlanId = new Map<Id, List<Product2>>();
     insurancePlans = new List<InsurancePlan__c>();
-    insurancePlans.add(
-      new InsurancePlan__c(Name = 'Insurance Plan One', Profit_Percent__c = 50)
-    );
+    insurancePlans.add(new InsurancePlan__c(Name = 'Insurance Plan One', Profit_Percent__c = 50));
     insert insurancePlans;
     insuranceProductsByPlanId.put(insurancePlans[0].Id, new List<Product2>());
     insuranceProductsByPlanId.get(insurancePlans[0].Id)
@@ -200,19 +180,12 @@ private class arInsuranceDocuments_Test {
 
     Test.stopTest();
     arInsuranceDocuments.retrieveERPDetails(erp.Id);
-    String jsonResult = arInsuranceDocuments.generateInsurancePDF(
-      erp.Id,
-      'Companion Maxum'
-    );
+    String jsonResult = arInsuranceDocuments.generateInsurancePDF(erp.Id, 'Companion Maxum');
     List<Map<String, String>> result = (List<Map<String, String>>) JSON.deserialize(
       jsonResult,
       List<Map<String, String>>.class
     );
     System.assertEquals(result.size(), 1);
-    arInsuranceDocuments.deleteDocument(
-      erp.Id,
-      result[0].get('idErpDoc'),
-      result[0].get('idDoc')
-    );
+    arInsuranceDocuments.deleteDocument(erp.Id, result[0].get('idErpDoc'), result[0].get('idDoc'));
   }
 }

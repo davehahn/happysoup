@@ -1,74 +1,72 @@
-<apex:page standardController="Opportunity"
-           extensions="OpportunityExt"
-           sidebar="true"
-           docType="html-5.0">
+<apex:page standardController="Opportunity" extensions="OpportunityExt" sidebar="true" docType="html-5.0">
   <apex:stylesheet value="{!URLFOR($Resource.Foundation, 'css/normalize.css')}" />
   <apex:stylesheet value="{!URLFOR($Resource.Foundation, 'css/foundation.css')}" />
   <apex:stylesheet value="{!URLFOR($Resource.salesforceFoundationOverRides)}" />
 
   <style type="text/css">
-
-
-  /* Over ride standard page title positioning */
+    /* Over ride standard page title positioning */
 
     .bPageTitle {
-      text-align:center;
+      text-align: center;
     }
 
-    .bPageTitle .content{
-      float:none !important;
-      margin:auto;
+    .bPageTitle .content {
+      float: none !important;
+      margin: auto;
     }
 
     .bPageTitle .content img {
-      float:none;
+      float: none;
     }
 
     /* over ride foundation standard row width */
     .row {
-      max-width:80rem;
+      max-width: 80rem;
     }
 
     .row.button_row {
       padding-top: 1rem;
-      border-top: 1px solid #0070C9;
+      border-top: 1px solid #0070c9;
       margin-top: 1rem;
     }
 
     /* overides for salesforce inserted elements to help play better with Foundation */
     .columns span.lookupInput input {
-      display:inline-block;
-      width:96%;
+      display: inline-block;
+      width: 96%;
     }
 
     select.placeHolder {
-      color:#959595;
+      color: #959595;
     }
 
     .columns span.dateInput input {
-      width:75%;
+      width: 75%;
     }
 
-    .columns span.dateOnlyInput input, .columns span.dateInput input {
-      display:inline-block;
+    .columns span.dateOnlyInput input,
+    .columns span.dateInput input {
+      display: inline-block;
     }
 
-    .columns span.dateOnlyInput span.dateFormat, .columns span.dateInput span.dateFormat {
-      margin-left:5px;
+    .columns span.dateOnlyInput span.dateFormat,
+    .columns span.dateInput span.dateFormat {
+      margin-left: 5px;
     }
 
-    .columns input.error, .columns select.error {
-      border-color:red;
+    .columns input.error,
+    .columns select.error {
+      border-color: red;
     }
 
     .columns div.errorMsg {
-      position:relative;
-      top:-15px;
+      position: relative;
+      top: -15px;
     }
 
     .columns .dateInput + .errorMsg {
-      top:0px;
-      margin-bottom:15px;
+      top: 0px;
+      margin-bottom: 15px;
     }
 
     .row.button_row .button {
@@ -82,28 +80,26 @@
       font-family: inherit;
     }
 
-
-
-  /* ============================================================================ */
+    /* ============================================================================ */
 
     .large-text-align-right {
       text-align: right;
     }
 
     h1.pageType {
-      color:#0070C9 !important;
+      color: #0070c9 !important;
     }
 
     h2.pageDescription {
-      color:#0070C9;
+      color: #0070c9;
     }
 
     h3 {
-      margin:0px;
-      padding:0px;
-      padding-left:25px;
-      padding-bottom:4px;
-      color: #0070C9;
+      margin: 0px;
+      padding: 0px;
+      padding-left: 25px;
+      padding-bottom: 4px;
+      color: #0070c9;
       font-family: "Open Sans", "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
       width: 100%;
       max-width: 80rem;
@@ -111,11 +107,11 @@
       display: block;
       font-size: 1.4em;
       font-weight: 300;
-      border-bottom: 1px solid #0070C9;
+      border-bottom: 1px solid #0070c9;
     }
 
     .select_controlled.hidden {
-      display:none;
+      display: none;
     }
 
     .requiredInput select,
@@ -123,241 +119,176 @@
     .requiredInput textarea {
       border-left: 3px solid red;
     }
-
   </style>
   <apex:sectionHeader title="Account: {!account.Name}" subtitle="{!pageSubTitle}" />
   <div class="row">
     <div class="large-8 large-offset-2 columns">
-      <apex:messages styleClass="alert-box alert"/>
+      <apex:messages styleClass="alert-box alert" />
     </div>
   </div>
 
-  <apex:form >
+  <apex:form>
+    <h3 class="lead">Opportunity Information</h3>
 
-  <h3 class="lead">Opportunity Information</h3>
-
-
-  <div class="row">
-
-    <div class="large-12 columns">
-
-      <div class="row ">
-
-        <div class="large-2 columns large-text-align-right">
-          Opportunity Name
+    <div class="row">
+      <div class="large-12 columns">
+        <div class="row">
+          <div class="large-2 columns large-text-align-right">Opportunity Name</div>
+          <div class="large-4 columns">
+            <apex:inputField value="{!Opportunity.Name}" label="Opportunity Name" required="true" />
+          </div>
+          <div class="large-2 columns large-text-align-right">Owner</div>
+          <div class="large-4 columns">
+            <apex:outputText value="{!$User.FirstName} {!$User.LastName}" label="Opportunity Owner" />
+          </div>
         </div>
-        <div class="large-4 columns">
-          <apex:inputField value="{!Opportunity.Name}"
-                           label="Opportunity Name"
-                           required="true" />
+
+        <div class="row">
+          <div class="large-2 columns large-text-align-right">Account Name</div>
+          <div class="large-4 columns">
+            <apex:inputField value="{!Opportunity.AccountId}" label="Account Name" required="true" />
+          </div>
+          <!-- Lead Source Here -->
+          <div class="large-2 columns large-text-align-right">Lead Source</div>
+          <div class="large-4 columns">
+            <apex:inputField id="leadSource" value="{!Opportunity.LeadSource}" required="false" />
+          </div>
         </div>
-        <div class="large-2 columns large-text-align-right">
-          Owner
+
+        <div class="row">
+          <div class="large-2 columns large-text-align-right">
+            <apex:outputLabel value="Stage" for="stageName" />
+          </div>
+          <div class="large-4 columns">
+            <apex:inputField
+              value="{!Opportunity.StageName}"
+              required="true"
+              onchange="setProbability(this); controllingSelectChanged(this, 'reasonLostRow')"
+              id="stageName"
+            />
+          </div>
+          <div class="large-2 columns large-text-align-right">Campaign Source</div>
+          <div class="large-4 columns">
+            <apex:inputField
+              value="{!Opportunity.CampaignId}"
+              label="Primary Champaign Source"
+              id="campaignSource"
+              required="fasle"
+            />
+          </div>
         </div>
-        <div class="large-4 columns">
-          <apex:outputText value="{!$User.FirstName} {!$User.LastName}"
-                           label="Opportunity Owner" />
+        <!-- /row -->
+
+        <div class="row">
+          <div class="large-2 columns large-text-align-right">Probability (%)</div>
+          <div class="large-4 columns">
+            <apex:inputField value="{!Opportunity.Probability}" required="false" id="probability" />
+          </div>
+          <!--Close Date Here -->
+          <div class="large-2 columns large-text-align-right">Close Date</div>
+          <div class="large-4 columns">
+            <apex:inputField value="{!Opportunity.CloseDate}" id="closeDate" required="true" showDatePicker="true" />
+          </div>
+        </div>
+        <!-- /row -->
+
+        <div class="row">
+          <div class="large-2 columns large-text-align-right">Sales Dept.</div>
+          <div class="large-4 columns">
+            <apex:inputField value="{!Opportunity.Sales_Department__c}" required="false" />
+          </div>
+          <div class="large-6 columns"></div>
+        </div>
+        <!-- /row -->
+        <div id="reasonLostRow" class="select_controlled hidden" data-criteria="Closed Lost">
+          <div class="row">
+            <div class="large-2 columns large-text-align-right">Reason Lost</div>
+            <div class="large-4 columns">
+              <apex:inputField
+                value="{!Opportunity.Reason_Lost__c}"
+                required="false"
+                onchange="controllingSelectChanged(this, 'otherReasonLostRow')"
+              />
+            </div>
+            <div class="large-6 columns"></div>
+          </div>
+          <!-- /row -->
+
+          <div id="otherReasonLostRow" class="row select_controlled hidden" data-criteria="Other">
+            <div class="large-2 columns large-text-align-right">Other Reason Lost</div>
+            <div class="large-4 columns">
+              <apex:inputField value="{!Opportunity.Other_Reason_Lost__c}" required="false" />
+            </div>
+            <div class="large-6 columns"></div>
+          </div>
+          <!-- /row -->
         </div>
       </div>
+    </div>
+    <!-- Opportunity Information -->
 
-      <div class="row ">
+    <h3 class="lead">Finance Information</h3>
 
-        <div class="large-2 columns large-text-align-right ">
-          Account Name
+    <div class="row">
+      <div class="large-12 columns">
+        <div class="row">
+          <div class="large-2 columns large-text-align-right">Payment Method</div>
+          <div class="large-4 columns">
+            <apex:inputField value="{!Opportunity.Payment_Method__c}" required="false" />
+          </div>
+          <div class="large-2 columns large-text-align-right">Deposit</div>
+          <div class="large-4 columns">
+            <apex:inputField value="{!Opportunity.Deposit__c}" label="Deposit" required="false" />
+          </div>
         </div>
-        <div class="large-4 columns">
-          <apex:inputField value="{!Opportunity.AccountId}"
-                           label="Account Name"
-                           required="true" />
+        <!-- /row -->
+
+        <div class="row">
+          <div class="large-2 columns large-text-align-right">Finance Status</div>
+          <div class="large-4 columns">
+            <apex:inputField value="{!Opportunity.Finance_Status__c}" required="false" />
+          </div>
+          <div class="large-2 columns large-text-align-right">
+            <apex:outputLabel value="Deposit Method" for="depositMethod" />
+          </div>
+          <div class="large-4 columns">
+            <apex:inputField
+              value="{!Opportunity.Deposit_Method__c}"
+              id="depositMethod"
+              required="false"
+              onchange="controllingSelectChanged(this, 'otherDepositMethodRow')"
+            />
+          </div>
         </div>
-        <!-- Lead Source Here -->
-        <div class="large-2 columns large-text-align-right">
-          Lead Source
+        <!-- /row -->
+
+        <div id="otherDepositMethodRow" class="row select_controlled hidden" data-criteria="Other">
+          <div class="large-6 columns">&nbsp;</div>
+          <div class="large-2 columns large-text-align-right">
+            <apex:outputLabel value="Deposit Method (other)" for="depositMethodOther" />
+          </div>
+          <div class="large-4 columns">
+            <apex:inputField value="{!Opportunity.Deposit_Method_Other__c}" id="depositMethodOther" required="false" />
+          </div>
         </div>
-        <div class="large-4 columns">
-          <apex:inputField id="leadSource"
-                            value="{!Opportunity.LeadSource}"
-                            required="false" />
+        <!-- /row -->
+
+        <div class="row">
+          <div class="large-2 columns large-text-align-right">Pickup Location</div>
+          <div class="large-4 columns">
+            <apex:inputField value="{!Opportunity.Pickup_Location__c}" required="false" />
+          </div>
+          <div class="large-2 columns large-text-align-right">Delivery Date</div>
+          <div class="large-4 columns">
+            <apex:inputField value="{!Opportunity.Delivery_Date__c}" required="false" />
+          </div>
         </div>
+        <!-- /row -->
       </div>
-
-      <div class="row ">
-
-        <div class="large-2 columns large-text-align-right">
-          <apex:outputLabel value="Stage" for="stageName" />
-        </div>
-        <div class="large-4 columns">
-          <apex:inputField value="{!Opportunity.StageName}"
-                           required="true"
-                           onchange="setProbability(this); controllingSelectChanged(this, 'reasonLostRow')"
-                           id="stageName" />
-        </div>
-        <div class="large-2 columns large-text-align-right ">
-          Campaign Source
-        </div>
-        <div class="large-4 columns">
-          <apex:inputField value="{!Opportunity.CampaignId}"
-                           label="Primary Champaign Source"
-                           id="campaignSource"
-                           required="fasle" />
-        </div>
-
-      </div><!-- /row -->
-
-      <div class="row ">
-
-        <div class="large-2 columns large-text-align-right ">
-          Probability (%)
-        </div>
-        <div class="large-4 columns">
-           <apex:inputField value="{!Opportunity.Probability}"
-                             required="false"
-                             id="probability" />
-        </div>
-       <!--Close Date Here -->
-       <div class="large-2 columns large-text-align-right ">
-          Close Date
-        </div>
-        <div class="large-4 columns">
-           <apex:inputField value="{!Opportunity.CloseDate}"
-                            id="closeDate"
-                            required="true"
-                            showDatePicker="true" />
-        </div>
-
-      </div><!-- /row -->
-
-      <div class="row ">
-
-        <div class="large-2 columns large-text-align-right">
-          Sales Dept.
-        </div>
-        <div class="large-4 columns">
-          <apex:inputField value="{!Opportunity.Sales_Department__c}"
-                           required="false" />
-        </div>
-        <div class="large-6 columns"></div>
-
-      </div><!-- /row -->
-       <div id="reasonLostRow" class="select_controlled hidden" data-criteria="Closed Lost">
-       <div class="row" >
-
-        <div class="large-2 columns large-text-align-right ">
-          Reason Lost
-        </div>
-        <div class="large-4 columns">
-          <apex:inputField value="{!Opportunity.Reason_Lost__c}"
-                           required="false"
-                           onchange="controllingSelectChanged(this, 'otherReasonLostRow')" />
-        </div>
-        <div class="large-6 columns"></div>
-
-      </div><!-- /row -->
-
-      <div id="otherReasonLostRow" class="row select_controlled hidden" data-criteria="Other">
-
-        <div class="large-2 columns large-text-align-right ">
-          Other Reason Lost
-        </div>
-        <div class="large-4 columns">
-          <apex:inputField value="{!Opportunity.Other_Reason_Lost__c}"
-                             required="false" />
-        </div>
-        <div class="large-6 columns"></div>
-
-      </div><!-- /row -->
     </div>
-    </div>
+    <!-- /Finance Information -->
 
-  </div><!-- Opportunity Information -->
-
-
-  <h3 class="lead">Finance Information</h3>
-
-  <div class="row">
-
-    <div class="large-12 columns">
-
-      <div class="row ">
-
-        <div class="large-2 columns large-text-align-right ">
-          Payment Method
-        </div>
-        <div class="large-4 columns">
-            <apex:inputField value="{!Opportunity.Payment_Method__c}"
-                           required="false" />
-        </div>
-        <div class="large-2 columns large-text-align-right">
-          Deposit
-        </div>
-        <div class="large-4 columns">
-          <apex:inputField value="{!Opportunity.Deposit__c}"
-                           label="Deposit"
-                           required="false" />
-        </div>
-
-      </div><!-- /row -->
-
-      <div class="row ">
-
-        <div class="large-2 columns large-text-align-right ">
-          Finance Status
-        </div>
-        <div class="large-4 columns">
-            <apex:inputField value="{!Opportunity.Finance_Status__c}"
-                           required="false" />
-        </div>
-        <div class="large-2 columns large-text-align-right">
-          <apex:outputLabel value="Deposit Method" for="depositMethod" />
-        </div>
-        <div class="large-4 columns">
-            <apex:inputField value="{!Opportunity.Deposit_Method__c}"
-                                 id="depositMethod"
-                                 required="false"
-                                 onchange="controllingSelectChanged(this, 'otherDepositMethodRow')"/>
-        </div>
-
-      </div><!-- /row -->
-
-      <div id="otherDepositMethodRow" class="row select_controlled hidden" data-criteria="Other">
-
-        <div class="large-6 columns">&nbsp;</div>
-        <div class="large-2 columns large-text-align-right ">
-          <apex:outputLabel value="Deposit Method (other)"
-                            for="depositMethodOther" />
-        </div>
-        <div class="large-4 columns">
-          <apex:inputField value="{!Opportunity.Deposit_Method_Other__c}"
-                             id="depositMethodOther"
-                             required="false" />
-        </div>
-
-      </div><!-- /row -->
-
-      <div class="row ">
-
-        <div class="large-2 columns large-text-align-right ">
-          Pickup Location
-        </div>
-        <div class="large-4 columns">
-           <apex:inputField value="{!Opportunity.Pickup_Location__c}"
-                           required="false" />
-        </div>
-        <div class="large-2 columns large-text-align-right">
-          Delivery Date
-        </div>
-        <div class="large-4 columns">
-          <apex:inputField value="{!Opportunity.Delivery_Date__c}"
-                           required="false" />
-        </div>
-
-      </div><!-- /row -->
-
-    </div>
-
-  </div><!-- /Finance Information -->
-
-  <!-- <h3 class="lead">Additional Information</h3>
+    <!-- <h3 class="lead">Additional Information</h3>
 
   <div class="row">
 
@@ -394,30 +325,33 @@
 
   </div> --><!-- /Addition Information -->
 
-  <div class="row button_row">
-    <div class="large-12 columns clearfix">
-      <apex:commandButton action="{!saveAndBuildBoat}"
-                          value="Save and Build Boat"
-                          rendered="{!isNewRecord}"
-                          styleClass="button small success right" />
-       <apex:commandButton action="{!save}"
-                          value="Save"
-                          styleClass="button small right" />
-      <apex:commandButton action="{!URLFOR($Action.Account.View, account.Id)}"
-                          immediate="true"
-                          value="Cancel"
-                          rendered="{!isNewRecord}"
-                          styleClass="button small secondary right" />
-      <apex:commandButton action="{!URLFOR($Action.Opportunity.View, Opportunity.Id)}"
-                          immediate="true"
-                          value="Cancel"
-                          rendered="{!!isNewRecord}"
-                          styleClass="button small secondary right" />
+    <div class="row button_row">
+      <div class="large-12 columns clearfix">
+        <apex:commandButton
+          action="{!saveAndBuildBoat}"
+          value="Save and Build Boat"
+          rendered="{!isNewRecord}"
+          styleClass="button small success right"
+        />
+        <apex:commandButton action="{!save}" value="Save" styleClass="button small right" />
+        <apex:commandButton
+          action="{!URLFOR($Action.Account.View, account.Id)}"
+          immediate="true"
+          value="Cancel"
+          rendered="{!isNewRecord}"
+          styleClass="button small secondary right"
+        />
+        <apex:commandButton
+          action="{!URLFOR($Action.Opportunity.View, Opportunity.Id)}"
+          immediate="true"
+          value="Cancel"
+          rendered="{!!isNewRecord}"
+          styleClass="button small secondary right"
+        />
+      </div>
     </div>
-  </div>
-
   </apex:form>
-  <apex:includeScript value="{!URLFOR($Resource.jQuery)}"  />
+  <apex:includeScript value="{!URLFOR($Resource.jQuery)}" />
   <script type="text/javascript">
     $j = jQuery.noConflict();
     $j('.columns .button').removeClass('btn');
@@ -455,7 +389,5 @@
       var prob = probability[select.value];
       $j("[id*='probability']").val(prob);
     }
-
-
   </script>
 </apex:page>

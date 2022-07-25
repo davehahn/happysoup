@@ -1,86 +1,87 @@
-<aura:component controller="Account_PartnerLocator_Controller"
-                implements="force:appHostable,flexipage:availableForAllPageTypes,forceCommunity:availableForAllPageTypes">
-
-  <ltng:require scripts="{!join(',', $Resource.Libraries +'/js/LightningApex.js',
+<aura:component
+  controller="Account_PartnerLocator_Controller"
+  implements="force:appHostable,flexipage:availableForAllPageTypes,forceCommunity:availableForAllPageTypes"
+>
+  <ltng:require
+    scripts="{!join(',', $Resource.Libraries +'/js/LightningApex.js',
                                      $Resource.Libraries +'/js/LightningUtils.js') }"
-                afterScriptsLoaded="{!c.doInit}" />
+    afterScriptsLoaded="{!c.doInit}"
+  />
 
-
-  <aura:attribute name="mapMarkers" type="Array"/>
+  <aura:attribute name="mapMarkers" type="Array" />
   <aura:attribute name="allPartners" type="Array" />
   <aura:attribute name="provinces" type="Array" />
   <aura:attribute name="markersTitle" type="String" />
   <aura:attribute name="includeLegendStores" type="Boolean" default="false" />
   <aura:attribute name="filterName" type="String" />
-  <aura:attribute name="filterProv" type="String" default="Ontario"/>
+  <aura:attribute name="filterProv" type="String" default="Ontario" />
   <aura:attribute name="dataLoaded" type="Boolean" default="false" />
 
   <c:Lgnd_Spinner_dh aura:id="spinner" />
 
   <aura:if isTrue="{!v.dataLoaded}">
-  <div class="slds-page-header slds-page-header_record-home">
-    <div class="slds-page-header__row">
-      <div class="slds-page-header__col-title">
-        <div class="slds-media">
-          <div class="slds-media__figure">
-            <lightning:icon iconName="standard:location" />
-          </div>
-          <div class="slds-media__body">
-            <div class="slds-page-header__name">
-              <div class="slds-page-header__name-title">
-                <h1>
-                  <span class="slds-page-header__title slds-truncate">Legend Partners</span>
-                  <!-- <span class="slds-page-header__title slds-truncate" title="Acme - 1,200 Widgets">Acme - 1,200 Widgets</span> -->
-                </h1>
+    <div class="slds-page-header slds-page-header_record-home">
+      <div class="slds-page-header__row">
+        <div class="slds-page-header__col-title">
+          <div class="slds-media">
+            <div class="slds-media__figure">
+              <lightning:icon iconName="standard:location" />
+            </div>
+            <div class="slds-media__body">
+              <div class="slds-page-header__name">
+                <div class="slds-page-header__name-title">
+                  <h1>
+                    <span class="slds-page-header__title slds-truncate">Legend Partners</span>
+                    <!-- <span class="slds-page-header__title slds-truncate" title="Acme - 1,200 Widgets">Acme - 1,200 Widgets</span> -->
+                  </h1>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-    <div class="slds-page-header__row slds-page-header__row_gutters">
-      <div class="slds-page-header__col-details">
-        <lightning:layout>
-          <lightning:layoutItem size="4" padding="around-small">
-            <lightning:input type="text"
-                             label="Search by Name"
-                             value="{!v.filterName}"
-                             onchange="{!c.handleFilter}" />
-          </lightning:layoutItem>
-          <lightning:layoutItem size="4" padding="around-small">
-            <lightning:select label="Filter by Province"
-                               value="{!v.filterProv}"
-                               onchange="{!c.handleFilter}">
-              <option value="all">All</option>
-              <aura:iteration items="{!v.provinces}" var="prov">
-                <option value="{!prov}">{!prov}</option>
-              </aura:iteration>
-            </lightning:select>
-          </lightning:layoutItem>
-          <lightning:layoutItem size="4"
-                                padding="around-small">
-            <div class="slds-m-left_medium">
-            <label class="slds-form-element__label">
-              <span>Include Legend Stores?</span>
-            </label>
-            <lightning:input type="toggle"
-                             checked="{!v.includeLegendStores}"
-                             onchange="{!c.handleFilter}"
-                             label="Include Legend Stores"
-                             variant="label-hidden"
-                             messageToggleActive=""
-                             messageToggleInactive="" />
-            </div>
-          </lightning:layoutItem>
-        </lightning:layout>
+      <div class="slds-page-header__row slds-page-header__row_gutters">
+        <div class="slds-page-header__col-details">
+          <lightning:layout>
+            <lightning:layoutItem size="4" padding="around-small">
+              <lightning:input
+                type="text"
+                label="Search by Name"
+                value="{!v.filterName}"
+                onchange="{!c.handleFilter}"
+              />
+            </lightning:layoutItem>
+            <lightning:layoutItem size="4" padding="around-small">
+              <lightning:select label="Filter by Province" value="{!v.filterProv}" onchange="{!c.handleFilter}">
+                <option value="all">All</option>
+                <aura:iteration items="{!v.provinces}" var="prov">
+                  <option value="{!prov}">{!prov}</option>
+                </aura:iteration>
+              </lightning:select>
+            </lightning:layoutItem>
+            <lightning:layoutItem size="4" padding="around-small">
+              <div class="slds-m-left_medium">
+                <label class="slds-form-element__label">
+                  <span>Include Legend Stores?</span>
+                </label>
+                <lightning:input
+                  type="toggle"
+                  checked="{!v.includeLegendStores}"
+                  onchange="{!c.handleFilter}"
+                  label="Include Legend Stores"
+                  variant="label-hidden"
+                  messageToggleActive=""
+                  messageToggleInactive=""
+                />
+              </div>
+            </lightning:layoutItem>
+          </lightning:layout>
+        </div>
       </div>
     </div>
-  </div>
 
-  <div class="slds-card">
-    <lightning:map mapMarkers="{! v.mapMarkers }"
-                   markersTitle="{!v.markersTitle}" />
-  </div>
+    <div class="slds-card">
+      <lightning:map mapMarkers="{! v.mapMarkers }" markersTitle="{!v.markersTitle}" />
+    </div>
   </aura:if>
-
 </aura:component>

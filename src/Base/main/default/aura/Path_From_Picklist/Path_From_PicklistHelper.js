@@ -38,19 +38,12 @@
           $A.get("e.force:refreshView").fire();
           $A.util.toggleClass(spinner, "slds-hide");
         } else if (saveResult.state === "INCOMPLETE") {
-          LightningUtils.errorToast(
-            "User is offline, device doesn't support drafts."
-          );
+          LightningUtils.errorToast("User is offline, device doesn't support drafts.");
         } else if (saveResult.state === "ERROR") {
-          LightningUtils.errorToast(
-            "Problem saving record, error: " + JSON.stringify(saveResult.error)
-          );
+          LightningUtils.errorToast("Problem saving record, error: " + JSON.stringify(saveResult.error));
         } else {
           LightningUtils.errorToast(
-            "Unknown problem, state: " +
-              saveResult.state +
-              ", error: " +
-              JSON.stringify(saveResult.error)
+            "Unknown problem, state: " + saveResult.state + ", error: " + JSON.stringify(saveResult.error)
           );
         }
       })

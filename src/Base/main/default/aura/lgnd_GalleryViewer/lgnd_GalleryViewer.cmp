@@ -1,6 +1,7 @@
-<aura:component controller="LegendGalleryRemoter"
-                implements="forceCommunity:availableForAllPageTypes,force:appHostable,flexipage:availableForAllPageTypes,force:hasRecordId">
-
+<aura:component
+  controller="LegendGalleryRemoter"
+  implements="forceCommunity:availableForAllPageTypes,force:appHostable,flexipage:availableForAllPageTypes,force:hasRecordId"
+>
   <!-- attributes -->
   <aura:attribute name="recordId" type="Id" />
   <aura:attribute name="imageList" type="Object" />
@@ -16,12 +17,9 @@
   <!-- Events -->
   <aura:handler name="init" value="{!this}" action="{!c.autoInit}" />
   <aura:handler event="force:refreshView" action="{!c.manualInit}" />
-  <aura:handler event="c:lgnd_FileUpload_AWS_Complete_Event"
-                action="{!c.imagesUploaded}" />
-
+  <aura:handler event="c:lgnd_FileUpload_AWS_Complete_Event" action="{!c.imagesUploaded}" />
 
   <div>
-
     <div class="slds-spinner_container" aura:id="busy-indicator">
       <div role="status" class="slds-spinner slds-spinner--medium">
         <span class="slds-assistive-text">Loading</span>
@@ -31,66 +29,54 @@
     </div>
 
     <lightning:tabset variant="scoped">
-
       <lightning:tab label="Images">
-
         <aura:if isTrue="{!empty( v.imageList )}">
           <div class="no-images">No Images Found</div>
         </aura:if>
 
         <aura:if isTrue="{!!empty( v.imageList )}">
           <div class="imageContainer">
-              <a href="" onclick="{!c.viewImage}" class="slds-m-top_medium">
-                <img src="{!v.currentImage.URL_700w}" />
-              </a>
+            <a href="" onclick="{!c.viewImage}" class="slds-m-top_medium">
+              <img src="{!v.currentImage.URL_700w}" />
+            </a>
           </div>
 
           <lightning:layout class="slds-m-top_medium">
-
             <lightning:layoutItem size="3" class="slds-align_absolute-center">
-              <lightning:button label="Previous"
-                                onclick="{!c.prevImage}"
-                                disabled="{! equals(v.currentImageNum, 0)}" />
+              <lightning:button label="Previous" onclick="{!c.prevImage}" disabled="{! equals(v.currentImageNum, 0)}" />
             </lightning:layoutItem>
-            <lightning:layoutItem size="6">
-
-            </lightning:layoutItem>
+            <lightning:layoutItem size="6"> </lightning:layoutItem>
             <lightning:layoutItem size="3" class="slds-align_absolute-center">
-              <lightning:button label="Next"
-                                onclick="{!c.nextImage}"
-                                disabled="{! equals((v.currentImageNum + 1), v.imageCount)}" />
+              <lightning:button
+                label="Next"
+                onclick="{!c.nextImage}"
+                disabled="{! equals((v.currentImageNum + 1), v.imageCount)}"
+              />
             </lightning:layoutItem>
-
           </lightning:layout>
         </aura:if>
-
       </lightning:tab>
 
       <aura:if isTrue="{!v.allowUploads}">
         <lightning:tab label="Add">
           <div class="slds-clearfix">
-            <lightning:button variant="neutral"
-                              label="Upload"
-                              onclick="{!c.doUpload}"
-                              class="slds-float_right"
-                              iconName="utility:upload"
-                              iconPosition="right" />
+            <lightning:button
+              variant="neutral"
+              label="Upload"
+              onclick="{!c.doUpload}"
+              class="slds-float_right"
+              iconName="utility:upload"
+              iconPosition="right"
+            />
           </div>
-          <c:lgnd_FileUpload_AWS recordId="{!v.recordId}"
-                                 aura:id="aws-CMP"
-                                 allowDefault="true" />
+          <c:lgnd_FileUpload_AWS recordId="{!v.recordId}" aura:id="aws-CMP" allowDefault="true" />
         </lightning:tab>
       </aura:if>
-
     </lightning:tabset>
-
   </div>
 
   <div class="full-image" aura:id="image-viewer" onclick="{!c.closeViewer}">
     <div class="image-loading">Image Loading</div>
-    <div class="image-container" aura:id="image-viewer-container">
-    </div>
+    <div class="image-container" aura:id="image-viewer-container"></div>
   </div>
-
-
 </aura:component>

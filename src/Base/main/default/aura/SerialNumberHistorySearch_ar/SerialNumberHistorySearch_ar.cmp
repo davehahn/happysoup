@@ -1,218 +1,219 @@
-<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:lightningQuickAction,force:hasRecordId" access="global" controller="SerialNumberHistorySearchController_ar">
-    <aura:attribute name="recordId" type="Id" />
-    <aura:attribute name="listData" type="sObject[]"/>
-    <aura:attribute name="listDataAll" type="sObject[]"/>
-	<aura:attribute name="whOptions" type="sObject[]" />
-	<aura:attribute name="idWarehouse" type="String" />
-	<aura:attribute name="moveType" type="String" />
-    <aura:attribute name="donotShowTop" type="Boolean" default="false" />
-	<aura:attribute name="canSeeGLAmount" type="Boolean" />
-	<aura:attribute name="idProduct" type="String" />
-	<aura:attribute name="idSerial" type="String" />
-	<aura:attribute name="availableQuantity" type="Decimal" />
-    <aura:attribute name="today" type="Date" default=""/>
-    <aura:handler action="{!c.doInit}" name="init" value="{!this}"/>
-    <aura:handler name="change" value="{!v.listData}" action="{!c.changeTotal}"/>
-    <aura:handler name="change" value="{!v.today}" action="{!c.warehouseChanged}"/>
-    <aura:handler name="filterSelectedEvent" event="c:filterSelectedEvent" action="{!c.handleFilterSelected}" />
-    <aura:handler name="serialSelectedEvent" event="c:serialSelectedEvent" action="{!c.handleSerialSelected}" />
-    <aura:if isTrue="{!!v.donotShowTop}">
+<aura:component
+  implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:lightningQuickAction,force:hasRecordId"
+  access="global"
+  controller="SerialNumberHistorySearchController_ar"
+>
+  <aura:attribute name="recordId" type="Id" />
+  <aura:attribute name="listData" type="sObject[]" />
+  <aura:attribute name="listDataAll" type="sObject[]" />
+  <aura:attribute name="whOptions" type="sObject[]" />
+  <aura:attribute name="idWarehouse" type="String" />
+  <aura:attribute name="moveType" type="String" />
+  <aura:attribute name="donotShowTop" type="Boolean" default="false" />
+  <aura:attribute name="canSeeGLAmount" type="Boolean" />
+  <aura:attribute name="idProduct" type="String" />
+  <aura:attribute name="idSerial" type="String" />
+  <aura:attribute name="availableQuantity" type="Decimal" />
+  <aura:attribute name="today" type="Date" default="" />
+  <aura:handler action="{!c.doInit}" name="init" value="{!this}" />
+  <aura:handler name="change" value="{!v.listData}" action="{!c.changeTotal}" />
+  <aura:handler name="change" value="{!v.today}" action="{!c.warehouseChanged}" />
+  <aura:handler name="filterSelectedEvent" event="c:filterSelectedEvent" action="{!c.handleFilterSelected}" />
+  <aura:handler name="serialSelectedEvent" event="c:serialSelectedEvent" action="{!c.handleSerialSelected}" />
+  <aura:if isTrue="{!!v.donotShowTop}">
     <lightning:card class="slds-p-around_none slds-m-around_none" title="">
-    	<lightning:layout horizontalAlign="center" verticalAlign="center">
-    		<lightning:layoutItem class="slds-m-around_small">
-				<lightning:select name="warehouses" value="{!v.idWarehouse}" label="Select Warehouse" onchange="{!c.warehouseChanged}">
-					<option value="" text="- All Warehouses -"></option>
-					<aura:iteration items="{!v.whOptions}" var="whs">
-						<option value="{!whs.idWarehouse}" text="{!whs.warehouseName}"></option>
-					</aura:iteration>
-				</lightning:select>
-			</lightning:layoutItem>
-    		<lightning:layoutItem class="slds-m-around_small">
-	            <c:SearchProduct_ar aura:id="searchProductComp" />					
-			</lightning:layoutItem>
-    		<lightning:layoutItem class="slds-m-around_small">
-	            <c:SearchSerial_ar aura:id="searchSerialComp" />
-			</lightning:layoutItem>
-            <lightning:layoutItem class="slds-m-around_small">
-                <lightning:input aura:id="startDate" type="date" name="startDateInput" label="Filter Start Date" value="{!v.today}"/>
-<!--                <ui:inputDate aura:id="startDate" format="dd/MM/yyyy" label="Filter Start Date" class="field" value="{!v.today}" displayDatePicker="true" />-->
-            </lightning:layoutItem>
-		</lightning:layout>
+      <lightning:layout horizontalAlign="center" verticalAlign="center">
+        <lightning:layoutItem class="slds-m-around_small">
+          <lightning:select
+            name="warehouses"
+            value="{!v.idWarehouse}"
+            label="Select Warehouse"
+            onchange="{!c.warehouseChanged}"
+          >
+            <option value="" text="- All Warehouses -"></option>
+            <aura:iteration items="{!v.whOptions}" var="whs">
+              <option value="{!whs.idWarehouse}" text="{!whs.warehouseName}"></option>
+            </aura:iteration>
+          </lightning:select>
+        </lightning:layoutItem>
+        <lightning:layoutItem class="slds-m-around_small">
+          <c:SearchProduct_ar aura:id="searchProductComp" />
+        </lightning:layoutItem>
+        <lightning:layoutItem class="slds-m-around_small">
+          <c:SearchSerial_ar aura:id="searchSerialComp" />
+        </lightning:layoutItem>
+        <lightning:layoutItem class="slds-m-around_small">
+          <lightning:input
+            aura:id="startDate"
+            type="date"
+            name="startDateInput"
+            label="Filter Start Date"
+            value="{!v.today}"
+          />
+          <!--                <ui:inputDate aura:id="startDate" format="dd/MM/yyyy" label="Filter Start Date" class="field" value="{!v.today}" displayDatePicker="true" />-->
+        </lightning:layoutItem>
+      </lightning:layout>
     </lightning:card>
-    </aura:if>
-    <lightning:card class="slds-p-around_small" title="">
-        <table class="slds-table slds-table_bordered slds-p-around_none slds-m-around_none">
-            <thead>
-                <tr class="slds-text-title_caps">
-                    <th scope="col">
-                        <div class="slds-truncate" title="Move Type">
-                            <lightning:select name="warehouses" value="{!v.moveType}" label="" onchange="{!c.moveChanged}">
-                                <option value="" text="- Move Types -"></option>
-                                <option value="Inbound" text="Inbound"></option>
-                                <option value="Outbound" text="Outbound"></option>
-                                <option value="Manufacturing" text="Manufacturing"></option>
-                                <option value="Purchase Order" text="Purchase Order"></option>
-                            </lightning:select>
-                        </div>
-                    </th>
-                    <th scope="col">
-                        <div class="slds-truncate" title="Move Date">
-                            Move Date
-                        </div>
-                    </th>
-                    <th scope="col">
-                        <div class="slds-truncate" title="Warehouse">
-                            Warehouse
-                        </div>
-                    </th>
-                    <th scope="col">
-                        <div class="slds-truncate" title="Description">
-                            Description
-                        </div>
-                    </th>
-                    <th scope="col">
-                        <div class="slds-truncate" title="Lot">
-                            Lot
-                        </div>
-                    </th>
-                    <th scope="col">
-                        <div class="slds-truncate" title="Serial">
-                            Serial
-                        </div>
-                    </th>
-                    <th scope="col" class="slds-text-align_center">
-                        <div class="slds-truncate" title="Quantity">
-                            Qty
-                        </div>
-                    </th>
-                    <aura:if isTrue="{!v.canSeeGLAmount}">
-                    <th scope="col" class="slds-text-align_right">
-                        <div class="slds-truncate" title="GL Amount">
-                            GL Amount
-                        </div>
-                    </th>
-                	</aura:if>
-                </tr>
-            </thead>
-            <tbody>
-                <aura:iteration indexvar="indx" items="{!v.listData}" var="a">
-                    <tr>
-                        <th class="slds-show_small" data-label="fileName" scope="row">
-                            <div class="slds-truncate" style="max-width:90%;">
-                            	{!a.moveType}
-                            </div>
-                        </th>
-                        <th class="slds-show_small" data-label="fileName" scope="row">
-                            <div class="slds-truncate" style="max-width:90%;">
-                            	{!a.moveDate}
-                            </div>
-                        </th>
-                        <th class="slds-show_small" data-label="fileName" scope="row">
-                            <div class="slds-truncate" style="max-width:90%;">
-                                {!a.warehouseName}
-                            </div>
-                        </th>
-                        <th>
-                        	<aura:if isTrue="{!a.idERP != null}">
-                                <div class="slds-truncate" style="max-width:90%;">
-                                    <a href="{!'/one/one.app?#/sObject/'+ a.idERP + '/view'}" target="_blank" title="{!a.erpName}">
-                                        {!a.erpName}
-                                    </a>
-                                </div>  
-                            </aura:if>                          
-                            <aura:if isTrue="{!a.idERPTask != null}">
-                                <div class="slds-truncate" style="max-width:90%;">
-                                    <a href="{!'/one/one.app?#/sObject/'+ a.idERPTask + '/view'}" target="_blank" title="{!a.erpTaskName}">
-                                        {!a.erpTaskName}
-                                    </a>
-                                </div>  
-                            </aura:if>
-                            <aura:if isTrue="{!a.idERP != null}">
-                                <aura:if isTrue="{!a.moveType == 'Inbound'}">
-                                    <div class="slds-grid slds-gutters">
-                                        <div class="slds-col slds-size_3-of-5 slds-theme_shade">
-                                            <span>ERP Order Item</span>
-                                        </div>
-                                        <div class="slds-col slds-size_1-of-5 slds-theme_shade slds-text-align_center">
-                                            <span>Qty</span>
-                                        </div>
-                                        <div class="slds-col slds-size_1-of-5 slds-theme_shade slds-text-align_right">
-                                            <span>Amount</span>
-                                        </div>
-                                    </div>
-                                    <aura:iteration indexvar="indx" items="{!a.listERPItems}" var="l">
-                                        <div class="slds-grid slds-gutters">
-                                            <div class="slds-col slds-truncate slds-size_3-of-5 slds-border_bottom">
-                                                <span>{!l.productName}</span>
-                                            </div>
-                                            <div class="slds-col slds-size_1-of-5 slds-border_bottom slds-text-align_center">
-                                                <span>{!l.quantity}</span>
-                                            </div>
-                                            <div class="slds-col slds-size_1-of-5 slds-border_bottom  slds-text-align_right">
-                                                <span>
-                                                    <aura:if isTrue="{!v.canSeeGLAmount}">
-                                                        <lightning:formattedNumber value="{!l.amount}" style="currency"/>
-                                                    </aura:if>
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </aura:iteration>
-                                </aura:if>
-                            </aura:if>
-                            <aura:if isTrue="{!a.idAdjustment != null}">
-                            <div class="slds-truncate" style="max-width:90%;">
-                                <a href="{!'/one/one.app?#/sObject/'+ a.idAdjustment + '/view'}" target="_blank" title="{!a.adjustmentName}">
-                                    {!a.adjustmentName}
-                                </a>
-                            </div>
-                        	</aura:if>
-                            <aura:if isTrue="{!a.idTransfer != null}">
-                            <div class="slds-truncate" style="max-width:90%;">
-                                <a href="{!'/one/one.app?#/sObject/'+ a.idTransfer + '/view'}" target="_blank" title="{!a.transferName}">
-                                    {!a.transferName}
-                                </a>
-                            </div>
-                            </aura:if>               
-                        </th>
-                        <th>
-                            <div class="slds-truncate" style="max-width:90%;">
-                                <a href="{!'/one/one.app?#/sObject/'+ a.idLot + '/view'}" target="_blank" title="{!a.lotName}">
-                                    {!a.lotName}
-                                </a>
-                            </div>                            
-                        </th>
-                        <th>
-                            <div class="slds-truncate" style="max-width:90%;">
-                                <a href="{!'/one/one.app?#/sObject/'+ a.idSerial + '/view'}" target="_blank" title="{!a.serialName}">
-                                    {!a.serialName}
-                                </a>
-                            </div>                            
-                        </th>
-                        <th scope="row" class="slds-text-align_center">
-                            {!a.quantity}
-                        </th>
-                        <aura:if isTrue="{!v.canSeeGLAmount}">
-                        <th scope="row" class="slds-text-align_right">
-                            <lightning:formattedNumber value="{!a.inventoryGLAmount}" style="currency"/>
-                        </th>
-                    	</aura:if>
-                    </tr>
-                </aura:iteration>
-            </tbody>
-            <tfoot class="slds-theme_shade">
-            	<tr class="slds-text-title_caps">
-                    <th class="slds-show_small" data-label="fileName" scope="row" colspan="6">
-                        <div class="slds-truncate" style="max-width:90%;">
-                        	Current Availability:
-                       	</div>
-                    </th>
-                    <th scope="row" class="slds-text-align_center">
-                        {!v.availableQuantity}
-                    </th>
-                    <th>&nbsp;</th>
-                </tr>
-            </tfoot>
-        </table>
-    </lightning:card>
-    <lightning:spinner aura:id="spinner" />
+  </aura:if>
+  <lightning:card class="slds-p-around_small" title="">
+    <table class="slds-table slds-table_bordered slds-p-around_none slds-m-around_none">
+      <thead>
+        <tr class="slds-text-title_caps">
+          <th scope="col">
+            <div class="slds-truncate" title="Move Type">
+              <lightning:select name="warehouses" value="{!v.moveType}" label="" onchange="{!c.moveChanged}">
+                <option value="" text="- Move Types -"></option>
+                <option value="Inbound" text="Inbound"></option>
+                <option value="Outbound" text="Outbound"></option>
+                <option value="Manufacturing" text="Manufacturing"></option>
+                <option value="Purchase Order" text="Purchase Order"></option>
+              </lightning:select>
+            </div>
+          </th>
+          <th scope="col">
+            <div class="slds-truncate" title="Move Date">Move Date</div>
+          </th>
+          <th scope="col">
+            <div class="slds-truncate" title="Warehouse">Warehouse</div>
+          </th>
+          <th scope="col">
+            <div class="slds-truncate" title="Description">Description</div>
+          </th>
+          <th scope="col">
+            <div class="slds-truncate" title="Lot">Lot</div>
+          </th>
+          <th scope="col">
+            <div class="slds-truncate" title="Serial">Serial</div>
+          </th>
+          <th scope="col" class="slds-text-align_center">
+            <div class="slds-truncate" title="Quantity">Qty</div>
+          </th>
+          <aura:if isTrue="{!v.canSeeGLAmount}">
+            <th scope="col" class="slds-text-align_right">
+              <div class="slds-truncate" title="GL Amount">GL Amount</div>
+            </th>
+          </aura:if>
+        </tr>
+      </thead>
+      <tbody>
+        <aura:iteration indexvar="indx" items="{!v.listData}" var="a">
+          <tr>
+            <th class="slds-show_small" data-label="fileName" scope="row">
+              <div class="slds-truncate" style="max-width: 90%">{!a.moveType}</div>
+            </th>
+            <th class="slds-show_small" data-label="fileName" scope="row">
+              <div class="slds-truncate" style="max-width: 90%">{!a.moveDate}</div>
+            </th>
+            <th class="slds-show_small" data-label="fileName" scope="row">
+              <div class="slds-truncate" style="max-width: 90%">{!a.warehouseName}</div>
+            </th>
+            <th>
+              <aura:if isTrue="{!a.idERP != null}">
+                <div class="slds-truncate" style="max-width: 90%">
+                  <a href="{!'/one/one.app?#/sObject/'+ a.idERP + '/view'}" target="_blank" title="{!a.erpName}">
+                    {!a.erpName}
+                  </a>
+                </div>
+              </aura:if>
+              <aura:if isTrue="{!a.idERPTask != null}">
+                <div class="slds-truncate" style="max-width: 90%">
+                  <a
+                    href="{!'/one/one.app?#/sObject/'+ a.idERPTask + '/view'}"
+                    target="_blank"
+                    title="{!a.erpTaskName}"
+                  >
+                    {!a.erpTaskName}
+                  </a>
+                </div>
+              </aura:if>
+              <aura:if isTrue="{!a.idERP != null}">
+                <aura:if isTrue="{!a.moveType == 'Inbound'}">
+                  <div class="slds-grid slds-gutters">
+                    <div class="slds-col slds-size_3-of-5 slds-theme_shade">
+                      <span>ERP Order Item</span>
+                    </div>
+                    <div class="slds-col slds-size_1-of-5 slds-theme_shade slds-text-align_center">
+                      <span>Qty</span>
+                    </div>
+                    <div class="slds-col slds-size_1-of-5 slds-theme_shade slds-text-align_right">
+                      <span>Amount</span>
+                    </div>
+                  </div>
+                  <aura:iteration indexvar="indx" items="{!a.listERPItems}" var="l">
+                    <div class="slds-grid slds-gutters">
+                      <div class="slds-col slds-truncate slds-size_3-of-5 slds-border_bottom">
+                        <span>{!l.productName}</span>
+                      </div>
+                      <div class="slds-col slds-size_1-of-5 slds-border_bottom slds-text-align_center">
+                        <span>{!l.quantity}</span>
+                      </div>
+                      <div class="slds-col slds-size_1-of-5 slds-border_bottom slds-text-align_right">
+                        <span>
+                          <aura:if isTrue="{!v.canSeeGLAmount}">
+                            <lightning:formattedNumber value="{!l.amount}" style="currency" />
+                          </aura:if>
+                        </span>
+                      </div>
+                    </div>
+                  </aura:iteration>
+                </aura:if>
+              </aura:if>
+              <aura:if isTrue="{!a.idAdjustment != null}">
+                <div class="slds-truncate" style="max-width: 90%">
+                  <a
+                    href="{!'/one/one.app?#/sObject/'+ a.idAdjustment + '/view'}"
+                    target="_blank"
+                    title="{!a.adjustmentName}"
+                  >
+                    {!a.adjustmentName}
+                  </a>
+                </div>
+              </aura:if>
+              <aura:if isTrue="{!a.idTransfer != null}">
+                <div class="slds-truncate" style="max-width: 90%">
+                  <a
+                    href="{!'/one/one.app?#/sObject/'+ a.idTransfer + '/view'}"
+                    target="_blank"
+                    title="{!a.transferName}"
+                  >
+                    {!a.transferName}
+                  </a>
+                </div>
+              </aura:if>
+            </th>
+            <th>
+              <div class="slds-truncate" style="max-width: 90%">
+                <a href="{!'/one/one.app?#/sObject/'+ a.idLot + '/view'}" target="_blank" title="{!a.lotName}">
+                  {!a.lotName}
+                </a>
+              </div>
+            </th>
+            <th>
+              <div class="slds-truncate" style="max-width: 90%">
+                <a href="{!'/one/one.app?#/sObject/'+ a.idSerial + '/view'}" target="_blank" title="{!a.serialName}">
+                  {!a.serialName}
+                </a>
+              </div>
+            </th>
+            <th scope="row" class="slds-text-align_center">{!a.quantity}</th>
+            <aura:if isTrue="{!v.canSeeGLAmount}">
+              <th scope="row" class="slds-text-align_right">
+                <lightning:formattedNumber value="{!a.inventoryGLAmount}" style="currency" />
+              </th>
+            </aura:if>
+          </tr>
+        </aura:iteration>
+      </tbody>
+      <tfoot class="slds-theme_shade">
+        <tr class="slds-text-title_caps">
+          <th class="slds-show_small" data-label="fileName" scope="row" colspan="6">
+            <div class="slds-truncate" style="max-width: 90%">Current Availability:</div>
+          </th>
+          <th scope="row" class="slds-text-align_center">{!v.availableQuantity}</th>
+          <th>&nbsp;</th>
+        </tr>
+      </tfoot>
+    </table>
+  </lightning:card>
+  <lightning:spinner aura:id="spinner" />
 </aura:component>

@@ -1,11 +1,10 @@
 <aura:component controller="DealerOrder_Ext">
-
   <!-- attributes -->
   <!-- <aura:attribute name="detailsWrapper" type="Object" access="global" /> -->
   <aura:attribute name="financeCompanyOptions" type="Object" />
   <aura:attribute name="programYearOptions" type="Array" />
   <aura:attribute name="paymentMethodOptions" type="Object" />
-  <aura:attribute name="dealerOrder" type="Dealer_Order__c"  />
+  <aura:attribute name="dealerOrder" type="Dealer_Order__c" />
   <aura:attribute name="fromInternal" type="Boolean" default="false" />
   <aura:attribute name="isFactoryStore" type="Boolean" default="false" />
   <aura:attribute name="accountOptions" type="Object" default="[]" />
@@ -14,11 +13,14 @@
   <aura:attribute name="orderNumber" type="String" />
   <aura:attribute name="province" type="String" />
   <aura:attribute name="legendAccounts" type="String[]" />
-  <aura:attribute name="lockBookingOrderToggle" type="Boolean" default="false"/>
+  <aura:attribute name="lockBookingOrderToggle" type="Boolean" default="false" />
   <aura:attribute name="scriptsLoaded" type="Boolean" default="false" />
 
-  <ltng:require scripts="{!join(',', $Resource.Libraries +'/js/LightningApex.js',
-                                     $Resource.Libraries +'/js/LightningUtils.js') }" afterScriptsLoaded="{!c.showConsole}" />
+  <ltng:require
+    scripts="{!join(',', $Resource.Libraries +'/js/LightningApex.js',
+                                     $Resource.Libraries +'/js/LightningUtils.js') }"
+    afterScriptsLoaded="{!c.showConsole}"
+  />
 
   <!-- methods -->
   <aura:method name="doInit" access="public" />
@@ -28,20 +30,20 @@
   <aura:registerEvent name="busyIndicatorEvent" type="c:lgndP_BusyIndicator_Event" />
   <aura:registerEvent name="cancelOrderEvent" type="c:lgndP_DealerOrderCancelled_Event" />
 
-
   <div class="theForm">
-
     <aura:if isTrue="{!v.fromInternal}">
       <div class="slds-grid slds-wrap slds-grid_pull-padded">
         <div class="slds-col slds-large-size_6-of-12 slds-p-horizontal_small">
-          <lightning:select name="account-method-select"
-                        aura:id="requiredField"
-                        label="Select Account"
-                        required="true"
-                        messageWhenValueMissing="Account is Required"
-                        value="{!v.dealerOrder.Account__c}"
-                        onchange="{!c.handleAccountChange}">
-            <option value=""> -- Select -- </option>
+          <lightning:select
+            name="account-method-select"
+            aura:id="requiredField"
+            label="Select Account"
+            required="true"
+            messageWhenValueMissing="Account is Required"
+            value="{!v.dealerOrder.Account__c}"
+            onchange="{!c.handleAccountChange}"
+          >
+            <option value="">-- Select --</option>
             <aura:iteration items="{!v.accountOptions}" var="account">
               <option value="{!account.Id}" text="{!account.Name}"></option>
             </aura:iteration>
@@ -54,13 +56,14 @@
       </div>
     </aura:if>
 
-    <div class='slds-grid slds-wrap slds-grid_pull-padded slds-m-top_large'>
-
+    <div class="slds-grid slds-wrap slds-grid_pull-padded slds-m-top_large">
       <div class="slds-col slds-large-size_6-of-12 slds-p-horizontal_small">
-        <lightning:select name="program-year"
-                          label="Program Year"
-                          value="{!v.dealerOrder.Program_Year__c}"
-                          onchange="{!c.handleProgramYearChange}">
+        <lightning:select
+          name="program-year"
+          label="Program Year"
+          value="{!v.dealerOrder.Program_Year__c}"
+          onchange="{!c.handleProgramYearChange}"
+        >
           <aura:iteration items="{!v.programYearOptions}" var="year">
             <option value="{!year.value}" text="{!year.label}" selected="{! year.selected}" />
           </aura:iteration>
@@ -68,73 +71,76 @@
       </div>
 
       <div class="slds-col slds-large-size_6-of-12 slds-p-horizontal_small">
-        <lightning:input type="toggle"
-                         name="isBookingOrder"
-                         label="Is this a Booking Order?"
-                         class="centerToggle"
-                         disabled="{!v.lockBookingOrderToggle}"
-                         checked="{!v.dealerOrder.Is_Booking_Order__c}"
-                         messageToggleActive="Yes"
-                         messageToggleInactive="No"/>
+        <lightning:input
+          type="toggle"
+          name="isBookingOrder"
+          label="Is this a Booking Order?"
+          class="centerToggle"
+          disabled="{!v.lockBookingOrderToggle}"
+          checked="{!v.dealerOrder.Is_Booking_Order__c}"
+          messageToggleActive="Yes"
+          messageToggleInactive="No"
+        />
       </div>
-
     </div>
 
-    <div class='slds-grid slds-wrap slds-grid_pull-padded'>
-
-        <div class="slds-col slds-large-size_6-of-12 slds-p-horizontal_small">
-          <aura:if isTrue="{!not(v.dealerOrder.Is_Legend_Transfer__c)}">
-            <lightning:select name="payment-method-select"
-                              aura:id="requiredField"
-                              label="Select Payment Method"
-                              class="slds-m-top_large"
-                              required="true"
-                              onchange="{!c.handlePaymentMethodChange}"
-                              messageWhenValueMissing="Payment Method is Required"
-                              value="{!v.dealerOrder.Payment_Method__c}">
-              <option value=""> -- None -- </option>
-              <aura:iteration items="{!v.paymentMethodOptions}" var="method">
-                <option value="{!method}" text="{!method}"></option>
-              </aura:iteration>
-            </lightning:select>
-          </aura:if>
-        </div>
-
-        <div class="slds-col slds-large-size_6-of-12 slds-p-horizontal_small">
-          <aura:if isTrue="{!equals(v.dealerOrder.Payment_Method__c,'Finance')}">
-            <lightning:select name="financing-complany-select"
-                            label="Select Financing Company"
-                            aura:id="requiredField"
-                            class="slds-m-top_large"
-                            required="{! equals(v.dealerOrder.Payment_Method__c, 'Finance') }"
-                            messageWhenValueMissing="Financing Company is Required"
-                            value="{!v.dealerOrder.Financing_Company__c}">
-              <option value=""> -- None -- </option>
-              <aura:iteration items="{!v.financeCompanyOptions}" var="company">
-                <option value="{!company.Id}" text="{!company.Name}"></option>
-              </aura:iteration>
-            </lightning:select>
-          </aura:if>
-        </div>
-
-
+    <div class="slds-grid slds-wrap slds-grid_pull-padded">
+      <div class="slds-col slds-large-size_6-of-12 slds-p-horizontal_small">
+        <aura:if isTrue="{!not(v.dealerOrder.Is_Legend_Transfer__c)}">
+          <lightning:select
+            name="payment-method-select"
+            aura:id="requiredField"
+            label="Select Payment Method"
+            class="slds-m-top_large"
+            required="true"
+            onchange="{!c.handlePaymentMethodChange}"
+            messageWhenValueMissing="Payment Method is Required"
+            value="{!v.dealerOrder.Payment_Method__c}"
+          >
+            <option value="">-- None --</option>
+            <aura:iteration items="{!v.paymentMethodOptions}" var="method">
+              <option value="{!method}" text="{!method}"></option>
+            </aura:iteration>
+          </lightning:select>
+        </aura:if>
       </div>
 
+      <div class="slds-col slds-large-size_6-of-12 slds-p-horizontal_small">
+        <aura:if isTrue="{!equals(v.dealerOrder.Payment_Method__c,'Finance')}">
+          <lightning:select
+            name="financing-complany-select"
+            label="Select Financing Company"
+            aura:id="requiredField"
+            class="slds-m-top_large"
+            required="{! equals(v.dealerOrder.Payment_Method__c, 'Finance') }"
+            messageWhenValueMissing="Financing Company is Required"
+            value="{!v.dealerOrder.Financing_Company__c}"
+          >
+            <option value="">-- None --</option>
+            <aura:iteration items="{!v.financeCompanyOptions}" var="company">
+              <option value="{!company.Id}" text="{!company.Name}"></option>
+            </aura:iteration>
+          </lightning:select>
+        </aura:if>
+      </div>
+    </div>
   </div>
 
   <div class="slds-modal__footer">
-    <lightning:button label="Cancel Order"
-                      iconName="utility:close"
-                      iconPosition="left"
-                      variant="destructive"
-                      class="slds-float_left"
-                      onclick="{!c.cancelOrder}" />
-    <lightning:button label="Next"
-                      variant="brand"
-                      iconName="utility:chevronright"
-                      iconPosition="right"
-                      onclick="{!c.orderComplete}" />
+    <lightning:button
+      label="Cancel Order"
+      iconName="utility:close"
+      iconPosition="left"
+      variant="destructive"
+      class="slds-float_left"
+      onclick="{!c.cancelOrder}"
+    />
+    <lightning:button
+      label="Next"
+      variant="brand"
+      iconName="utility:chevronright"
+      iconPosition="right"
+      onclick="{!c.orderComplete}"
+    />
   </div>
-
-
 </aura:component>

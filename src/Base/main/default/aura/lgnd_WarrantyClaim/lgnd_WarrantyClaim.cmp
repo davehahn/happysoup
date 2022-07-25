@@ -1,5 +1,4 @@
 <aura:component implements="force:appHostable,flexipage:availableForAllPageTypes" controller="CaseLexController">
-
   <!-- ATTRIBUTES -->
   <aura:attribute name="caseId" type="String" />
   <aura:attribute name="erpId" type="String" />
@@ -27,7 +26,6 @@
   <aura:attribute name="stepTwoValid" type="Boolean" default="false" />
   <aura:attribute name="currentStep" type="Integer" default="1" />
 
-
   <!-- EVENTS -->
   <aura:handler name="change" value="{!v.serialNumberId}" action="{!c.fetchSerialDetails}" />
   <aura:handler name="change" value="{!v.accountId}" action="{!c.validateStepOne}" />
@@ -36,7 +34,6 @@
   <lightning:utilityBarAPI aura:id="utilitybar" />
 
   <div>
-
     <div class="slds-spinner_container hidden" aura:id="busy-indicator">
       <div role="status" class="slds-spinner slds-spinner--medium">
         <span class="slds-assistive-text">Loading</span>
@@ -45,104 +42,100 @@
       </div>
     </div>
 
-    <c:toast content="{!v.toastContent}" isThemeReverse="false" containerId="toast" isToast="true"/>
+    <c:toast content="{!v.toastContent}" isThemeReverse="false" containerId="toast" isToast="true" />
 
     <aura:if isTrue="{!empty(v.caseId)}">
-
       <!-- ++++ STEP ONE FIELDS ++++ -->
       <div id="step-one" class="{!'step-'+v.currentStep}">
-        <c:LightningLookup aura:id="accountLookup"
-                           type="Account"
-                           sobjectId="{!v.accountId}"
-                           label="Account"
-                           required="true" />
+        <c:LightningLookup
+          aura:id="accountLookup"
+          type="Account"
+          sobjectId="{!v.accountId}"
+          label="Account"
+          required="true"
+        />
 
-        <c:LightningLookup aura:id="serialLookup"
-                           type="GMBLASERP__Serial_Number__c"
-                           sobjectId="{!v.serialNumberId}"
-                           label="Serial Number"
-                           required="true" />
+        <c:LightningLookup
+          aura:id="serialLookup"
+          type="GMBLASERP__Serial_Number__c"
+          sobjectId="{!v.serialNumberId}"
+          label="Serial Number"
+          required="true"
+        />
 
         <aura:if isTrue="{!!empty(v.serialNumberId)}">
-          <div class="slds-text-title slds-m-top_medium slds-m-bottom_small">
-            Serial Number Details
-          </div>
-          <lightning:layout >
-
-            <lightning:layoutItem size="3"
-                                  class="slds-text-body_regular slds-m-right_small">
-              <div class="slds-input">
-                {!v.serialProductYear}
-              </div>
+          <div class="slds-text-title slds-m-top_medium slds-m-bottom_small">Serial Number Details</div>
+          <lightning:layout>
+            <lightning:layoutItem size="3" class="slds-text-body_regular slds-m-right_small">
+              <div class="slds-input">{!v.serialProductYear}</div>
             </lightning:layoutItem>
 
-            <lightning:layoutItem size="9"
-                                  class="slds-text-body_regular slds-m-bottom_medium">
-              <div class="slds-truncate slds-input">
-                {!v.serialProductName}
-              </div>
+            <lightning:layoutItem size="9" class="slds-text-body_regular slds-m-bottom_medium">
+              <div class="slds-truncate slds-input">{!v.serialProductName}</div>
             </lightning:layoutItem>
-
           </lightning:layout>
         </aura:if>
 
-        <lightning:button label="Next"
-                      onclick="{! c.goToStepTwo }"
-                      class="btm-right-button submit-button"
-                      disabled="{!!v.stepOneValid}" />
+        <lightning:button
+          label="Next"
+          onclick="{! c.goToStepTwo }"
+          class="btm-right-button submit-button"
+          disabled="{!!v.stepOneValid}"
+        />
       </div>
       <!-- ==== STEP ONE FIELDS ==== -->
 
       <!-- ++++ STEP TWO FIELDS ++++ -->
       <div id="step-two" class="{!'step-'+v.currentStep}">
-       <lightning:select name="type"
-                  label="Select Claim Type"
-                  value="{!v.claimType}"
-                  required="true"
-                  aura:id="requiredField"
-                  messageWhenValueMissing="Claim Type is Required"
-                  onchange="{!c.checkValidity}">
+        <lightning:select
+          name="type"
+          label="Select Claim Type"
+          value="{!v.claimType}"
+          required="true"
+          aura:id="requiredField"
+          messageWhenValueMissing="Claim Type is Required"
+          onchange="{!c.checkValidity}"
+        >
           <option value="">choose one...</option>
           <aura:iteration items="{!v.claimTypeOptions}" var="t">
             <option value="{!t}" text="{!t}"></option>
           </aura:iteration>
         </lightning:select>
 
-        <lightning:input type="date"
-                     label="Failure Date"
-                     name="failure_date"
-                     value="{!v.failureDate}" />
+        <lightning:input type="date" label="Failure Date" name="failure_date" value="{!v.failureDate}" />
 
-        <lightning:input label="Subject"
-                     name="subject"
-                     value="{!v.subject}"
-                     required="true"
-                     aura:id="requiredField"
-                     messageWhenValueMissing="Subject is Required"
-                     onchange="{!c.checkValidity}" />
+        <lightning:input
+          label="Subject"
+          name="subject"
+          value="{!v.subject}"
+          required="true"
+          aura:id="requiredField"
+          messageWhenValueMissing="Subject is Required"
+          onchange="{!c.checkValidity}"
+        />
 
-        <lightning:textarea name="description"
-                        value="{!v.description}"
-                        label="Description of issue"
-                        maxlength="1000"
-                        required="true"
-                        aura:id="requiredField"
-                        messageWhenValueMissing="Description is Required"
-                        onchange="{!c.checkValidity}" />
+        <lightning:textarea
+          name="description"
+          value="{!v.description}"
+          label="Description of issue"
+          maxlength="1000"
+          required="true"
+          aura:id="requiredField"
+          messageWhenValueMissing="Description is Required"
+          onchange="{!c.checkValidity}"
+        />
 
-        <lightning:button variant="brand"
-                      label="Submit"
-                      onclick="{! c.submitCase }"
-                      class="btm-right-button submit-button"
-                      disabled="{!!v.stepTwoValid}" />
+        <lightning:button
+          variant="brand"
+          label="Submit"
+          onclick="{! c.submitCase }"
+          class="btm-right-button submit-button"
+          disabled="{!!v.stepTwoValid}"
+        />
 
-        <lightning:button label="Back"
-                      onclick="{! c.goBackToStepOne }"
-                      class="btm-left-button submit-button" />
-
+        <lightning:button label="Back" onclick="{! c.goBackToStepOne }" class="btm-left-button submit-button" />
       </div>
       <!-- ==== STEP TWO FIELDS ==== -->
-
     </aura:if>
 
     <aura:if isTrue="{!!empty(v.caseId)}">
@@ -153,7 +146,5 @@
         <!-- <lightning:button label="Go To ERP" onclick="{! c.goToERP }" /> -->
       </div>
     </aura:if>
-
   </div>
-
 </aura:component>

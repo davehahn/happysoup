@@ -1,6 +1,7 @@
-<aura:component controller="OpportunityLexController"
-                implements="force:appHostable,flexipage:availableForAllPageTypes,force:hasRecordId">
-
+<aura:component
+  controller="OpportunityLexController"
+  implements="force:appHostable,flexipage:availableForAllPageTypes,force:hasRecordId"
+>
   <!-- attributes -->
   <aura:attribute name="recordId" type="Id" />
   <aura:attribute name="insuranceLines" type="Object" />
@@ -20,14 +21,15 @@
   <aura:attribute name="termError" type="Boolean" default="false" />
   <aura:attribute name="originalInitComplete" type="Boolean" default="false" />
 
-  <ltng:require scripts="{!join(',', $Resource.Libraries +'/js/LightningApex.js',
+  <ltng:require
+    scripts="{!join(',', $Resource.Libraries +'/js/LightningApex.js',
                                      $Resource.Libraries +'/js/LightningUtils.js') }"
-                afterScriptsLoaded="{!c.doInit}" />
+    afterScriptsLoaded="{!c.doInit}"
+  />
 
   <!-- Events -->
   <aura:handler event="force:refreshView" action="{!c.refresh}" />
-  <aura:handler event="c:BusinessOffice_Insurance_ChangedEvent_dh"
-                action="{!c.insuranceItemsChanged}" />
+  <aura:handler event="c:BusinessOffice_Insurance_ChangedEvent_dh" action="{!c.insuranceItemsChanged}" />
   <aura:registerEvent name="calculatorChange" type="c:lgnd_FinanceCalculator_ChangedEvent_dh" />
 
   <aura:method name="remoteUpdate" action="{!c.remoteUpdate}" />
@@ -43,16 +45,13 @@
     </div>
 
     <h1>Payment Calculator</h1>
-    <div style="padding-top: 1rem;">
-
+    <div style="padding-top: 1rem">
       <aura:if isTrue="{!v.termError}">
-        <div class="slds-notify
-                    slds-notify_alert
-                    slds-theme_alert-texture
-                    slds-theme_error
-                    slds-is-absolute">
-          <h2>One or more selected Insurance items is not available for the selected term <br />
-             Calculations are not accurate.  Please lower the term and fix the problem</h2>
+        <div class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_error slds-is-absolute">
+          <h2>
+            One or more selected Insurance items is not available for the selected term <br /> Calculations are not
+            accurate. Please lower the term and fix the problem
+          </h2>
         </div>
       </aura:if>
 
@@ -60,25 +59,19 @@
         <div class="slds-col slds-size--4-of-12 payment-cell">
           <span>Monthly</span>
           <span>
-            <lightning:formattedNumber value="{!v.monthlyPayment}"
-                                 style="currency"
-                                 currencyCode="CAD" />
+            <lightning:formattedNumber value="{!v.monthlyPayment}" style="currency" currencyCode="CAD" />
           </span>
         </div>
         <div class="slds-col slds-size--4-of-12 payment-cell">
           <span>Bi-Weekly</span>
           <span>
-            <lightning:formattedNumber value="{!v.biWeeklyPayment}"
-                                 style="currency"
-                                 currencyCode="CAD" />
+            <lightning:formattedNumber value="{!v.biWeeklyPayment}" style="currency" currencyCode="CAD" />
           </span>
         </div>
         <div class="slds-col slds-size--4-of-12 payment-cell">
           <span>Weekly</span>
           <span>
-            <lightning:formattedNumber value="{!v.weeklyPayment}"
-                                 style="currency"
-                                 currencyCode="CAD" />
+            <lightning:formattedNumber value="{!v.weeklyPayment}" style="currency" currencyCode="CAD" />
           </span>
         </div>
       </div>
@@ -87,9 +80,7 @@
         <div class="payment-cell">
           <span>Principal After Term</span>
           <span>
-            <lightning:formattedNumber value="{!v.remaining}"
-                                 style="currency"
-                                 currencyCode="CAD" />
+            <lightning:formattedNumber value="{!v.remaining}" style="currency" currencyCode="CAD" />
           </span>
         </div>
       </div>
@@ -98,15 +89,17 @@
 
       <div class="slds-grid range-row">
         <div class="slds-col slds-size--9-of-12">
-          <lightning:input type="range"
-                           label="Insurance Term"
-                           name="term"
-                           min="12"
-                           max="240"
-                           step="12"
-                           class="termSlider"
-                           value="{!v.insTerm}"
-                           onchange="{!c.termChange}" />
+          <lightning:input
+            type="range"
+            label="Insurance Term"
+            name="term"
+            min="12"
+            max="240"
+            step="12"
+            class="termSlider"
+            value="{!v.insTerm}"
+            onchange="{!c.termChange}"
+          />
         </div>
         <div class="slds-col slds-size--3-of-12 value-container">
           <span class="range-value">{!v.insTerm}</span>
@@ -118,15 +111,17 @@
 
       <div class="slds-grid range-row">
         <div class="slds-col slds-size--9-of-12">
-          <lightning:input type="range"
-                           label="Finance Term"
-                           name="term"
-                           min="12"
-                           max="240"
-                           step="12"
-                           class="termSlider"
-                           value="{!v.finTerm}"
-                           onchange="{!c.termChange}" />
+          <lightning:input
+            type="range"
+            label="Finance Term"
+            name="term"
+            min="12"
+            max="240"
+            step="12"
+            class="termSlider"
+            value="{!v.finTerm}"
+            onchange="{!c.termChange}"
+          />
         </div>
         <div class="slds-col slds-size--3-of-12 value-container">
           <span class="range-value">{!v.finTerm}</span>
@@ -136,14 +131,16 @@
 
       <div class="slds-grid range-row">
         <div class="slds-col slds-size--9-of-12">
-          <lightning:input type="range"
-                           label="Finance Ammortization"
-                           name="ammortization"
-                           min="12"
-                           max="240"
-                           step="12"
-                           value="{!v.finAmort}"
-                           onchange="{!c.amortChange}" />
+          <lightning:input
+            type="range"
+            label="Finance Ammortization"
+            name="ammortization"
+            min="12"
+            max="240"
+            step="12"
+            value="{!v.finAmort}"
+            onchange="{!c.amortChange}"
+          />
         </div>
         <div class="slds-col slds-size--3-of-12 value-container">
           <span class="range-value">{!v.finAmort}</span>
@@ -154,36 +151,36 @@
       <div class="slds-grid slds-grid_pull-padded-small slds-grid_align-center ir-deposit-row">
         <div class="slds-col slds-size--5-of-12 slds-p-horizontal_small">
           <div class="slds-form-element">
-            <label class="slds-form-element__label"
-                   for="deposit">Interest Rate
-            </label>
+            <label class="slds-form-element__label" for="deposit">Interest Rate </label>
             <div class="slds-form-element__control">
-              <lightning:input type="number"
-                               name="intrestRate"
-                               label="intrestRate"
-                               class="un-stylize"
-                               step="0.01"
-                               min="0"
-                               value="{!v.intrestRate}"
-                               onchange="{!c.rate_deposit_change}" />
-                <span>%</span>
+              <lightning:input
+                type="number"
+                name="intrestRate"
+                label="intrestRate"
+                class="un-stylize"
+                step="0.01"
+                min="0"
+                value="{!v.intrestRate}"
+                onchange="{!c.rate_deposit_change}"
+              />
+              <span>%</span>
             </div>
           </div>
         </div>
         <div class="slds-col slds-size--5-of-12 slds-p-horizontal_small">
           <div class="slds-form-element">
-            <label class="slds-form-element__label"
-                   for="deposit">Deposit
-            </label>
+            <label class="slds-form-element__label" for="deposit">Deposit </label>
             <div class="slds-form-element__control">
               <span>$</span>
-               <lightning:input type="number"
-                     label="Deposit"
-                     step="any"
-                     class="un-stylize"
-                     name="deposit"
-                     value="{!v.deposit}"
-                     onchange="{!c.rate_deposit_change}" />
+              <lightning:input
+                type="number"
+                label="Deposit"
+                step="any"
+                class="un-stylize"
+                name="deposit"
+                value="{!v.deposit}"
+                onchange="{!c.rate_deposit_change}"
+              />
             </div>
           </div>
         </div>
@@ -204,8 +201,6 @@
                             onclick="{! c.handleSave }" />
         </div>
       </div>-->
-
     </div>
   </div>
-
 </aura:component>

@@ -1,29 +1,32 @@
 public with sharing class SurveyTestingUtil {
-  public String        surveyId       {get; set;}
-  public List<String>  questionIds    {get; set;}
-  public String          contactId      {get; set;}
-  public String        surveyTakerId  {get; set;}
-  public String        contactId2     {get; set;}
+  public String surveyId { get; set; }
+  public List<String> questionIds { get; set; }
+  public String contactId { get; set; }
+  public String surveyTakerId { get; set; }
+  public String contactId2 { get; set; }
 
-
-  public SurveyTestingUtil(){
+  public SurveyTestingUtil() {
     questionIds = new List<String>();
     createTestSurvey();
     createTestQuestions();
     createTestContact();
     createSurveyTaker();
     createTestResponses();
-
   }
 
-  private static TestMethod void testConstructor(){
+  private static testMethod void testConstructor() {
     SurveyTestingUtil tu = new SurveyTestingUtil();
-    Survey_Question__c sq = [Select id, NPS_Detractor_Count__c from Survey_Question__c where id=: tu.questionIds[4] limit 1];
+    Survey_Question__c sq = [
+      SELECT id, NPS_Detractor_Count__c
+      FROM Survey_Question__c
+      WHERE id = :tu.questionIds[4]
+      LIMIT 1
+    ];
     System.assert(tu.surveyId != null);
     System.assertEquals(1, sq.NPS_Detractor_Count__c);
   }
 
-  private void createSurveyTaker(){
+  private void createSurveyTaker() {
     SurveyTaker__c st = new SurveyTaker__c();
     st.Contact__c = contactId;
     st.Survey__c = surveyId;
@@ -32,7 +35,7 @@ public with sharing class SurveyTestingUtil {
     surveyTakerId = st.Id;
   }
 
-  public void createTestSurvey(){
+  public void createTestSurvey() {
     Survey__c s = new Survey__c();
     s.Name = 'Testing Survey';
     s.Submit_Response__c = 'empty';
@@ -40,7 +43,7 @@ public with sharing class SurveyTestingUtil {
     surveyId = s.Id;
   }
 
-  public void createTestQuestions(){
+  public void createTestQuestions() {
     questionIds.add(createQuestion(0));
     questionIds.add(createQuestion(1));
     questionIds.add(createQuestion(2));
@@ -48,7 +51,7 @@ public with sharing class SurveyTestingUtil {
     questionIds.add(createQuestion(4));
   }
 
-  private String createQuestion(Integer i){
+  private String createQuestion(Integer i) {
     Survey_Question__c q = new Survey_Question__c();
     String t = getType(i);
     q.Name = 'Testing Question';
@@ -62,7 +65,6 @@ public with sharing class SurveyTestingUtil {
     insert q;
     return q.id;
   }
-
 
   private void createTestContact() {
     Contact c = new Contact();
@@ -83,28 +85,27 @@ public with sharing class SurveyTestingUtil {
   private String createTestResponses() {
     SurveyQuestionResponse__c r = new SurveyQuestionResponse__c();
     r.Response__c = '4';
-    Survey_Question__c sq = [Select id from Survey_Question__c where id=: questionIds[4] limit 1];
+    Survey_Question__c sq = [SELECT id FROM Survey_Question__c WHERE id = :questionIds[4] LIMIT 1];
     r.Survey_Question__c = sq.id;
     r.SurveyTaker__c = surveyTakerId;
     insert r;
     return 'true';
   }
 
-  private String getType(Integer i){
-    if      (i==1)
-     return 'Multi-Select--Vertical';
-    else if (i==2)
-     return 'Single Select--Vertical';
-    else if (i==3)
-     return 'Free Text';
-    else if (i==4)
-     return 'NPS--Horizontal';
+  private String getType(Integer i) {
+    if (i == 1)
+      return 'Multi-Select--Vertical';
+    else if (i == 2)
+      return 'Single Select--Vertical';
+    else if (i == 3)
+      return 'Free Text';
+    else if (i == 4)
+      return 'NPS--Horizontal';
     else
-     return 'Single Select--Horizontal';
+      return 'Single Select--Horizontal';
   }
-  private String getChoices(){
+  private String getChoices() {
     //return 'one\ntwo\nthree\n';
     return '1\n2\n3\n4\n5\n6\n7\n8\n9\n10';
   }
-
 }

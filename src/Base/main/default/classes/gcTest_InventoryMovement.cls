@@ -1,12 +1,9 @@
 @isTest
 private class gcTest_InventoryMovement {
-
-
-	static testMethod void test1()
-	{
+  static testMethod void test1() {
     gcInventoryMovementCube_Report.coverage();
   }
-	/*static testMethod void gcTest3()
+  /*static testMethod void gcTest3()
 	{
 		gcInventoryMovementCube_Report.inventoryDetail(new map<String,list<String>>());
 

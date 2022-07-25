@@ -22,13 +22,7 @@ public without sharing class SystemIssue_TriggerHandler extends TriggerHandler {
     get {
       if (devQueueId == null) {
         try {
-          devQueueId = [
-            SELECT Id
-            FROM Group
-            WHERE Type = 'Queue' AND Name = 'Development'
-            LIMIT 1
-          ]
-          .Id;
+          devQueueId = [SELECT Id FROM Group WHERE Type = 'Queue' AND Name = 'Development' LIMIT 1].Id;
         } catch (Exception e) {
           throw new SystemIssue_Exception(
             'Development Queue not found.  Please contact your administrator with the error'
@@ -104,9 +98,7 @@ public without sharing class SystemIssue_TriggerHandler extends TriggerHandler {
   //  }
 
   private Id getRecordTypeIdByType(String issueType) {
-    return issueType == 'Epic'
-      ? recordTypes.getEpicId()
-      : recordTYpes.getStandardId();
+    return issueType == 'Epic' ? recordTypes.getEpicId() : recordTYpes.getStandardId();
   }
 
   private static String setStatusCategory(String status) {
@@ -117,9 +109,7 @@ public without sharing class SystemIssue_TriggerHandler extends TriggerHandler {
     }
   }
 
-  private static void setPercentageCompleteOnEpics(
-    List<System_Issue__c> newList
-  ) {
+  private static void setPercentageCompleteOnEpics(List<System_Issue__c> newList) {
     Set<Id> parentEpics = new Set<Id>();
     for (System_Issue__c si : newList) {
       if (si.Parent_System_Issue__c != null) {
@@ -132,9 +122,7 @@ public without sharing class SystemIssue_TriggerHandler extends TriggerHandler {
   }
 
   private static void doPercentCalc(Set<Id> parentEpicIds) {
-    Map<Id, List<System_Issue__c>> issuesByParentRecordId = groupChildIssuesByParent(
-      parentEpicIds
-    );
+    Map<Id, List<System_Issue__c>> issuesByParentRecordId = groupChildIssuesByParent(parentEpicIds);
     List<System_Issue__c> parentIssues = new List<System_Issue__c>();
     for (Id parentId : issuesByParentRecordId.keySet()) {
       Decimal doneCount = 0;
@@ -155,27 +143,19 @@ public without sharing class SystemIssue_TriggerHandler extends TriggerHandler {
       }
       System_Issue__c si = new System_Issue__c(
         Id = parentId,
-        Story_Count_Done__c = doneCount ,
-        Story_Count_To_Do__c = toDoCount ,
-        Story_Count_In_Progress__c = inProgressCount ,
+        Story_Count_Done__c = doneCount,
+        Story_Count_To_Do__c = toDoCount,
+        Story_Count_In_Progress__c = inProgressCount,
         Story_Count__c = issuesByParentRecordId.get(parentId).size()
       );
-      parentIssues.add(
-        si
-      );
+      parentIssues.add(si);
     }
     update parentIssues;
   }
 
-  private static Map<Id, List<System_Issue__c>> groupChildIssuesByParent(
-    Set<Id> parentEpicIds
-  ) {
+  private static Map<Id, List<System_Issue__c>> groupChildIssuesByParent(Set<Id> parentEpicIds) {
     Map<Id, List<System_Issue__c>> result = new Map<Id, List<System_Issue__c>>();
-    for (
-      System_Issue__c si : SystemIssue_Selector.allChildrenByParentId(
-        parentEpicIds
-      )
-    ) {
+    for (System_Issue__c si : SystemIssue_Selector.allChildrenByParentId(parentEpicIds)) {
       if (!result.containsKey(si.Parent_System_Issue__c)) {
         result.put(si.Parent_System_Issue__c, new List<System_Issue__c>());
       }

@@ -1,87 +1,80 @@
 @isTest
 private class RetailSalesToolController_dh_Test {
-
-  @testSetup static void dataSetup()
-  {
+  @testSetup
+  static void dataSetup() {
     new Factory_TestData();
     Factory_CustomSettings.setupInventorySettings();
   }
 
-	@isTest
+  @isTest
   static void buildSelectOptions_Test() {
-		RetailSalesToolController_dh.buildSelectOptions();
-	}
+    RetailSalesToolController_dh.buildSelectOptions();
+  }
 
-	@isTest
+  @isTest
   static void fetchCustomer_PearsonAccount_Test() {
     Test.startTest();
-		Account acct = Factory_Account.insertFullPersonAccount('Testy', 'McTestFace');
-    String jsonCustomer = RetailSalesToolController_dh.fetchCustomer( acct.Id );
+    Account acct = Factory_Account.insertFullPersonAccount('Testy', 'McTestFace');
+    String jsonCustomer = RetailSalesToolController_dh.fetchCustomer(acct.Id);
     Test.stopTest();
-    Customer.Person customer =
-      (Customer.Person)JSON.deserialize( jsonCustomer, Customer.Person.class);
+    Customer.Person customer = (Customer.Person) JSON.deserialize(jsonCustomer, Customer.Person.class);
 
-    System.assertEquals( 'Testy', customer.firstName );
-    System.assertEquals( 'McTestFace', customer.lastName );
-    System.assertEquals( acct.Id, customer.Id );
-	}
+    System.assertEquals('Testy', customer.firstName);
+    System.assertEquals('McTestFace', customer.lastName);
+    System.assertEquals(acct.Id, customer.Id);
+  }
 
   @isTest
   static void fetchCustomer_Lead_Test() {
     Test.startTest();
     Lead l = Factory_Lead.insertLead('Testy', 'McTestFace');
-    String jsonCustomer = RetailSalesToolController_dh.fetchCustomer( l.Id );
+    String jsonCustomer = RetailSalesToolController_dh.fetchCustomer(l.Id);
     Test.stopTest();
-    Customer.Person customer =
-      (Customer.Person)JSON.deserialize( jsonCustomer, Customer.Person.class);
+    Customer.Person customer = (Customer.Person) JSON.deserialize(jsonCustomer, Customer.Person.class);
 
-    System.assertEquals( 'Testy', customer.firstName );
-    System.assertEquals( 'McTestFace', customer.lastName );
-    System.assertEquals( l.Id, customer.Id );
+    System.assertEquals('Testy', customer.firstName);
+    System.assertEquals('McTestFace', customer.lastName);
+    System.assertEquals(l.Id, customer.Id);
   }
 
   @isTest
-  static void createSale_ExistingPersonAccount_Test()
-  {
+  static void createSale_ExistingPersonAccount_Test() {
     Test.startTest();
     Account acct = Factory_Account.insertFullPersonAccount('Testy', 'McTestFace');
-    String jsonCustomer = RetailSalesToolController_dh.fetchCustomer( acct.Id );
+    String jsonCustomer = RetailSalesToolController_dh.fetchCustomer(acct.Id);
     RetailSalesToolController_dh.OppWrapper oppWrapper = new RetailSalesToolController_dh.OppWrapper();
     Date d = Date.today();
     oppWrapper.closeDate = d;
-    String oppId = RetailSalesToolController_dh.createSale( jsonCustomer,
-                                                            JSON.serialize( oppWrapper ) );
+    String oppId = RetailSalesToolController_dh.createSale(jsonCustomer, JSON.serialize(oppWrapper));
     Opportunity opp = [SELECT Id, AccountId, CloseDate FROM Opportunity WHERE Id = :oppId];
     Test.stopTest();
 
-    System.assertEquals( acct.Id, opp.AccountId );
-    System.assertEquals( d, opp.CloseDate );
+    System.assertEquals(acct.Id, opp.AccountId);
+    System.assertEquals(d, opp.CloseDate);
   }
 
   @isTest
-  static void createSale_ExistingLead_Test()
-  {
+  static void createSale_ExistingLead_Test() {
     Test.startTest();
-    Lead l = Factory_Lead.insertLead('Testy', 'McTestFace');
-    String jsonCustomer = RetailSalesToolController_dh.fetchCustomer( l.Id );
+    Lead l = Factory_Lead.buildAcceptedLead('Testy', 'McTestFace');
+    insert l;
+    String jsonCustomer = RetailSalesToolController_dh.fetchCustomer(l.Id);
     RetailSalesToolController_dh.OppWrapper oppWrapper = new RetailSalesToolController_dh.OppWrapper();
     Date d = Date.today();
     oppWrapper.closeDate = d;
-    String oppId = RetailSalesToolController_dh.createSale( jsonCustomer,
-                                                            JSON.serialize( oppWrapper ) );
+    String oppId = RetailSalesToolController_dh.createSale(jsonCustomer, JSON.serialize(oppWrapper));
     Opportunity opp = [SELECT Id, Account.FirstName, Account.LastName, CloseDate FROM Opportunity WHERE Id = :oppId];
     Lead convertedLead = [SELECT Id, FirstName, LastName, isConverted FROM Lead WHERE Id = :l.Id];
     Test.stopTest();
 
-    System.assert( convertedLead.isConverted );
-    System.assertEquals( d, opp.CloseDate );
-    System.assertEquals( convertedLead.FirstName, opp.Account.FirstName );
-    System.assertEquals( convertedLead.LastName, opp.Account.LastName );
+    System.assert(convertedLead.isConverted);
+    System.assertEquals(d, opp.CloseDate);
+    System.assertEquals(convertedLead.FirstName, opp.Account.FirstName);
+    System.assertEquals(convertedLead.LastName, opp.Account.LastName);
   }
 
   @isTest
-  static void createSale_NonExisting_Person_Test()
-  {
+  static void createSale_NonExisting_Person_Test() {
     Test.startTest();
     String[] hobbies = LGND_Utilities.getPicklistValues('Account', 'Hobbies__c');
     String[] emoMoto = LGND_Utilities.getPicklistValues('Account', 'Emotional_Motivation__c');
@@ -113,32 +106,30 @@ private class RetailSalesToolController_dh_Test {
     RetailSalesToolController_dh.OppWrapper oppWrapper = new RetailSalesToolController_dh.OppWrapper();
     Date d = Date.today();
     oppWrapper.closeDate = d;
-    String oppId = RetailSalesToolController_dh.createSale( JSON.serialize( cust ),
-                                                            JSON.serialize( oppWrapper ) );
+    String oppId = RetailSalesToolController_dh.createSale(JSON.serialize(cust), JSON.serialize(oppWrapper));
     Test.stopTest();
     Opportunity opp = [SELECT Id, Account.FirstName, Account.LastName, CloseDate FROM Opportunity WHERE Id = :oppId];
-    System.assertEquals( d, opp.CloseDate );
-    System.assertEquals( cust.firstName, opp.Account.FirstName );
-    System.assertEquals( cust.lastName, opp.Account.LastName );
+    System.assertEquals(d, opp.CloseDate);
+    System.assertEquals(cust.firstName, opp.Account.FirstName);
+    System.assertEquals(cust.lastName, opp.Account.LastName);
   }
 
   @isTest
-  static void fetchBusiness_Test()
-  {
+  static void fetchBusiness_Test() {
     Test.startTest();
-    Account a = Factory_Account.insertBusinessAccountWithContacts('Test Company', 2 );
-    String jsonResult = RetailSalesToolController_dh.fetchBusiness( a.Id );
-    RetailSalesToolController_dh.Business result =
-      (RetailSalesToolController_dh.Business)JSON.deserialize( jsonResult,
-                                                              RetailSalesToolController_dh.Business.class );
+    Account a = Factory_Account.insertBusinessAccountWithContacts('Test Company', 2);
+    String jsonResult = RetailSalesToolController_dh.fetchBusiness(a.Id);
+    RetailSalesToolController_dh.Business result = (RetailSalesToolController_dh.Business) JSON.deserialize(
+      jsonResult,
+      RetailSalesToolController_dh.Business.class
+    );
     Test.stopTest();
-    System.assertEquals( a.Id, result.id );
-    System.assertEquals( 2, result.contacts.size() );
+    System.assertEquals(a.Id, result.id);
+    System.assertEquals(2, result.contacts.size());
   }
 
   @isTest
-  static void createSale_NonExisting_Business_Test()
-  {
+  static void createSale_NonExisting_Business_Test() {
     Test.startTest();
     RetailSalesToolController_dh.Business bus = new RetailSalesToolController_dh.Business();
     bus.name = 'Testy Co';
@@ -166,47 +157,47 @@ private class RetailSalesToolController_dh_Test {
     bc2.email = 'bc2@tastyco.com';
     bc2.contactRoleType = 'cobuyer';
 
-    bus.contacts.add( bc1 );
-    bus.contacts.add( bc2 );
+    bus.contacts.add(bc1);
+    bus.contacts.add(bc2);
 
     RetailSalesToolController_dh.OppWrapper oppWrapper = new RetailSalesToolController_dh.OppWrapper();
     Date d = Date.today();
     oppWrapper.closeDate = d;
 
-    String oppId = RetailSalesToolController_dh.createSale_Business(
-      JSON.serialize( bus ),
-      JSON.serialize( oppWrapper )
-    );
+    String oppId = RetailSalesToolController_dh.createSale_Business(JSON.serialize(bus), JSON.serialize(oppWrapper));
     Test.stopTest();
-    Opportunity opp = [SELECT Id,
-                              Account.Name,
-                              Account.BillingCountry,
-                              Account.BillingCountryCode,
-                              Account.BillingState,
-                              Account.BillingStateCode,
-                              CloseDate,
-                        (SELECT Id FROM OpportunityContactRoles)
-                       FROM Opportunity
-                       WHERE Id = :oppId ];
+    Opportunity opp = [
+      SELECT
+        Id,
+        Account.Name,
+        Account.BillingCountry,
+        Account.BillingCountryCode,
+        Account.BillingState,
+        Account.BillingStateCode,
+        CloseDate,
+        (SELECT Id FROM OpportunityContactRoles)
+      FROM Opportunity
+      WHERE Id = :oppId
+    ];
 
-    System.assertEquals( d, opp.CloseDate );
-    System.assertEquals( bus.name, opp.Account.Name );
-    System.assertEquals( 2, opp.OpportunityContactRoles.size() );
-    System.assertEquals( 'Ontario', opp.Account.BillingState );
-    System.assertEquals( 'ON', opp.Account.BillingStateCode );
-    System.assertEquals( 'Canada', opp.Account.BillingCountry );
-    System.assertEquals( 'CA', opp.Account.BillingCountryCode );
+    System.assertEquals(d, opp.CloseDate);
+    System.assertEquals(bus.name, opp.Account.Name);
+    System.assertEquals(2, opp.OpportunityContactRoles.size());
+    System.assertEquals('Ontario', opp.Account.BillingState);
+    System.assertEquals('ON', opp.Account.BillingStateCode);
+    System.assertEquals('Canada', opp.Account.BillingCountry);
+    System.assertEquals('CA', opp.Account.BillingCountryCode);
   }
 
   @isTest
-  static void createSale_Existing_Business_Test()
-  {
+  static void createSale_Existing_Business_Test() {
     Test.startTest();
-    Account a = Factory_Account.insertBusinessAccountWithContacts('Test Company', 2 );
-    String jsonResult = RetailSalesToolController_dh.fetchBusiness( a.Id );
-    RetailSalesToolController_dh.Business bus =
-      (RetailSalesToolController_dh.Business)JSON.deserialize( jsonResult,
-                                                              RetailSalesToolController_dh.Business.class );
+    Account a = Factory_Account.insertBusinessAccountWithContacts('Test Company', 2);
+    String jsonResult = RetailSalesToolController_dh.fetchBusiness(a.Id);
+    RetailSalesToolController_dh.Business bus = (RetailSalesToolController_dh.Business) JSON.deserialize(
+      jsonResult,
+      RetailSalesToolController_dh.Business.class
+    );
 
     bus.contacts[0].contactRoleType = 'buyer';
     bus.contacts[1].contactRoleType = 'cobuyer';
@@ -215,19 +206,16 @@ private class RetailSalesToolController_dh_Test {
     Date d = Date.today();
     oppWrapper.closeDate = d;
 
-    String oppId = RetailSalesToolController_dh.createSale_Business(
-      JSON.serialize( bus ),
-      JSON.serialize( oppWrapper )
-    );
+    String oppId = RetailSalesToolController_dh.createSale_Business(JSON.serialize(bus), JSON.serialize(oppWrapper));
     Test.stopTest();
-    Opportunity opp = [SELECT Id, Account.Name, CloseDate,
-                        (SELECT Id FROM OpportunityContactRoles)
-                       FROM Opportunity
-                       WHERE Id = :oppId ];
+    Opportunity opp = [
+      SELECT Id, Account.Name, CloseDate, (SELECT Id FROM OpportunityContactRoles)
+      FROM Opportunity
+      WHERE Id = :oppId
+    ];
 
-    System.assertEquals( d, opp.CloseDate );
-    System.assertEquals( bus.name, opp.Account.Name );
-    System.assertEquals( 2, opp.OpportunityContactRoles.size() );
+    System.assertEquals(d, opp.CloseDate);
+    System.assertEquals(bus.name, opp.Account.Name);
+    System.assertEquals(2, opp.OpportunityContactRoles.size());
   }
-
 }

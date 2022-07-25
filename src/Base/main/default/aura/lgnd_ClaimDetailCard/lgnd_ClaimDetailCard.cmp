@@ -1,5 +1,4 @@
 <aura:component controller="lgnd_newClaimController">
-
   <aura:attribute name="claim" type="Object" required="true" />
   <aura:attribute type="List" name="claimTypeOptions" />
   <aura:attribute name="problemNumber" type="Integer" required="true" />
@@ -12,12 +11,11 @@
 
   <div class="problem" id="{!'problem-'+v.problemNumber}">
     <h3>Problem #{!v.problemNumber + 1}</h3>
-    <br/>
+    <br />
     <aura:if isTrue="{!v.error != null}">
-      <div class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_error">
-        {!v.error}
-      </div><br/>
-      <br/>
+      <div class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_error">{!v.error}</div>
+      <br />
+      <br />
     </aura:if>
     <div class="">
       <div class="slds-tabs_scoped">
@@ -27,7 +25,9 @@
           </li>
           <aura:if isTrue="{!v.claim.imagesAdded == true}">
             <li class="slds-tabs_scoped__item" title="Attached Image(s)" aura:id="tab-images">
-              <a class="slds-tabs_scoped__link" href="javascript:void(0);" onclick="{!c.showImagesTab}">Attached Image(s)</a>
+              <a class="slds-tabs_scoped__link" href="javascript:void(0);" onclick="{!c.showImagesTab}"
+                >Attached Image(s)</a
+              >
             </li>
           </aura:if>
         </ul>
@@ -36,8 +36,7 @@
             <table class="slds-table slds-card slds-table--fixed-layout confirmation">
               <tr>
                 <th>Problem Description</th>
-                <td>{!v.claim.case.Description}
-                </td>
+                <td>{!v.claim.case.Description}</td>
               </tr>
               <tr>
                 <th>Claim Type</th>
@@ -50,9 +49,7 @@
               <aura:if isTrue="{!v.claim.case.Labor_Hours__c gt 0}">
                 <tr>
                   <th>Labour</th>
-                  <td>
-                    {!v.claim.case.Labor_Hours__c} hours
-                  </td>
+                  <td>{!v.claim.case.Labor_Hours__c} hours</td>
                 </tr>
               </aura:if>
               <aura:if isTrue="{! !empty(v.claim.parts)}">
@@ -77,7 +74,13 @@
                   <th valign="top">
                     <p>Need to add a sublet?</p>
                     <label class="slds-checkbox_toggle slds-grid slds-p-top_small">
-                      <input type="checkbox" name="acheckbox" aria-describedby="toggle-desc" value="on" onchange="{!c.toggleSubletDisplay}" />
+                      <input
+                        type="checkbox"
+                        name="acheckbox"
+                        aria-describedby="toggle-desc"
+                        value="on"
+                        onchange="{!c.toggleSubletDisplay}"
+                      />
                       <span id="toggle-desc" class="slds-checkbox_faux_container" aria-live="assertive">
                         <span class="slds-checkbox_faux"></span>
                         <span class="slds-checkbox_on">Yes</span>
@@ -91,30 +94,45 @@
                       <div class="slds-form-element__row">
                         <!-- sublet company -->
                         <div class="slds-form-element slds-size--1-of-1 slds-p-bottom_small">
-                          <label class="slds-form-element__label"><span class="slds-required"></span>Who is the sublet company?</label><br/>
+                          <label class="slds-form-element__label"
+                            ><span class="slds-required"></span>Who is the sublet company?</label
+                          ><br />
                           <ui:inputText value="{!v.claim.case.Sublet_Company__c}" aura:id="subletCompany" />
                         </div>
                         <!-- sublet price -->
                         <div class="slds-form-element slds-size--1-of-1 slds-p-bottom_small">
-                          <label class="slds-form-element__label"><span class="slds-required"></span>What is the amount of the sublet estimate?</label>
-                          <lightning:input type="number" value="{!v.claim.case.Sublet_Price__c}" aura:id="subletPrice" max="9999.99" formatter="currency" />
+                          <label class="slds-form-element__label"
+                            ><span class="slds-required"></span>What is the amount of the sublet estimate?</label
+                          >
+                          <lightning:input
+                            type="number"
+                            value="{!v.claim.case.Sublet_Price__c}"
+                            aura:id="subletPrice"
+                            max="9999.99"
+                            formatter="currency"
+                          />
                         </div>
                         <div class="slds-form-element slds-size--1-of-1">
                           <div class="slds-p-bottom_small">
                             <c:lgnd_dh_fileUpload />
                           </div>
                           <div class="slds-p-top_small">
-                            <em style="white-space: normal">Please be aware that all sublet work must be approved before proceeding with the work.</em><br/>
-                            <br/>
-                            <button class="slds-button slds-button--brand" 
-                                    onclick="{!c.addSublet}" 
-                                    data-parent="{!v.claim.case.Id}"
-                                    disabled="false"
-                                    >Save Sublet</button>
+                            <em style="white-space: normal"
+                              >Please be aware that all sublet work must be approved before proceeding with the
+                              work.</em
+                            ><br />
+                            <br />
+                            <button
+                              class="slds-button slds-button--brand"
+                              onclick="{!c.addSublet}"
+                              data-parent="{!v.claim.case.Id}"
+                              disabled="false"
+                            >
+                              Save Sublet
+                            </button>
                           </div>
                         </div>
                       </div>
-
                     </aura:if>
                   </td>
                 </tr>
@@ -131,16 +149,20 @@
                 <tr>
                   <th>Sublet Attachment(s)</th>
                   <td>
-                    <aura:iteration var="doc" items="{!v.claim.docs}">
-                      {!doc.Title}<br/>
-                    </aura:iteration>
+                    <aura:iteration var="doc" items="{!v.claim.docs}"> {!doc.Title}<br /> </aura:iteration>
                   </td>
                 </tr>
               </aura:if>
             </table>
             <div class="">
-              <br/>
-              <button class="slds-button slds-button--brand" onclick="{!c.toggleEdit}" data-problemId="{!v.problemNumber}">Edit</button>
+              <br />
+              <button
+                class="slds-button slds-button--brand"
+                onclick="{!c.toggleEdit}"
+                data-problemId="{!v.problemNumber}"
+              >
+                Edit
+              </button>
             </div>
           </div>
 
@@ -154,7 +176,13 @@
               <tr>
                 <th>Claim Type</th>
                 <td>
-                  <lightning:select name="Claim_Type__c" value="{!v.claim.case.Claim_Type__c}" label="What type of problem is it?" required="true" aura:id="claimType">
+                  <lightning:select
+                    name="Claim_Type__c"
+                    value="{!v.claim.case.Claim_Type__c}"
+                    label="What type of problem is it?"
+                    required="true"
+                    aura:id="claimType"
+                  >
                     <aura:iteration items="{!v.claimTypeOptions}" var="option">
                       <option value="{!option.value}" text="{!option.label}"></option>
                     </aura:iteration>
@@ -208,19 +236,29 @@
               </aura:if>
             </table>
             <div class="">
-              <br/>
-              <button class="slds-button slds-button--brand" onclick="{!c.saveEdits}" data-problemId="{!v.problemNumber}">Save Changes</button>
+              <br />
+              <button
+                class="slds-button slds-button--brand"
+                onclick="{!c.saveEdits}"
+                data-problemId="{!v.problemNumber}"
+              >
+                Save Changes
+              </button>
             </div>
           </div>
           <!-- end edit form -->
-        </div>          
+        </div>
         <aura:if isTrue="{!v.claim.imagesAdded == true}">
           <div aura:id="images" class="slds-tabs_scoped__content slds-hide">
-            <c:lgnd_GalleryViewer recordId="{!v.claim.case.Id}" allowUploads="false" autoInit="false" aura:id="gallery"/>
+            <c:lgnd_GalleryViewer
+              recordId="{!v.claim.case.Id}"
+              allowUploads="false"
+              autoInit="false"
+              aura:id="gallery"
+            />
           </div>
         </aura:if>
       </div>
     </div>
   </div>
-
 </aura:component>

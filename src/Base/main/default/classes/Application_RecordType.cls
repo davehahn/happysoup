@@ -2,23 +2,23 @@
  * Created by dave on 2020-12-29.
  */
 
-public virtual class Application_RecordType
-{
-  public class Application_RecordType_Exception extends Exception{}
+public virtual class Application_RecordType {
+  public class Application_RecordType_Exception extends Exception {
+  }
 
   private static Application_RecordType instance = null;
   private static SObjectRecordType sobjectRecordTypeInstance = null;
 
-  public static Application_RecordType getInstance(){
-    if( instance == null ) instance = new Application_RecordType();
+  public static Application_RecordType getInstance() {
+    if (instance == null)
+      instance = new Application_RecordType();
     return instance;
   }
 
-  public static SObjectRecordType getSObjectRecordTypeInstance(String sObjectName){
-    if( sobjectRecordTypeInstance == null ){
+  public static SObjectRecordType getSObjectRecordTypeInstance(String sObjectName) {
+    if (sobjectRecordTypeInstance == null) {
       sobjectRecordTypeInstance = new SObjectRecordType(sObjectName);
-    }
-    else {
+    } else {
       sobjectRecordTypeInstance.setSObjectName(sObjectName);
     }
     return sobjectRecordTypeInstance;
@@ -30,7 +30,8 @@ public virtual class Application_RecordType
     @InvocableVariable
     public String recordTypeDeveloperName;
 
-    public FlowRecordTypeDescriptor(){}
+    public FlowRecordTypeDescriptor() {
+    }
   }
 
   @InvocableMethod(
@@ -38,23 +39,20 @@ public virtual class Application_RecordType
     Description='Pass in sObjectName and RecordTypeDeveloperName to retrieve the RecordTypeId'
     Category='Application Utilities'
   )
-  public static List<String> getRecordTypeId(
-    List<FlowRecordTypeDescriptor> descriptors
-  )
-  {
+  public static List<String> getRecordTypeId(List<FlowRecordTypeDescriptor> descriptors) {
     List<String> result = new List<String>();
-    for( FlowRecordTypeDescriptor d : descriptors ){
+    for (FlowRecordTypeDescriptor d : descriptors) {
       result.add(
-        (String)Application_RecordType.getSObjectRecordTypeInstance(d.sObjectName).getIdFromDeveloperName(d.recordTypeDeveloperName)
+        (String) Application_RecordType.getSObjectRecordTypeInstance(d.sObjectName)
+          .getIdFromDeveloperName(d.recordTypeDeveloperName)
       );
     }
     return result;
   }
 
-  private Map<String,List<RecordType>> recordTypesBySobjectName {
+  private Map<String, List<RecordType>> recordTypesBySobjectName {
     get {
-      if( recordTypesBySobjectName == null )
-      {
+      if (recordTypesBySobjectName == null) {
         fetchAllRecordTypes();
       }
       return recordTypesBySobjectName;
@@ -64,8 +62,7 @@ public virtual class Application_RecordType
 
   public Map<Id, String> developerNameById {
     get {
-      if( developerNameById == null )
-      {
+      if (developerNameById == null) {
         fetchAllRecordTypes();
       }
       return developerNameById;
@@ -75,8 +72,7 @@ public virtual class Application_RecordType
 
   private AccountRTs accountRTs {
     get {
-      if( this.accountRTs == null )
-      {
+      if (this.accountRTs == null) {
         this.accountRTs = new AccountRTs();
       }
       return accountRTs;
@@ -85,8 +81,7 @@ public virtual class Application_RecordType
   }
   private CaseRTs caseRTs {
     get {
-      if( this.caseRTs == null )
-      {
+      if (this.caseRTs == null) {
         this.caseRTs = new CaseRTs();
       }
       return caseRTs;
@@ -95,8 +90,7 @@ public virtual class Application_RecordType
   }
   private ERPOrderRTs erpOrderRTs {
     get {
-      if( this.erpOrderRTs == null )
-      {
+      if (this.erpOrderRTs == null) {
         this.erpOrderRTs = new ERPOrderRTs();
       }
       return erpOrderRTs;
@@ -105,8 +99,7 @@ public virtual class Application_RecordType
   }
   private OpportunityRTs opportunityRTs {
     get {
-      if( this.opportunityRTs == null )
-      {
+      if (this.opportunityRTs == null) {
         this.opportunityRTs = new OpportunityRTs();
       }
       return opportunityRTs;
@@ -115,8 +108,7 @@ public virtual class Application_RecordType
   }
   private PricebookRTs pricebookRTs {
     get {
-      if( this.pricebookRTs == null )
-      {
+      if (this.pricebookRTs == null) {
         this.pricebookRTs = new PricebookRTs();
       }
       return pricebookRTs;
@@ -125,8 +117,7 @@ public virtual class Application_RecordType
   }
   private ProductRTs productRTs {
     get {
-      if( this.productRTs == null )
-      {
+      if (this.productRTs == null) {
         this.productRTs = new ProductRTs();
       }
       return productRTs;
@@ -135,8 +126,7 @@ public virtual class Application_RecordType
   }
   private SystemIssueRTs systemIssueRTs {
     get {
-      if( this.systemIssueRTs == null )
-      {
+      if (this.systemIssueRTs == null) {
         this.systemIssueRTs = new SystemIssueRTs();
       }
       return systemIssueRTs;
@@ -145,8 +135,7 @@ public virtual class Application_RecordType
   }
   private WorkOrderRTs workOrderRTs {
     get {
-      if( this.workOrderRTs == null )
-      {
+      if (this.workOrderRTs == null) {
         this.workOrderRTs = new WorkOrderRTs();
       }
       return workOrderRTs;
@@ -154,482 +143,376 @@ public virtual class Application_RecordType
     private set;
   }
 
-  public Application_RecordType(){}
+  public Application_RecordType() {
+  }
 
-  public String getDeveloperNameById( Id recordId ){
-    if( this.developerNameById.containsKey(recordId) ){
+  public String getDeveloperNameById(Id recordId) {
+    if (this.developerNameById.containsKey(recordId)) {
       return this.developerNameById.get(recordId);
     }
     String err = 'A record type with Id [' + recordId + '] does not exist.';
-    Application_RecordType_Exception ex = new Application_RecordType_Exception(
-      err
-    );
-    ex.setMessage( err );
+    Application_RecordType_Exception ex = new Application_RecordType_Exception(err);
+    ex.setMessage(err);
     throw ex;
   }
 
-
-  public AccountRTs getAccountRecordTypes()
-  {
+  public AccountRTs getAccountRecordTypes() {
     return this.accountRTs;
   }
 
-  public CaseRTs getCaseRecordTypes()
-  {
+  public CaseRTs getCaseRecordTypes() {
     return this.caseRTs;
   }
 
-  public ERPOrderRTs getERPOrderRecordTypes()
-  {
+  public ERPOrderRTs getERPOrderRecordTypes() {
     return this.erpOrderRTs;
   }
 
-  public OpportunityRTs getOpportunityRecordTypes()
-  {
+  public OpportunityRTs getOpportunityRecordTypes() {
     return this.opportunityRTs;
   }
 
-  public PricebookRTs getPricebookRecordTypes()
-  {
+  public PricebookRTs getPricebookRecordTypes() {
     return this.pricebookRTs;
   }
 
-  public ProductRTs getProductRecordTypes()
-  {
+  public ProductRTs getProductRecordTypes() {
     return this.productRTs;
   }
 
-  public SystemIssueRTs getSystemIssueRecordTypes(){
+  public SystemIssueRTs getSystemIssueRecordTypes() {
     return this.systemIssueRTs;
   }
 
-  public WorkOrderRTs getWorkOrderRecordTypes()
-  {
+  public WorkOrderRTs getWorkOrderRecordTypes() {
     return this.workOrderRTs;
   }
 
-  public virtual class SObjectRecordType extends Application_RecordType
-  {
+  public virtual class SObjectRecordType extends Application_RecordType {
     private String sObjectName;
 
     public Map<String, RecordType> recordTypeByDeveloperName {
       get {
-        if( recordTypeByDeveloperName == null )
-        {
-          recordTypeByDeveloperName = buildDeveloperMapFor(this.sObjectName );
+        if (recordTypeByDeveloperName == null) {
+          recordTypeByDeveloperName = buildDeveloperMapFor(this.sObjectName);
         }
         return recordTypeByDeveloperName;
       }
       set;
     }
 
-    public SObjectRecordType(){}
+    public SObjectRecordType() {
+    }
 
-    public SObjectRecordType( String sObjectName )
-    {
+    public SObjectRecordType(String sObjectName) {
       this.sObjectName = sObjectName;
     }
 
-    public void setSObjectName(String sObjectName){
+    public void setSObjectName(String sObjectName) {
       this.sObjectName = sObjectName;
     }
 
-    public Id getIdFromDeveloperName( String devName )
-    {
-      if( this.recordTypeByDeveloperName.containsKey( devName ) )
-      {
+    public Id getIdFromDeveloperName(String devName) {
+      if (this.recordTypeByDeveloperName.containsKey(devName)) {
         return this.recordTypeByDeveloperName.get(devName).Id;
       }
       String err = 'A record type with API Name [' + devName + '] for ' + this.sObjectName + ' does not exist.';
-      Application_RecordType_Exception ex = new Application_RecordType_Exception(
-        err
-      );
-      ex.setMessage( err );
+      Application_RecordType_Exception ex = new Application_RecordType_Exception(err);
+      ex.setMessage(err);
       throw ex;
     }
 
-    public Integer getRecordTypeCount()
-    {
+    public Integer getRecordTypeCount() {
       return this.recordTypeByDeveloperName.keySet().size();
     }
 
-    private Map<String, RecordType> buildDeveloperMapFor( String sObjectName )
-    {
+    private Map<String, RecordType> buildDeveloperMapFor(String sObjectName) {
       Map<String, RecordType> result = new Map<String, RecordType>();
-      for( RecordType rt : super.recordTypesBySobjectName.get( sObjectName ) )
-      {
-        result.put( rt.DeveloperName, rt );
+      for (RecordType rt : super.recordTypesBySobjectName.get(sObjectName)) {
+        result.put(rt.DeveloperName, rt);
       }
       return result;
     }
 
-    private Map<Id, String> buildNameMapFor( String sObjectName )
-    {
+    private Map<Id, String> buildNameMapFor(String sObjectName) {
       Map<Id, String> result = new Map<Id, String>();
-      for( RecordType rt : super.recordTypesBySobjectName.get( sObjectName ) )
-      {
-        result.put( rt.Id, rt.DeveloperName );
+      for (RecordType rt : super.recordTypesBySobjectName.get(sObjectName)) {
+        result.put(rt.Id, rt.DeveloperName);
       }
       return result;
     }
   }
 
-  public virtual class AccountRTs extends SObjectRecordType
-  {
-
-    public AccountRTs()
-    {
+  public virtual class AccountRTs extends SObjectRecordType {
+    public AccountRTs() {
       super('Account');
     }
 
-    public Id getBusinessAccountId()
-    {
+    public Id getBusinessAccountId() {
       return this.getIdFromDeveloperName('Business_Account');
     }
 
-    public Id getDealerId()
-    {
+    public Id getDealerId() {
       return this.getIdFromDeveloperName('Dealer');
     }
 
-    public Id getGeoHackId()
-    {
+    public Id getGeoHackId() {
       return this.getIdFromDeveloperName('GeoHack');
     }
 
-    public Id getPersonAccountId()
-    {
+    public Id getPersonAccountId() {
       return this.getIdFromDeveloperName('PersonAccount');
     }
 
-    public Id getSupplierId()
-    {
+    public Id getSupplierId() {
       return this.getIdFromDeveloperName('Supplier');
     }
   }
 
-  public virtual class CaseRTs extends SObjectRecordType
-  {
-
-    public CaseRTs()
-    {
+  public virtual class CaseRTs extends SObjectRecordType {
+    public CaseRTs() {
       super('Case');
     }
 
-    public Id getCustomerCommunityId()
-    {
+    public Id getCustomerCommunityId() {
       return this.getIdFromDeveloperName('Customer_Community');
     }
 
-    public Id getPartOrderRequestId()
-    {
+    public Id getPartOrderRequestId() {
       return this.getIdFromDeveloperName('Part_Order_Request');
     }
 
-    public Id getPartInquiryId()
-    {
+    public Id getPartInquiryId() {
       return this.getIdFromDeveloperName('PartInquiry');
     }
 
-    public Id getPartnerSupportId()
-    {
+    public Id getPartnerSupportId() {
       return this.getIdFromDeveloperName('Partner_Support_Process');
     }
 
-    public Id getPromotionId()
-    {
+    public Id getPromotionId() {
       return this.getIdFromDeveloperName('Promotion');
     }
 
-    public Id getReportRequestId()
-    {
+    public Id getReportRequestId() {
       return this.getIdFromDeveloperName('Report_Request');
     }
 
-    public Id getServiceAppointmentId()
-    {
+    public Id getServiceAppointmentId() {
       return this.getIdFromDeveloperName('Service_Appointment');
     }
 
-    public Id getSupportCaseId()
-    {
+    public Id getSupportCaseId() {
       return this.getIdFromDeveloperName('Support_Case');
     }
 
-    public Id getTranslationId()
-    {
+    public Id getTranslationId() {
       return this.getIdFromDeveloperName('Translation');
     }
 
-    public Id getWarrantyId()
-    {
+    public Id getWarrantyId() {
       return this.getIdFromDeveloperName('Warranty');
     }
 
-    public Id getWarrantyReturnId()
-    {
+    public Id getWarrantyReturnId() {
       return this.getIdFromDeveloperName('Warranty_Returns');
     }
   }
 
-  public virtual class ERPOrderRTs extends SObjectRecordType
-  {
-
-    public ERPOrderRTs()
-    {
+  public virtual class ERPOrderRTs extends SObjectRecordType {
+    public ERPOrderRTs() {
       super('AcctSeed__Project__c');
     }
 
-    public Id getCounterSaleId()
-    {
+    public Id getCounterSaleId() {
       return this.getIdFromDeveloperName('CounterSale');
     }
 
-    public Id getFixedAssetId()
-    {
+    public Id getFixedAssetId() {
       return this.getIdFromDeveloperName('LegendFixedAsset');
     }
 
-    public Id getManufacturingId()
-    {
+    public Id getManufacturingId() {
       return this.getIdFromDeveloperName('Manufacturing');
     }
 
-    public Id getPartnerPartsOrderId()
-    {
+    public Id getPartnerPartsOrderId() {
       return this.getIdFromDeveloperName('LegendPartnerPartsOrder');
     }
 
-    public Id getPartnerRetailBoatSaleId()
-    {
+    public Id getPartnerRetailBoatSaleId() {
       return this.getIdFromDeveloperName('PartnerRetailBoatSale');
     }
 
-    public Id getServiceWorkOrderId()
-    {
+    public Id getServiceWorkOrderId() {
       return this.getIdFromDeveloperName('Service');
     }
 
-    public Id getTradeInId()
-    {
+    public Id getTradeInId() {
       return this.getIdFromDeveloperName('TradeIn');
     }
 
-    public Id getWarrantyId()
-    {
+    public Id getWarrantyId() {
       return this.getIdFromDeveloperName('Legend_Warranty');
     }
 
-    public Id getPartnerBoatSaleId()
-    {
+    public Id getPartnerBoatSaleId() {
       return this.getIdFromDeveloperName('PartnerBoatSale');
     }
 
-    public Id getProjectId()
-    {
+    public Id getProjectId() {
       return this.getIdFromDeveloperName('Project');
     }
 
-    public Id getRetailBoatSaleId()
-    {
+    public Id getRetailBoatSaleId() {
       return this.getIdFromDeveloperName('BoatSale');
     }
-
   }
 
-  public virtual class OpportunityRTs extends SObjectRecordType
-  {
-
-    public OpportunityRTs()
-    {
+  public virtual class OpportunityRTs extends SObjectRecordType {
+    public OpportunityRTs() {
       super('Opportunity');
     }
 
-    public Id getOnlineId()
-    {
+    public Id getOnlineId() {
       return this.getIdFromDeveloperName('Online');
     }
 
-    public Id getPartnerRetailBoatSaleId()
-    {
+    public Id getPartnerRetailBoatSaleId() {
       return this.getIdFromDeveloperName('Partner_Retail_Boat_Sale');
     }
 
-    public Id getRetailId()
-    {
+    public Id getRetailId() {
       return this.getIdFromDeveloperName('Retail');
     }
   }
 
-  public virtual class PriceBookRTs extends SObjectRecordType
-  {
-    public PriceBookRTs()
-    {
+  public virtual class PriceBookRTs extends SObjectRecordType {
+    public PriceBookRTs() {
       super('Pricebook2');
     }
 
-    public Id getDealerId()
-    {
+    public Id getDealerId() {
       return this.getIdFromDeveloperName('Dealer');
     }
 
-    public Id getFactoryId()
-    {
+    public Id getFactoryId() {
       return this.getIdFromDeveloperName('Factory');
     }
 
-    public Id getSalesId()
-    {
+    public Id getSalesId() {
       return this.getIdFromDeveloperName('Sales');
     }
 
-    public Id getSupplierId()
-    {
+    public Id getSupplierId() {
       return this.getIdFromDeveloperName('Supplier');
     }
   }
 
-  public virtual class ProductRTs extends SObjectRecordType
-  {
-
-    public ProductRTs()
-    {
+  public virtual class ProductRTs extends SObjectRecordType {
+    public ProductRTs() {
       super('Product2');
     }
 
-    public Id getBoatId()
-    {
+    public Id getBoatId() {
       return this.getIdFromDeveloperName('Boat');
     }
 
-    public Id getFeesId()
-    {
+    public Id getFeesId() {
       return this.getIdFromDeveloperName('Fees');
     }
 
-    public Id getInsuranceId()
-    {
+    public Id getInsuranceId() {
       return this.getIdFromDeveloperName('Insurance');
     }
 
-    public Id getInternalId()
-    {
+    public Id getInternalId() {
       return this.getIdFromDeveloperName('Internal');
     }
 
-    public Id getLabourId()
-    {
+    public Id getLabourId() {
       return this.getIdFromDeveloperName('Labour');
     }
 
-    public Id getMotorId()
-    {
+    public Id getMotorId() {
       return this.getIdFromDeveloperName('Motor');
     }
 
-    public Id getPackageBundleId()
-    {
+    public Id getPackageBundleId() {
       return this.getIdFromDeveloperName('Package_Bundle');
     }
 
-    public Id getPartId()
-    {
+    public Id getPartId() {
       return this.getIdFromDeveloperName('Part');
     }
 
-    public Id getPrepaidPackageId()
-    {
+    public Id getPrepaidPackageId() {
       return this.getIdFromDeveloperName('Prepaid_Package');
     }
 
-    public Id getProtectionAndServiceId()
-    {
+    public Id getProtectionAndServiceId() {
       return this.getIdFromDeveloperName('Protection_and_Services');
     }
 
-    public Id getTrailerId()
-    {
+    public Id getTrailerId() {
       return this.getIdFromDeveloperName('Trailer');
     }
 
-    public Id getTrollingMotorId()
-    {
+    public Id getTrollingMotorId() {
       return this.getIdFromDeveloperName('Trolling_Motor');
     }
-
   }
 
   public virtual class SystemIssueRTs extends SObjectRecordType {
-    public SystemIssueRTs(){
+    public SystemIssueRTs() {
       super('System_Issue__c');
     }
 
-    public Id getStandardId(){
+    public Id getStandardId() {
       return this.getIdFromDeveloperName('Standard');
     }
 
-    public Id getEpicId(){
+    public Id getEpicId() {
       return this.getIdFromDeveloperName('Epic');
     }
   }
 
-  public virtual class WorkOrderRTs extends SObjectRecordType
-  {
-
-    public WorkOrderRTs()
-    {
+  public virtual class WorkOrderRTs extends SObjectRecordType {
+    public WorkOrderRTs() {
       super('WorkOrder');
     }
 
-    public Id getManufacturingId()
-    {
+    public Id getManufacturingId() {
       return this.getIdFromDeveloperName('Manufacturing');
     }
 
-    public Id getPartnerSaleId()
-    {
+    public Id getPartnerSaleId() {
       return this.getIdFromDeveloperName('Partner_Sale');
     }
 
-    public Id getRetailSaleId()
-    {
+    public Id getRetailSaleId() {
       return this.getIdFromDeveloperName('Retail_Sale');
     }
 
-    public Id getRetailServiceId()
-    {
+    public Id getRetailServiceId() {
       return this.getIdFromDeveloperName('Retail_Service');
     }
 
-    public Id getWholesaleServiceId()
-    {
+    public Id getWholesaleServiceId() {
       return this.getIdFromDeveloperName('Wholesale_Service');
     }
-
   }
 
-  private void fetchAllRecordTypes()
-  {
+  private void fetchAllRecordTypes() {
     this.recordTypesBySobjectName = new Map<String, List<RecordType>>();
     this.developerNameById = new Map<Id, String>();
-    List<RecordType> rts = [
-      SELECT
-        Id,
-        Name,
-        DeveloperName,
-        SobjectType
-      FROM RecordType
-      WHERE IsActive = true
-    ];
-    for( RecordType rt : rts )
-    {
-      this.developerNameById.put( rt.Id, rt.DeveloperName );
-      if( !this.recordTypesBySobjectName.containsKey( rt.SobjectType ) )
-      {
-        this.recordTypesBySobjectName.put( rt.SobjectType, new List<RecordType>() );
+    List<RecordType> rts = [SELECT Id, Name, DeveloperName, SobjectType FROM RecordType WHERE IsActive = TRUE];
+    for (RecordType rt : rts) {
+      this.developerNameById.put(rt.Id, rt.DeveloperName);
+      if (!this.recordTypesBySobjectName.containsKey(rt.SobjectType)) {
+        this.recordTypesBySobjectName.put(rt.SobjectType, new List<RecordType>());
       }
-      this.recordTypesBySobjectName.get( rt.SobjectType ).add( rt );
+      this.recordTypesBySobjectName.get(rt.SobjectType).add(rt);
     }
   }
-
 }

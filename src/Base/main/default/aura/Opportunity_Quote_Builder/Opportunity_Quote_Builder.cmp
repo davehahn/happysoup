@@ -1,12 +1,14 @@
-<aura:component controller="Opportunity_Quote_Builder_Controller"
-                implements="force:appHostable,flexipage:availableForAllPageTypes,forceCommunity:availableForAllPageTypes,force:hasRecordId">
-
-  <ltng:require scripts="{!join(',', $Resource.Libraries +'/js/LightningApex.js',
+<aura:component
+  controller="Opportunity_Quote_Builder_Controller"
+  implements="force:appHostable,flexipage:availableForAllPageTypes,forceCommunity:availableForAllPageTypes,force:hasRecordId"
+>
+  <ltng:require
+    scripts="{!join(',', $Resource.Libraries +'/js/LightningApex.js',
                                      $Resource.Libraries +'/js/LightningUtils.js') }"
-                afterScriptsLoaded="{!c.doInit}" />
+    afterScriptsLoaded="{!c.doInit}"
+  />
 
-  <aura:handler event="c:CPQ_PaymentCalculator_PaymentsChanged_Event"
-                action="{!c.handlePaymentChange}" />
+  <aura:handler event="c:CPQ_PaymentCalculator_PaymentsChanged_Event" action="{!c.handlePaymentChange}" />
 
   <aura:attribute name="recordId" type="String" />
   <aura:attribute name="quotes" type="Quote[]" />
@@ -21,48 +23,52 @@
   <aura:attribute name="showPaymentsOnPDF" type="Boolean" default="false" />
   <aura:attribute name="isOutdated" type="Boolean" default="false" />
 
-  <aura:handler name="render" value="{!this}" action="{!c.onRender}"/>
-  <aura:handler name="change"
-                value="{!v.selectedQuoteId}"
-                action="{!c.handleSelectedChanged}" />
-  <aura:handler name="change"
-                value="{!v.quotes}"
-                action="{!c.quotesChanged}" />
-  <aura:handler event="c:CPQ_SavedForQuote_Event"
-                action="{!c.handleQuoteSaved}" />
+  <aura:handler name="render" value="{!this}" action="{!c.onRender}" />
+  <aura:handler name="change" value="{!v.selectedQuoteId}" action="{!c.handleSelectedChanged}" />
+  <aura:handler name="change" value="{!v.quotes}" action="{!c.quotesChanged}" />
+  <aura:handler event="c:CPQ_SavedForQuote_Event" action="{!c.handleQuoteSaved}" />
 
   <c:Lgnd_Spinner_dh aura:id="spinner" />
   <c:lgnd_Confirm aura:id="confirm" />
   <div aura:id="menu-mask" class="c-mask" onclick="{!c.toggleQuoteList}"></div>
   <div>
-
-    <lightning:layout horizontalAlign="space"
-                      verticalAlign="center"
-                      multipleRows="true"
-                      class="slds-m-bottom_small"
-                      aura:id="button-container">
-        <!-- Buttons -->
+    <lightning:layout
+      horizontalAlign="space"
+      verticalAlign="center"
+      multipleRows="true"
+      class="slds-m-bottom_small"
+      aura:id="button-container"
+    >
+      <!-- Buttons -->
       <aura:if isTrue="{! !empty(v.quotes)}">
-        <lightning:layoutItem size="12"
-                              smallDeviceSize="12"
-                              mediumDeviceSize="4"
-                              largeDeviceSize="4"
-                              padding="around-small">
-           <lightning:button label="{! join('', 'View Quotes (', v.quotes.length, ')' )}"
-                             onclick="{!c.toggleQuoteList}"
-                             class="quote-list-toggle" />
+        <lightning:layoutItem
+          size="12"
+          smallDeviceSize="12"
+          mediumDeviceSize="4"
+          largeDeviceSize="4"
+          padding="around-small"
+        >
+          <lightning:button
+            label="{! join('', 'View Quotes (', v.quotes.length, ')' )}"
+            onclick="{!c.toggleQuoteList}"
+            class="quote-list-toggle"
+          />
         </lightning:layoutItem>
       </aura:if>
 
-      <lightning:layoutItem size="12"
-                            smallDeviceSize="12"
-                            mediumDeviceSize="8"
-                            largeDeviceSize="8"
-                            padding="around-small"
-                            class="slds-text-align_right">
+      <lightning:layoutItem
+        size="12"
+        smallDeviceSize="12"
+        mediumDeviceSize="8"
+        largeDeviceSize="8"
+        padding="around-small"
+        class="slds-text-align_right"
+      >
         <lightning:buttonGroup>
-          <lightning:button label="{! if(v.showPaymentsOnPDF, 'Hide Payments','Show Payments' )}"
-                            onclick="{!c.toggleViewPdfPayments}" />
+          <lightning:button
+            label="{! if(v.showPaymentsOnPDF, 'Hide Payments','Show Payments' )}"
+            onclick="{!c.toggleViewPdfPayments}"
+          />
           <aura:if isTrue="{! not(or(equals(v.selectedQuoteId, v.syncedQuoteId), v.creatingNewQuote))}">
             <lightning:button label="Sync to Opportunity" onclick="{!c.handleSyncQuote}" />
           </aura:if>
@@ -79,51 +85,53 @@
           </aura:if>
         </lightning:buttonGroup>
       </lightning:layoutItem>
-
     </lightning:layout>
 
-    <lightning:layout horizontalAlign="space"
-                      verticalAlign="top"
-                      pullToBoundary="small"
-                      class="slds-m-bottom_small">
-
-      <lightning:layoutItem size="4"
-                            padding="around-small"
-                            class="{! join(' ', 'quote-list-container', if( v.loadCPQ, 'hidden', '') )}"
-                            aura:id="quote-list-container">
-        <c:Opportunity_QuoteList recordId="{!v.recordId}"
-                                 quotes="{!v.quotes}"
-                                 selectedQuoteId="{!v.selectedQuoteId}"
-                                 syncedQuoteId="{!v.syncedQuoteId}"
-                                 aura:id="quote-list" />
+    <lightning:layout horizontalAlign="space" verticalAlign="top" pullToBoundary="small" class="slds-m-bottom_small">
+      <lightning:layoutItem
+        size="4"
+        padding="around-small"
+        class="{! join(' ', 'quote-list-container', if( v.loadCPQ, 'hidden', '') )}"
+        aura:id="quote-list-container"
+      >
+        <c:Opportunity_QuoteList
+          recordId="{!v.recordId}"
+          quotes="{!v.quotes}"
+          selectedQuoteId="{!v.selectedQuoteId}"
+          syncedQuoteId="{!v.syncedQuoteId}"
+          aura:id="quote-list"
+        />
       </lightning:layoutItem>
 
-      <lightning:layoutItem size="12"
-                            smallDeviceSize="12"
-                            mediumDeviceSize="12"
-                            largeDeviceSize="{! if( v.loadCPQ, 12, 8)}"
-                            padding="around-small"
-                            class="quote-container">
+      <lightning:layoutItem
+        size="12"
+        smallDeviceSize="12"
+        mediumDeviceSize="12"
+        largeDeviceSize="{! if( v.loadCPQ, 12, 8)}"
+        padding="around-small"
+        class="quote-container"
+      >
         <aura:if isTrue="{! !v.loadCPQ }">
-
           <div class="modile-selected-quote-header">
-            <c:Opportunity_QuoteList_Card quote="{! v.selectedQuote }"
-                                          syncedQuoteId="{! v.syncedQuoteId }"
-                                          selectedQuoteId="{! v.selectedQuoteId }"
-                                          showIndicator="false" />
+            <c:Opportunity_QuoteList_Card
+              quote="{! v.selectedQuote }"
+              syncedQuoteId="{! v.syncedQuoteId }"
+              selectedQuoteId="{! v.selectedQuoteId }"
+              showIndicator="false"
+            />
           </div>
 
           <aura:if isTrue="{!and( !empty(v.url), !empty(v.selectedQuoteId))}">
             <div class="iframe-container">
               <aura:if isTrue="{! v.showPDF }">
-                <div class="pdf-loading">
-                  Building PDF ...
-                </div>
-                <iframe aura:id="pdf-iframe"
-                        src="{!'https://'+v.url+'/apex/Opportunity_PartnerQuote?quoteId='+v.selectedQuoteId+'&amp;show_payments='+v.showPaymentsOnPDF}"
-                        width="100%"
-                        height="100%"
-                        frameBorder="0" />
+                <div class="pdf-loading">Building PDF ...</div>
+                <iframe
+                  aura:id="pdf-iframe"
+                  src="{!'https://'+v.url+'/apex/Opportunity_PartnerQuote?quoteId='+v.selectedQuoteId+'&amp;show_payments='+v.showPaymentsOnPDF}"
+                  width="100%"
+                  height="100%"
+                  frameborder="0"
+                />
               </aura:if>
             </div>
           </aura:if>
@@ -131,10 +139,6 @@
 
         <div aura:id="cpq-container" id="cpq"></div>
       </lightning:layoutItem>
-
     </lightning:layout>
-
   </div>
-
-
 </aura:component>

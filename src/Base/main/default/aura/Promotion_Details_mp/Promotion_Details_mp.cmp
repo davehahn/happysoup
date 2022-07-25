@@ -1,138 +1,122 @@
-<aura:component controller="Promotion_mp"
-								implements="force:hasRecordId,forceCommunity:availableForAllPageTypes"
-								access="global">
+<aura:component
+  controller="Promotion_mp"
+  implements="force:hasRecordId,forceCommunity:availableForAllPageTypes"
+  access="global"
+>
+  <aura:attribute name="claim" type="Object" />
+  <aura:attribute name="regInProcess" type="Boolean" default="false" />
+  <aura:attribute name="AccountId" type="Id" />
+  <aura:attribute name="recordId" type="String" />
 
-	<aura:attribute name="claim" type="Object" />
-	<aura:attribute name="regInProcess" type="Boolean" default="false" />
-	<aura:attribute name="AccountId" type="Id" />
-	<aura:attribute name="recordId" type="String" />
-
-	<ltng:require scripts="{!join(',', $Resource.Libraries +'/js/LightningApex.js',
+  <ltng:require
+    scripts="{!join(',', $Resource.Libraries +'/js/LightningApex.js',
                          $Resource.Libraries +'/js/LightningUtils.js') }"
-    afterScriptsLoaded="{!c.doInit}" />
+    afterScriptsLoaded="{!c.doInit}"
+  />
 
-	<aura:handler name="registrationSuccessEvent"
-								event="c:lgnd_registration_success_Event"
-								action="{!c.handleRegistrationSuccess}" />
+  <aura:handler
+    name="registrationSuccessEvent"
+    event="c:lgnd_registration_success_Event"
+    action="{!c.handleRegistrationSuccess}"
+  />
 
-	<aura:if isTrue="{! !v.regInProcess }">
-	  <div class="slds-grid slds-gutters">
-	  	<div class="slds-col slds-size_2-of-3">
+  <aura:if isTrue="{! !v.regInProcess }">
+    <div class="slds-grid slds-gutters">
+      <div class="slds-col slds-size_2-of-3">
+        <div class="slds-box">
+          <div class="slds-grid">
+            <div class="slds-panel slds-grid slds-grid_vertical slds-nowrap">
+              <div class="slds-form slds-form_stacked slds-grow slds-scrollable_y">
+                <div class="slds-panel__section">
+                  <ul>
+                    <li class="slds-form-element slds-hint-parent slds-border_bottom">
+                      <span class="slds-form-element__label">Dealer</span>
+                      <div class="slds-form-element__control">
+                        <span class="slds-form-element__static"> {!v.claim.Account.Name} </span>
+                      </div>
+                    </li>
+                    <li class="slds-form-element slds-hint-parent slds-border_bottom">
+                      <span class="slds-form-element__label">Customer</span>
+                      <div class="slds-form-element__control">
+                        <span class="slds-form-element__static">
+                          <a href="{! '/s/account/' + v.claim.Promotion_Customer_Account__c }">
+                            {!v.claim.Promotion_Customer_Account__r.Name}
+                          </a>
+                        </span>
+                      </div>
+                    </li>
+                    <li class="slds-form-element slds-hint-parent slds-border_bottom">
+                      <span class="slds-form-element__label">Product</span>
+                      <div class="slds-form-element__control">
+                        <span class="slds-form-element__static"> {!v.claim.Promotion_Item__r.Product__r.Name} </span>
+                      </div>
+                    </li>
+                    <li class="slds-form-element slds-hint-parent slds-border_bottom">
+                      <span class="slds-form-element__label">Serial Number</span>
+                      <div class="slds-form-element__control">
+                        <span class="slds-form-element__static">
+                          <lightning:button
+                            label="{!v.claim.Registration__r.SerialNumber__r.Name}"
+                            value="{! v.claim.Registration__r.SerialNumber__c }"
+                            onclick="{! c.btnClick }"
+                            variant="bare"
+                          />
+                        </span>
+                      </div>
+                    </li>
+                    <li class="slds-form-element slds-hint-parent slds-border_bottom">
+                      <span class="slds-form-element__label">Retail Amount</span>
+                      <div class="slds-form-element__control">
+                        <span class="slds-form-element__static">
+                          <lightning:formattedNumber
+                            value="{!v.claim.Promotion_Item__r.Retail_Amount__c}"
+                            style="currency"
+                            currencyCode="CAD"
+                          />
+                        </span>
+                      </div>
+                    </li>
+                    <li class="slds-form-element slds-hint-parent slds-border_bottom">
+                      <span class="slds-form-element__label">Promotion</span>
+                      <div class="slds-form-element__control">
+                        <span class="slds-form-element__static"> {!v.claim.Promotion__c} </span>
+                      </div>
+                    </li>
+                    <li class="slds-form-element slds-hint-parent slds-border_bottom">
+                      <span class="slds-form-element__label">Partner Rebate</span>
+                      <div class="slds-form-element__control">
+                        <span class="slds-form-element__static">
+                          <ui:outputCurrency value="{!v.claim.Promotion_Item__r.Amount__c}" />
+                        </span>
+                      </div>
+                    </li>
+                    <li class="slds-form-element slds-hint-parent slds-border_bottom">
+                      <span class="slds-form-element__label">Status</span>
+                      <div class="slds-form-element__control">
+                        <span class="slds-form-element__static"> {!v.claim.Status} </span>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="slds-col slds-size_1-of-3">
+        <c:Promotion_Claim_Status_mp regInProcess="{!v.regInProcess}" recordId="{! v.recordId }" />
+      </div>
+    </div>
+  </aura:if>
 
-			  <div class="slds-box">
-			  	<div class="slds-grid">
-					  <div class="slds-panel slds-grid slds-grid_vertical slds-nowrap">
-					    <div class="slds-form slds-form_stacked slds-grow slds-scrollable_y">
-					      <div class="slds-panel__section">
-					        <ul>
-					          <li class="slds-form-element 
-					          					 slds-hint-parent 
-					          					 slds-border_bottom">
-					            <span class="slds-form-element__label">Dealer</span>
-					            <div class="slds-form-element__control">
-					              <span class="slds-form-element__static">
-					              	{!v.claim.Account.Name}
-					              </span>
-					            </div>
-					          </li>
-					          <li class="slds-form-element 
-					          					 slds-hint-parent 
-					          					 slds-border_bottom">
-					            <span class="slds-form-element__label">Customer</span>
-					            <div class="slds-form-element__control">
-					              <span class="slds-form-element__static">
-					              	<a href="{! '/s/account/' + v.claim.Promotion_Customer_Account__c }">
-					              		{!v.claim.Promotion_Customer_Account__r.Name}
-					              	</a>
-					              </span>
-					            </div>
-					          </li>
-					          <li class="slds-form-element 
-					          					 slds-hint-parent 
-					          					 slds-border_bottom">
-					            <span class="slds-form-element__label">Product</span>
-					            <div class="slds-form-element__control">
-					              <span class="slds-form-element__static">
-					              	{!v.claim.Promotion_Item__r.Product__r.Name}
-					              </span>
-					            </div>
-					          </li>
-					          <li class="slds-form-element 
-					          					 slds-hint-parent 
-					          					 slds-border_bottom">
-					            <span class="slds-form-element__label">Serial Number</span>
-					            <div class="slds-form-element__control">
-					              <span class="slds-form-element__static">
-					              	<lightning:button label="{!v.claim.Registration__r.SerialNumber__r.Name}"
-					              										value="{! v.claim.Registration__r.SerialNumber__c }"
-					              										onclick="{! c.btnClick }"
-					              										variant="bare" />
-					              </span>
-					            </div>
-					          </li>
-					          <li class="slds-form-element 
-					          					 slds-hint-parent 
-					          					 slds-border_bottom">
-					            <span class="slds-form-element__label">Retail Amount</span>
-					            <div class="slds-form-element__control">
-					              <span class="slds-form-element__static">
-					              	<lightning:formattedNumber value="{!v.claim.Promotion_Item__r.Retail_Amount__c}"
-																										 style="currency"
-																										 currencyCode="CAD"/>
-					              </span>
-					            </div>
-					          </li>
-					          <li class="slds-form-element
-					          					 slds-hint-parent
-					          					 slds-border_bottom">
-					            <span class="slds-form-element__label">Promotion</span>
-					            <div class="slds-form-element__control">
-					              <span class="slds-form-element__static">
-					              	{!v.claim.Promotion__c}
-					              </span>
-					            </div>
-					          </li>
-					          <li class="slds-form-element
-					          					 slds-hint-parent 
-					          					 slds-border_bottom">
-					            <span class="slds-form-element__label">Partner Rebate</span>
-					            <div class="slds-form-element__control">
-					              <span class="slds-form-element__static">
-					              	<ui:outputCurrency value="{!v.claim.Promotion_Item__r.Amount__c}" />
-					              </span>
-					            </div>
-					          </li>
-					          <li class="slds-form-element 
-					          					 slds-hint-parent 
-					          					 slds-border_bottom">
-					            <span class="slds-form-element__label">Status</span>
-					            <div class="slds-form-element__control">
-					              <span class="slds-form-element__static">
-					              	{!v.claim.Status}
-					              </span>
-					            </div>
-					          </li>
-					        </ul>
-					      </div>
-					    </div>
-					  </div>
-					</div>
-				</div>
-
-			</div>
-	  	<div class="slds-col slds-size_1-of-3">
-	  		<c:Promotion_Claim_Status_mp regInProcess="{!v.regInProcess}" recordId="{! v.recordId }" />
-	  	</div>
-		</div>
-	</aura:if>
-
-	<aura:if isTrue="{! v.regInProcess }">
-		<c:lgnd_registration accountId="{!v.AccountId}" 
-												 regInProcess="{!v.regInProcess}" 
-												 redirectToRecord="false" 
-												 caseId="{!v.recordId}"
-												 context="limited"
-												 RestrictToThisProduct="{!v.claim.Promotion_Item__r.Product__c}" />
-	</aura:if>
-
+  <aura:if isTrue="{! v.regInProcess }">
+    <c:lgnd_registration
+      accountId="{!v.AccountId}"
+      regInProcess="{!v.regInProcess}"
+      redirectToRecord="false"
+      caseId="{!v.recordId}"
+      context="limited"
+      RestrictToThisProduct="{!v.claim.Promotion_Item__r.Product__c}"
+    />
+  </aura:if>
 </aura:component>

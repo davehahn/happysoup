@@ -1,45 +1,44 @@
 <apex:page showHeader="false" sidebar="false">
   <base target="_parent" />
-  <link href='https://fonts.googleapis.com/css?family=Lato:400,300' rel='stylesheet' type='text/css' />
+  <link href="https://fonts.googleapis.com/css?family=Lato:400,300" rel="stylesheet" type="text/css" />
   <style type="text/css">
-
     .sales-menu-container {
       height: 100%;
       width: 100%;
       margin: 0;
       padding: 0;
-      background: #FFF;
+      background: #fff;
       position: absolute;
     }
 
     .sales-menu-container > h1 {
       display: block;
       width: 100%;
-      background: #1797C0;
-      color: #FFF;
+      background: #1797c0;
+      color: #fff;
       height: 25px;
       line-height: 25px;
       font-size: 12px;
       border-radius: 5px;
       text-align: left;
-      font-family: 'Lato', sans-serif;
+      font-family: "Lato", sans-serif;
       padding-left: 9px;
       box-sizing: border-box;
     }
 
     a {
-      display:block;
-      width:95%;
+      display: block;
+      width: 95%;
       text-decoration: none;
-      color: #00AAF9;
-      background: #FFF;
-      border: 1px solid #CDCDCD;
+      color: #00aaf9;
+      background: #fff;
+      border: 1px solid #cdcdcd;
       padding: 0;
       line-height: 35px;
       height: 35px;
       font-size: 15px;
       font-weight: 300;
-      font-family: 'Lato', sans-serif;
+      font-family: "Lato", sans-serif;
       margin: 10px auto;
       box-sizing: border-box;
       border-radius: 4px;
@@ -50,15 +49,13 @@
       text-decoration: none !important;
       color: #0087c6;
     }
-
   </style>
 
-  <div class='sales-menu-container'>
+  <div class="sales-menu-container">
     <h1>Sales Menu</h1>
 
     <a href="{!$Page.RetailSalesTool}">Retail Sale</a>
     <!-- <<a href="{!$Page.RetailCounterSalesTool}">Retail Counter Sale</a> -->
     <!-- <a href="{!$Page.DealerBoatSale}">Wholesale Boat Sale</a> -->
   </div>
-
 </apex:page>

@@ -1,29 +1,29 @@
-<apex:page standardController="Dealer_Order_Line__c"
+<apex:page
+  standardController="Dealer_Order_Line__c"
   extensions="Dealer_Order_Line_Ext"
   docType="html-5.0"
   showHeader="true"
-  sidebar="true">
-
-  <apex:stylesheet value="{!URLFOR($Resource.LGND_SLDS_203, 'assets/styles/salesforce-lightning-design-system-vf.min.css')}" />
+  sidebar="true"
+>
+  <apex:stylesheet
+    value="{!URLFOR($Resource.LGND_SLDS_203, 'assets/styles/salesforce-lightning-design-system-vf.min.css')}"
+  />
   <apex:stylesheet value="{!URLFOR($Resource.DealerOrderAssets, 'css/dealer-order-line.min.css')}" />
 
   <div class="lgnd">
-
     <div role="dialog" tabindex="-1" class="slds-modal">
       <div class="slds-modal__container">
         <div class="slds-modal__header">
           <h2 id="header43" class="slds-text-heading--medium">How many would like to clone?</h2>
         </div>
         <div class="slds-modal__content slds-p-around--medium">
-          <div style="width: 30%; margin:auto;">
-
+          <div style="width: 30%; margin: auto">
             <div class="slds-form-element">
               <label class="slds-form-element__label" for="text-input-01">Enter a Number</label>
               <div class="slds-form-element__control">
-                <input id="clone-quantity" class="slds-input" type="number" value="1"/>
+                <input id="clone-quantity" class="slds-input" type="number" value="1" />
               </div>
             </div>
-
           </div>
         </div>
         <div class="slds-modal__footer">
@@ -45,91 +45,109 @@
 
     <div class="slds-page-header" role="banner">
       <div class="slds-grid">
-
         <div class="slds-col slds-has-flexi-truncate">
           <div class="slds-media slds-media--center slds-no-space slds-grow">
             <div class="slds-media__figure">
-              <img src="{!URLFOR($Resource.LGND_SLDS_203, 'assets/icons/standard/drafts_60.png')}" class="slds-icon  slds-icon--large slds-icon-standard-drafts"/>
+              <img
+                src="{!URLFOR($Resource.LGND_SLDS_203, 'assets/icons/standard/drafts_60.png')}"
+                class="slds-icon slds-icon--large slds-icon-standard-drafts"
+              />
             </div>
             <div class="slds-media__body">
               <p class="slds-text-title--caps slds-line-height--reset">Dealer Order Line</p>
-              <h1 class="slds-page-header__title slds-m-right--small slds-align-middle slds-truncate" title="this should match the Record Title">{!dealerOrderLine.Name}</h1>
+              <h1
+                class="slds-page-header__title slds-m-right--small slds-align-middle slds-truncate"
+                title="this should match the Record Title"
+              >
+                {!dealerOrderLine.Name}
+              </h1>
             </div>
           </div>
-
         </div>
 
-        <div class="slds-col slds-has-flexi-truncate">
-
-        </div>
+        <div class="slds-col slds-has-flexi-truncate"></div>
 
         <div class="slds-col slds-no-flex slds-grid slds-align-top action-buttons">
           <div class="slds-button-group" role="group">
-            <a href="/{!Dealer_Order_Line__c.Dealer_Order__c}" class="slds-button slds-button--neutral slds-not-selected">Return to Order</a>
+            <a
+              href="/{!Dealer_Order_Line__c.Dealer_Order__c}"
+              class="slds-button slds-button--neutral slds-not-selected"
+              >Return to Order</a
+            >
             <apex:outputPanel layout="none" rendered="{!NOT(isDealerOrderLocked)}">
-              <a href="/apex/BoatConfigurator?dealer_order_id={!Dealer_Order_Line__c.Dealer_Order__c}&opportunity_id={!Dealer_Order_Line__c.Opportunity__c}" class="slds-button slds-button--neutral">
+              <a
+                href="/apex/BoatConfigurator?dealer_order_id={!Dealer_Order_Line__c.Dealer_Order__c}&opportunity_id={!Dealer_Order_Line__c.Opportunity__c}"
+                class="slds-button slds-button--neutral"
+              >
                 Edit Configuration
               </a>
-              <a href="#" class="slds-button slds-button--neutral" id="cloneBtn">
-                Clone
-              </a>
+              <a href="#" class="slds-button slds-button--neutral" id="cloneBtn"> Clone </a>
             </apex:outputPanel>
-            <a href="" class="slds-button slds-button--neutral" id="print">
-              Print
-            </a>
+            <a href="" class="slds-button slds-button--neutral" id="print"> Print </a>
           </div>
         </div>
-
       </div>
 
       <div class="slds-grid">
-
         <div class="slds-col slds-has-flexi-truncate">
-          <div class="slds-media slds-media--center slds-no-space slds-grow" style="margin-top: 1rem;">
+          <div class="slds-media slds-media--center slds-no-space slds-grow" style="margin-top: 1rem">
             <div class="slds-media__figure">
-              <img src="{!URLFOR($Resource.LGND_SLDS_203, 'assets/icons/custom/custom62_60.png')}" class="slds-icon  slds-icon-custom-custom62" />
+              <img
+                src="{!URLFOR($Resource.LGND_SLDS_203, 'assets/icons/custom/custom62_60.png')}"
+                class="slds-icon slds-icon-custom-custom62"
+              />
             </div>
             <div class="slds-media__body small">
               <p class="slds-text-title--caps slds-line-height--reset">Dealer Order</p>
-              <h1 class="slds-page-header__title slds-m-right--small slds-align-middle slds-truncate">{!dealerOrderLine.Dealer_Order__r.Name}</h1>
+              <h1 class="slds-page-header__title slds-m-right--small slds-align-middle slds-truncate">
+                {!dealerOrderLine.Dealer_Order__r.Name}
+              </h1>
             </div>
           </div>
         </div>
 
         <div class="slds-col slds-has-flexi-truncate">
-          <div class="slds-media slds-media--center slds-no-space slds-grow" style="margin-top: 1rem;">
+          <div class="slds-media slds-media--center slds-no-space slds-grow" style="margin-top: 1rem">
             <div class="slds-media__figure">
-              <img src="{!URLFOR($Resource.LGND_SLDS_203, 'assets/icons/custom/custom63_60.png')}" class="slds-icon  slds-icon-custom-custom63" />
+              <img
+                src="{!URLFOR($Resource.LGND_SLDS_203, 'assets/icons/custom/custom63_60.png')}"
+                class="slds-icon slds-icon-custom-custom63"
+              />
             </div>
             <div class="slds-media__body small">
               <p class="slds-text-title--caps slds-line-height--reset">ERP Order</p>
-              <h1 class="slds-page-header__title slds-m-right--small slds-align-middle slds-truncate">{!dealerOrderLine.ERP_Order__r.Name}</h1>
+              <h1 class="slds-page-header__title slds-m-right--small slds-align-middle slds-truncate">
+                {!dealerOrderLine.ERP_Order__r.Name}
+              </h1>
             </div>
           </div>
         </div>
 
         <div class="slds-col slds-has-flexi-truncate">
-          <div class="slds-media slds-media--center slds-no-space slds-grow"  style="margin-top: 1rem;">
+          <div class="slds-media slds-media--center slds-no-space slds-grow" style="margin-top: 1rem">
             <div class="slds-media__figure">
-              <img src="{!URLFOR($Resource.LGND_SLDS_203, 'assets/icons/standard/account_60.png')}" class="slds-icon  slds-icon-standard-account" />
+              <img
+                src="{!URLFOR($Resource.LGND_SLDS_203, 'assets/icons/standard/account_60.png')}"
+                class="slds-icon slds-icon-standard-account"
+              />
             </div>
             <div class="slds-media__body small">
               <p class="slds-text-title--caps slds-line-height--reset">Account</p>
-              <h1 class="slds-page-header__title slds-m-right--small slds-align-middle slds-truncate" title="this should match the Record Title">{!dealerOrderLine.Dealer_Order__r.Account__r.Name}</h1>
+              <h1
+                class="slds-page-header__title slds-m-right--small slds-align-middle slds-truncate"
+                title="this should match the Record Title"
+              >
+                {!dealerOrderLine.Dealer_Order__r.Account__r.Name}
+              </h1>
             </div>
           </div>
         </div>
-
       </div>
     </div>
 
-
-
     <div class="slds-grid slds-wrap page-content">
       <div class="slds-col--padded slds-large-size--8-of-12 slds-small-size--1-of-1 order-details">
-        <h1 class="slds-page-header__title slds-m-right--small slds-align-middle slds-truncate">
-          Boat Items
-        </h1>
+        <h1 class="slds-page-header__title slds-m-right--small slds-align-middle slds-truncate">Boat Items</h1>
         <table class="slds-table slds-table--bordered slds-table--cell-buffer">
           <tbody>
             <tr class="boat-row">
@@ -137,11 +155,14 @@
               <td>{!boatBuilder.selectedBoat.Name}</td>
               <td>
                 <apex:outputText value="${0, number, ###,###,###,##0.00}">
-                  <apex:param value="{!boatBuilder.basePrice}"/>
+                  <apex:param value="{!boatBuilder.basePrice}" />
                 </apex:outputText>
               </td>
             </tr>
-            <apex:outputPanel layout="none" rendered="{!AND(boatBuilder.selectedMotor != null, NOT(boatBuilder.isDealerOrder))}">
+            <apex:outputPanel
+              layout="none"
+              rendered="{!AND(boatBuilder.selectedMotor != null, NOT(boatBuilder.isDealerOrder))}"
+            >
               <tr>
                 <td>{!boatBuilder.selectedMotor.Make__c}</td>
                 <td>{!boatBuilder.selectedMotor.Name}</td>
@@ -162,7 +183,6 @@
                 <td>$ {!boatBuilder.trollingMotorUpgradePrice}</td>
               </tr>
             </apex:outputPanel>
-
           </tbody>
         </table>
 
@@ -218,8 +238,7 @@
                 </tr>
                 <!--  +++ Sub Items +++ -->
                 <apex:repeat value="{!items[key].subItems}" var="subkey">
-                  <apex:variable value="{!items[key].subItems[subkey]}"
-                                 var="subItem" />
+                  <apex:variable value="{!items[key].subItems[subkey]}" var="subItem" />
                   <tr>
                     <td>{!subItem.quantity}</td>
                     <td>{!subItem.description}</td>
@@ -245,40 +264,37 @@
         </apex:outputPanel>
 
         <apex:outputPanel layout="none" rendered="{!boatBuilder.renderSummaryFees}">
-          <h1 class="slds-page-header__title slds-m-right--small slds-align-middle slds-truncate">
-            Additional Fees
-          </h1>
+          <h1 class="slds-page-header__title slds-m-right--small slds-align-middle slds-truncate">Additional Fees</h1>
           <table class="slds-table slds-table--bordered slds-table--cell-buffer">
             <tbody>
-            <!-- +++ Additional Fees +++ -->
-            <apex:repeat value="{!boatBuilder.provinceFeesMap}" var="feeKey">
-              <apex:repeat value="{!boatBuilder.provinceFeesMap[feeKey]}" var="prov">
-
-                <apex:outputPanel layout="none" rendered="{!prov = boatBuilder.opportunity.GL_Account_Variable_3__r.Name}">
-                  <apex:repeat value="{!boatBuilder.provinceFeesMap[feeKey][prov]}" var="feeItem">
-                    <tr style="display:{!IF(feeItem.total = 0, 'none','initital')}">
-                      <td>
-                        <apex:outputText value="{!feeItem.description}"/>
-                      </td>
-                      <td>
-                        <apex:outputText value="$ {!feeItem.total}" rendered="{!feeItem.total != 0}"/>
-                        <apex:outputText value="$ Included" rendered="{!feeItem.total == 0}"/>
-                      </td>
-                    </tr>
-                  </apex:repeat>
-                </apex:outputPanel>
-
+              <!-- +++ Additional Fees +++ -->
+              <apex:repeat value="{!boatBuilder.provinceFeesMap}" var="feeKey">
+                <apex:repeat value="{!boatBuilder.provinceFeesMap[feeKey]}" var="prov">
+                  <apex:outputPanel
+                    layout="none"
+                    rendered="{!prov = boatBuilder.opportunity.GL_Account_Variable_3__r.Name}"
+                  >
+                    <apex:repeat value="{!boatBuilder.provinceFeesMap[feeKey][prov]}" var="feeItem">
+                      <tr style="display:{!IF(feeItem.total = 0, 'none','initital')}">
+                        <td>
+                          <apex:outputText value="{!feeItem.description}" />
+                        </td>
+                        <td>
+                          <apex:outputText value="$ {!feeItem.total}" rendered="{!feeItem.total != 0}" />
+                          <apex:outputText value="$ Included" rendered="{!feeItem.total == 0}" />
+                        </td>
+                      </tr>
+                    </apex:repeat>
+                  </apex:outputPanel>
+                </apex:repeat>
               </apex:repeat>
-            </apex:repeat>
-            <!-- === /Addition Fees === -->
+              <!-- === /Addition Fees === -->
             </tbody>
           </table>
         </apex:outputPanel>
 
         <apex:outputPanel layout="none" rendered="{!boatBuilder.renderDiscountSummary}">
-          <h1 class="slds-page-header__title slds-m-right--small slds-align-middle slds-truncate">
-            Special Savings
-          </h1>
+          <h1 class="slds-page-header__title slds-m-right--small slds-align-middle slds-truncate">Special Savings</h1>
           <table class="slds-table slds-table--bordered slds-table--cell-buffer">
             <tbody>
               <apex:repeat value="{!boatBuilder.discountItems}" var="key">
@@ -295,13 +311,10 @@
             </tbody>
           </table>
         </apex:outputPanel>
-
       </div>
 
       <div class="sds-col--padded slds-large-size--4-of-12 slds-small-size--1-of-1">
-        <h1 class="slds-page-header__title slds-m-right--small slds-align-middle slds-truncate">
-          Totals
-        </h1>
+        <h1 class="slds-page-header__title slds-m-right--small slds-align-middle slds-truncate">Totals</h1>
         <div class="slds-grid slds-wrap totals">
           <div class="slds-col slds-size--7-of-12">
             <p>Sub Total:</p>
@@ -312,13 +325,22 @@
             <apex:outputPanel layout="none" rendered="{!boatbuilder.opportunity.Tax_Override__c == true}">
               <p>Tax: ({!boatbuilder.totalTAxRateDisplay}%)</p>
             </apex:outputPanel>
-            <apex:outputPanel layout="none" rendered="{!AND(boatbuilder.opportunity.Tax_Override__c == false, boatBuilder.opportunity.Tax_is_Harmonized__c == true)}">
+            <apex:outputPanel
+              layout="none"
+              rendered="{!AND(boatbuilder.opportunity.Tax_Override__c == false, boatBuilder.opportunity.Tax_is_Harmonized__c == true)}"
+            >
               <p>Tax: {!boatBuilder.provTaxRate.taxName} {!boatBuilder.totalTaxRateDisplay}%:</p>
             </apex:outputPanel>
-            <apex:outputPanel layout="none" rendered="{!AND(boatbuilder.opportunity.Tax_Override__c == false, boatBuilder.opportunity.Tax_is_Harmonized__c == false)}">
+            <apex:outputPanel
+              layout="none"
+              rendered="{!AND(boatbuilder.opportunity.Tax_Override__c == false, boatBuilder.opportunity.Tax_is_Harmonized__c == false)}"
+            >
               <p>Tax: GST {!boatBuilder.opportunity.Tax_Rate_Federal__c}%:</p>
             </apex:outputPanel>
-            <apex:outputPanel layout="none" rendered="{!AND(boatbuilder.opportunity.Tax_Override__c == false, boatBuilder.opportunity.Tax_is_Harmonized__c == false, boatBuilder.opportunity.Tax_Rate_Provincial__c > 0)}">
+            <apex:outputPanel
+              layout="none"
+              rendered="{!AND(boatbuilder.opportunity.Tax_Override__c == false, boatBuilder.opportunity.Tax_is_Harmonized__c == false, boatBuilder.opportunity.Tax_Rate_Provincial__c > 0)}"
+            >
               <p>Tax: {!boatBuilder.provTaxRate.taxName} {!boatBuilder.opportunity.Tax_Rate_Provincial__c}%:</p>
             </apex:outputPanel>
             <p>Total:</p>
@@ -327,61 +349,72 @@
           <div class="slds-col slds-size--5-of-12">
             <p>
               <apex:outputText value="${0, number, ###,###,###,##0.00}">
-                <apex:param value="{!boatbuilder.opportunity.Amount + ( -1 * boatbuilder.opportunity.Discount_Total__c) - boatbuilder.opportunity.Trade_In_Value__c}"/>
+                <apex:param
+                  value="{!boatbuilder.opportunity.Amount + ( -1 * boatbuilder.opportunity.Discount_Total__c) - boatbuilder.opportunity.Trade_In_Value__c}"
+                />
               </apex:outputText>
             </p>
             <apex:outputPanel layout="none" rendered="{!boatBuilder.discountItems != null}">
               <p>
-                <apex:outputText value="${0, number, ###,###,###,##0.00}"
-                                   rendered="{!boatBuilder.discountTotal != null}">
-                  <apex:param value="{!boatBuilder.discountTotal}"/>
+                <apex:outputText
+                  value="${0, number, ###,###,###,##0.00}"
+                  rendered="{!boatBuilder.discountTotal != null}"
+                >
+                  <apex:param value="{!boatBuilder.discountTotal}" />
                 </apex:outputText>
               </p>
             </apex:outputPanel>
             <p>
               <apex:outputText value="${0, number, ###,###,###,##0.00}">
-                <apex:param value="{!boatbuilder.opportunity.Amount - boatbuilder.opportunity.Trade_In_Value__c }"/>
+                <apex:param value="{!boatbuilder.opportunity.Amount - boatbuilder.opportunity.Trade_In_Value__c }" />
               </apex:outputText>
             </p>
             <apex:outputPanel layout="none" rendered="{!boatbuilder.opportunity.Tax_Override__c == true}">
               <p>
                 <apex:outputText value="${0, number, ###,###,###,##0.00}">
-                  <apex:param value="{!boatbuilder.opportunity.TotalTaxes__c}"/>
+                  <apex:param value="{!boatbuilder.opportunity.TotalTaxes__c}" />
                 </apex:outputText>
               </p>
             </apex:outputPanel>
-            <apex:outputPanel layout="none" rendered="{!AND(boatbuilder.opportunity.Tax_Override__c == false, boatBuilder.opportunity.Tax_is_Harmonized__c == true)}">
+            <apex:outputPanel
+              layout="none"
+              rendered="{!AND(boatbuilder.opportunity.Tax_Override__c == false, boatBuilder.opportunity.Tax_is_Harmonized__c == true)}"
+            >
               <p>
                 <apex:outputText value="${0, number, ###,###,###,##0.00}">
-                  <apex:param value="{!boatbuilder.opportunity.TotalTaxes__c}"/>
+                  <apex:param value="{!boatbuilder.opportunity.TotalTaxes__c}" />
                 </apex:outputText>
               </p>
             </apex:outputPanel>
-            <apex:outputPanel layout="none" rendered="{!AND(boatbuilder.opportunity.Tax_Override__c == false, boatBuilder.opportunity.Tax_is_Harmonized__c == false)}">
+            <apex:outputPanel
+              layout="none"
+              rendered="{!AND(boatbuilder.opportunity.Tax_Override__c == false, boatBuilder.opportunity.Tax_is_Harmonized__c == false)}"
+            >
               <p>
                 <apex:outputText value="${0, number, ###,###,###,##0.00}">
-                  <apex:param value="{!boatbuilder.opportunity.Tax_Amount_Federal__c}"/>
+                  <apex:param value="{!boatbuilder.opportunity.Tax_Amount_Federal__c}" />
                 </apex:outputText>
               </p>
             </apex:outputPanel>
-            <apex:outputPanel layout="none" rendered="{!AND(boatbuilder.opportunity.Tax_Override__c == false, boatBuilder.opportunity.Tax_is_Harmonized__c == false, boatBuilder.opportunity.Tax_Rate_Provincial__c > 0)}">
+            <apex:outputPanel
+              layout="none"
+              rendered="{!AND(boatbuilder.opportunity.Tax_Override__c == false, boatBuilder.opportunity.Tax_is_Harmonized__c == false, boatBuilder.opportunity.Tax_Rate_Provincial__c > 0)}"
+            >
               <p>
                 <apex:outputText value="${0, number, ###,###,###,##0.00}">
-                  <apex:param value="{!boatbuilder.opportunity.Tax_Amount_Provincial__c}"/>
+                  <apex:param value="{!boatbuilder.opportunity.Tax_Amount_Provincial__c}" />
                 </apex:outputText>
               </p>
             </apex:outputPanel>
             <p class="grand-total">
               <apex:outputText value="${0, number, ###,###,###,##0.00}">
-                <apex:param value="{!boatBuilder.opportunity.Amount_Financed__c}"/>
+                <apex:param value="{!boatBuilder.opportunity.Amount_Financed__c}" />
               </apex:outputText>
             </p>
           </div>
         </div>
         <apex:outputPanel layout="none" rendered="{!NOT(ISBLANK(boatBuilder.opportunity.Customer_Notes__c))}">
-          <h1 class="slds-page-header__title slds-m-right--small slds-align-middle slds-truncate">
-            Special Notes
-          </h1>
+          <h1 class="slds-page-header__title slds-m-right--small slds-align-middle slds-truncate">Special Notes</h1>
           <div class="slds-grid slds-wrap">
             <div class="slds-col slds-size--1-of-12 special-notes">
               <apex:outputField value="{!boatBuilder.opportunity.Customer_Notes__c}" />
@@ -390,93 +423,78 @@
         </apex:outputPanel>
       </div>
     </div>
-
-
   </div>
-
 
   <apex:includeScript value="{!URLFOR($Resource.jQuery)}" />
   <apex:includeScript value="{! URLFOR($Resource.UtilJS) }" />
   <apex:includeScript value="https://code.jquery.com/jquery-migrate-1.2.1.min.js" />
-  <apex:includeScript value="{!URLFOR($Resource.jQueryPrintElement)}"/>
+  <apex:includeScript value="{!URLFOR($Resource.jQueryPrintElement)}" />
   <script type="text/javascript">
-
-  (function($, window, document, undefined)
-  {
-
-    $('#cloneBtn').on('click', function(e) {
-      e.preventDefault();
-      var $btn = $(this);
-      openQuantityDialog();
-    });
-
-    $('#print').on('click', function(e) {
-      e.preventDefault();
-
-      $('.lgnd').printElement({
-        pageTitle: 'Dealer Order Line',
-        leaveOpen: true,
-        printMode: 'popup',
-        printBodyOptions: {
-          styleToAdd: 'padding: 0; margin: 0;'
-        },
-        overrideElementCSS: [
-          {href: "{!URLFOR($Resource.LGND_SLDS_203, 'assets/styles/salesforce-lightning-design-system-vf.min.css')}", media: 'all'},
-          {href: "{!URLFOR($Resource.DealerOrderAssets, 'css/dealer-order-line.min.css')}", media: 'all'}
-        ]
+    (function ($, window, document, undefined) {
+      $("#cloneBtn").on("click", function (e) {
+        e.preventDefault();
+        var $btn = $(this);
+        openQuantityDialog();
       });
-    });
 
-    function openQuantityDialog()
-    {
-      var $modal = $('div[role="dialog"]'),
-          $overlay = $('.slds-backdrop'),
-          $buttons = $modal.find('.slds-modal__footer button'),
-          closeModal = function() {
-            $modal.removeClass('slds-fade-in-open');
-            $overlay.removeClass('slds-backdrop--open');
-            $buttons.off('click');
+      $("#print").on("click", function (e) {
+        e.preventDefault();
+
+        $(".lgnd").printElement({
+          pageTitle: "Dealer Order Line",
+          leaveOpen: true,
+          printMode: "popup",
+          printBodyOptions: {
+            styleToAdd: "padding: 0; margin: 0;"
+          },
+          overrideElementCSS: [
+            {
+              href: "{!URLFOR($Resource.LGND_SLDS_203, 'assets/styles/salesforce-lightning-design-system-vf.min.css')}",
+              media: "all"
+            },
+            { href: "{!URLFOR($Resource.DealerOrderAssets, 'css/dealer-order-line.min.css')}", media: "all" }
+          ]
+        });
+      });
+
+      function openQuantityDialog() {
+        var $modal = $('div[role="dialog"]'),
+          $overlay = $(".slds-backdrop"),
+          $buttons = $modal.find(".slds-modal__footer button"),
+          closeModal = function () {
+            $modal.removeClass("slds-fade-in-open");
+            $overlay.removeClass("slds-backdrop--open");
+            $buttons.off("click");
           };
 
-      $overlay.addClass('slds-backdrop--open')
-      $modal.addClass('slds-fade-in-open');
+        $overlay.addClass("slds-backdrop--open");
+        $modal.addClass("slds-fade-in-open");
 
-      $buttons.on('click', function(e) {
-        e.preventDefault();
-        var $this = $(this);
-        if( $this.data('action') === 'cancel' )
-        {
-          closeModal();
-        }
-        if( $this.data('action') === 'create' )
-        {
-          var quantity = $('#clone-quantity').val();
-          closeModal();
-          $('.slds-spinner_container').show();
-          Dealer_Order_Line_Ext.cloneOrderLine( "{!Dealer_Order_Line__c.Id}", quantity, function(result, event) {
-            if( event.status )
-            {
-              if( determineUI("{!$User.UITheme}") === 'classic' )
-              {
-                window.top.location.href = window.location.origin + '/{!Dealer_Order_Line__c.Dealer_Order__c}';
+        $buttons.on("click", function (e) {
+          e.preventDefault();
+          var $this = $(this);
+          if ($this.data("action") === "cancel") {
+            closeModal();
+          }
+          if ($this.data("action") === "create") {
+            var quantity = $("#clone-quantity").val();
+            closeModal();
+            $(".slds-spinner_container").show();
+            Dealer_Order_Line_Ext.cloneOrderLine("{!Dealer_Order_Line__c.Id}", quantity, function (result, event) {
+              if (event.status) {
+                if (determineUI("{!$User.UITheme}") === "classic") {
+                  window.top.location.href = window.location.origin + "/{!Dealer_Order_Line__c.Dealer_Order__c}";
+                } else {
+                  sforce.one.navigateToSObject("{!Dealer_Order_Line__c.Dealer_Order__c}");
+                }
+              } else {
+                $(".slds-spinner_container").hide();
+                alert(event.message);
               }
-              else
-              {
-                sforce.one.navigateToSObject("{!Dealer_Order_Line__c.Dealer_Order__c}");
-              }
-            }
-            else
-            {
-              $('.slds-spinner_container').hide();
-              alert( event.message );
-            }
-          });
-        }
-      })
-    }
-
-  })(jQuery.noConflict(), window, document);
-
+            });
+          }
+        });
+      }
+    })(jQuery.noConflict(), window, document);
   </script>
-
 </apex:page>

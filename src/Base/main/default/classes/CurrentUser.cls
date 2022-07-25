@@ -2,13 +2,10 @@
  * Created by dave on 2020-11-06.
  */
 
-public virtual class CurrentUser
-{
-
+public virtual class CurrentUser {
   private static User record {
     get {
-      if( record == null )
-      {
+      if (record == null) {
         System.debug('QUERYING FOR USER');
         record = User_Selector.getCurrentUser();
       }
@@ -19,12 +16,9 @@ public virtual class CurrentUser
 
   private static Schema.Location baseLocation {
     get {
-      if( baseLocation == null )
-      {
+      if (baseLocation == null) {
         System.debug('QUERYING FOR LOCATION');
-        baseLocation = Location_Selector.getSiteLocationByWarehouseName(
-          record.Warehouse__c
-        );
+        baseLocation = Location_Selector.getSiteLocationByWarehouseName(record.Warehouse__c);
       }
       return baseLocation;
     }
@@ -33,41 +27,31 @@ public virtual class CurrentUser
 
   private static List<Schema.Location> fslInventoryLocations {
     get {
-      if( fslInventoryLocations == null )
-      {
-        fslInventoryLocations = Location_Selector.allChildLocations(
-          baseLocation.Id
-        );
+      if (fslInventoryLocations == null) {
+        fslInventoryLocations = Location_Selector.allChildLocations(baseLocation.Id);
       }
       return fslInventoryLocations;
     }
     private set;
   }
 
-  public static String getWarehouseName()
-  {
+  public static String getWarehouseName() {
     return record.Warehouse__c;
   }
 
-  public static String getFullName()
-  {
+  public static String getFullName() {
     return record.FirstName + ' ' + record.LastName;
   }
 
-  public static Schema.Location getBaseLocation()
-  {
+  public static Schema.Location getBaseLocation() {
     return baseLocation;
   }
 
-  public static Id getBaseLocationId()
-  {
+  public static Id getBaseLocationId() {
     return baseLocation.Id;
   }
 
-  public static List<Schema.Location> getFslInventoryLocations()
-  {
+  public static List<Schema.Location> getFslInventoryLocations() {
     return fslInventoryLocations;
   }
-
-
 }

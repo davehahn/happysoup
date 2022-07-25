@@ -4,36 +4,35 @@
 
 <!-- Work Order Inventory Summary -->
 <template>
-
   <c-legend-spinner variant="contained" visible="true"></c-legend-spinner>
 
   <template if:true={summaryLines}>
-
     <div>
-      <table class="slds-table slds-table_bordered slds-table_cell-buffer slds-max-medium-table--stacked " aura:id="listTable">
-      <thead>
-      <tr class="slds-text-title_caps slds-line-height_reset">
-        <template for:each={headings} for:item="head">
-          <th key={head} scope="col" class="slds-text-align_center">{head}</th>
-        </template>
-      </tr>
-      </thead>
-      <tbody>
-        <template for:each={summaryLines} for:item="line">
-          <tr key={line.productRequiredId}>
-            <td>{line.productName}</td>
-            <td class="slds-text-align_center">{line.requiredQuantity}</td>
-            <td class="slds-text-align_center">{line.warehouseQuantity}</td>
-            <td class="slds-text-align_center">{line.pickAndPackQuantity}</td>
-            <template for:each={line.resourceLines} for:item="resourceLine">
-              <td class="slds-text-align_center" key={resourceLine.name}>{resourceLine.quantity}</td>
+      <table
+        class="slds-table slds-table_bordered slds-table_cell-buffer slds-max-medium-table--stacked"
+        aura:id="listTable"
+      >
+        <thead>
+          <tr class="slds-text-title_caps slds-line-height_reset">
+            <template for:each={headings} for:item="head">
+              <th key={head} scope="col" class="slds-text-align_center">{head}</th>
             </template>
           </tr>
-        </template>
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          <template for:each={summaryLines} for:item="line">
+            <tr key={line.productRequiredId}>
+              <td>{line.productName}</td>
+              <td class="slds-text-align_center">{line.requiredQuantity}</td>
+              <td class="slds-text-align_center">{line.warehouseQuantity}</td>
+              <td class="slds-text-align_center">{line.pickAndPackQuantity}</td>
+              <template for:each={line.resourceLines} for:item="resourceLine">
+                <td class="slds-text-align_center" key={resourceLine.name}>{resourceLine.quantity}</td>
+              </template>
+            </tr>
+          </template>
+        </tbody>
+      </table>
     </div>
-
   </template>
-
 </template>

@@ -3,14 +3,12 @@
  */
 
 @IsTest
-private class TA_Case_EnforceAssignmentRules_T
-{
+private class TA_Case_EnforceAssignmentRules_T {
   private static List<Case> cases;
   private static Account dealer;
 
-
-  @testSetup static void dataSetup()
-  {
+  @testSetup
+  static void dataSetup() {
     new Factory_TestData();
     Factory_CustomSettings.setupInventorySettings();
   }
@@ -22,7 +20,7 @@ private class TA_Case_EnforceAssignmentRules_T
   }
 
   @IsTest
-  static void TA_AfterInsert(){
+  static void TA_AfterInsert() {
     init();
     Case c = Factory_Case.buildWarrantyCase(dealer);
     TriggerBase.bypass('Case');
@@ -30,7 +28,7 @@ private class TA_Case_EnforceAssignmentRules_T
     TriggerBAse.clearBypass('Case');
     System.debug('BEFORE');
     c = [SELECT Id, Owner.Id, Owner.Name FROM Case WHERE Id = :c.Id];
-    System.debug( c.OwnerId );
+    System.debug(c.OwnerId);
     System.debug(c.Owner.Name);
 
     cases.add(c);
@@ -39,8 +37,7 @@ private class TA_Case_EnforceAssignmentRules_T
 
     System.debug('AFTER');
     c = [SELECT Id, Owner.Id, Owner.Name FROM Case WHERE Id = :c.Id];
-    System.debug( c.OwnerId );
+    System.debug(c.OwnerId);
     System.debug(c.Owner.Name);
   }
-
 }

@@ -2,10 +2,9 @@
  * Created by dave on 2020-04-16.
  */
 
-import { LightningElement, api, track } from 'lwc';
+import { LightningElement, api, track } from "lwc";
 
 export default class SquarePaymentForm extends LightningElement {
-
   origin;
 
   @api apexPageName;
@@ -13,64 +12,53 @@ export default class SquarePaymentForm extends LightningElement {
   @api widthBreakPoint = 140;
   @api smallHeight = 200;
   @api largeHeight = 400;
-  @api currentLanguage = 'english';
+  @api currentLanguage = "english";
 
   @track iframeHeight;
 
-  constructor()
-  {
+  constructor() {
     super();
     this.origin = window.location.origin;
   }
 
-  connectedCallback()
-  {
-    if( this.isResponsive )
-    {
-      window.addEventListener('resize', (event) => {
-        this.setIframeHeight( event.currentTarget.outerWidth );
+  connectedCallback() {
+    if (this.isResponsive) {
+      window.addEventListener("resize", (event) => {
+        this.setIframeHeight(event.currentTarget.outerWidth);
       });
     }
-    this.setIframeHeight( window.outerWidth );
+    this.setIframeHeight(window.outerWidth);
   }
 
-  @api doPostToSquare( paymentAmount, reference_id )
-  {
+  @api doPostToSquare(paymentAmount, reference_id) {
     const data = {
-      messageType: 'doPayment',
+      messageType: "doPayment",
       paymentAmount: paymentAmount,
       reference_id: reference_id
     };
     const iframe = this.template.querySelector('[data-id="square-payment-container"]').contentWindow;
 
-    return new Promise( (resolve, reject) => {
-      const messageHandler = ( event ) =>
-      {
-        if( event.origin === this.origin )
-        {
-          window.removeEventListener('message', messageHandler );
-          if( event.data.status === 'success' )
-            resolve( event.data.response );
-          if( event.data.status === 'error' )
-            reject( event.data.errors );
+    return new Promise((resolve, reject) => {
+      const messageHandler = (event) => {
+        if (event.origin === this.origin) {
+          window.removeEventListener("message", messageHandler);
+          if (event.data.status === "success") resolve(event.data.response);
+          if (event.data.status === "error") reject(event.data.errors);
         }
       };
-      window.addEventListener('message', messageHandler );
+      window.addEventListener("message", messageHandler);
       iframe.postMessage(data, this.origin);
     });
   }
 
-  get pageURL()
-  {
+  get pageURL() {
     const urlString = window.location.href;
-    let url = urlString.substring(0, urlString.indexOf("/s") ) + this.apexPageName;
-    url += '?currentLanguage=' + this.currentLanguage;
+    let url = urlString.substring(0, urlString.indexOf("/s")) + this.apexPageName;
+    url += "?currentLanguage=" + this.currentLanguage;
     return url;
   }
 
-  setIframeHeight( width )
-  {
-     this.iframeHeight = width >= this.widthBreakPoint ?
-      `height:${this.smallHeight}px` : `height:${this.largeHeight}px`;
+  setIframeHeight(width) {
+    this.iframeHeight = width >= this.widthBreakPoint ? `height:${this.smallHeight}px` : `height:${this.largeHeight}px`;
   }
 }

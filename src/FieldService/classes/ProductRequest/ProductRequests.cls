@@ -2,15 +2,12 @@
  * Created by dave on 2020-11-18.
  */
 
-public with sharing class ProductRequests
-{
-
+public with sharing class ProductRequests {
   public static ProductRequest createNewPickupForWorkOrder(
     Id workOrderId,
     Id sourceLocationId,
     Id destinationLocationId
-  )
-  {
+  ) {
     ProductRequest pr = new ProductRequest(
       DestinationLocationId = destinationLocationId,
       SourceLocationId = sourceLocationId,
@@ -21,5 +18,4 @@ public with sharing class ProductRequests
     insert pr;
     return pr;
   }
-
 }

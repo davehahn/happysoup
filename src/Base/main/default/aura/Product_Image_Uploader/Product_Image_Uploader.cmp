@@ -1,19 +1,12 @@
 <aura:component implements="force:appHostable,flexipage:availableForAllPageTypes">
-
-  <aura:attribute name="productId"  type="string" />
+  <aura:attribute name="productId" type="string" />
   <aura:attribute name="awsReady" type="Boolean" default="false" />
   <aura:attribute name="hasFiles" type="Boolean" />
 
+  <aura:handler name="initComplete" event="c:lgnd_FileUpload_AWS_Initialized_Event" action="{!c.awsInitialized}" />
+  <aura:handler event="c:lgnd_FileUpload_AWS_Complete_Event" action="{!c.imagesUploaded}" />
 
-  <aura:handler name="initComplete"
-                event="c:lgnd_FileUpload_AWS_Initialized_Event"
-                action="{!c.awsInitialized}" />
-  <aura:handler event="c:lgnd_FileUpload_AWS_Complete_Event"
-                action="{!c.imagesUploaded}" />
-
-  <lightning:layout multipleRows="true"
-                    class="slds-grid_vertical-align-center slds-grid_align-center">
-
+  <lightning:layout multipleRows="true" class="slds-grid_vertical-align-center slds-grid_align-center">
     <lightning:layoutItem size="12" largeDeviceSize="8" mediumDeviceSize="8" smallDeviceSize="12">
       <c:Product_Lookup_mp selectionId="{!v.productId}" />
     </lightning:layoutItem>
@@ -21,32 +14,36 @@
     <lightning:layoutItem size="12" largeDeviceSize="8" mediumDeviceSize="8" smallDeviceSize="12">
       <div class="slds-clearfix">
         <aura:if isTrue="{! and( not( empty( v.productId ) ), v.awsReady ) }">
-          <lightning:button label="Add Images"
-                            variant="brand"
-                            class="slds-m-top_small slds-float_left"
-                            onclick="{!c.addImages}" />
+          <lightning:button
+            label="Add Images"
+            variant="brand"
+            class="slds-m-top_small slds-float_left"
+            onclick="{!c.addImages}"
+          />
           <aura:if isTrue="{!v.hasFiles}">
-            <lightning:button label="Upload"
-                                variant="brand"
-                                class="slds-m-top_small slds-float_right"
-                                onclick="{!c.doUpload}" />
+            <lightning:button
+              label="Upload"
+              variant="brand"
+              class="slds-m-top_small slds-float_right"
+              onclick="{!c.doUpload}"
+            />
           </aura:if>
         </aura:if>
       </div>
     </lightning:layoutItem>
-
   </lightning:layout>
 
   <aura:if isTrue="{! not( empty( v.productId ) ) }">
     <div class="slds-m-top_medium">
-      <c:lgnd_FileUpload_AWS aura:id="fileUploader"
-                             recordId="{!v.productId}"
-                             externalImageButton="true"
-                             allowDefault="true"
-                             fullImagePreview="true"
-                             allowDescriptions="false"
-                             hasFiles="{!v.hasFiles}" />
+      <c:lgnd_FileUpload_AWS
+        aura:id="fileUploader"
+        recordId="{!v.productId}"
+        externalImageButton="true"
+        allowDefault="true"
+        fullImagePreview="true"
+        allowDescriptions="false"
+        hasFiles="{!v.hasFiles}"
+      />
     </div>
   </aura:if>
-
 </aura:component>

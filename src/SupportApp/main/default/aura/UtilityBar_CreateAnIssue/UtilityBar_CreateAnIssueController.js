@@ -3,9 +3,8 @@
  */
 
 ({
-  handleSelected: function( component, event, helper )
-  {
-    console.log('I got the selected event');
+  handleSelected: function (component, event, helper) {
+    console.log("I got the selected event");
     var utilityAPI = component.find("utilityBarAPI");
     utilityAPI.minimizeUtility();
   }

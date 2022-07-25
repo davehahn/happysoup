@@ -1,404 +1,414 @@
-<apex:page standardController="AcctSeed__Account_Payable__c" extensions="gcAccountPayable_payBatch" recordSetVar="payables" showHeader="true" sidebar="true">
+<apex:page
+  standardController="AcctSeed__Account_Payable__c"
+  extensions="gcAccountPayable_payBatch"
+  recordSetVar="payables"
+  showHeader="true"
+  sidebar="true"
+>
+  <apex:pageMessages id="pageMsg" />
 
-	<apex:pageMessages id="pageMsg" />
+  <apex:form>
+    <apex:pageBlock title="Accounts Payable to Pay">
+      <apex:pageBlockButtons location="top">
+        <apex:commandButton
+          action="{!payBatch}"
+          value="Pay"
+          styleClass="cmdPayBatch"
+          rerender="bankAccId, pageMsg"
+          onclick="if(!apTable.setApIdList()) return false;"
+          oncomplete="apTable.cmdPayBatchEnable();"
+        />
+        <apex:commandButton action="{!cancel}" value="Cancel" />
+      </apex:pageBlockButtons>
 
-	<apex:form >
-		<apex:pageBlock title="Accounts Payable to Pay">
+      <apex:pageBlockSection>
+        <apex:inputField value="{!cdHolder.AcctSeed__Disbursement_Date__c}" />
 
-			<apex:pageBlockButtons location="top">
-				<apex:commandButton action="{!payBatch}" value="Pay" styleClass="cmdPayBatch" rerender="bankAccId, pageMsg"
-					onclick="if(!apTable.setApIdList()) return false;" oncomplete="apTable.cmdPayBatchEnable();" />
-				<apex:commandButton action="{!cancel}" value="Cancel"/>
-			</apex:pageBlockButtons>
+        <apex:pageBlockSectionItem>
+          <apex:outputLabel value="Bank Account" />
+          <select id="elAccountOptions"></select>
+        </apex:pageBlockSectionItem>
+        <apex:inputField value="{!cdHolder.AcctSeed__GL_Account_Variable_1__c}" />
+        <apex:inputField value="{!cdHolder.AcctSeed__GL_Account_Variable_4__c}" />
+        <apex:inputField value="{!cdHolder.AcctSeed__Cash_Flow_Category__c}" />
 
-			<apex:pageBlockSection >
-				<apex:inputField value="{!cdHolder.AcctSeed__Disbursement_Date__c}" />
+        <apex:inputField onchange="showHideCheckNumber(this)" value="{!cdHolder.AcctSeed__Type__c}" id="txnType" />
+        <apex:inputField value="{!cdHolder.AcctSeed__Check_Number__c}" id="elCheckNum" />
 
-				<apex:pageBlockSectionItem >
-					<apex:outputLabel value="Bank Account" />
-					<select id="elAccountOptions"></select>
-				</apex:pageBlockSectionItem>
-				<apex:inputField value="{!cdHolder.AcctSeed__GL_Account_Variable_1__c}"/>
-				<apex:inputField value="{!cdHolder.AcctSeed__GL_Account_Variable_4__c}"/>
-				<apex:inputField value="{!cdHolder.AcctSeed__Cash_Flow_Category__c}"/>
+        <!-- <apex:inputHidden value="{!selectedAcc}" id="elAccountId"/> -->
+        <apex:inputHidden value="{!cdHolder.AcctSeed__Bank_Account__c}" id="elAccountId" />
+        <apex:inputHidden value="{!includedApId}" id="elIncludedApId" />
+        <apex:inputHidden value="{!discountedApId}" id="elDiscountedApId" />
+      </apex:pageBlockSection>
 
-				<apex:inputField onchange="showHideCheckNumber(this)" value="{!cdHolder.AcctSeed__Type__c}" id="txnType"/>
-				<apex:inputField value="{!cdHolder.AcctSeed__Check_Number__c}" id="elCheckNum"/>
+      <table class="list" border="0" cellpadding="0" cellspacing="0">
+        <thead>
+          <tr class="headerRow">
+            <th>Payee</th>
+            <th>AP</th>
+            <th>Date</th>
+            <th>Ref</th>
+            <th>Total</th>
+            <th>Discount Amount</th>
+            <th>CM Applied Amount</th>
+            <th>Paid Amount</th>
+            <th>Balance</th>
+            <th>Include</th>
+          </tr>
+        </thead>
+        <tbody class="elApTb"></tbody>
+      </table>
+    </apex:pageBlock>
+  </apex:form>
 
-				<!-- <apex:inputHidden value="{!selectedAcc}" id="elAccountId"/> -->
-				<apex:inputHidden value="{!cdHolder.AcctSeed__Bank_Account__c}" id="elAccountId"/>
-				<apex:inputHidden value="{!includedApId}" id="elIncludedApId"/>
-				<apex:inputHidden value="{!discountedApId}" id="elDiscountedApId"/>
-			</apex:pageBlockSection>
+  <apex:includeScript value="{!$Resource.GMBLJS__jQuery}" />
+  <apex:includeScript value="{!$Resource.GMBLJS__accountingJS}" />
+  <style>
+    .payeeRow {
+      background-color: #f8f8f8;
+    }
+    .payeeError {
+      background-color: #f6d2d2;
+    }
+    .disabled {
+      color: #ccc !important;
+    }
+    .tr-total {
+      font-weight: bold;
+    }
+  </style>
+  <script type="text/javascript">
+    var defaultAcc = "{!defaultAcc}";
+    var accData = JSON.parse("{!accData}");
+    var selectedAPIds = JSON.parse("{!selectedApIds}");
+    var allRecords = "{!$CurrentPage.parameters.all}" === "true";
 
-			<table class="list" border="0" cellpadding="0" cellspacing="0">
-				<thead>
-					<tr class="headerRow">
-						<th>Payee</th>
-						<th>AP</th>
-						<th>Date</th>
-						<th>Ref</th>
-						<th>Total</th>
-						<th>Discount Amount</th>
-						<th>CM Applied Amount</th>
-						<th>Paid Amount</th>
-						<th>Balance</th>
-						<th>Include</th>
-					</tr>
-				</thead>
-				<tbody class="elApTb"></tbody>								
-			</table>
+    $j = jQuery.noConflict();
+    $j(document).ready(function () {
+      initBankAccounts();
+      apTable.init(selectedAPIds);
+      if ($j('select[id*=":txnType"]').find("option[value=Cheque]").length) $j('select[id*=":txnType"]').val("Cheque");
+      else if ($j('select[id*=":txnType"]').find("option[value=Check]").length)
+        $j('select[id*=":txnType"]').val("Check");
+      else if ($j('select[id*=":txnType"]').find("option[value=US Check]").length)
+        $j('select[id*=":txnType"]').val("US Check");
+    });
 
-		</apex:pageBlock>
-	</apex:form> 
+    function showHideCheckNumber(obj) {
+      if ($j(obj).val() == "Cheque" || $j(obj).val() == "Check" || $j(obj).val() == "US Check") {
+        $j('input[id*=":elCheckNum"]').show();
+        $j('label[for*=":elCheckNum"]').show();
+      } else {
+        $j('input[id*=":elCheckNum"]').hide();
+        $j('label[for*=":elCheckNum"]').hide();
+      }
+    }
 
-<apex:includeScript value="{!$Resource.GMBLJS__jQuery}"/>
-<apex:includeScript value="{!$Resource.GMBLJS__accountingJS}"/>
-<style>
-	.payeeRow{ background-color: #f8f8f8; }
-	.payeeError{ background-color: #f6d2d2; }
-	.disabled{ color:#ccc !important; }
-	.tr-total{font-weight: bold;}
-</style>
-<script type="text/javascript">
+    function initBankAccounts() {
+      var elAccountOptions = $j("#elAccountOptions");
+      $j.each(accData, function (iacc, vacc) {
+        elAccountOptions.append($j("<option></option>").attr("value", vacc.id).text(vacc.name));
+      });
 
-var defaultAcc = '{!defaultAcc}';
-var accData = JSON.parse('{!accData}');
-var selectedAPIds = JSON.parse('{!selectedApIds}');
-var allRecords = ('{!$CurrentPage.parameters.all}' === 'true');
+      elAccountOptions.on("change", function () {
+        changeAcc(elAccountOptions.val());
+      });
 
-$j = jQuery.noConflict();
-$j(document).ready(function(){
-	initBankAccounts();
-	apTable.init(selectedAPIds);
-	if($j('select[id*=":txnType"]').find('option[value=Cheque]').length)
-		$j('select[id*=":txnType"]').val('Cheque');
-	else if($j('select[id*=":txnType"]').find('option[value=Check]').length)
-		$j('select[id*=":txnType"]').val('Check');
-	else if($j('select[id*=":txnType"]').find('option[value=US Check]').length)
-		$j('select[id*=":txnType"]').val('US Check');
-});
+      if (defaultAcc) {
+        elAccountOptions.val(defaultAcc);
+        changeAcc(defaultAcc);
+      }
+    }
 
-function showHideCheckNumber(obj) {
-	if($j(obj).val() == 'Cheque' || $j(obj).val() == 'Check' || $j(obj).val() == 'US Check'){
-		$j('input[id*=":elCheckNum"]').show();
-		$j('label[for*=":elCheckNum"]').show();
-	}else{
-		$j('input[id*=":elCheckNum"]').hide();
-		$j('label[for*=":elCheckNum"]').hide();
-	}
-}
+    function changeAcc(accId) {
+      var elAccountId = $j("[id$=elAccountId]");
+      var elCheckNum = $j("[id$=elCheckNum]");
 
-function initBankAccounts(){
-	var elAccountOptions = $j('#elAccountOptions');
-	$j.each(accData, function(iacc, vacc) {
-		elAccountOptions.append($j("<option></option>").attr("value", vacc.id).text(vacc.name));
-	});
+      elAccountId.val(accId);
 
-	elAccountOptions.on('change', function(){
-		changeAcc(elAccountOptions.val());
-	});
+      var checkNumVal = "";
+      $j.each(accData, function (iacc, vacc) {
+        if (vacc.id == accId) {
+          checkNumVal = vacc.checkNum;
+        }
+      });
 
-	if(defaultAcc){
-		elAccountOptions.val(defaultAcc);
-		changeAcc(defaultAcc);
-	}
-}
+      elCheckNum.val(checkNumVal);
+    }
 
-function changeAcc(accId){
-	var elAccountId = $j('[id$=elAccountId]');
-	var elCheckNum = $j('[id$=elCheckNum]');
+    var apTable = (function () {
+      var mapTotal = { total: 0, discountAmt: 0, cmAppliedAmt: 0, paidAmt: 0, balance: 0 };
+      var includedTotal = 0;
+      var _apIds,
+        _dataRows,
+        _mapPayeeName,
+        _listPayeeId,
+        _init = function (apIds) {
+          _apIds = apIds;
+          _getApData();
+        },
+        _getApData = function () {
+          if (allRecords) {
+            var action = "{!$RemoteAction.gcAccountPayable_payBatch.retrieveApDataAll}";
+            Visualforce.remoting.Manager.invokeAction(
+              action,
+              function (result, event) {
+                if (event.status) _initApData(result);
+                else alert(event.message);
+              },
+              { buffer: true, escape: true, timeout: 120000 }
+            );
+          } else {
+            var action = "{!$RemoteAction.gcAccountPayable_payBatch.retrieveApData}";
+            Visualforce.remoting.Manager.invokeAction(
+              action,
+              _apIds,
+              function (result, event) {
+                if (event.status) _initApData(result);
+                else alert(event.message);
+              },
+              { buffer: true, escape: true, timeout: 120000 }
+            );
+          }
+        },
+        _refreshMapTotal = function () {
+          mapTotal = { total: 0, discountAmt: 0, cmAppliedAmt: 0, paidAmt: 0, balance: 0 };
+        },
+        _initApData = function (data) {
+          _dataRows = data;
+          _mapPayeeName = {};
+          var mapPayee = {};
+          _refreshMapTotal();
+          $j.each(_dataRows, function (id, vd) {
+            vd.total = parseFloat(vd.total);
+            vd.discountAmt = parseFloat(vd.discountAmt);
+            vd.cmAppliedAmt = parseFloat(vd.cmAppliedAmt);
+            vd.paidAmt = parseFloat(vd.paidAmt);
+            vd.balance = parseFloat(vd.balance);
+            vd.included = true;
 
-	elAccountId.val(accId);
+            mapTotal.total += vd.total;
+            mapTotal.discountAmt += vd.discountAmt;
+            mapTotal.cmAppliedAmt += vd.cmAppliedAmt;
+            mapTotal.paidAmt += vd.paidAmt;
+            mapTotal.balance += vd.balance;
 
-	var checkNumVal = '';
-	$j.each(accData, function(iacc, vacc) {
-		if(vacc.id == accId){
-			checkNumVal = vacc.checkNum;
-		}
-	});
+            if (!mapPayee.hasOwnProperty(vd.payeeId)) mapPayee[vd.payeeId] = 0;
+            mapPayee[vd.payeeId] += vd.balance;
+          });
+          includedTotal = mapTotal.balance;
+          _initTableRows(mapPayee, mapTotal);
+        },
+        _initTableRows = function (mapPayee, mapTotal) {
+          var tbody, tr, td, el;
+          tbody = $j(".elApTb");
+          tbody.html("");
+          $j.each(_dataRows, function (ir, row) {
+            tr = $j("<tr>");
+            tr.addClass("tr" + row.payeeId);
+            tr.appendTo(tbody);
 
-	elCheckNum.val(checkNumVal);
-}
+            var payeeBalance = mapPayee[row.payeeId];
+            if (payeeBalance < 0) tr.addClass("payeeError");
+            else tr.removeClass("payeeError");
 
-var apTable = (function(){
-	var mapTotal = {total:0,discountAmt:0,cmAppliedAmt:0,paidAmt:0,balance:0};
-	var includedTotal = 0;
-	var
-	_apIds,
-	_dataRows,
-	_mapPayeeName,
-	_listPayeeId,
+            // Payee
+            td = $j("<td>");
+            td.text(row.payee);
+            tr.append(td);
 
-	_init = function(apIds){
-		_apIds = apIds;
-		_getApData();
-	},
-	_getApData = function(){
+            // AP
+            td = $j("<td>");
+            td.text(row.name);
+            tr.append(td);
 
-		if(allRecords){
-			var action = '{!$RemoteAction.gcAccountPayable_payBatch.retrieveApDataAll}';
-			Visualforce.remoting.Manager.invokeAction(action, function(result, event){
-				if(event.status) _initApData(result);
-				else alert(event.message);
-			}, {buffer:true, escape:true, timeout:120000});
-		} else {
-			var action = '{!$RemoteAction.gcAccountPayable_payBatch.retrieveApData}';
-			Visualforce.remoting.Manager.invokeAction(action, _apIds, function(result, event){
-				if(event.status) _initApData(result);
-				else alert(event.message);
-			}, {buffer:true, escape:true, timeout:120000});
-		}
-	},
-	_refreshMapTotal = function(){
-		mapTotal = {total:0,discountAmt:0,cmAppliedAmt:0,paidAmt:0,balance:0};
-	},	
-	_initApData = function(data){
-		_dataRows = data;
-		_mapPayeeName = {};
-		var mapPayee = {};
-		_refreshMapTotal();
-		$j.each(_dataRows, function(id, vd){
-			vd.total = parseFloat(vd.total);
-			vd.discountAmt = parseFloat(vd.discountAmt);
-			vd.cmAppliedAmt = parseFloat(vd.cmAppliedAmt);
-			vd.paidAmt = parseFloat(vd.paidAmt);
-			vd.balance = parseFloat(vd.balance);
-			vd.included = true;
+            // Date
+            td = $j("<td>");
+            td.text(row.date);
+            tr.append(td);
 
-			mapTotal.total += vd.total;
-			mapTotal.discountAmt += vd.discountAmt;
-			mapTotal.cmAppliedAmt += vd.cmAppliedAmt;
-			mapTotal.paidAmt += vd.paidAmt;
-			mapTotal.balance += vd.balance;
+            // Ref
+            td = $j("<td>");
+            td.text(row.payeeRef);
+            tr.append(td);
 
-			if(!mapPayee.hasOwnProperty(vd.payeeId)) mapPayee[vd.payeeId] = 0;
-			mapPayee[vd.payeeId] += vd.balance;
-		});
-		includedTotal = mapTotal.balance;
-		_initTableRows(mapPayee,mapTotal);
-	},
-	_initTableRows = function(mapPayee,mapTotal){
-		var tbody, tr, td, el;
-		tbody = $j('.elApTb');
-		tbody.html('');
-		$j.each(_dataRows, function(ir, row){
-		
-			tr = $j('<tr>');
-			tr.addClass('tr' + row.payeeId);
-			tr.appendTo(tbody);
+            // Total
+            td = $j("<td>");
+            td.text(accounting.formatMoney(row.total));
+            tr.append(td);
 
-			var payeeBalance = mapPayee[row.payeeId];
-			if(payeeBalance < 0) tr.addClass('payeeError');
-			else tr.removeClass('payeeError');
+            // Discount Amt
+            td = $j("<td>");
+            if (parseFloat(row.paidAmt) == 0) {
+              //} && parseFloat(row.dbDiscountAmt) == 0){
+              el = $j('<input type="text" />');
+              el.data("obj", { payeeId: row.payeeId, apId: row.id, dbBalance: row.dbBalance, dbTotal: row.total });
+              el.val(row.discountAmt);
+              el.change(_onDiscountChange);
+              el.appendTo(td);
+            } else td.text(accounting.formatMoney(row.discountAmt));
+            tr.append(td);
 
-			// Payee
-			td = $j('<td>');
-			td.text(row.payee);
-			tr.append(td);
+            // CM Applied Amt
+            td = $j("<td>");
+            td.text(accounting.formatMoney(row.cmAppliedAmt));
+            tr.append(td);
 
-			// AP
-			td = $j('<td>');
-			td.text(row.name);
-			tr.append(td);
+            // Paid Amt
+            td = $j("<td>");
+            td.text(accounting.formatMoney(row.paidAmt));
+            tr.append(td);
 
-			// Date
-			td = $j('<td>');
-			td.text(row.date);
-			tr.append(td);
+            // Balance
+            td = $j("<td>");
+            td.text(accounting.formatMoney(row.balance));
+            tr.append(td);
 
-			// Ref
-			td = $j('<td>');
-			td.text(row.payeeRef);
-			tr.append(td);
+            // Include
+            td = $j("<td>");
+            tr.append(td);
 
-			// Total
-			td = $j('<td>');
-			td.text(accounting.formatMoney(row.total));
-			tr.append(td);
+            el = $j('<input type="checkbox" />');
+            el.data("obj", { payeeId: row.payeeId, apId: row.id, dbBalance: row.dbBalance, dbTotal: row.total });
+            el.prop("checked", row.preIncluded == "true" ? true : false);
+            el.click(_onIncludeChange);
+            el.appendTo(td);
+          });
+          tr = $j("<tr>");
+          tr.appendTo(tbody);
+          td = $j('<td colspan="4" align="right">').html("Total:");
+          tr.append(td);
+          td = $j("<td>").html("$" + parseFloat(mapTotal.total).toFixed(2));
+          tr.append(td);
+          td = $j("<td>").html("$" + parseFloat(mapTotal.discountAmt).toFixed(2));
+          tr.append(td);
+          td = $j("<td>").html("$" + parseFloat(mapTotal.cmAppliedAmt).toFixed(2));
+          tr.append(td);
+          td = $j("<td>").html("$" + parseFloat(mapTotal.paidAmt).toFixed(2));
+          tr.append(td);
+          td = $j("<td>").html("$" + parseFloat(mapTotal.balance).toFixed(2));
+          tr.append(td);
+          td = $j("<td>");
+          tr.append(td);
 
-			// Discount Amt
-			td = $j('<td>');
-			if(parseFloat(row.paidAmt) == 0){//} && parseFloat(row.dbDiscountAmt) == 0){
-				el = $j('<input type="text" />');
-				el.data('obj', { payeeId: row.payeeId, apId: row.id, dbBalance:row.dbBalance, dbTotal:row.total});
-				el.val(row.discountAmt);
-				el.change(_onDiscountChange);
-				el.appendTo(td);
-			}
-			else
-				td.text(accounting.formatMoney(row.discountAmt));
-			tr.append(td);
+          // tr = $j('<tr style="display:none;">').addClass('tr-total');
+          // tr.appendTo(tbody);
+          // td = $j('<td colspan="8" align="right">').html('Total Balance Included:');
+          // tr.append(td);
+          // td = $j('<td colspan="2">');
+          // td.append($j('<span>').addClass('tot-inc-bal').html("$"+parseFloat(mapTotal.balance).toFixed(2)));
+          // tr.append(td);
+        },
+        _onDiscountChange = function (ev) {
+          var el = $j(this);
+          var val = el.val();
+          var obj = el.data("obj");
+          if (val == "" || isNaN(val)) val = 0;
+          if (parseFloat(obj.dbTotal) <= parseFloat(val)) {
+            alert("Discount must be less that the available balance.");
+            val = 0;
+          }
+          $j.each(_dataRows, function (ir, vr) {
+            if (vr.id == obj.apId) {
+              vr.discountAmt = val;
+              vr.balance = vr.total - val;
+              vr.preIncluded = "true";
+            }
+          });
+          _initApData(_dataRows);
+        },
+        _onIncludeChange = function (ev) {
+          var el = $j(this);
+          var checked = el.prop("checked");
+          var obj = el.data("obj");
+          var payeeBalance = 0.0;
 
-			// CM Applied Amt
-			td = $j('<td>');
-			td.text(accounting.formatMoney(row.cmAppliedAmt));
-			tr.append(td);
+          $j.each(_dataRows, function (ir, vr) {
+            if (vr.id == obj.apId) {
+              vr.included = checked;
+              vr.preIncluded = checked ? "true" : "false";
+            }
+            if (vr.payeeId == obj.payeeId && vr.included) payeeBalance += vr.balance;
+            if (checked) includedTotal += vr.balance;
+            else includedTotal -= vr.balance;
+          });
 
-			// Paid Amt
-			td = $j('<td>');
-			td.text(accounting.formatMoney(row.paidAmt));
-			tr.append(td);
+          var payeeRows = $j(".tr" + obj.payeeId);
+          if (payeeBalance < 0) {
+            payeeRows.addClass("payeeError");
+            apTable.cmdPayBatchDisable();
+          } else {
+            payeeRows.removeClass("payeeError");
+            apTable.cmdPayBatchEnable();
+          }
+          $incSpan = $j(".tot-inc-bal").html("$" + parseFloat(includedTotal).toFixed(2));
+        },
+        _setApIdList = function (ev) {
+          // Disable the pay button
+          var cmdPayBatch = $j(".cmdPayBatch");
+          cmdPayBatch.prop("disabled", true);
+          cmdPayBatch.addClass("disabled");
 
-			// Balance
-			td = $j('<td>');
-			td.text(accounting.formatMoney(row.balance));
-			tr.append(td);
+          var mapPayee = {};
+          $j.each(_dataRows, function (ir, vr) {
+            if (vr.included) {
+              if (!mapPayee.hasOwnProperty(vr.payeeId)) mapPayee[vr.payeeId] = 0;
+              mapPayee[vr.payeeId] += vr.balance;
+            }
+          });
 
-			// Include
-			td = $j('<td>');
-			tr.append(td);
+          var errMsg = null;
+          var includedApIds = [];
+          var includedDiscountInAp = [];
+          $j.each(_dataRows, function (ir, vr) {
+            if (vr.included) {
+              var payeeBalance = mapPayee[vr.payeeId];
+              if (payeeBalance < 0) {
+                errMsg = "All included Payees must have a balance of 0.00 or greater.";
+                return false;
+              }
+              includedApIds.push(vr.id);
+              if (parseFloat(vr.discountAmt) != parseFloat(vr.dbDiscountAmt)) {
+                var apDiscount = {};
+                apDiscount[vr.id] = vr.discountAmt;
+                includedDiscountInAp.push(apDiscount);
+              }
+            }
+          });
 
-			el = $j('<input type="checkbox" />');
-			el.data('obj', { payeeId: row.payeeId, apId: row.id, dbBalance:row.dbBalance, dbTotal:row.total});
-			el.prop('checked', row.preIncluded == 'true' ? true : false);
-			el.click(_onIncludeChange);
-			el.appendTo(td);
-		});
-		tr = $j('<tr>');
-		tr.appendTo(tbody);
-		td = $j('<td colspan="4" align="right">').html('Total:');
-		tr.append(td);
-		td = $j('<td>').html("$"+parseFloat(mapTotal.total).toFixed(2));
-		tr.append(td);
-		td = $j('<td>').html("$"+parseFloat(mapTotal.discountAmt).toFixed(2));
-		tr.append(td);
-		td = $j('<td>').html("$"+parseFloat(mapTotal.cmAppliedAmt).toFixed(2));
-		tr.append(td);
-		td = $j('<td>').html("$"+parseFloat(mapTotal.paidAmt).toFixed(2));
-		tr.append(td);
-		td = $j('<td>').html("$"+parseFloat(mapTotal.balance).toFixed(2));
-		tr.append(td);
-		td = $j('<td>');
-		tr.append(td);
+          if (!errMsg && includedApIds.length == 0) {
+            errMsg = "There are no included Payees that have a balance of 0.00 or greater.";
+          }
 
-		// tr = $j('<tr style="display:none;">').addClass('tr-total');
-		// tr.appendTo(tbody);
-		// td = $j('<td colspan="8" align="right">').html('Total Balance Included:');
-		// tr.append(td);
-		// td = $j('<td colspan="2">');
-		// td.append($j('<span>').addClass('tot-inc-bal').html("$"+parseFloat(mapTotal.balance).toFixed(2)));
-		// tr.append(td);		
-	},
-	_onDiscountChange = function(ev){
-		var el = $j(this);
-		var val = el.val();
-		var obj = el.data('obj');
-		if(val == '' || isNaN(val)) val = 0;
-		if(parseFloat(obj.dbTotal) <= parseFloat(val))
-		{
-			alert('Discount must be less that the available balance.');
-			val = 0;
-		}
-		$j.each(_dataRows, function(ir, vr){
-			if(vr.id == obj.apId){
-				vr.discountAmt = val;
-				vr.balance = vr.total - val;
-				vr.preIncluded = 'true';
-			}
-		});
-		_initApData(_dataRows);
-	},
-	_onIncludeChange = function(ev){
+          var result = true;
+          if (errMsg == null) {
+            $j("[id$=elIncludedApId]").val(JSON.stringify(includedApIds));
+            $j("[id$=elDiscountedApId]").val(JSON.stringify(includedDiscountInAp));
+          } else {
+            result = false;
+            alert(errMsg);
+          }
 
-		var el = $j(this);
-		var checked = el.prop('checked');
-		var obj = el.data('obj');
-		var payeeBalance = 0.00;
-
-		$j.each(_dataRows, function(ir, vr){
-			if(vr.id == obj.apId) {
-				vr.included = checked;
-				vr.preIncluded = checked ? 'true' : 'false';
-			}
-			if(vr.payeeId == obj.payeeId && vr.included) payeeBalance += vr.balance;
-			if(checked)
-				includedTotal += vr.balance; 
-			else 
-				includedTotal -= vr.balance;
-		});
-
-		var payeeRows = $j('.tr' + obj.payeeId);
-		if(payeeBalance < 0)
-		{
-			payeeRows.addClass('payeeError');
-			apTable.cmdPayBatchDisable();
-		} else {
-			payeeRows.removeClass('payeeError');
-			apTable.cmdPayBatchEnable();
-		}
-		$incSpan = $j('.tot-inc-bal').html("$"+parseFloat(includedTotal).toFixed(2));
-	},
-	_setApIdList = function(ev){
-
-		// Disable the pay button
-		var cmdPayBatch = $j('.cmdPayBatch');
-		cmdPayBatch.prop('disabled', true);
-		cmdPayBatch.addClass('disabled');
-
-		var mapPayee = {};
-		$j.each(_dataRows, function(ir, vr){
-			if(vr.included){
-				if(!mapPayee.hasOwnProperty(vr.payeeId)) mapPayee[vr.payeeId] = 0;
-				mapPayee[vr.payeeId] += vr.balance;
-			}
-		});
-
-		var errMsg = null;
-		var includedApIds = [];
-		var includedDiscountInAp = [];
-		$j.each(_dataRows, function(ir, vr){
-			if(vr.included){
-				var payeeBalance = mapPayee[vr.payeeId];
-				if(payeeBalance < 0){
-					errMsg = 'All included Payees must have a balance of 0.00 or greater.';
-					return false;
-				}
-				includedApIds.push(vr.id);
-				if(parseFloat(vr.discountAmt) != parseFloat(vr.dbDiscountAmt))
-				{
-					var apDiscount = {};
-					apDiscount[vr.id] = vr.discountAmt;
-					includedDiscountInAp.push(apDiscount);
-				}
-			}
-		});
-
-		if(!errMsg && includedApIds.length == 0){
-			errMsg = 'There are no included Payees that have a balance of 0.00 or greater.';
-		}
-
-		var result = true;
-		if(errMsg == null){
-			$j('[id$=elIncludedApId]').val(JSON.stringify(includedApIds));
-			$j('[id$=elDiscountedApId]').val(JSON.stringify(includedDiscountInAp));
-		} else {
-			result = false;
-			alert(errMsg);
-		}
-
-		return result;
-	},
-	_cmdPayBatchEnable = function(){
-		var cmdPayBatch = $j('.cmdPayBatch');
-		cmdPayBatch.prop('disabled', false);
-		cmdPayBatch.removeClass('disabled');
-	},
-	_cmdPayBatchDisable = function(){
-		var cmdPayBatch = $j('.cmdPayBatch');
-		if(!cmdPayBatch.prop('disabled'))
-		{
-			cmdPayBatch.prop('disabled', true);
-			cmdPayBatch.addClass('disabled');
-		}
-	};
-	return { 
-		init: _init,
-		setApIdList: _setApIdList,
-		cmdPayBatchEnable:_cmdPayBatchEnable,
-		cmdPayBatchDisable:_cmdPayBatchDisable
-	};
-})();
-</script>
-
+          return result;
+        },
+        _cmdPayBatchEnable = function () {
+          var cmdPayBatch = $j(".cmdPayBatch");
+          cmdPayBatch.prop("disabled", false);
+          cmdPayBatch.removeClass("disabled");
+        },
+        _cmdPayBatchDisable = function () {
+          var cmdPayBatch = $j(".cmdPayBatch");
+          if (!cmdPayBatch.prop("disabled")) {
+            cmdPayBatch.prop("disabled", true);
+            cmdPayBatch.addClass("disabled");
+          }
+        };
+      return {
+        init: _init,
+        setApIdList: _setApIdList,
+        cmdPayBatchEnable: _cmdPayBatchEnable,
+        cmdPayBatchDisable: _cmdPayBatchDisable
+      };
+    })();
+  </script>
 </apex:page>

@@ -11,19 +11,22 @@
         {introBlurb} <strong class="overlay__boatName">{boatName}</strong>.
       </p>
     </header>
-    <button class="overlay__close btn btn--primary" onclick={handleCloseOverlay}><span class="ro">Close</span> <span>+</span></button>
+    <button class="overlay__close btn btn--primary" onclick={handleCloseOverlay}>
+      <span class="ro">Close</span> <span>+</span>
+    </button>
     <c-community-shared-lead-form
-            form-name={leadFormName}
-            location-name={locationName}
-            campaign-id={campaignId}
-            serial-number={serialNumber}
-            serial-number-id={serialNumberId}
-            boat-model-id={recordId}
-            collect-first-name="true"
-            collect-last-name="true"
-            collect-postal-code="true"
-            collect-email="true"
-            collect-plan-to-purchase="true"
-            section-width="Container"></c-community-shared-lead-form>
+      form-name={leadFormName}
+      location-name={locationName}
+      campaign-id={campaignId}
+      serial-number={serialNumber}
+      serial-number-id={serialNumberId}
+      boat-model-id={recordId}
+      collect-first-name="true"
+      collect-last-name="true"
+      collect-postal-code="true"
+      collect-email="true"
+      collect-plan-to-purchase="true"
+      section-width="Container"
+    ></c-community-shared-lead-form>
   </aside>
 </template>

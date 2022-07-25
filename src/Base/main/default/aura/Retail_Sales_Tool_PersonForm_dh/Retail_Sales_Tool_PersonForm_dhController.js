@@ -1,11 +1,6 @@
 ({
   doInit: function (component, event, helper) {
-    var steps = [
-        "Person Account Details",
-        "Account F.O.R.M.A.T",
-        "WOW Notes",
-        "Opportunity"
-      ],
+    var steps = ["Person Account Details", "Account F.O.R.M.A.T", "WOW Notes", "Opportunity"],
       customer = {
         isTaxExempt: component.get("v.makeAccountTaxExempt")
       };
@@ -30,10 +25,7 @@
           spinner.toggle();
           helper.fetchCustomer(component, leadId).then(
             $A.getCallback(function (result) {
-              if (
-                Object.keys(result).indexOf("leadSource") >= 0 &&
-                result.leadSource !== null
-              ) {
+              if (Object.keys(result).indexOf("leadSource") >= 0 && result.leadSource !== null) {
                 let opp = component.get("v.opp");
                 opp.leadSource = result.leadSource;
                 component.set("v.opp", opp);
@@ -80,10 +72,7 @@
     if (helper.formValid(component, stepNum)) {
       component.set("v.currentStep", steps[stepNum]);
       component.set("v.onLastStep", stepNum + 1 === steps.length);
-    } else
-      LightningUtils.errorToast(
-        "Please fix any errors on the form to continue"
-      );
+    } else LightningUtils.errorToast("Please fix any errors on the form to continue");
   },
 
   handleBack: function (component) {
@@ -105,10 +94,7 @@
     spinner.toggle();
     helper.fetchCustomer(component, objectId).then(
       $A.getCallback(function (result) {
-        if (
-          Object.keys(result).indexOf("leadSource") >= 0 &&
-          result.leadSource !== null
-        ) {
+        if (Object.keys(result).indexOf("leadSource") >= 0 && result.leadSource !== null) {
           let opp = component.get("v.opp");
           opp.leadSource = result.leadSource;
           component.set("v.opp", opp);

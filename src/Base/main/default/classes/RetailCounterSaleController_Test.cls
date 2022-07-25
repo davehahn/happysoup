@@ -13,11 +13,7 @@ private class RetailCounterSaleController_Test {
   static void storeLocation_Test() {
     User barrieAdmin = User_TestFactory.newSysAdmin('dave', 'hahn', 'Barrie');
     insert barrieAdmin;
-    User whitefishAdmin = User_TestFactory.newSysAdmin(
-      'trent',
-      'rez',
-      'Whitefish'
-    );
+    User whitefishAdmin = User_TestFactory.newSysAdmin('trent', 'rez', 'Whitefish');
     insert whitefishAdmin;
     User openAdmin = User_TestFactory.newSysAdmin('les', 'clay');
     insert openAdmin;
@@ -236,14 +232,7 @@ private class RetailCounterSaleController_Test {
     pbEntries = new List<PricebookEntry>();
     for (Pricebook2 pb : pbs) {
       for (Product2 p : products) {
-        pbEntries.add(
-          new PricebookEntry(
-            Product2Id = p.Id,
-            Pricebook2Id = pb.Id,
-            UnitPrice = 100.00,
-            IsActive = true
-          )
-        );
+        pbEntries.add(new PricebookEntry(Product2Id = p.Id, Pricebook2Id = pb.Id, UnitPrice = 100.00, IsActive = true));
         if (p.RecordTypeId == feeRTId) {
           feeAmounts.add(
             new Product_Fee_Amount__c(
@@ -283,12 +272,8 @@ private class RetailCounterSaleController_Test {
     initAccountData();
     initProductData();
     List<RetailCounterSaleController.LineItemWrapper> lineItems = new List<RetailCounterSaleController.LineItemWrapper>();
-    lineItems.add(
-      RetailCounterSaleController.productSearch(products[0].Name, pbs[0].Id)[0]
-    );
-    lineItems.add(
-      RetailCounterSaleController.productSearch(products[1].Name, pbs[0].Id)[0]
-    );
+    lineItems.add(RetailCounterSaleController.productSearch(products[0].Name, pbs[0].Id)[0]);
+    lineItems.add(RetailCounterSaleController.productSearch(products[1].Name, pbs[0].Id)[0]);
     // build up the account data which simulates being sent from JS
     Map<String, String> accountData = new Map<String, String>();
     accountData.put('Id', accounts[0].Id);
@@ -327,9 +312,7 @@ private class RetailCounterSaleController_Test {
   @isTest
   static void accountSearchTest() {
     initAccountData();
-    List<Account> searchResults = RetailCounterSaleController.accountSearch(
-      'Xzvgtreb'
-    );
+    List<Account> searchResults = RetailCounterSaleController.accountSearch('Xzvgtreb');
 
     System.assertEquals(1, searchResults.size());
   }
@@ -400,16 +383,10 @@ private class RetailCounterSaleController_Test {
   static void addLineItem_Test() {
     Test.startTest();
     createInitialSale();
-    Opportunity opp = [
-      SELECT Id
-      FROM Opportunity
-      WHERE AccountId = :accounts[0].Id
-    ];
+    Opportunity opp = [SELECT Id FROM Opportunity WHERE AccountId = :accounts[0].Id];
     ApexPages.StandardController std = new ApexPages.StandardController(opp);
     RetailCounterSaleController ext = new RetailCounterSaleController(std);
-    Map<String, String> accountData = new Map<String, String>{
-      'Id' => accounts[0].Id
-    };
+    Map<String, String> accountData = new Map<String, String>{ 'Id' => accounts[0].Id };
     List<Map<String, String>> selectedItems = new List<Map<String, String>>();
     Map<String, String> li;
     //recreate currently selected Items
@@ -448,11 +425,7 @@ private class RetailCounterSaleController_Test {
       JSON.serialize(selectedItems),
       JSON.serialize(oppData)
     );
-    List<OpportunityLineItem> olis = [
-      SELECT Id
-      FROM OpportunityLineItem
-      WHERE OpportunityId = :opp.Id
-    ];
+    List<OpportunityLineItem> olis = [SELECT Id FROM OpportunityLineItem WHERE OpportunityId = :opp.Id];
     Test.stopTest();
 
     System.assertEquals(3, olis.size());
@@ -462,16 +435,10 @@ private class RetailCounterSaleController_Test {
   static void removeItem_Test() {
     Test.startTest();
     createInitialSale();
-    Opportunity opp = [
-      SELECT Id
-      FROM Opportunity
-      WHERE AccountId = :accounts[0].Id
-    ];
+    Opportunity opp = [SELECT Id FROM Opportunity WHERE AccountId = :accounts[0].Id];
     ApexPages.StandardController std = new ApexPages.StandardController(opp);
     RetailCounterSaleController ext = new RetailCounterSaleController(std);
-    Map<String, String> accountData = new Map<String, String>{
-      'Id' => accounts[0].Id
-    };
+    Map<String, String> accountData = new Map<String, String>{ 'Id' => accounts[0].Id };
     List<Map<String, String>> selectedItems = new List<Map<String, String>>();
     Map<String, String> li;
     //recreate currently selected Items
@@ -497,11 +464,7 @@ private class RetailCounterSaleController_Test {
       JSON.serialize(selectedItems),
       JSON.serialize(oppData)
     );
-    List<OpportunityLineItem> olis = [
-      SELECT Id
-      FROM OpportunityLineItem
-      WHERE OpportunityId = :opp.Id
-    ];
+    List<OpportunityLineItem> olis = [SELECT Id FROM OpportunityLineItem WHERE OpportunityId = :opp.Id];
     Test.stopTest();
 
     System.assertEquals(1, olis.size());
@@ -530,20 +493,11 @@ private class RetailCounterSaleController_Test {
       ext.getLineItemsJSON(),
       List<RetailCounterSaleController.LineItemWrapper>.class
     );
-    Opportunity opp2 = (Opportunity) JSON.deserialize(
-      ext.getOpportunityJSON(),
-      Opportunity.class
-    );
+    Opportunity opp2 = (Opportunity) JSON.deserialize(ext.getOpportunityJSON(), Opportunity.class);
 
     System.assert(ext.getPriceBooks().size() > 0);
-    System.assertEquals(
-      TaxRate__c.getAll().keySet().size() + 1,
-      ext.getProvinceOptions().size()
-    );
-    System.assertEquals(
-      TaxRate__c.getAll().keySet().size(),
-      provTaxRates.keySet().size()
-    );
+    System.assertEquals(TaxRate__c.getAll().keySet().size() + 1, ext.getProvinceOptions().size());
+    System.assertEquals(TaxRate__c.getAll().keySet().size(), provTaxRates.keySet().size());
     System.assertEquals(opp.OpportunityLineItems.size(), items.size());
     System.assertEquals(opp.Id, opp2.Id);
   }
@@ -552,16 +506,10 @@ private class RetailCounterSaleController_Test {
   static void pricebookAndStageChangeTest() {
     Test.startTest();
     createInitialSale();
-    Opportunity opp = [
-      SELECT Id
-      FROM Opportunity
-      WHERE AccountId = :accounts[0].Id
-    ];
+    Opportunity opp = [SELECT Id FROM Opportunity WHERE AccountId = :accounts[0].Id];
     ApexPages.StandardController std = new ApexPages.StandardController(opp);
     RetailCounterSaleController ext = new RetailCounterSaleController(std);
-    Map<String, String> accountData = new Map<String, String>{
-      'Id' => accounts[0].Id
-    };
+    Map<String, String> accountData = new Map<String, String>{ 'Id' => accounts[0].Id };
     List<Map<String, String>> selectedItems = new List<Map<String, String>>();
     Map<String, String> li;
 
@@ -578,10 +526,7 @@ private class RetailCounterSaleController_Test {
     li.put('Description', newItem.description);
     selectedItems.add(li);
     //add a new Item
-    newItem = RetailCounterSaleController.productSearch(
-      products[1].Name,
-      pbs[1].Id
-    )[0];
+    newItem = RetailCounterSaleController.productSearch(products[1].Name, pbs[1].Id)[0];
     li = new Map<String, String>();
     li.put('Quantity', '1');
     li.put('ListPrice', String.valueOf(newItem.unitPrice));

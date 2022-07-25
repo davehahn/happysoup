@@ -1,7 +1,7 @@
 <aura:component controller="DealerOrder_Ext">
   <aura:attribute name="dealerOrder" type="Dealer_Order__c" access="global" />
   <aura:attribute name="orderGroupId" type="String" />
-  <aura:attribute name="isViewing" type="Boolean" default="false" access="global"/>
+  <aura:attribute name="isViewing" type="Boolean" default="false" access="global" />
   <aura:attribute name="lineData" type="Object" />
 
   <aura:method name="doInit" access="public">
@@ -9,33 +9,24 @@
   </aura:method>
 
   <aura:registerEvent name="cancelEvent" type="c:lgndP_DealerOrderLineViewCancel_Event" />
-  <aura:handler name="cancelEvent"
-                event="c:lgndP_DealerOrderLineViewCancel_Event"
-                action="{!c.handleCancelView}" />
+  <aura:handler name="cancelEvent" event="c:lgndP_DealerOrderLineViewCancel_Event" action="{!c.handleCancelView}" />
 
   <div>
-    <lightning:spinner variant="brand" size="large" aura:id="spinner"/>
+    <lightning:spinner variant="brand" size="large" aura:id="spinner" />
 
     <aura:if isTrue="{! !empty(v.lineData) }">
-      <lightning:layout >
-
-        <lightning:layoutItem size="8"
-                              padding="around-small">
+      <lightning:layout>
+        <lightning:layoutItem size="8" padding="around-small">
           <!-- ++++ BOAT ++++ -->
           <aura:if isTrue="{! !empty(v.lineData.boat) }">
             <div class="data-group">
               <div class="slds-text-heading_small">Boat</div>
               <lightning:layout class="line-item">
-                <lightning:layoutItem size="8"
-                                      padding="around-small">
+                <lightning:layoutItem size="8" padding="around-small">
                   <div class="slds-text-body_regular">{!v.lineData.boat.name}</div>
                 </lightning:layoutItem>
-                <lightning:layoutItem size="4"
-                                      padding="around-small"
-                                      class="slds-text-align_right">
-                  <lightning:formattedNumber value="{!v.lineData.boat.cost}"
-                                             style="currency"
-                                             currencyCode="CAD" />
+                <lightning:layoutItem size="4" padding="around-small" class="slds-text-align_right">
+                  <lightning:formattedNumber value="{!v.lineData.boat.cost}" style="currency" currencyCode="CAD" />
                 </lightning:layoutItem>
               </lightning:layout>
             </div>
@@ -46,20 +37,15 @@
             <div class="data-group">
               <div class="slds-text-heading_small">Motor</div>
               <lightning:layout class="line-item">
-                <lightning:layoutItem size="8"
-                                      padding="around-small">
+                <lightning:layoutItem size="8" padding="around-small">
                   <div class="slds-text-body_regular">{!v.lineData.motor.name}</div>
                 </lightning:layoutItem>
-                <lightning:layoutItem size="4"
-                                      padding="around-small"
-                                      class="slds-text-align_right">
+                <lightning:layoutItem size="4" padding="around-small" class="slds-text-align_right">
                   <aura:if isTrue="{!!empty(v.lineData.motor.cost_description)}">
                     <span>{!v.lineData.motor.cost_description}</span>
                   </aura:if>
                   <aura:if isTrue="{!empty(v.lineData.motor.cost_description)}">
-                    <lightning:formattedNumber value="{!v.lineData.motor.cost}"
-                                               style="currency"
-                                               currencyCode="CAD" />
+                    <lightning:formattedNumber value="{!v.lineData.motor.cost}" style="currency" currencyCode="CAD" />
                   </aura:if>
                 </lightning:layoutItem>
               </lightning:layout>
@@ -71,20 +57,15 @@
             <div class="data-group">
               <div class="slds-text-heading_small">Trailer</div>
               <lightning:layout class="line-item">
-                <lightning:layoutItem size="8"
-                                      padding="around-small">
+                <lightning:layoutItem size="8" padding="around-small">
                   <div class="slds-text-body_regular">{!v.lineData.trailer.name}</div>
                 </lightning:layoutItem>
-                <lightning:layoutItem size="4"
-                                      padding="around-small"
-                                      class="slds-text-align_right">
+                <lightning:layoutItem size="4" padding="around-small" class="slds-text-align_right">
                   <aura:if isTrue="{!!empty(v.lineData.trailer.cost_description)}">
                     <span>{!v.lineData.trailer.cost_description}</span>
                   </aura:if>
                   <aura:if isTrue="{!empty(v.lineData.trailer.cost_description)}">
-                    <lightning:formattedNumber value="{!v.lineData.trailer.cost}"
-                                               style="currency"
-                                               currencyCode="CAD" />
+                    <lightning:formattedNumber value="{!v.lineData.trailer.cost}" style="currency" currencyCode="CAD" />
                   </aura:if>
                 </lightning:layoutItem>
               </lightning:layout>
@@ -96,20 +77,19 @@
             <div class="data-group">
               <div class="slds-text-heading_small">Trolling Motor</div>
               <lightning:layout class="line-item">
-                <lightning:layoutItem size="8"
-                                      padding="around-small">
+                <lightning:layoutItem size="8" padding="around-small">
                   <div class="slds-text-body_regular">{!v.lineData.trollingMotor.name}</div>
                 </lightning:layoutItem>
-                <lightning:layoutItem size="4"
-                                      padding="around-small"
-                                      class="slds-text-align_right">
-                   <aura:if isTrue="{!!empty(v.lineData.trollingMotor.cost_description)}">
+                <lightning:layoutItem size="4" padding="around-small" class="slds-text-align_right">
+                  <aura:if isTrue="{!!empty(v.lineData.trollingMotor.cost_description)}">
                     <span>{!v.lineData.trollingMotor.cost_description}</span>
                   </aura:if>
                   <aura:if isTrue="{!empty(v.lineData.trollingMotor.cost_description)}">
-                    <lightning:formattedNumber value="{!v.lineData.trollingMotor.cost}"
-                                               style="currency"
-                                               currencyCode="CAD" />
+                    <lightning:formattedNumber
+                      value="{!v.lineData.trollingMotor.cost}"
+                      style="currency"
+                      currencyCode="CAD"
+                    />
                   </aura:if>
                 </lightning:layoutItem>
               </lightning:layout>
@@ -122,16 +102,11 @@
               <div class="slds-text-heading_small">Options</div>
               <aura:iteration items="{! v.lineData.options}" var="option">
                 <lightning:layout class="{! join(' ', 'line-item', if(option.hasChildren, 'has-children', ''))}">
-                  <lightning:layoutItem size="8"
-                                        padding="around-small">
+                  <lightning:layoutItem size="8" padding="around-small">
                     <div class="slds-text-body_regular">{!option.name}</div>
                   </lightning:layoutItem>
-                  <lightning:layoutItem size="4"
-                                        padding="around-small"
-                                        class="slds-text-align_right">
-                    <lightning:formattedNumber value="{!option.cost}"
-                                               style="currency"
-                                               currencyCode="CAD" />
+                  <lightning:layoutItem size="4" padding="around-small" class="slds-text-align_right">
+                    <lightning:formattedNumber value="{!option.cost}" style="currency" currencyCode="CAD" />
                   </lightning:layoutItem>
                 </lightning:layout>
                 <aura:if isTrue="{! !empty(option.kitParts) }">
@@ -140,11 +115,8 @@
                       <lightning:layoutItem size="8">
                         <div class="slds-text-body_regular">{!kitPart.more_name}</div>
                       </lightning:layoutItem>
-                      <lightning:layoutItem size="4"
-                                            class="slds-text-align_right">
-                        <lightning:formattedNumber value="{!kitPart.cost}"
-                                                   style="currency"
-                                                   currencyCode="CAD" />
+                      <lightning:layoutItem size="4" class="slds-text-align_right">
+                        <lightning:formattedNumber value="{!kitPart.cost}" style="currency" currencyCode="CAD" />
                       </lightning:layoutItem>
                     </lightning:layout>
                   </aura:iteration>
@@ -155,11 +127,8 @@
                       <lightning:layoutItem size="8">
                         <div class="slds-text-body_regular">{!subOpt.more_name}</div>
                       </lightning:layoutItem>
-                      <lightning:layoutItem size="4"
-                                            class="slds-text-align_right">
-                        <lightning:formattedNumber value="{!subOpt.cost}"
-                                                   style="currency"
-                                                   currencyCode="CAD" />
+                      <lightning:layoutItem size="4" class="slds-text-align_right">
+                        <lightning:formattedNumber value="{!subOpt.cost}" style="currency" currencyCode="CAD" />
                       </lightning:layoutItem>
                     </lightning:layout>
                   </aura:iteration>
@@ -174,46 +143,35 @@
               <div class="slds-text-heading_small">Fees</div>
               <aura:iteration items="{! v.lineData.fees}" var="fee">
                 <lightning:layout class="line-item">
-                  <lightning:layoutItem size="8"
-                                        padding="around-small">
+                  <lightning:layoutItem size="8" padding="around-small">
                     <div class="slds-text-body_regular">{!fee.name}</div>
                   </lightning:layoutItem>
-                  <lightning:layoutItem size="4"
-                                        padding="around-small"
-                                        class="slds-text-align_right">
-                    <lightning:formattedNumber value="{!fee.cost}"
-                                               style="currency"
-                                               currencyCode="CAD" />
+                  <lightning:layoutItem size="4" padding="around-small" class="slds-text-align_right">
+                    <lightning:formattedNumber value="{!fee.cost}" style="currency" currencyCode="CAD" />
                   </lightning:layoutItem>
                 </lightning:layout>
               </aura:iteration>
             </div>
           </aura:if>
 
-           <!-- ++++ DISCOUNTS ++++ -->
+          <!-- ++++ DISCOUNTS ++++ -->
           <aura:if isTrue="{! !empty(v.lineData.discounts) }">
             <div class="data-group">
               <div class="slds-text-heading_small">Savings</div>
               <aura:iteration items="{! v.lineData.discounts}" var="discount">
                 <lightning:layout class="line-item">
-                  <lightning:layoutItem size="8"
-                                        padding="around-small">
+                  <lightning:layoutItem size="8" padding="around-small">
                     <div class="slds-text-body_regular">{!discount.name}</div>
                   </lightning:layoutItem>
-                  <lightning:layoutItem size="4"
-                                        padding="around-small"
-                                        class="slds-text-align_right">
-                    <lightning:formattedNumber value="{!discount.cost}"
-                                               style="currency"
-                                               currencyCode="CAD" />
+                  <lightning:layoutItem size="4" padding="around-small" class="slds-text-align_right">
+                    <lightning:formattedNumber value="{!discount.cost}" style="currency" currencyCode="CAD" />
                   </lightning:layoutItem>
                 </lightning:layout>
               </aura:iteration>
             </div>
           </aura:if>
 
-
-         <!--      <lightning:layout class="line-item line-total">
+          <!--      <lightning:layout class="line-item line-total">
                 <lightning:layoutItem size="8"
                                       padding="around-small">
                 </lightning:layoutItem>
@@ -225,48 +183,37 @@
                                              currencyCode="CAD" />
                 </lightning:layoutItem>
               </lightning:layout> -->
-
-
         </lightning:layoutItem>
 
-        <lightning:layoutItem size="4"
-                              padding="around-small">
+        <lightning:layoutItem size="4" padding="around-small">
           <div class="slds-clearfix">
-            <lightning:button label="Return" onclick="{! c.returnToList }" class="slds-float_right"/>
+            <lightning:button label="Return" onclick="{! c.returnToList }" class="slds-float_right" />
           </div>
           <div class="slds-text-heading_small">Notes</div>
-          <div class="notes-container">
-            {!v.lineData.notes}
-          </div>
-
+          <div class="notes-container">{!v.lineData.notes}</div>
         </lightning:layoutItem>
-
       </lightning:layout>
 
       <lightning:layout class="total-row">
         <lightning:layoutItem size="8">
-          <lightning:layout class="line-item line-total ">
+          <lightning:layout class="line-item line-total">
             <lightning:layoutItem size="12" class="slds-text-align_right slds-text-heading_medium">
-               <div class="quantity">{!v.lineData.quantity} <span>x</span></div>
-               <lightning:formattedNumber value="{!v.lineData.orderTotal}"
-                                         style="currency"
-                                         currencyCode="CAD" />
-                <div style="display: inline-block; padding-left:1rem;"> = </div>
+              <div class="quantity">{!v.lineData.quantity} <span>x</span></div>
+              <lightning:formattedNumber value="{!v.lineData.orderTotal}" style="currency" currencyCode="CAD" />
+              <div style="display: inline-block; padding-left: 1rem">=</div>
             </lightning:layoutItem>
           </lightning:layout>
         </lightning:layoutItem>
         <lightning:layoutItem size="4" class="slds-text-heading_large slds-text-align_center">
           <div class="grand-total">
-            <lightning:formattedNumber value="{!v.lineData.orderTotal * v.lineData.quantity}"
-                                         style="currency"
-                                         currencyCode="CAD" />
+            <lightning:formattedNumber
+              value="{!v.lineData.orderTotal * v.lineData.quantity}"
+              style="currency"
+              currencyCode="CAD"
+            />
           </div>
         </lightning:layoutItem>
       </lightning:layout>
-
     </aura:if>
-
-
   </div>
-
 </aura:component>

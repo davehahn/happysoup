@@ -3,19 +3,18 @@
   <aura:attribute name="warehouseId" type="String" />
   <aura:attribute name="tableCols" type="List" />
 
-  <ltng:require scripts="{!join(',', $Resource.Libraries +'/js/LightningApex.js',
+  <ltng:require
+    scripts="{!join(',', $Resource.Libraries +'/js/LightningApex.js',
                                      $Resource.Libraries +'/js/LightningUtils.js') }"
-                afterScriptsLoaded="{!c.doInit}" />
+    afterScriptsLoaded="{!c.doInit}"
+  />
 
-
-<!--  <aura:handler name="init" value="{!this}" action="{!c.doInit}" />-->
+  <!--  <aura:handler name="init" value="{!this}" action="{!c.doInit}" />-->
   <aura:registerEvent name="vendorPartsSelected" type="c:Case_CreatePO_VenderPartsSelected_Event" />
 
   <div>
     <h3>
-      <span>
-        {!v.vendor.name}
-      </span>
+      <span> {!v.vendor.name} </span>
     </h3>
 
     <div class="slds-p-around_small slds-m-bottom_small parts-container">
@@ -26,11 +25,13 @@
               <aura:iteration items="{!v.vendor.caseParts}" var="cp">
                 <tr>
                   <td>
-                    <lightning:input type="checkbox"
-                                     aura:id="rowSelect"
-                                     variant="label-hidden"
-                                     value="{!cp.Id}"
-                                     checked="{!not(empty(v.vendor.id))}" />
+                    <lightning:input
+                      type="checkbox"
+                      aura:id="rowSelect"
+                      variant="label-hidden"
+                      value="{!cp.Id}"
+                      checked="{!not(empty(v.vendor.id))}"
+                    />
                   </td>
                   <td>{!cp.Product__r.ProductCode}</td>
                   <td>{!cp.Product__r.Name}</td>
@@ -39,26 +40,28 @@
               </aura:iteration>
             </tbody>
           </table>
-
         </lightning:layoutItem>
         <lightning:layoutItem size="3" padding="around-small" class="slds-text-align_right">
           <lightning:buttonGroup>
             <aura:if isTrue="{! !empty(v.vendor.id)}">
-              <lightning:button variant="neutral"
-                                label="Link PO"
-                                class="slds-float_right"
-                                onclick="{!c.handlePO}"
-                                value="link" />
+              <lightning:button
+                variant="neutral"
+                label="Link PO"
+                class="slds-float_right"
+                onclick="{!c.handlePO}"
+                value="link"
+              />
             </aura:if>
-            <lightning:button variant="neutral"
-                              label="Create PO"
-                              class="slds-float_right"
-                              onclick="{!c.handlePO}"
-                              value="create" />
+            <lightning:button
+              variant="neutral"
+              label="Create PO"
+              class="slds-float_right"
+              onclick="{!c.handlePO}"
+              value="create"
+            />
           </lightning:buttonGroup>
         </lightning:layoutItem>
       </lightning:layout>
     </div>
   </div>
-
 </aura:component>

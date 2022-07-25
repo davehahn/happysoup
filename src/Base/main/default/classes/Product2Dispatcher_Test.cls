@@ -1,9 +1,7 @@
 @isTest
 private class Product2Dispatcher_Test {
-
-	@isTest
+  @isTest
   static void coverage_Test() {
-		Product2Dispatcher.coverage();
-	}
-
+    Product2Dispatcher.coverage();
+  }
 }

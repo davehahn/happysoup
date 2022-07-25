@@ -65,6 +65,21 @@ jobs:
           command: |
             . build/circleci/cleancode.sh
             . build/circleci/validate_build_fsl.sh
+  validate_dave:
+    docker:
+      - image: legendarydevs/sfdx_deploy
+    steps:
+      - checkout
+      - run:
+          name: Authenticate Dave Valid
+          command: . build/circleci/authenticate.sh $DAVE_VALIDATE_USER $DAVE_VALIDATE_CONSUMER_KEY https://test.salesforce.com
+      - run:
+          name: Clean
+          command: . build/circleci/cleancode.sh
+      - run:
+          name: Deploy to Dave Valid
+          no_output_timeout: 30m
+          command: . build/circleci/deploy.sh
   stage:
     docker:
       - image: legendarydevs/sfdx_deploy
@@ -168,4 +183,11 @@ workflows:
       - validate-build-fsl:
           requires:
             - build-validation-env
+  deploy_to_validate_dave:
+    jobs:
+      - validate_dave:
+          filters:
+            branches:
+              only:
+                - /dave\/.*/
 

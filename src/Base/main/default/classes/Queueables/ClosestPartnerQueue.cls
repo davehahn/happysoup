@@ -12,16 +12,19 @@ public class ClosestPartnerQueue implements Queueable, Database.AllowsCallouts {
   public void execute(QueueableContext context) {
     String origin;
     PartnerLocator locator = new PartnerLocator();
-    List<Lead> leads =  Lead_Selector.allByIds(this.leadIds);
-    for (Lead l :leads) {
-      if( Lead_Service.setClosestPartnerByLeadSource(l) ) continue;
+    List<Lead> reassign = new List<Lead>();
+    List<Lead> dontReassign = new List<Lead>();
+    for (Lead l : Lead_Selector.allByIds(this.leadIds)) {
+      if (Lead_Service.setClosestPartnerByLeadSource(l))
+        continue;
       origin = null;
-      if (l.PostalCode != null)
+      if (l.PostalCode != null) {
         origin = l.PostalCode;
-      else if (l.IP_City__c != null)
+      } else if (l.IP_City__c != null) {
         origin = l.IP_City__c;
-      else if (l.hubspot_IP_City_Lead__c != null)
+      } else if (l.hubspot_IP_City_Lead__c != null) {
         origin = l.hubspot_IP_City_Lead__c;
+      }
       if (origin != null) {
         PartnerLocator.SearchResult result = locator.execute(origin, 1);
         if (result.mapMarkers.size() > 0) {
@@ -39,12 +42,20 @@ public class ClosestPartnerQueue implements Queueable, Database.AllowsCallouts {
           }
         }
       }
+      if (l.Status == Lead_Service.NEW_STATUS) {
+        reassign.add(l);
+      } else {
+        dontReassign.add(l);
+      }
     }
     TriggerBase.bypass('Lead');
     Database.DMLOptions options = new Database.DMLOptions();
     options.emailHeader.triggerUserEmail = true;
     options.assignmentRuleHeader.useDefaultRule = true;
-    Database.update(leads, options);
+    Database.update(reassign, options);
+    options.emailHeader.triggerUserEmail = false;
+    options.assignmentRuleHeader.useDefaultRule = false;
+    Database.update(dontReassign, options);
     TriggerBase.clearBypass('Lead');
   }
 }

@@ -4,10 +4,10 @@
 
 public without sharing class TA_Task_SetRelatedActivityFields implements TriggerAction.AfterInsert {
   private final Set<String> TASK_SUBTYPES = new Set<String>{ 'Email', 'Call' };
-  private final Set<String> SOBJECT_TYPES_WITH_ACTIVITY_FIELDS = new Set<String>{'Case'};
+  private final Set<String> SOBJECT_TYPES_WITH_ACTIVITY_FIELDS = new Set<String>{ 'Case' };
 
   public void afterInsert(List<Task> newList) {
-    List<Sobject> result = sortApplicableBySobjectType( newLIst );
+    List<Sobject> result = sortApplicableBySobjectType(newLIst);
     if (result.size() > 0) {
       update result;
     }
@@ -21,7 +21,7 @@ public without sharing class TA_Task_SetRelatedActivityFields implements Trigger
       if (!TASK_SUBTYPES.contains(t.TaskSubtype))
         continue;
       String sObjectName = LGND_Utilities.sObjectNameFromId(t.WhatId);
-      if( !SOBJECT_TYPES_WITH_ACTIVITY_FIELDS.contains(sObjectName) )
+      if (!SOBJECT_TYPES_WITH_ACTIVITY_FIELDS.contains(sObjectName))
         continue;
       SObject sobj = Schema.getGlobalDescribe().get(sObjectName).newSObject();
       sobj.put('Id', t.WhatId);
