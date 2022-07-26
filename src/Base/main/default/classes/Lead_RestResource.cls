@@ -139,8 +139,10 @@ global with sharing class Lead_RestResource {
     }
 
     public LeadSubmissionHistoryWrapper toSubmissionHistoryObject(RestResult result) {
+      String listName = this.firstName + ' ' + this.lastName + ': ' + date.today().format();
       this.submission = new Lead_Submission_History__c(
         Lead_ID__c = result.data.id,
+        Name = listName,
         First_Name__c = this.firstName,
         Last_Name__c = this.lastName,
         Address__c = this.street,
