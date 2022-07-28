@@ -108,7 +108,7 @@ export default class FactoryStoreCurrentInventoryList extends NavigationMixin(Li
     this.pBoatName = stripParentheses(this.pBoat.Base.Name);
     console.log("run lookup for " + this.pBoat.Base.Name);
 
-    this.modelYear = this.calendarMonth >= 9 ? this.calendarYear + 1 : this.calendarYear;
+    this.modelYear = this.calendarMonth >= 6 ? this.calendarYear + 1 : this.calendarYear;
     console.log("current model year: ", this.modelYear);
 
     const inventory = fetchNewInStockInventory({
