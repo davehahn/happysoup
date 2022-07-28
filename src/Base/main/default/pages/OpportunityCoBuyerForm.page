@@ -204,9 +204,11 @@
       var self,
         indc = $j("#searchInd");
       indc.show();
+      console.log('contactSearch');
+      console.log({!excludedIds});
       return $j.Deferred(function () {
         self = this;
-        ContactRemoter.findContacts(queryString, "{!excludedIds}", function (events, result) {
+        ContactRemoter.findContacts(queryString, '{!excludedIds}', function (events, result) {
           indc.hide();
           if (result.statusCode === 200) {
             self.resolve(result.result);
