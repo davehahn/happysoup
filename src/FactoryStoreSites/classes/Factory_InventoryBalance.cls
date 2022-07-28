@@ -10,7 +10,9 @@ public class Factory_InventoryBalance {
       AcctSeedERP__Warehouse__c = Test_Constants.idWarehouse,
       AcctSeedERP__Location__c = acctSeedLocationId
     );
+
     insert balance;
+
     return balance;
   }
 }
