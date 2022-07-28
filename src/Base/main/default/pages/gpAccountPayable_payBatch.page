@@ -79,19 +79,21 @@
   </style>
   <script type="text/javascript">
     var defaultAcc = "{!defaultAcc}";
-    var accData = JSON.parse("{!accData}");
-    var selectedAPIds = JSON.parse("{!selectedApIds}");
+    var accData = JSON.parse('{!accData}');
+    var selectedAPIds = JSON.parse('{!selectedApIds}');
     var allRecords = "{!$CurrentPage.parameters.all}" === "true";
+    var $j = jQuery.noConflict();
 
-    $j = jQuery.noConflict();
     $j(document).ready(function () {
       initBankAccounts();
       apTable.init(selectedAPIds);
-      if ($j('select[id*=":txnType"]').find("option[value=Cheque]").length) $j('select[id*=":txnType"]').val("Cheque");
-      else if ($j('select[id*=":txnType"]').find("option[value=Check]").length)
+      if ($j('select[id*=":txnType"]').find("option[value=Cheque]").length) {
+        $j('select[id*=":txnType"]').val("Cheque");
+      } else if ($j('select[id*=":txnType"]').find("option[value=Check]").length) {
         $j('select[id*=":txnType"]').val("Check");
-      else if ($j('select[id*=":txnType"]').find("option[value=US Check]").length)
+      } else if ($j('select[id*=":txnType"]').find("option[value=US Check]").length) {
         $j('select[id*=":txnType"]').val("US Check");
+      }
     });
 
     function showHideCheckNumber(obj) {
@@ -290,14 +292,6 @@
           tr.append(td);
           td = $j("<td>");
           tr.append(td);
-
-          // tr = $j('<tr style="display:none;">').addClass('tr-total');
-          // tr.appendTo(tbody);
-          // td = $j('<td colspan="8" align="right">').html('Total Balance Included:');
-          // tr.append(td);
-          // td = $j('<td colspan="2">');
-          // td.append($j('<span>').addClass('tot-inc-bal').html("$"+parseFloat(mapTotal.balance).toFixed(2)));
-          // tr.append(td);
         },
         _onDiscountChange = function (ev) {
           var el = $j(this);
@@ -329,8 +323,11 @@
               vr.preIncluded = checked ? "true" : "false";
             }
             if (vr.payeeId == obj.payeeId && vr.included) payeeBalance += vr.balance;
-            if (checked) includedTotal += vr.balance;
-            else includedTotal -= vr.balance;
+            if (checked) {
+              includedTotal += vr.balance;
+            } else {
+              includedTotal -= vr.balance;
+            }
           });
 
           var payeeRows = $j(".tr" + obj.payeeId);

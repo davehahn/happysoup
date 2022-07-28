@@ -70,6 +70,7 @@ public without sharing class gcCashReceipt {
       System.debug('@@ listNew= ' + listNew);
       retrieveStatics(listNew);
       for (AcctSeed__Cash_Receipt__c cr : listNew) {
+        cr.Uniquefier__c = cr.AcctSeed__Account__c + '' + cr.AcctSeed__Payment_Reference__c;
         if (boolIsUpdate) {
           AcctSeed__Cash_Receipt__c oldRec = oldMap.get(cr.Id);
           if (
