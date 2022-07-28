@@ -143,7 +143,7 @@ public class gcBilling_Actions_T {
     cashReceipt_inprocess.AcctSeed__Project_Task__c = erp_task_map.get(erps[0].Id).Id;
     cashReceipt_inprocess.AcctSeed__Receipt_Date__c = Date.Today();
     cashReceipt_inprocess.AcctSeed__Purpose__c = 'Customer Receipt';
-    cashReceipt_inprocess.AcctSeed__Payment_Reference__c = 'Test Payment Reference';
+    cashReceipt_inprocess.AcctSeed__Payment_Reference__c = LGND_Utilities.generateRandomString(6)+String.valueOf(System.now());
     cashReceipt_inprocess.AcctSeed__Cash_Flow_Category__c = gcConstants.idGlRevenueCF;
     insert cashReceipt_inprocess;
 

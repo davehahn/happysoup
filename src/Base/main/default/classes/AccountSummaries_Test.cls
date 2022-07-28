@@ -75,7 +75,7 @@ private class AccountSummaries_Test {
       AcctSeed__Account__c = dealer.Id,
       AcctSeed__Amount__c = 5.0,
       AcctSeed__Receipt_Date__c = Date.today(),
-      AcctSeed__Payment_Reference__c = 'Cash',
+      AcctSeed__Payment_Reference__c = LGND_Utilities.generateRandomString(6)+String.valueOf(System.now()),
       AcctSeed__Ledger__c = ledger.Id
     );
     insert cr;
