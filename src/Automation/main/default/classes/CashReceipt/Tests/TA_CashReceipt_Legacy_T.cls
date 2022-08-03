@@ -75,7 +75,7 @@ public class TA_CashReceipt_Legacy_T {
           AcctSeed__Account__c = dealer.Id,
           AcctSeed__Amount__c = 5.0,
           AcctSeed__Receipt_Date__c = Date.today(),
-          AcctSeed__Payment_Reference__c = 'Cash',
+          AcctSeed__Payment_Reference__c = LGND_Utilities.generateRandomString(6)+String.valueOf(System.now()),
           AcctSeed__Ledger__c = ledger.Id,
           AcctSeed__Project__c = erp.Id,
           AcctSeed__Project_Task__c = erp_task_map.get(erp.Id).Id,

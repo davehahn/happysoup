@@ -39,12 +39,19 @@ public virtual class PartnerProgram_Cash extends PartnerProgramItem {
   }
 
   protected override Decimal determineSavingsPercent() {
-    if (this.orderWrapper.createdDate.month() >= 8) {
-      if (this.orderWrapper.createdDate.month() == 12 && this.orderWrapper.createdDate.day() > 18) {
-        return 1;
-      }
-      return 3;
-    }
-    return 1;
+    return PartnerProgram_Cash.determinePercentageFromDate(this.orderWrapper.createdDate);
+  }
+
+  public static Decimal determinePercentageFromDate( Date orderCreatedDate ){
+    /* ***** 2022 *****/
+    //    if (orderCreatedDate.month() >= 8) {
+    //      if (orderCreatedDate.month() == 12 && orderCreatedDate.day() > 18) {
+    //        return 1;
+    //      }
+    //      return 3;
+    //    }
+    //    return 1;
+    /* ***** 2023 ****/
+    return orderCreatedDate.month() >= 9 ? 2 : 1;
   }
 }

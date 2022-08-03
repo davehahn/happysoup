@@ -119,7 +119,7 @@ private class gcDealerReseved_Receipt_T {
     cashReceipt_inprocess.AcctSeed__Project_Task__c = erpTask.Id;
     cashReceipt_inprocess.AcctSeed__Receipt_Date__c = Date.Today();
     cashReceipt_inprocess.AcctSeed__Purpose__c = 'Customer Receipt';
-    cashReceipt_inprocess.AcctSeed__Payment_Reference__c = 'Test Payment Reference';
+    cashReceipt_inprocess.AcctSeed__Payment_Reference__c = LGND_Utilities.generateRandomString(6)+String.valueOf(System.now());
     insert cashReceipt_inprocess;
 
     //        Test.StartTest();
