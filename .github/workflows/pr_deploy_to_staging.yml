@@ -1,0 +1,100 @@
+name: 'Staging'
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the "main" branch
+  pull_request:
+    types: [opened, synchronize]
+    branches: [ "staging" ]
+    paths:
+      - 'src/**'
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "validate"
+  Deploy_Staging:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Now we install nodejs in the VM, and specify version 14
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: 'Checkout Source Code'
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: 'Read PR Body'
+        env:
+          # The pull request body is available through the github context object
+          # we put the body of the pull request in an env variable (only available to this step)
+          PR_BODY: ${{github.event.pull_request.body}}
+
+        # Here we print the content of the environment variable and
+        # pipe to a a text file.
+
+        # Then we call the local script parsePR.js, which will create
+        # a new file called testsToRun.txt. This file will have the list
+        # of tests to run separated by a comma
+
+        # Finally, we add the list of tests to the $GITHUB_ENV variable
+        # as this allows us to reference the list in a subsequent step.  If you
+        # were using a normal env variable, its value would not be available outside this step.
+        run: |
+            echo $PR_BODY > ./.github/pr_body.txt
+            node ./.github/parsePR.js
+            TESTS=$(cat .github/testsToRun.txt)
+            echo "APEX_TESTS=$TESTS" >> $GITHUB_ENV
+
+      #Now Install Salesforce CLI
+      - name: 'Install Salesforce CLI'
+        run: |
+            wget https://developer.salesforce.com/media/salesforce-cli/sfdx/channels/stable/sfdx-linux-x64.tar.xz
+            mkdir ~/sfdx
+            tar xJf sfdx-linux-x64.tar.xz -C ~/sfdx --strip-components 1
+            echo "$HOME/sfdx/bin" >> $GITHUB_PATH
+            ~/sfdx/bin/sfdx version
+
+      # Now Install SFDX plugins
+      - name: 'Install SFDX plugins'
+        run: |
+            echo y | sfdx plugins:install sfdx-git-delta
+            sfdx plugins
+
+      # We use SFDX Git Delta to create a directory with only the metadata that has changed.
+      # this allows us to deploy only those changes, as opposed to deploying the entire branch.
+      # This helps reducing deployment times
+      - name: 'Create delta packages for new, modified or deleted metadata'
+        run: |
+            mkdir changed-sources
+            sfdx sgd:source:delta --to "HEAD" --from "HEAD^" --output changed-sources/ --generate-delta --source src/
+
+       # Authenticate Staging ORG
+      - name: 'Authenticating Staging Org'
+        shell: bash
+        run: ./build/github/authenticate.sh ${{secrets.SFDC_SERVER_KEY}} ${{secrets.STAGING_USER}} ${{secrets.STAGING_CONSUMER_KEY}} https://test.salesforce.com
+
+    # We do a check-only deploy and we only run the tests specified in the PR
+    # If the env variable does not equal 'all', we know that there is a list of
+    # tests that can be run
+
+      - name: 'Deploy delta changes - run specified tests'
+        if: ${{ env.APEX_TESTS != 'all' }}
+        run: |
+            echo ${{env.APEX_TESTS}}
+            sfdx force:source:deploy -p "changed-sources/src" --testlevel RunSpecifiedTests --runtests ${{env.APEX_TESTS}} -u ci-deploy
+      # If the env variable equals all, we run all tests
+      - name: 'Deploy delta changes - run all tests'
+        if: ${{ env.APEX_TESTS == 'all' }}
+        run: |
+            sfdx force:source:deploy -p "changed-sources/src" --testlevel RunLocalTests -u ci-deploy -g -w 240
+
+

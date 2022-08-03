@@ -1,5 +1,8 @@
+[![Production](https://github.com/Legend-Boats/HappySoup/actions/workflows/pr_deploy_to_production.yml/badge.svg)](https://github.com/Legend-Boats/HappySoup/actions/workflows/pr_deploy_to_production.yml)
+[![Staging](https://github.com/Legend-Boats/HappySoup/actions/workflows/pr_deploy_to_staging.yml/badge.svg)](https://github.com/Legend-Boats/HappySoup/actions/workflows/pr_deploy_to_staging.yml)
+[![Validate Develoment](https://github.com/Legend-Boats/HappySoup/actions/workflows/pr_develop.yml/badge.svg)](https://github.com/Legend-Boats/HappySoup/actions/workflows/pr_develop.yml)
 
-# Legend Bug Fix Week Process
+# Legend Bug Fix Week Process (DEPRECATED)
 
 ### Step 1 - Setup dev and validation orgs
 

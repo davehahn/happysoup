@@ -1,0 +1,107 @@
+name: 'Production'
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the "main" branch
+  pull_request:
+    types: [opened, synchronize]
+    branches: [ "main" ]
+    paths:
+      - 'src/**'
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "validate"
+  Deploy_Production:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Now we install nodejs in the VM, and specify version 14
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: 'Checkout Source Code'
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      # - name: 'Read PR Body'
+      #   env:
+      #     # The pull request body is available through the github context object
+      #     # we put the body of the pull request in an env variable (only available to this step)
+      #     PR_BODY: ${{github.event.pull_request.body}}
+
+      #   # Here we print the content of the environment variable and
+      #   # pipe to a a text file.
+
+      #   # Then we call the local script parsePR.js, which will create
+      #   # a new file called testsToRun.txt. This file will have the list
+      #   # of tests to run separated by a comma
+
+      #   # Finally, we add the list of tests to the $GITHUB_ENV variable
+      #   # as this allows us to reference the list in a subsequent step.  If you
+      #   # were using a normal env variable, its value would not be available outside this step.
+      #   run: |
+      #       echo $PR_BODY > ./pr_body.txt
+      #       node ./.github/parsePR.js
+      #       TESTS=$(cat testsToRun.txt)
+      #       echo "APEX_TESTS=$TESTS" >> $GITHUB_ENV
+
+      #Install Java
+      - name: 'Installing java'
+        run: sudo apt-get install openjdk-8-jdk
+
+      #Install Ant
+      - name: 'Install Ant'
+        run: sudo apt-get install ant
+
+      #Now Install Salesforce CLI
+      - name: 'Install Salesforce CLI'
+        run: |
+            wget https://developer.salesforce.com/media/salesforce-cli/sfdx/channels/stable/sfdx-linux-x64.tar.xz
+            mkdir ~/sfdx
+            tar xJf sfdx-linux-x64.tar.xz -C ~/sfdx --strip-components 1
+            echo "$HOME/sfdx/bin" >> $GITHUB_PATH
+            ~/sfdx/bin/sfdx version
+
+      # Now Install SFDX plugins
+      - name: 'Install SFDX plugins'
+        run: |
+            echo y | sfdx plugins:install sfdx-heber
+            sfdx plugins
+
+      # We use SFDX Git Delta to create a directory with only the metadata that has changed.
+      # this allows us to deploy only those changes, as opposed to deploying the entire branch.
+      # This helps reducing deployment times
+      # - name: 'Create delta packages for new, modified or deleted metadata'
+      #   run: |
+      #       mkdir changed-sources
+      #       sfdx sgd:source:delta --to "HEAD" --from "HEAD^" --output changed-sources/ --generate-delta --source src/
+
+       # Authenticate Production ORG
+      - name: 'Authenticating Production Org'
+        shell: bash
+        run: ./build/github/authenticate.sh ${{secrets.SFDC_SERVER_KEY}} ${{secrets.PRODUCTION_USER}} ${{secrets.PRODUCTION_CONSUMER_KEY}} https://login.salesforce.com
+
+      #clean code
+      - name: 'Clean code'
+        shell: bash
+        run: ./build/github/cleancode.sh
+
+      # Deploy
+      - name: 'Deploying to Production'
+        shell: bash
+        run: ./build/github/deploy.sh
+
+
+
+
+
+
