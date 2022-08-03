@@ -99,13 +99,8 @@ public class PartnerProgram_Executor_T {
   }
 
   private static Decimal determineCashDiscount() {
-    if (order.createdDate.month() >= 8) {
-      if (order.createdDate.month() == 12 && order.createdDate.day() > 18) {
-        return 1;
-      }
-      return 3;
-    }
-    return 1;
+    Date created = Date.newInstance(order.CreatedDate.year(), order.CreatedDate.month(), order.CreatedDate.day());
+    return PartnerProgram_Cash.determinePercentageFromDate(created);
   }
 
   @IsTest
