@@ -217,22 +217,6 @@
         <style>TwoColumnsTopToBottom</style>
     </layoutSections>
     <layoutSections>
-        <customLabel>true</customLabel>
-        <detailHeading>true</detailHeading>
-        <editHeading>true</editHeading>
-        <label>Account Ledger</label>
-        <layoutColumns>
-            <layoutItems>
-                <height>275</height>
-                <page>gpAccount_Ledger</page>
-                <showLabel>false</showLabel>
-                <showScrollbars>false</showScrollbars>
-                <width>100%</width>
-            </layoutItems>
-        </layoutColumns>
-        <style>OneColumn</style>
-    </layoutSections>
-    <layoutSections>
         <customLabel>false</customLabel>
         <detailHeading>true</detailHeading>
         <editHeading>true</editHeading>
@@ -280,31 +264,6 @@
     <platformActionList>
         <actionListContext>Record</actionListContext>
         <platformActionListItems>
-            <actionName>LogACall</actionName>
-            <actionType>QuickAction</actionType>
-            <sortOrder>6</sortOrder>
-        </platformActionListItems>
-        <platformActionListItems>
-            <actionName>Account.Image_Capture</actionName>
-            <actionType>QuickAction</actionType>
-            <sortOrder>7</sortOrder>
-        </platformActionListItems>
-        <platformActionListItems>
-            <actionName>FeedItem.LinkPost</actionName>
-            <actionType>QuickAction</actionType>
-            <sortOrder>8</sortOrder>
-        </platformActionListItems>
-        <platformActionListItems>
-            <actionName>FeedItem.PollPost</actionName>
-            <actionType>QuickAction</actionType>
-            <sortOrder>9</sortOrder>
-        </platformActionListItems>
-        <platformActionListItems>
-            <actionName>Account.Contact</actionName>
-            <actionType>QuickAction</actionType>
-            <sortOrder>10</sortOrder>
-        </platformActionListItems>
-        <platformActionListItems>
             <actionName>Account.Collect_Payment</actionName>
             <actionType>QuickAction</actionType>
             <sortOrder>0</sortOrder>
@@ -333,6 +292,31 @@
             <actionName>NewTask</actionName>
             <actionType>QuickAction</actionType>
             <sortOrder>5</sortOrder>
+        </platformActionListItems>
+        <platformActionListItems>
+            <actionName>LogACall</actionName>
+            <actionType>QuickAction</actionType>
+            <sortOrder>6</sortOrder>
+        </platformActionListItems>
+        <platformActionListItems>
+            <actionName>Account.Image_Capture</actionName>
+            <actionType>QuickAction</actionType>
+            <sortOrder>7</sortOrder>
+        </platformActionListItems>
+        <platformActionListItems>
+            <actionName>FeedItem.LinkPost</actionName>
+            <actionType>QuickAction</actionType>
+            <sortOrder>8</sortOrder>
+        </platformActionListItems>
+        <platformActionListItems>
+            <actionName>FeedItem.PollPost</actionName>
+            <actionType>QuickAction</actionType>
+            <sortOrder>9</sortOrder>
+        </platformActionListItems>
+        <platformActionListItems>
+            <actionName>Account.Contact</actionName>
+            <actionType>QuickAction</actionType>
+            <sortOrder>10</sortOrder>
         </platformActionListItems>
         <platformActionListItems>
             <actionName>Account.Opportunity</actionName>
@@ -535,19 +519,6 @@
     </relatedLists>
     <relatedLists>
         <fields>NAME</fields>
-        <fields>AcctSeed__Accounting_Period__c</fields>
-        <fields>Payee_New__c</fields>
-        <fields>AcctSeed__Payee_Reference__c</fields>
-        <fields>AcctSeed__Date__c</fields>
-        <fields>AcctSeed__Due_Date__c</fields>
-        <fields>AcctSeed__Status__c</fields>
-        <fields>AcctSeed__Payment_Status__c</fields>
-        <fields>AcctSeed__Total__c</fields>
-        <fields>AcctSeed__Balance__c</fields>
-        <relatedList>AcctSeed__Account_Payable__c.AcctSeed__Vendor__c</relatedList>
-    </relatedLists>
-    <relatedLists>
-        <fields>NAME</fields>
         <fields>RECORDTYPE</fields>
         <fields>Grand_Total__c</fields>
         <fields>Stage__c</fields>
@@ -649,10 +620,6 @@
         <fields>CASES.STATUS</fields>
         <fields>OWNER_NAME</fields>
         <relatedList>RelatedCaseList</relatedList>
-    </relatedLists>
-    <relatedLists>
-        <fields>NAME</fields>
-        <relatedList>Square_Transaction__c.Account__c</relatedList>
     </relatedLists>
     <showEmailCheckbox>false</showEmailCheckbox>
     <showHighlightsPanel>false</showHighlightsPanel>

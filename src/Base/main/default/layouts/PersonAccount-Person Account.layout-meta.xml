@@ -7,8 +7,7 @@
     <customButtons>Transaction_Detail</customButtons>
     <customButtons>Create_AP_Statement</customButtons>
     <customButtons>Dealer_Reserve_Receipt</customButtons>
-    <excludeButtons>DataDotComAccountInsights</excludeButtons>
-    <excludeButtons>DataDotComCompanyHierarchy</excludeButtons>
+    <excludeButtons>DataDotComClean</excludeButtons>
     <excludeButtons>DisableCustomerPortalAccount</excludeButtons>
     <excludeButtons>DisablePartnerPortalAccount</excludeButtons>
     <excludeButtons>IncludeOffline</excludeButtons>
@@ -285,6 +284,11 @@
     <platformActionList>
         <actionListContext>Record</actionListContext>
         <platformActionListItems>
+            <actionName>Account.Collect_Payment</actionName>
+            <actionType>QuickAction</actionType>
+            <sortOrder>0</sortOrder>
+        </platformActionListItems>
+        <platformActionListItems>
             <actionName>Edit</actionName>
             <actionType>StandardButton</actionType>
             <sortOrder>1</sortOrder>
@@ -335,11 +339,6 @@
             <sortOrder>10</sortOrder>
         </platformActionListItems>
         <platformActionListItems>
-            <actionName>Account.Collect_Payment</actionName>
-            <actionType>QuickAction</actionType>
-            <sortOrder>0</sortOrder>
-        </platformActionListItems>
-        <platformActionListItems>
             <actionName>Account.Opportunity</actionName>
             <actionType>QuickAction</actionType>
             <sortOrder>11</sortOrder>
@@ -373,6 +372,11 @@
             <actionName>Submit</actionName>
             <actionType>StandardButton</actionType>
             <sortOrder>17</sortOrder>
+        </platformActionListItems>
+        <platformActionListItems>
+            <actionName>LoginToNetworkAsPersonUser</actionName>
+            <actionType>StandardButton</actionType>
+            <sortOrder>18</sortOrder>
         </platformActionListItems>
         <platformActionListItems>
             <actionName>PartnerScorecard</actionName>
@@ -443,11 +447,6 @@
             <actionName>Transaction_Detail</actionName>
             <actionType>CustomButton</actionType>
             <sortOrder>32</sortOrder>
-        </platformActionListItems>
-        <platformActionListItems>
-            <actionName>LoginToNetworkAsPersonUser</actionName>
-            <actionType>StandardButton</actionType>
-            <sortOrder>18</sortOrder>
         </platformActionListItems>
         <platformActionListItems>
             <actionName>Create_AP_Statement</actionName>
@@ -640,10 +639,6 @@
         <fields>CASES.STATUS</fields>
         <fields>OWNER_NAME</fields>
         <relatedList>RelatedCaseList</relatedList>
-    </relatedLists>
-    <relatedLists>
-        <fields>NAME</fields>
-        <relatedList>Square_Transaction__c.Account__c</relatedList>
     </relatedLists>
     <showEmailCheckbox>false</showEmailCheckbox>
     <showHighlightsPanel>false</showHighlightsPanel>
