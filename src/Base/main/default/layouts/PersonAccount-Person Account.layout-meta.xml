@@ -7,7 +7,8 @@
     <customButtons>Transaction_Detail</customButtons>
     <customButtons>Create_AP_Statement</customButtons>
     <customButtons>Dealer_Reserve_Receipt</customButtons>
-    <excludeButtons>DataDotComClean</excludeButtons>
+    <excludeButtons>DataDotComAccountInsights</excludeButtons>
+    <excludeButtons>DataDotComCompanyHierarchy</excludeButtons>
     <excludeButtons>DisableCustomerPortalAccount</excludeButtons>
     <excludeButtons>DisablePartnerPortalAccount</excludeButtons>
     <excludeButtons>IncludeOffline</excludeButtons>
@@ -548,6 +549,10 @@
         <fields>UPDATEDBY_USER</fields>
         <fields>CREATED_DATE</fields>
         <relatedList>AcctSeed__Project__c.AcctSeed__Account__c</relatedList>
+    </relatedLists>
+    <relatedLists>
+        <fields>NAME</fields>
+        <relatedList>Boat_Appraisal__c.Customer__c</relatedList>
     </relatedLists>
     <relatedLists>
         <customButtons>Refund_Selected</customButtons>
