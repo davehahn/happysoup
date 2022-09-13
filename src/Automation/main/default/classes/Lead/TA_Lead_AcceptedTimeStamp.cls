@@ -13,7 +13,7 @@ public without sharing class TA_Lead_AcceptedTimeStamp implements TriggerAction.
         LGND_Utilities.sObjectNameFromId(newLead.OwnerId) == 'User'
       ) {
         newLead.Accepted_On__c = DateTime.now();
-        newLead.Status = Lead_Service.ACCEPTED_STATUS;
+        newLead.Status = Lead_Service.NEW_STATUS;
       }
       //Unaccepted
       if (

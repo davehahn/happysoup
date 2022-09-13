@@ -289,15 +289,15 @@ global with sharing class RetailSalesToolController {
 
     if (entityType == Lead.sObjectType) {
       //try {
-      List<Lead> leads = Lead_Selector.allUncovertedByIds(new Set<Id>{ objId });
-      if (leads.size() == 1) {
+      List<Lead> leads = Lead_Selector.allUncovertedByIds( new Set<Id>{objId} );
+      if( leads.size() == 1 ){
         return new CustomerWrapper(leads[0]);
       }
-      //        Lead ld = [SELECT Id, Name, Email, FirstName, LastName, Phone, MobilePhone, Preferred_Language__c
-      //                           FROM Lead
-      //                           WHERE Id = :objId
-      //                           AND isConverted = false];
-      //        return new CustomerWrapper(ld);
+//        Lead ld = [SELECT Id, Name, Email, FirstName, LastName, Phone, MobilePhone, Preferred_Language__c
+//                           FROM Lead
+//                           WHERE Id = :objId
+//                           AND isConverted = false];
+//        return new CustomerWrapper(ld);
       //}
       //catch(Exception e)
       //{
