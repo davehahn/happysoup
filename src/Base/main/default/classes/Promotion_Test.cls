@@ -298,4 +298,4 @@ private class Promotion_Test {
 	}
 
 }
-}
+
