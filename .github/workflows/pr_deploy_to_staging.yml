@@ -16,7 +16,7 @@ on:
 jobs:
   # Check to make sure the PR is coming from the develop branch and if not fail this step
   Validate_Branch:
-    if: github.head_ref == 'develop'
+    if: github.head_ref != 'develop'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/github-script@v3
@@ -85,6 +85,11 @@ jobs:
             mkdir changed-sources
             sfdx sgd:source:delta --to "HEAD" --from "HEAD^" --output changed-sources/ --generate-delta --source src/
 
+      #make sure our deploy scripts are executable
+      - name: CHMOD scripts
+        run: |
+          chmod +x build/github/*.sh
+
        # Authenticate Staging ORG
       - name: 'Authenticating Staging Org'
         shell: bash
@@ -97,12 +102,10 @@ jobs:
       - name: 'Deploy delta changes - run specified tests'
         if: ${{ env.APEX_TESTS != 'all' }}
         run: |
-            echo ${{env.APEX_TESTS}}
-            sfdx force:source:deploy -p "changed-sources/src" --testlevel RunSpecifiedTests --runtests ${{env.APEX_TESTS}} -u ci-deploy
+            ./build/github/delta_deploy.sh "changed-sources/src" "RunSpecifiedTests" ${{env.APEX_TESTS}}
       # If the env variable equals all, we run all tests
       - name: 'Deploy delta changes - run all tests'
         if: ${{ env.APEX_TESTS == 'all' }}
         run: |
-            sfdx force:source:deploy -p "changed-sources/src" --testlevel RunLocalTests -u ci-deploy -g -w 240
-
+          ./build/github/delta_deploy.sh "changed-sources/src" "RunLocalTests"
 

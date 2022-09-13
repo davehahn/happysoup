@@ -49,7 +49,6 @@ jobs:
         # as this allows us to reference the list in a subsequent step.  If you
         # were using a normal env variable, its value would not be available outside this step.
         run: |
-            echo ${{github.actor}}
             echo $PR_BODY > ./.github/pr_body.txt
             node ./.github/parsePR.js
             cat .github/testsToRun.txt
@@ -79,25 +78,49 @@ jobs:
             mkdir changed-sources
             sfdx sgd:source:delta --to "HEAD" --from "HEAD^" --output changed-sources/ --generate-delta --source src/
 
-      #Authentication id Dave is the github actor
+      #Authentication if Dave is the github actor
       - name: Authenticate Dave
-        if: ${{github.actor}} == 'DaveHahn-Legend'
-        shell: bash
-        run: ./build/github/authenticate.sh ${{secrets.SFDC_SERVER_KEY}} ${{secrets.DAVE_VALIDATE_USER}} ${{secrets.DAVE_VALIDATE_CONSUMER_KEY}} https://test.salesforce.com
+        if: ${{github.actor == 'DaveHahn-Legend'}}
+        run: |
+            echo "Authenticating ${{github.actor}}"
+            ./build/github/authenticate.sh ${{secrets.SFDC_SERVER_KEY}} ${{secrets.DAVE_VALIDATE_USER}} ${{secrets.DAVE_VALIDATE_CONSUMER_KEY}} https://test.salesforce.com
 
-    # We do a check-only deploy and we only run the tests specified in the PR
-    # If the env variable does not equal 'all', we know that there is a list of
-    # tests that can be run
+      #Authentication if Rubel is the github actor
+      - name: Authenticate Rubel
+        if: ${{github.actor == 'aminrubel-legend'}}
+        run: |
+            echo "Authenticating ${{github.actor}}"
+            ./build/github/authenticate.sh ${{secrets.SFDC_SERVER_KEY}} ${{secrets.RUBEL_VALIDATE_USER}} ${{secrets.RUBEL_VALIDATE_CONSUMER_KEY}} https://test.salesforce.com
 
+       #Authentication if Pooja is the github actor
+      - name: Authenticate Pooja
+        if: ${{github.actor == 'PoojaLegendBoats'}}
+        run: |
+            echo "Authenticating ${{github.actor}}"
+            ./build/github/authenticate.sh ${{secrets.SFDC_SERVER_KEY}} ${{secrets.POOJA_VALIDATE_USER}} ${{secrets.POOJA_VALIDATE_CONSUMER_KEY}} https://test.salesforce.com
+
+      #make sure our deploy scripts are executable
+      - name: CHMOD scripts
+        run: |
+          chmod +x build/github/*.sh
+
+      # We do a check-only deploy and we only run the tests specified in the PR
+      # If the env variable does not equal 'all' OR 'none', we know that there is a list of
+      # tests that can be run
       - name: 'Deploy delta changes - run specified tests'
-        if: ${{ env.APEX_TESTS != 'all' }}
+        if: ${{ env.APEX_TESTS != 'all' && env.APEX_TESTS != 'none'}}
         run: |
             echo ${{env.APEX_TESTS}}
-            sfdx force:source:deploy -p "changed-sources/src" --testlevel RunSpecifiedTests --runtests ${{env.APEX_TESTS}} -u ci-deploy
+            ./build/github/delta_deploy.sh "changed-sources/src" "RunSpecifiedTests" ${{env.APEX_TESTS}}
       # If the env variable equals all, we run all tests
       - name: 'Deploy delta changes - run all tests'
         if: ${{ env.APEX_TESTS == 'all' }}
         run: |
-            sfdx force:source:deploy -p "changed-sources/src" --testlevel RunLocalTests -u ci-deploy -g -w 240
+            ./build/github/delta_deploy.sh "changed-sources/src" "RunLocalTests"
+      # If the env variable equals none, don't run any tests
+      - name: 'Deploy delta changes - no tests run'
+        if: ${{ env.APEX_TESTS == 'none' }}
+        run: |
+            ./build/github/delta_deploy.sh "changed-sources/src" "NoTestRun"
 
 
