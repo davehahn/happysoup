@@ -12,4 +12,4 @@ echo -e "\nsrc/BoatReservation/experiences" >> .forceignore
 echo -e "\nsrc/CustomerCommunity/experiences" >> .forceignore
 #echo -e "\nsrc/FactoryStoreSites/experiences" >> .forceignore
 
-./build/github/deploy2.sh "src" "RunLocalTests"
+./build/github/delta_deploy.sh "src" "RunLocalTests"

@@ -64,33 +64,6 @@ function GetProgress {
   COMPONENTS=$(jq -n "$_resultJSON" | jq '.numOfComponents')
   COMPONENTS_DEPLOYED=$(jq -n "$_resultJSON" | jq '.numOfComponentsDeployed')
   OutputProgress
-  #_done=$(sfdx force:mdapi:deploy:report -u ci-deploy -i $ID --json | jq '.result.done' )
-  # if [[ -z $1 ]] || [[ "${_done}" == "null" ]]; then
-  #   echo "_done is null"
-  #   sleep 1
-  #   GetProgress
-  # else
-    # if $_done; then
-    #   ISSUCCESS=$(sfdx force:mdapi:deploy:report -u ci-deploy -i $ID --json | jq '.result.success' )
-    #   OutputProgress
-    # else
-    #   REPORT=$(sfdx force:mdapi:deploy:report -u ci-deploy -i $ID --json | jq '.result' )
-    #   if [[ "${REPORT}" == "null" ]]; then
-    #     echo "deploy report is null"
-    #     sleep 1
-    #     GetProgress
-    #   else
-    #     STATUS=$(jq -n "$REPORT" | jq '.status')
-    #     ISDONE=$(jq -n "$REPORT" | jq '.done')
-    #     ISSUCCESS=$(jq -n "$REPORT" | jq '.success')
-    #     COMPONENTS=$(jq -n "$REPORT" | jq '.numberComponentsTotal')
-    #     COMPONENTS_DEPLOYED=$(jq -n "$REPORT" | jq '.numberComponentsDeployed')
-    #     TESTS=$(jq -n "$REPORT" | jq '.numberTestsTotal')
-    #     TESTS_COMPLETE=$(jq -n "$REPORT" | jq '.numberTestsCompleted')
-    #     OutputProgress
-    #   fi
-    # fi
-  # fi
 }
 
 function Deploy {
