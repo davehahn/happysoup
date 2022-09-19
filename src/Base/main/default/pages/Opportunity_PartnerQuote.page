@@ -3,6 +3,7 @@
   showHeader="false"
   standardStylesheets="false"
   sidebar="false"
+  language="{!$CurrentPage.parameters.locale}"
   renderAs="pdf"
 >
   <apex:stylesheet value="{!URLFOR($Resource.LegendPDF,'css/quote_page.css')}" />
@@ -16,7 +17,7 @@
   <div id="footerLeft"></div>
 
   <div id="footerCenter">
-    Thank you for choosing <b>{!partner.Name}</b> to help you create memories on the water!
+    {!$Label.Quote_Thankyou_1} <b>{!partner.Name}</b> {!$Label.Quote_Thankyou_2}!
     <p>
       {!partner.BillingStreet}, {!partner.BillingCity}, {!partner.BillingState}, {!partner.BillingCountry},
       {!partner.BillingPostalCode}
@@ -39,11 +40,11 @@
         <div>
           <img src="{!URLFOR($Resource.LegendPDF,'Icons/Phone.png')}" />
           <p>
-            phone
+            {!$Label.Quote_Phone}
             <span style="float: right; padding-right: 25px"> {!partner.Phone} </span>
           </p>
           <p>
-            fax
+            {!$Label.Quote_Fax}
             <span style="float: right; padding-right: 25px"> {!partner.Fax} </span>
           </p>
         </div>
@@ -67,7 +68,7 @@
       <div>
         <p>
           <img src="{!URLFOR($Resource.LegendPDF,'Icons/Invoice.png')}" />
-          QUOTE FOR:
+          {!$Label.Quote_For}:
         </p>
       </div>
 
@@ -92,7 +93,7 @@
               <table>
                 <tr>
                   <td>
-                    <p>Quote Total:</p>
+                    <p>{!$Label.Quote_Quote_Total}:</p>
                     <p>
                       <apex:outputText value="${0, number, ###,###,###,##0.00}">
                         <apex:param value="{!qt.Grand_Total__c}" />
@@ -100,7 +101,7 @@
                     </p>
                   </td>
                   <td>
-                    <p>Quoted On:</p>
+                    <p>{!$Label.Quoted_On}:</p>
                     <p>
                       <apex:outputText value="{0, date, MMMM dd, yyyy}">
                         <apex:param value="{!NOW()}" />
@@ -108,7 +109,7 @@
                     </p>
                   </td>
                   <td>
-                    <p>Valid Until:</p>
+                    <p>{!$Label.Quote_Valid_Until}:</p>
                     <p>
                       <apex:outputText value="{0, date, MMMM dd, yyyy}">
                         <apex:param value="{!expireDate}" />
@@ -119,7 +120,7 @@
                 </tr>
                 <tr>
                   <td>
-                    Weekly:<br />
+                    {!$Label.Quote_Weekly}:<br />
                     <span>
                       <apex:outputText value="${0, number, ###,###,###,##0.00}">
                         <apex:param value="{!qt.Weekly_Payment__c}" />
@@ -128,7 +129,7 @@
                     **
                   </td>
                   <td>
-                    Bi-Weekly:<br />
+                    {!$Label.Quote_Bi_Weekly}:<br />
                     <span>
                       <apex:outputText value="${0, number, ###,###,###,##0.00}">
                         <apex:param value="{!qt.Bi_Weekly_Payment__c}" />
@@ -137,7 +138,7 @@
                     **
                   </td>
                   <td>
-                    Monthly:<br />
+                    {!$Label.Quote_Monthly}:<br />
                     <span>
                       <apex:outputText value="${0, number, ###,###,###,##0.00}">
                         <apex:param value="{!qt.Monthly_Payment__c}" />
@@ -151,8 +152,8 @@
           </div>
         </div>
         <p class="disclaimer-1">
-          <span>** ALL payments are O.A.C.</span>
-          <span>* while supplies last</span>
+          <span>** {!$Label.Quote_on_OAC}</span>
+          <span>* {!$Label.Quote_While_Supplies_Last}</span>
         </p>
       </div>
     </div>
@@ -329,7 +330,7 @@
 
       <!-- ++++++++++++++++ MEMORY MAKER ++++++++++++++++++++ -->
       <div class="col memory_maker" style="border-left: 1px solid #ccc; width: 19%">
-        <p>SALES REPRESENTATIVE</p>
+        <p>{!$Label.Quote_Sales_Rep}</p>
         <p>{!UPPER(opp.Owner.FirstName + ' ' + opp.Owner.LastName)}</p>
       </div>
       <!-- ================ /MEMORY MAKER =================== -->
@@ -341,8 +342,8 @@
       <table class="itemsTable">
         <thead>
           <tr>
-            <td colspan="3">Item Description</td>
-            <td>Serial Number</td>
+            <td colspan="3">{!$Label.Quote_Item_Description}</td>
+            <td>{!$Label.Quote_Serial_Number}</td>
             <td></td>
           </tr>
         </thead>
@@ -404,7 +405,7 @@
       <!-- ++++++++++++++++++++++++++++++ LEFT COLUMN ++++++++++++++++++++++ -->
       <div class="col invoice-body-left">
         <apex:outputPanel>
-          <h3>Options &amp; Accessories</h3>
+          <h3><apex:outputText value="{!$Label.Quote_Options_and_Accessories_Header}" /></h3>
           <apex:variable value="{!1}" var="rowCount" />
           <apex:variable value="{!0}" var="optionsTotal" />
 
@@ -462,23 +463,9 @@
           </apex:outputPanel>
           <!-- ============================ /CUSTOM PRODUCTS ============= -->
 
-          <!-- ++++++++++++++++++++++++++ TABLE FILLER ++++++++++++++++++++++ -->
-          <!--  <apex:repeat value="{!boatBuilder.invoiceOptionRowFiller}" var="count">
-          <apex:outputPanel layout="none" rendered="{!count == (rowCount +1)}">
-            <c:Opportunity_PartnerQuoteOptionLine rowClass="itemRow {!IF(MOD(rowCount,2)=0,'even','odd')}"
-                                   quantity="{!null}"
-                                   description="{!null}"
-                                   cost="{!null}" />
-            <apex:variable value="{!rowCount+1}" var="rowCount" />
-          </apex:outputPanel>
-
-        </apex:repeat> -->
-
-          <!-- ========================== /TABLE FILLER ===================== -->
-
           <p class="itemRow sub_total">
             <span class="quantity">&nbsp;</span>
-            Sub Total
+            {!$Label.Quote_Sub_Total}
             <span class="cost">
               <apex:outputText value="${0, number, ###,###,###,##0.00}">
                 <apex:param value="{!optionsTotal}" />
@@ -497,7 +484,7 @@
           <table class="itemsTable">
             <thead>
               <tr>
-                <td colspan="3" style="padding-left: 20px">Additional Fees</td>
+                <td colspan="3" style="padding-left: 20px">{!$Label.Quote_Additional_Fees_Header}</td>
               </tr>
             </thead>
             <tbody>
@@ -510,14 +497,14 @@
                   </td>
                   <td class="w30 right">
                     <apex:outputText value="$ {!fee.retailAmount}" rendered="{!fee.retailAmount != 0}" />
-                    <apex:outputText value="$ Included" rendered="{!fee.retailAmount == 0}" />
+                    <apex:outputText value="{!$Label.Quote_Included}" rendered="{!fee.retailAmount == 0}" />
                   </td>
                 </tr>
                 <apex:variable value="{!rowCount+1}" var="rowCount" />
                 <apex:variable value="{!feeTotal + fee.retailAmount}" var="feeTotal" />
               </apex:repeat>
               <tr class="subTotal">
-                <td colspan="1">Sub Total</td>
+                <td colspan="1">{!$Label.Quote_Sub_Total}</td>
                 <td class="w30 right">
                   <apex:outputText value="${0, number, ###,###,###,##0.00}">
                     <apex:param value="{!feeTotal}" />
@@ -571,7 +558,7 @@
           <table class="itemsTable" style="margin-top: 10px">
             <thead>
               <tr>
-                <td colspan="2">Special Savings</td>
+                <td colspan="2">{!$Label.Quote_Special_Savings_Header}</td>
               </tr>
             </thead>
             <tbody>
@@ -587,7 +574,7 @@
                 <apex:variable value="{!savingsTotal + discount.amount}" var="savingsTotal" />
               </apex:repeat>
               <tr class="total_savings">
-                <td class="w70">Total Saving</td>
+                <td class="w70">{!$Label.Quote_Total_Savings}</td>
                 <td class="w30 right">
                   <apex:outputText value="-${0, number, ###,###,###,##0.00}" rendered="{!savingsTotal != null}">
                     <apex:param value="{!savingsTotal}" />
@@ -609,8 +596,8 @@
         <table class="itemsTable">
           <thead>
             <tr>
-              <td colspan="3">Trade-In Information</td>
-              <td>Serial Number</td>
+              <td colspan="3">{!$Label.Quote_Trade_In_Information}</td>
+              <td>{!$Label.Quote_Serial_Number}</td>
             </tr>
           </thead>
           <tbody>
@@ -678,23 +665,23 @@
         <table class="itemsTable">
           <thead>
             <tr>
-              <td colspan="2">Trade-In Value</td>
+              <td colspan="2">{!$Label.Quote_Trade_In_Value}</td>
             </tr>
           </thead>
           <tbody>
             <tr class="odd">
-              <td class="w75">Trade-In Allowance *</td>
+              <td class="w75">{!$Label.Quote_Trade_In_Allowance} *</td>
               <td class="w25 right">-$ {!tradeIn.value}</td>
             </tr>
             <tr class="even">
-              <td class="w75">Lien on Trade</td>
+              <td class="w75">{!$Label.Quote_Lien_On_Trade}</td>
               <td class="w25 right">$ {!tradeIn.lien}</td>
             </tr>
             <tr class="odd">
-              <td colspan="2">* Trade in allowance pending appraisal and inspection</td>
+              <td colspan="2">* {!$Label.Quote_Trade_In_Disclaimer}</td>
             </tr>
             <tr class="subTotal">
-              <td class="w75">Net Trade-In Value</td>
+              <td class="w75">{!$Label.Quote_Net_Trade_In_Value}</td>
               <td class="w25 right">$ {!tradeIn.value - tradeIn.lien}</td>
             </tr>
             <tr class="odd">
@@ -710,7 +697,7 @@
     <!-- +++++++++++++++++++++++++++ SIGNATURES AND SUMMARY +++++++++++++++++++++++ -->
     <div class="row signatures_and_summary customer_notes" style="margin-top: 0px">
       <!-- ++++++++++++++++++++ SIGNATURES AND STUFF ++++++++++++++++++++++++++++ -->
-      <div class="col col70">
+      <div class="col col60">
         <div
           class="notes_container"
           style="width: 90%; margin: auto; margin-top: 22px; padding: 0 10px; min-height: 90px"
@@ -719,17 +706,18 @@
             <apex:outputField value="{!opp.Customer_Notes__c}" />
           </p>
         </div>
-        <div style="width: 90%; margin: auto; padding: 0 10px">
-          <b>Please Remember:</b> 2" Ball at 18" height, flat 4-wiring, balance to be paid by certified funds
+        <div style="width: 90%; margin: auto; padding: 0 10px; min-height:22px; height: auto">
+          <b>{!$Label.Quote_Please_Remember}:</b>
+          <apex:outputText value="{!$Label.Quote_Reminder}" />
         </div>
       </div>
       <!-- ==================== SIGNATURES AND STUFF ============================ -->
 
       <!-- ++++++++++++++++++++++++++++ COST SUMMARY ++++++++++++++++++++++++++++ -->
-      <div class="col col30 right">
+      <div class="col col40 right">
         <table class="costSummary">
           <tr>
-            <td>SUB TOTAL:</td>
+            <td>{!UPPER($Label.Quote_Sub_Total)}:</td>
             <td>
               <apex:outputText value="${0, number, ###,###,###,##0.00}">
                 <apex:param value="{!qt.TotalPrice + ( -1 * totalSavings) }" />
@@ -738,7 +726,7 @@
           </tr>
           <apex:outputPanel layout="none">
             <tr>
-              <td class="decrease">SAVINGS:</td>
+              <td class="decrease">{!UPPER($Label.Quote_Savings)}:</td>
               <td class="decrease">
                 - &nbsp;<apex:outputText value="${0, number, ###,###,###,##0.00}" rendered="{!totalSavings != 0}">
                   <apex:param value="{!totalSavings}" />
@@ -747,7 +735,7 @@
             </tr>
           </apex:outputPanel>
           <tr>
-            <td>TOTAL BEFORE TAX:</td>
+            <td>{!UPPER($Label.Quote_Total_Before_tax)}:</td>
             <td>
               <apex:outputText value="${0, number, ###,###,###,##0.00}">
                 <apex:param value="{!qt.Total_Before_Tax__c }" />
@@ -807,7 +795,7 @@
             </tr>
           </apex:outputPanel> -->
           <tr>
-            <td>DEPOSIT:</td>
+            <td>{!UPPER($Label.Quote_Deposit)}:</td>
             <td class="">
               <apex:outputText value="- ${0, number, ###,###,###,##0.00}">
                 <apex:param value="{!NULLVALUE( deposit  , 0 ) }" />
@@ -815,7 +803,7 @@
             </td>
           </tr>
           <tr class="total">
-            <td>Total:</td>
+            <td>{!UPPER($Label.Quote_Total)}:</td>
             <td>
               <apex:outputText value="${0, number, ###,###,###,##0.00}">
                 <apex:param value="{!qt.Grand_Total__c}" />
@@ -825,7 +813,7 @@
           </tr>
           <tr>
             <td colspan="2" style="text-align:right;padding-right;font-size: 10px; color: #666">
-              *** All prices subject to managers approval
+              *** {!$Label.Quote_Managers_Approval_Disclaimer}
             </td>
           </tr>
         </table>

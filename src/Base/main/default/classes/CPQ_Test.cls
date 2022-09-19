@@ -284,7 +284,7 @@ private class CPQ_Test {
     init(null);
     System.runAs(partnerUser) {
       setupBoatData();
-      List<CPQ_Lib_dh.Fee> fees = CPQ.findAllFees(boat.Id, 'Ontario');
+      List<CPQ_Lib_dh.Fee> fees = CPQ.findAllFees(boat.Id, 'Ontario', 'en_US');
 
       System.assertEquals(12, fees.size()); // build in Boat_Test_Factory
     }
