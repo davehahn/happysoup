@@ -16,10 +16,12 @@ public with sharing class Opportunity_PartnerQuote_Ext {
   public Decimal totalSavings { get; set; }
   public String logo { get; set; }
   public Boolean displayPayments { get; set; }
+  public String locale { get; set; }
 
   public Opportunity_PartnerQuote_Ext() {
     quoteId = ApexPages.currentPage().getParameters().get('quoteId');
     String showPayments = ApexPages.currentPage().getParameters().get('show_payments');
+    locale = ApexPages.currentPage().getParameters().get('locale');
     displayPayments = showPayments == null ? false : Boolean.valueOf(showPayments);
     qt = [
       SELECT
@@ -102,7 +104,7 @@ public with sharing class Opportunity_PartnerQuote_Ext {
     this.partner = findPartner();
     this.customer = findCustomer();
     this.isForCustomer = customer.isPersonAccount;
-    this.theCPQ = new CPQ('retail', qt.Id);
+    this.theCPQ = new CPQ('retail', qt.Id, null, locale);
     this.theCPQ.selectBoat();
     this.theCPQ.theMotor = setUpgrade(this.theCPQ.theBoat.standardMotorId, this.theCPQ.motorId);
     this.theCPQ.theTrailer = setUpgrade(this.theCPQ.theBoat.standardTrailerId, this.theCPQ.trailerId);
@@ -176,7 +178,7 @@ public with sharing class Opportunity_PartnerQuote_Ext {
     if (toId == null)
       return null;
 
-    return CPQ.setUpgrade(fromId, toId, String.valueOf(this.theCPQ.activePricebookId), this.theCPQ.saleProvince);
+    return CPQ.setUpgrade(fromId, toId, String.valueOf(this.theCPQ.activePricebookId), this.theCPQ.saleProvince, this.theCPQ.locale);
   }
 
   private void groupFees() {

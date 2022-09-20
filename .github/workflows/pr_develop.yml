@@ -4,7 +4,7 @@ name: 'Validate Develoment'
 on:
   # Triggers the workflow on push or pull request events but only for the "main" branch
   pull_request:
-    types: [opened, synchronize]
+    types: [opened, synchronize, edited, reopened]
     branches: [ "develop" ]
     paths:
       - 'src/**'
@@ -103,6 +103,11 @@ jobs:
       - name: CHMOD scripts
         run: |
           chmod +x build/github/*.sh
+
+      #clean code
+      - name: 'Clean code'
+        shell: bash
+        run: ./build/github/cleancode.sh changed-sources/src
 
       # We do a check-only deploy and we only run the tests specified in the PR
       # If the env variable does not equal 'all' OR 'none', we know that there is a list of
