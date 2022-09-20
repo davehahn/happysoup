@@ -10,14 +10,17 @@
   },
 
   onRender: function (component, event, helper) {
+    console.log('onrender')
     var iframe = component.find("pdf-iframe"),
       btns = component.find("button-container"),
       ele;
     if (iframe !== null && iframe !== undefined) {
+      console.log('iframe')
       ele = iframe.getElement();
       ele.classList.add("loading");
       $A.util.addClass(btns, "loading");
       if (!ele.getAttribute("data-event-loaded")) {
+        console.log('ele data event not loaded')
         ele.setAttribute("data-event-loaded", "true");
         ele.addEventListener(
           "load",
@@ -41,6 +44,10 @@
 
   toggleViewPdfPayments: function (component, event, helper) {
     component.set("v.showPaymentsOnPDF", !component.get("v.showPaymentsOnPDF"));
+  },
+
+  handleLanguageToggle: function (component, event, helper) {
+    component.set("v.showFrenchPDF", !component.get('v.showFrenchPDF') );
   },
 
   handleSelectedChanged: function (component, event, helper) {

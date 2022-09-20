@@ -42,6 +42,8 @@ public class CPQ {
 
   public static Map<String, Id> defaultPricebooks = CPQ_Lib_dh.defaultPricebooks;
 
+  public String locale = 'en_US';
+
   public CPQ(String saleType) {
     init(saleType);
   }
@@ -51,6 +53,13 @@ public class CPQ {
     this.saveToRecordId = recordId;
     this.populateExisting();
   }
+
+  //  public CPQ(String saleType, String recordId, String locale) {
+  //    init(saleType);
+  //    this.saveToRecordId = recordId;
+  //    this.locale = locale;
+  //    this.populateExisting();
+  //  }
 
   public CPQ(String saleType, String recordId, String opportunityId) {
     init(saleType);
@@ -65,11 +74,25 @@ public class CPQ {
     }
   }
 
+  public CPQ(String saleType, String recordId, String opportunityId, String locale) {
+    init(saleType);
+    this.locale = locale;
+    if (opportunityId != null) {
+      Opportunity opp = [SELECT Id, IsAccountTaxExempt__c FROM Opportunity WHERE Id = :opportunityId];
+      this.isTaxExempt = opp.IsAccountTaxExempt__c;
+      this.isTaxExemptStatusFixed = true;
+    }
+    if (recordId != null) {
+      this.saveToRecordId = recordId;
+      this.populateExisting();
+    }
+  }
+
   public void selectBoat() {
     if (this.boatLine == null) {
-      this.theBoat = new CPQ_Lib_dh.Boat(this.boatId, this.saleProvince);
+      this.theBoat = new CPQ_Lib_dh.Boat(this.boatId, this.saleProvince, this.locale);
     } else {
-      this.theBoat = new CPQ_Lib_dh.Boat(this.boatLine, this.saleProvince);
+      this.theBoat = new CPQ_Lib_dh.Boat(this.boatLine, this.saleProvince, this.locale);
     }
     if (this.motorId == null)
       this.motorId = this.theBoat.standardMotorId;
@@ -180,11 +203,47 @@ public class CPQ {
     return CPQ.fetchProducts(rtId, activePricebookId, allowInactiveEntries, rtName, family);
   }
 
-  public static List<CPQ_Lib_dh.Fee> findAllFees(String parentProductId, String prov) {
+//  public static List<CPQ_Lib_dh.Fee> findAllFees(String parentProductId, String prov) {
+//    Map<Id, Product_Fee_Map__c> prodMap = new Map<Id, Product_Fee_Map__c>();
+//    Map<Id, CPQ_Lib_dh.Fee> result = new Map<Id, CPQ_Lib_dh.Fee>();
+//    for (Product_Fee_Map__c fm : [
+//      SELECT Id, Fee_Product__c, Fee_Product__r.Name, Fee_Product__r.Name_FR__c, Fee_Product__r.Taxable__c
+//      FROM Product_Fee_Map__c
+//      WHERE Parent_Product__c = :parentProductId
+//    ]) {
+//      prodMap.put(fm.Fee_Product__c, fm);
+//    }
+//    for (Product_Fee_Amount__c pfa : [
+//      SELECT Id, Amount__c, Fee_Product__c, Price_Book__c
+//      FROM Product_Fee_Amount__c
+//      WHERE
+//        Fee_Product__c IN :prodMap.keySet()
+//        AND Price_Book__c IN :CPQ_Lib_dh.defaultPricebooks.values()
+//        AND Province__c = :prov
+//    ]) {
+//      CPQ_lib_dh.Fee f;
+//      if (!result.containsKey(pfa.Fee_Product__c)) {
+//        CPQ_lib_dh.Fee nf = new CPQ_Lib_dh.Fee();
+//        nf.feeName = prodMap.get(pfa.Fee_Product__c).Fee_Product__r.Name;
+//        nf.feeProductId = prodMap.get(pfa.Fee_Product__c).Fee_Product__c;
+//        nf.taxable = prodMap.get(pfa.Fee_Product__c).Fee_Product__r.Taxable__c;
+//        result.put(pfa.Fee_Product__c, nf);
+//      }
+//      f = result.get(pfa.Fee_Product__c);
+//      if (pfa.Price_Book__c == CPQ_Lib_dh.defaultPricebooks.get('retail'))
+//        f.retailAmount = pfa.Amount__c;
+//      if (pfa.Price_Book__c == CPQ_Lib_dh.defaultPricebooks.get('partner'))
+//        f.partnerAmount = pfa.Amount__c;
+//      result.put(pfa.Fee_Product__c, f);
+//    }
+//    return result.values();
+//  }
+
+  public static List<CPQ_Lib_dh.Fee> findAllFees(String parentProductId, String prov, String locale) {
     Map<Id, Product_Fee_Map__c> prodMap = new Map<Id, Product_Fee_Map__c>();
     Map<Id, CPQ_Lib_dh.Fee> result = new Map<Id, CPQ_Lib_dh.Fee>();
     for (Product_Fee_Map__c fm : [
-      SELECT Id, Fee_Product__c, Fee_Product__r.Name, Fee_Product__r.Taxable__c
+      SELECT Id, Fee_Product__c,  Fee_Product__r.Id, Fee_Product__r.Name, Fee_Product__r.Name_FR__c, Fee_Product__r.Taxable__c
       FROM Product_Fee_Map__c
       WHERE Parent_Product__c = :parentProductId
     ]) {
@@ -194,16 +253,17 @@ public class CPQ {
       SELECT Id, Amount__c, Fee_Product__c, Price_Book__c
       FROM Product_Fee_Amount__c
       WHERE
-        Fee_Product__c IN :prodMap.keySet()
-        AND Price_Book__c IN :CPQ_Lib_dh.defaultPricebooks.values()
-        AND Province__c = :prov
+      Fee_Product__c IN :prodMap.keySet()
+      AND Price_Book__c IN :CPQ_Lib_dh.defaultPricebooks.values()
+      AND Province__c = :prov
     ]) {
       CPQ_lib_dh.Fee f;
       if (!result.containsKey(pfa.Fee_Product__c)) {
         CPQ_lib_dh.Fee nf = new CPQ_Lib_dh.Fee();
-        nf.feeName = prodMap.get(pfa.Fee_Product__c).Fee_Product__r.Name;
-        nf.feeProductId = prodMap.get(pfa.Fee_Product__c).Fee_Product__c;
-        nf.taxable = prodMap.get(pfa.Fee_Product__c).Fee_Product__r.Taxable__c;
+        Product2 feeProd = prodMap.get(pfa.Fee_Product__c).Fee_Product__r;
+        nf.feeName = (locale == 'fr' && feeProd.Name_FR__c != null) ? feeProd.Name_FR__c : feeProd.Name;
+        nf.feeProductId = feeProd.Id;
+        nf.taxable = feeProd.Taxable__c;
         result.put(pfa.Fee_Product__c, nf);
       }
       f = result.get(pfa.Fee_Product__c);
@@ -213,18 +273,6 @@ public class CPQ {
         f.partnerAmount = pfa.Amount__c;
       result.put(pfa.Fee_Product__c, f);
     }
-    //for( PricebookEntry pbe : [SELECT Id, Pricebook2Id, Product2Id
-    //                             FROM PricebookEntry
-    //                             WHERE Product2Id IN :result.keySet()
-    //                             AND Pricebook2Id IN :CPQ_Lib_dh.defaultPricebooks.values() ] )
-    //{
-    //  CPQ_Lib_dh.Fee f = result.get( pbe.Product2Id );
-    //  if( pbe.Pricebook2Id == CPQ_Lib_dh.defaultPricebooks.get('retail') )
-    //    f.retailPricebookEntryId = pbe.Id;
-    //  if( pbe.Pricebook2Id == CPQ_Lib_dh.defaultPricebooks.get('partner') )
-    //    f.partnerPricebookEntryId = pbe.Id;
-    //  result.put( pbe.Product2Id, f );
-    //}
     return result.values();
   }
 
@@ -238,6 +286,22 @@ public class CPQ {
       return null;
     try {
       return new CPQ_Lib_dh.UpgradeProduct(fromId, toId, activePricebookId, prov);
+    } catch (Exception e) {
+      throw new AuraHandledException(e.getMessage());
+    }
+  }
+
+  public static CPQ_Lib_dh.UpgradeProduct setUpgrade(
+    String fromId,
+    String toId,
+    String activePricebookId,
+    String prov,
+    String locale
+  ) {
+    if (String.isBlank(toId))
+      return null;
+    try {
+      return new CPQ_Lib_dh.UpgradeProduct(fromId, toId, activePricebookId, prov, locale);
     } catch (Exception e) {
       throw new AuraHandledException(e.getMessage());
     }
@@ -265,6 +329,7 @@ public class CPQ {
       SELECT
         Id,
         Name,
+        Name_FR__c,
         RecordType.Name,
         Family,
         Make__c,
@@ -432,6 +497,7 @@ public class CPQ {
             PricebookEntry.UnitPrice,
             PricebookEntry.Product2Id,
             PricebookEntry.Product2.Name,
+            PricebookEntry.Product2.Name_FR__c,
             PricebookEntry.Product2.Family,
             PricebookEntry.Product2.RecordTypeId,
             PricebookEntry.Product2.RecordType.Name,
@@ -506,9 +572,9 @@ public class CPQ {
         if (!subSaleItemsMap.containsKey(qli.ParentProductId__c)) {
           subSaleItemsMap.put(qli.ParentProductId__c, new List<CPQ_Lib_dh.SaleLineItem>());
         }
-        subSaleItemsMap.get(qli.ParentProductId__c).add(new CPQ_Lib_dh.SaleLineItem(qli));
+        subSaleItemsMap.get(qli.ParentProductId__c).add(new CPQ_Lib_dh.SaleLineItem(qli, locale));
       } else {
-        this.saleItems.add(new CPQ_Lib_dh.SaleLineItem(qli));
+        this.saleItems.add(new CPQ_Lib_dh.SaleLineItem(qli, locale));
       }
     }
 
@@ -561,6 +627,7 @@ public class CPQ {
             PricebookEntry.UnitPrice,
             PricebookEntry.Product2Id,
             PricebookEntry.Product2.Name,
+            PricebookEntry.Product2.Name_FR__c,
             PricebookEntry.Product2.Family,
             PricebookEntry.Product2.RecordTypeId,
             PricebookEntry.Product2.RecordType.Name,
@@ -620,9 +687,9 @@ public class CPQ {
         if (!subSaleItemsMap.containsKey(oli.ParentProductId__c)) {
           subSaleItemsMap.put(oli.ParentProductId__c, new List<CPQ_Lib_dh.SaleLineItem>());
         }
-        subSaleItemsMap.get(oli.ParentProductId__c).add(new CPQ_Lib_dh.SaleLineItem(oli));
+        subSaleItemsMap.get(oli.ParentProductId__c).add(new CPQ_Lib_dh.SaleLineItem(oli, locale));
       } else {
-        this.saleItems.add(new CPQ_Lib_dh.SaleLineItem(oli));
+        this.saleItems.add(new CPQ_Lib_dh.SaleLineItem(oli, locale));
       }
     }
 
@@ -737,6 +804,7 @@ public class CPQ {
       SELECT
         Id,
         Name,
+        Name_FR__c,
         RecordType.Name,
         Family,
         Make__c,

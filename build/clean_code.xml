@@ -1,0 +1,57 @@
+<project name="Clean SFDC metadata" default="cleanFiles" basedir=".." xmlns:sf="antlib:com.salesforce">
+
+  <taskdef uri="antlib:com.salesforce"
+           resource="com/salesforce/antlib.xml"
+           classpath="${basedir}/build/lib/ant-salesforce.jar"/>
+
+
+  <property file="${basedir}/build/build.properties"/>
+  <property environment="env"/>
+  <property name="srcDir" value="${sourceDir}" />
+  <property name="tabs" value="${basedir}/${srcDir}/Base/main/default/tabs" />
+  <property name="translations" value="${basedir}/${srcDir}/Base/main/default/translations" />
+
+  <target name="tabs.check">
+    <condition property="tabs.exists">
+      <available file="${tabs}" type="dir"/>
+    </condition>
+  </target>
+
+  <target name="translations.check">
+    <condition property="translations.exists">
+      <available file="${translations}" type="dir"/>
+    </condition>
+  </target>
+
+  <target name="cleanTabs" depends="tabs.check" if="tabs.exists">
+    <echo>Cleaning Tabs</echo>
+    <!-- Removes icon from Accounting Seed Accounting home tab -->
+    <replaceregexp match="&lt;icon&gt;(.+?)&lt;/icon&gt;\s*" replace="" flags="gm" byline="true">
+      <fileset dir="${basedir}/${srcDir}/Base/main/default/tabs" includes="*.xml"/>
+    </replaceregexp>
+  </target>
+
+  <target name="cleanTranslations" depends="translations.check" if="translations.exists">
+    <echo>Cleaning Translations in ${srcDir}</echo>
+    <!-- remove reportTypes from translations -->
+    <replaceregexp match="&lt;reportTypes&gt;[\s\S]*&lt;/reportTypes&gt;\s*" replace="" flags="gm" byline="false">
+      <fileset dir="${basedir}/${srcDir}/Base/main/default/translations" includes="*.xml"/>
+    </replaceregexp>
+    <!-- remove flowDefinitions from translations -->
+    <replaceregexp match="&lt;flowDefinitions&gt;[\s\S]*&lt;/flowDefinitions&gt;\s*" replace="" flags="gm" byline="false">
+      <fileset dir="${basedir}/${srcDir}/Base/main/default/translations" includes="*.xml"/>
+    </replaceregexp>
+    <!-- remove prompts from translations -->
+    <replaceregexp match="&lt;prompts&gt;[\s\S]*&lt;/prompts&gt;\s*" replace="" flags="gm" byline="false">
+      <fileset dir="${basedir}/${srcDir}/Base/main/default/translations" includes="*.xml"/>
+    </replaceregexp>
+  </target>
+
+  <target name="cleanFiles">
+    <echo>Cleaning Files</echo>
+    <antcall target="cleanTabs" />
+    <antcall target="cleanTranslations" />
+  </target>
+
+
+</project>
