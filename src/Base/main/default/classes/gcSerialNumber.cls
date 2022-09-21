@@ -394,6 +394,7 @@ public without sharing class gcSerialNumber {
     Id idRtProjectCounterSale = gcConstants.idRtProjectCounterSale;
     Id idRtProjectPartnerBoatSale = gcConstants.idRtProjectPartnerBoatSale;
     Id idRtProjectBoatSale = gcConstants.idRtProjectBoatSale;
+    Id idRtPartnerPartsOrder = gcConstants.idRtPartnerPartsOrder;
     Set<Id> setRecordTypesToExclude = new Set<Id>();
     setRecordTypesToExclude.add(idRtProjectPartnerBoatSale);
     setRecordTypesToExclude.add(idRtProjectService);
@@ -457,7 +458,8 @@ public without sharing class gcSerialNumber {
         for (AcctSeed__Project__c p : sn.Projects__r) {
           /// Checking if it is a partner order
           /// Also by warehouse if wholesale
-          if (p.RecordTypeId == idRtProjectPartnerBoatSale && !p.Locked__c)
+          /// Added Partner Parts Order from SFISSUES-1937 on Sept-21-22
+          if ((p.RecordTypeId == idRtProjectPartnerBoatSale || p.RecordTypeId == idRtPartnerPartsOrder) && !p.Locked__c)
             taggedInPartner = true;
           if (p.Internal_Partner_Boat_Sale__c && !p.Locked__c)
             taggedInInternalPartnerOrder = true;
@@ -501,9 +503,8 @@ public without sharing class gcSerialNumber {
             inUnlockedMfgProject = true;
 
           if (
-            matl.AcctSeedERP__Project__r.RecordTypeId == idRtProjectPartnerBoatSale &&
-            !matl.AcctSeedERP__Project__r.Locked__c
-          )
+                  (matl.AcctSeedERP__Project__r.RecordTypeId == idRtProjectPartnerBoatSale || matl.AcctSeedERP__Project__r.RecordTypeId == idRtPartnerPartsOrder)
+                          && !matl.AcctSeedERP__Project__r.Locked__c)
             taggedInPartner = true;
           if (matl.AcctSeedERP__Project__r.Internal_Partner_Boat_Sale__c && !matl.AcctSeedERP__Project__r.Locked__c)
             taggedInInternalPartnerOrder = true;
