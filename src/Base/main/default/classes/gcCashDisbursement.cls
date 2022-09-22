@@ -116,6 +116,13 @@ public without sharing class gcCashDisbursement {
 
         if (cd.AcctSeed__GL_Account_Variable_1__c == null && !cd.GMBLASG__Posted__c && glv1Name != null)
           cd.AcctSeed__GL_Account_Variable_1__c = mapGlv1ByName.get(glv1Name).Id;
+        /// SFISSUES-2041
+        if(cd.AcctSeed__GL_Account_Variable_4__c != null && !cd.GMBLASG__Posted__c){
+          AcctSeed__Accounting_Variable__c glv = mapGlv4ById.get(cd.AcctSeed__GL_Account_Variable_4__c);
+          if(!glv.AcctSeed__Active__c){
+            cd.addError('Cannot use inactive GL Account Variable 4. Please use an active one.');
+          }
+        }
       }
     }
   }
@@ -181,10 +188,12 @@ public without sharing class gcCashDisbursement {
   }
 
   private static map<String, AcctSeed__Accounting_Variable__c> mapGlv1ByName;
+  private static map<Id, AcctSeed__Accounting_Variable__c> mapGlv4ById;
   private static map<Id, User> mapUser;
 
   private static void retrieveStatics(list<AcctSeed__Cash_Disbursement__c> listNew) {
     set<String> setNameGlv = new Set<String>();
+    set<Id> setIdGlv = new Set<Id>();
 
     if (mapGlv1ByName == null) {
       mapGlv1ByName = new Map<String, AcctSeed__Accounting_Variable__c>();
@@ -198,21 +207,30 @@ public without sharing class gcCashDisbursement {
       mapUser.put(u.Id, u);
     }
 
+    for(AcctSeed__Cash_Disbursement__c cd : listNew){
+      if(cd.AcctSeed__GL_Account_Variable_4__c != null){
+        setIdGlv.add(cd.AcctSeed__GL_Account_Variable_4__c);
+      }
+    }
+
     if (!setNameGlv.isEmpty())
       for (AcctSeed__Accounting_Variable__c glv : [
         SELECT
           Id,
           Name,
+          AcctSeed__Active__c,
           Tax_is_Harmonized__c,
           Tax_Rate_Provincial__c,
           Tax_Rate_Retail__c,
           GL_Account_Variable_3__c,
           AcctSeed__Type__c
         FROM AcctSeed__Accounting_Variable__c
-        WHERE Name IN :setNameGlv
+        WHERE (Name IN :setNameGlv OR Id IN:setIdGlv)
       ]) {
         if (glv.AcctSeed__Type__c.equals('GL Account Variable 1'))
           mapGlv1ByName.put(glv.Name, glv);
+        if (glv.AcctSeed__Type__c.equals('GL Account Variable 4'))
+          mapGlv4ById.put(glv.Id, glv);
       }
   }
 }
