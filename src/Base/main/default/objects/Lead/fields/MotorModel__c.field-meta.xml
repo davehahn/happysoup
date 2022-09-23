@@ -5,6 +5,15 @@
     <description>This is the model of the motor that the customer is most interested in</description>
     <externalId>false</externalId>
     <label>Motor Model</label>
+    <lookupFilter>
+        <active>true</active>
+        <filterItems>
+            <field>Product2.RecordType.Name</field>
+            <operation>equals</operation>
+            <value>Motor</value>
+        </filterItems>
+        <isOptional>false</isOptional>
+    </lookupFilter>
     <referenceTo>Product2</referenceTo>
     <relationshipLabel>Leads (Motor Model)</relationshipLabel>
     <relationshipName>LeadMotorModels</relationshipName>
