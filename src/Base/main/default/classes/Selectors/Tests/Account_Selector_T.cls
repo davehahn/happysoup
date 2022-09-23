@@ -9,7 +9,14 @@ private class Account_Selector_T {
 
   @testSetup
   static void dataSetup() {
-    Factory_Account.insertDealerAccounts(5);
+    List<Account> dealers = Factory_Account.buildDealerAccounts(5);
+    dealers[0].BillingLatitude = 44.29707;
+    dealers[0].BillingLongitude = -79.68126;
+    dealers[0].Boat_Types_Carried__c = 'Deck Boat;Pontoon';
+    dealers[1].BillingLatitude = 46.38468;
+    dealers[1].BillingLongitude = -81.29074;
+    dealers[1].Boat_Types_Carried__c = 'Full Windshield;Side Console';
+    insert dealers;
     Factory_Account.insertCustomerAccounts(5);
     Factory_Account.insertBusinessAccountWithContacts('business1', 3);
   }
@@ -68,7 +75,34 @@ private class Account_Selector_T {
     Account[] dealers = Account_Selector.allActiveDealersWithGeolocation();
     Test.stopTest();
 
-    System.assertEquals(0, dealers.size(), 'No Dealers have address information set');
+    System.assertEquals(2, dealers.size(), '2 Dealers should have Geolocation set');
+  }
+
+  @IsTest
+  static void dealerAccountWithGeolocation_sellsPontoons_Test() {
+    Test.startTest();
+    Account[] dealers = Account_Selector.allActiveDealersWithGeolocationThatSellThisBoatType('Pontoon');
+    Test.stopTest();
+
+    System.assertEquals(1, dealers.size(), '1 Dealer should have Geolocation set and carry Pontoons');
+  }
+
+  @IsTest
+  static void dealerAccountWithGeolocation_SellsFullWindshields_Test() {
+    Test.startTest();
+    Account[] dealers = Account_Selector.allActiveDealersWithGeolocationThatSellThisBoatType('Full Windshield');
+    Test.stopTest();
+
+    System.assertEquals(1, dealers.size(), '1 Dealer should have Geolocation set and carry Full Windshields');
+  }
+
+  @IsTest
+  static void dealerAccountWithGeolocation_SellsUtilities_Test() {
+    Test.startTest();
+    Account[] dealers = Account_Selector.allActiveDealersWithGeolocationThatSellThisBoatType('Utility');
+    Test.stopTest();
+
+    System.assertEquals(0, dealers.size(), '0 Dealer should have Geolocation set and carry Utilities');
   }
 
   @IsTest

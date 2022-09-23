@@ -55,7 +55,8 @@ public virtual class Account_Selector extends Application_Selector {
     'AccountEmail__c',
     'Website',
     'BillingLongitude',
-    'BillingLatitude'
+    'BillingLatitude',
+    'Boat_Types_Carried__c'
   };
 
   public Account_Selector() {
@@ -119,6 +120,15 @@ public virtual class Account_Selector extends Application_Selector {
       .addWhere('Active__c = true', 'AND')
       .addWhere('BillingLongitude != NULL', 'AND')
       .addWhere('BillingLatitude != NULL', 'AND')
+      .query();
+  }
+
+  public static Account[] allActiveDealersWithGeolocationThatSellThisBoatType( String boatType) {
+    return new DealerAccount_Selector()
+      .addWhere('Active__c = true', 'AND')
+      .addWhere('BillingLongitude != NULL', 'AND')
+      .addWhere('BillingLatitude != NULL', 'AND')
+      .addWhere( '(Is_Internal__c = true OR Boat_Types_Carried__c includes (\''+boatType+'\'))', 'AND')
       .query();
   }
 
