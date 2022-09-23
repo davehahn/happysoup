@@ -15,6 +15,7 @@ public without sharing class PartnerLocator {
     public String street;
     public String city;
     public String prov;
+    public List<String> boat_types_carried;
     public String postalCode;
     public String description;
     public Decimal distance;
@@ -38,6 +39,7 @@ public without sharing class PartnerLocator {
       this.city = acct.BillingCity;
       this.prov = acct.BillingState;
       this.postalCode = acct.BillingPostalCode;
+      this.boat_types_carried = acct.Boat_Types_Carried__c == null ? null : acct.Boat_Types_Carried__c.split(';');
       this.isFactoryStore = acct.Is_Internal__c;
       this.description = buildDescription(acct);
     }
@@ -141,6 +143,7 @@ public without sharing class PartnerLocator {
   public String destinations;
   public Set<String> excludeAccountIds;
   public Integer resultSize;
+  public String boatType;
   private Map<String, AccountWrapper> accountMap;
   private List<Account> partners;
 
@@ -152,9 +155,10 @@ public without sharing class PartnerLocator {
     this.excludeAccountIds.addAll(excludeAccountIds.split(','));
   }
 
-  public SearchResult execute(String origin, Integer resultSize) {
+  public SearchResult execute(String origin, Integer resultSize, String boatType) {
     this.origin = origin;
     this.resultSize = resultSize == null ? 1 : resultSize;
+    this.boatType = boatType;
     setDestinations();
     return processResult(doGoogleCallout());
   }
@@ -177,7 +181,7 @@ public without sharing class PartnerLocator {
 
   private Map<String, AccountWrapper> makeAccountMap() {
     if (this.partners == null) {
-      fetchPartners();
+      this.partners = fetchPartners();
     }
     Map<String, AccountWrapper> result = new Map<String, AccountWrapper>();
 
@@ -189,8 +193,12 @@ public without sharing class PartnerLocator {
     return result;
   }
 
-  private void fetchPartners() {
-    this.partners = Account_Selector.allActiveDealersWithGeolocation();
+  private List<Account> fetchPartners() {
+    if (this.boatType == null) {
+      return Account_Selector.allActiveDealersWithGeolocation();
+    } else {
+      return Account_Selector.allActiveDealersWithGeolocationThatSellThisBoatType(this.boatType);
+    }
   }
 
   private GoogleAPI.GoogleDestinationsResult doGoogleCallout() {

@@ -5,7 +5,7 @@ public with sharing class Account_FindClosestPartner {
     if (excludedAccountIds != null && excludedAccountIds.length() > 0)
       locator.exclude(excludedAccountIds);
     try {
-      return JSON.serialize(locator.execute(lookupValue, resultCount));
+      return JSON.serialize(locator.execute(lookupValue, resultCount, null));
     } catch (Exception e) {
       AuraHandledException ex = new AuraHandledException(e.getMessage());
       ex.setMessage(e.getMessage());

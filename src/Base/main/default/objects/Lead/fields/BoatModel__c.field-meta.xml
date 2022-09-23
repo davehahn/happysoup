@@ -5,6 +5,15 @@
     <description>This is the model of boat that the customer is most interested in</description>
     <externalId>false</externalId>
     <label>Boat Model</label>
+    <lookupFilter>
+        <active>true</active>
+        <filterItems>
+            <field>Product2.RecordType_Name__c</field>
+            <operation>equals</operation>
+            <value>Boat</value>
+        </filterItems>
+        <isOptional>false</isOptional>
+    </lookupFilter>
     <referenceTo>Product2</referenceTo>
     <relationshipLabel>Leads (Boat Model)</relationshipLabel>
     <relationshipName>LeadBoatModels</relationshipName>
