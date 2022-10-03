@@ -186,10 +186,18 @@ public without sharing class DealerPartsOrderController {
     List<Mercury_Product__c> mProds
   ) {
     Map<String, Decimal> pdtUnitPriceMap = getProductUnitPriceMap(products, activePriceBookId);
+    Map<String, Decimal> pdtMSRPPriceMap;
+    Pricebook2 activePricebook = Pricebook_Selector.getById(activePriceBookId);
+    if( new Application_RecordType().getPricebookRecordTypes().getDealerId() == activePricebook.RecordTypeId ){
+      pdtMSRPPriceMap = getProductMSRPPriceMap(products, activePriceBookId);
+    }
     List<ProductWrapper> results = new List<ProductWrapper>();
     for (Product2 pdt : products) {
       if (pdtUnitPriceMap.containsKey(pdt.Id)) {
         ProductWrapper newWrapper = new ProductWrapper(pdt, pdtUnitPriceMap.get(pdt.Id));
+        if( pdtMSRPPriceMap != null && pdtMSRPPriceMap.containsKey(pdt.Id) ){
+          newWrapper.MSRP = pdtMSRPPriceMap.get(pdt.Id);
+        }
         results.add(newWrapper);
       }
     }
@@ -201,7 +209,22 @@ public without sharing class DealerPartsOrderController {
 
   @TestVisible
   private static Map<String, Decimal> getProductUnitPriceMap(List<Product2> products, String activePriceBookId) {
-    Map<String, Decimal> pdtUnitPriceMap = new Map<String, Decimal>();
+
+    return getProductPriceMap(products, activePriceBookId);
+  }
+
+  @TestVisible
+  private static Map<String, Decimal> getProductMSRPPriceMap(List<Product2> products, String activePriceBookId) {
+    try{
+      return getProductPriceMap(products, Pricebook2_Service.getInstance().getMatchingRetailIdFromDealerId(activePriceBookId));
+    }
+    catch( Exception e ){
+      return  new Map<String, Decimal>();
+    }
+  }
+
+  private static Map<String, Decimal> getProductPriceMap(List<Product2> products, String priceBookId) {
+    Map<String, Decimal> result = new Map<String, Decimal>();
     Set<String> pdtIds = new Set<String>();
     for (Product2 pdt : products) {
       pdtIds.add(pdt.Id);
@@ -209,12 +232,12 @@ public without sharing class DealerPartsOrderController {
     List<PricebookEntry> pbeList = [
       SELECT Id, UnitPrice, Product2Id
       FROM PricebookEntry
-      WHERE Pricebook2Id = :activePriceBookId AND UnitPrice > 0 AND Product2Id IN :pdtIds
+      WHERE Pricebook2Id = :priceBookId AND UnitPrice > 0 AND Product2Id IN :pdtIds
     ];
     for (PricebookEntry pbe : pbeList) {
-      pdtUnitPriceMap.put(pbe.Product2Id, pbe.UnitPrice);
+      result.put(pbe.Product2Id, pbe.UnitPrice);
     }
-    return pdtUnitPriceMap;
+    return result;
   }
 
   @AuraEnabled
@@ -700,6 +723,9 @@ public without sharing class DealerPartsOrderController {
     public Decimal UnitPrice;
 
     @AuraEnabled
+    public Decimal MSRP;
+
+    @AuraEnabled
     public Boolean isMercuryProduct = false;
 
     public ProductWrapper(String prodId, String pricebookId) {
@@ -724,6 +750,7 @@ public without sharing class DealerPartsOrderController {
       this.Family = pbe.Product2.Family;
       this.ImageURL = pbe.Product2.Default_Image_Thumb__c;
       this.UnitPrice = pbe.UnitPrice;
+      this.MSRP = 15.00;
     }
 
     public ProductWrapper(Product2 p, Decimal price) {
@@ -734,6 +761,7 @@ public without sharing class DealerPartsOrderController {
       this.Family = p.Family;
       this.ImageURL = p.Default_Image_Thumb__c;
       this.UnitPrice = price;
+      this.MSRP = 15.00;
     }
 
     public ProductWrapper(Mercury_Product__c mp) {

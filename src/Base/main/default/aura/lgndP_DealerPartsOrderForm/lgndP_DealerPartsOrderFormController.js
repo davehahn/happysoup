@@ -61,12 +61,6 @@
   },
 
   closeMenus: function (component, event, helper) {
-    // var eles = document.querySelectorAll('.is-slide-menu-open');
-    // for( var i=0; i<eles.length; i++ )
-    // {
-    //   eles[i].classList.remove('is-slide-menu-open');
-    // }
-    console.log("CLOSE MENUS");
     var filter = component.find("filter-container"),
       cart = component.find("cart-container"),
       mask = component.find("menu-mask");
@@ -88,13 +82,16 @@
   },
 
   searchKeyOnEnter: function (component, event, helper) {
-    if (
-      event.getParams().keyCode != 37 &&
-      event.getParams().keyCode != 38 &&
-      event.getParams().keyCode != 39 &&
-      event.getParams().keyCode != 40
-    ) {
-      helper.searchKeyChangeHelper(component);
+    const ignoredKeys = [37, 38, 39, 40];
+    if (ignoredKeys.indexOf(event.getParams().keyCode) === -1) {
+      helper.currentSearchKey = component.get("v.searchKey");
+      clearTimeout(helper.searchTimer);
+      helper.searchTimer = setTimeout(
+        $A.getCallback(function () {
+          helper.searchKeyChangeHelper(component);
+        }),
+        500
+      );
     }
   },
 

@@ -9,6 +9,7 @@
     description="This variable is used to indicate which environment this component is displayed on, f.i. community vs standard lightning"
   />
   <aura:attribute name="saleType" type="String" default="Partner" />
+  <aura:attribute name="searchBusy" type="Boolean" default="false" />
   <aura:attribute name="inConsoleView" type="Boolean" />
   <aura:attribute name="isSelectingAccount" type="Boolean" default="false" />
   <aura:attribute name="erpOrderId" type="String" default="" />
@@ -309,6 +310,14 @@
                     </div>
                     <div class="slds-text-body_small slds-text-color_weak">{!pdt.ProductCode}</div>
                     <div class="slds-m-top_small slds-text-body_small slds-text-color_weak">{!pdt.Description}</div>
+                    <aura:if isTrue="{!v.saleType == 'Partner'}">
+                      <div class="slds-m-top_small slds-text-body_small msrp">
+                        <span>
+                          <span>MSRP </span>
+                          <c:lgnd_currencyDisplay value="{!pdt.MSRP}" zeroLabel="0.00" />
+                        </span>
+                      </div>
+                    </aura:if>
                   </div>
                 </div>
               </aura:iteration>
