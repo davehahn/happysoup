@@ -9,6 +9,14 @@ public class Factory_Lead {
     return l;
   }
 
+  public static List<Lead> buildLeads( String fName, String lName, Integer count ){
+    List<Lead> result = new List<Lead>();
+    for( Integer i=0; i<count; i++){
+      result.add( buildLead(fName + String.valueOf(i), lName + String.valueOf(i)) );
+    }
+    return result;
+  }
+
   public static Lead buildAcceptedLead(String fName, String lName) {
     Lead l = constructBasicLead(fName, lName);
     l.Status = Lead_Service.ACCEPTED_STATUS;

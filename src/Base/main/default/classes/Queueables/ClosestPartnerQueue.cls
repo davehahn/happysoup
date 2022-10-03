@@ -26,7 +26,7 @@ public class ClosestPartnerQueue implements Queueable, Database.AllowsCallouts {
         origin = l.hubspot_IP_City_Lead__c;
       }
       if (origin != null) {
-        PartnerLocator.SearchResult result = locator.execute(origin, 1);
+        PartnerLocator.SearchResult result = locator.execute(origin, 1, l.BoatModel__r.Family);
         if (result.mapMarkers.size() > 0) {
           try {
             /** use this if we want to set the owner to a Partner User

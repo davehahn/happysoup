@@ -8,6 +8,7 @@ public without sharing class Lead_Selector extends Application_Selector {
     this.fields = new List<String>{
       'Id',
       'BoatModel__c',
+      'BoatModel__r.Family',
       'City',
       'Company',
       'Country',

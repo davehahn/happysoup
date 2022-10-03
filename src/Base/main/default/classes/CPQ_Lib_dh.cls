@@ -78,6 +78,7 @@ public with sharing class CPQ_Lib_dh {
     public String image;
     public SObject originalLineItem;
     private Product2 prod;
+    private String locale = 'en_US';
 
     public CPQ_Product(String prodId) {
       this.id = prodId;
@@ -90,7 +91,38 @@ public with sharing class CPQ_Lib_dh {
       construct();
     }
 
+    public CPQ_Product(String prodId, String locale) {
+      if (locale != null) {
+        this.locale = locale;
+      }
+      this.id = prodId;
+      this.prod = findProduct();
+      construct();
+    }
+
+    public CPQ_Product(Product2 prod, String locale) {
+      if (locale != null) {
+        this.locale = locale;
+      }
+      this.prod = prod;
+      construct();
+    }
+
     public CPQ_Product(SObject lineItem) {
+      this.originalLineItem = lineItem;
+      try {
+        this.id = String.valueOf(lineItem.getSObject('PricebookEntry').get('Product2Id'));
+        this.prod = findProduct();
+        construct();
+      } catch (Exception e) {
+        throw new CPQ.CPQ_Exception('This does not appear to be an OpportunityLineItem or a QuoteLineItem');
+      }
+    }
+
+    public CPQ_Product(SObject lineItem, String locale) {
+      if (locale != null) {
+        this.locale = locale;
+      }
       this.originalLineItem = lineItem;
       try {
         this.id = String.valueOf(lineItem.getSObject('PricebookEntry').get('Product2Id'));
@@ -108,7 +140,9 @@ public with sharing class CPQ_Lib_dh {
 
     private void setAttrs() {
       this.id = this.prod.Id;
-      this.name = this.prod.Name;
+      this.name = this.locale == 'fr'
+        ? (this.prod.Name_FR__c == null || this.prod.Name_FR__c.length() == 0 ? this.prod.Name : this.prod.Name_FR__c)
+        : this.prod.Name;
       this.make = this.prod.Make__c;
       this.recordTypeName = this.prod.RecordType.Name;
       this.family = this.prod.Family;
@@ -121,6 +155,7 @@ public with sharing class CPQ_Lib_dh {
         SELECT
           Id,
           Name,
+          Name_FR__c,
           RecordType.Name,
           Family,
           Make__c,
@@ -182,8 +217,20 @@ public with sharing class CPQ_Lib_dh {
       finishConstruction();
     }
 
+    public Boat(String prodId, String prov, String locale) {
+      super(prodId, locale);
+      this.prov = prov;
+      finishConstruction();
+    }
+
     public Boat(SObject lineItem, String prov) {
       super(lineItem);
+      this.prov = prov;
+      finishConstruction();
+    }
+
+    public Boat(SObject lineItem, String prov, String locale) {
+      super(lineItem, locale);
       this.prov = prov;
       finishConstruction();
     }
@@ -192,7 +239,7 @@ public with sharing class CPQ_Lib_dh {
       this.standardMotorId = this.prod.Standard_Motor__c;
       this.standardTrailerId = this.prod.Standard_Trailer__c;
       this.standardTrollingMotorId = this.prod.Standard_Trolling_Motor__c;
-      this.fees = CPQ.findAllFees(this.id, this.prov);
+      this.fees = CPQ.findAllFees(this.id, this.prov, this.locale);
     }
 
     public SObject[] createLineItems(String objectType) {
@@ -224,7 +271,7 @@ public with sharing class CPQ_Lib_dh {
 
     public UpgradeProduct(String fromId, String toId, String activePricebookId, String prov) {
       super(toId);
-      this.fees = CPQ.findAllFees(this.id, prov);
+      this.fees = CPQ.findAllFees(this.id, prov, this.locale);
       if (!setUpgradeCosts(fromId, toId))
         setUpgradeCostFromPUCs(findProductUpgradeCosts(fromId, toId));
       this.options = CPQ.fetchAllOptions(toId, activePricebookId);
@@ -232,7 +279,23 @@ public with sharing class CPQ_Lib_dh {
 
     public UpgradeProduct(String fromId, Product2 toProd, Product_Upgrade_Cost__c[] pucs, String prov) {
       super(toProd);
-      this.fees = CPQ.findAllFees(this.id, prov);
+      this.fees = CPQ.findAllFees(this.id, prov, this.locale);
+      if (!setUpgradeCosts(fromId, toProd.Id)) {
+        setUpgradeCostFromPUCs(pucs);
+      }
+    }
+
+    public UpgradeProduct(String fromId, String toId, String activePricebookId, String prov, String locale) {
+      super(toId, locale);
+      this.fees = CPQ.findAllFees(this.id, prov, this.locale);
+      if (!setUpgradeCosts(fromId, toId))
+        setUpgradeCostFromPUCs(findProductUpgradeCosts(fromId, toId));
+      this.options = CPQ.fetchAllOptions(toId, activePricebookId);
+    }
+
+    public UpgradeProduct(String fromId, Product2 toProd, Product_Upgrade_Cost__c[] pucs, String prov, String locale) {
+      super(toProd, locale);
+      this.fees = CPQ.findAllFees(this.id, prov, this.locale);
       if (!setUpgradeCosts(fromId, toProd.Id)) {
         setUpgradeCostFromPUCs(pucs);
       }
@@ -326,28 +389,45 @@ public with sharing class CPQ_Lib_dh {
 
     public OptionProduct(Product2 prod, String parentProductId, Decimal std, Decimal max) {
       super(prod);
-      this.isSubOption = false;
       this.parentProductId = parentProductId;
-      this.uniqueId = this.id + this.parentProductId;
       this.standard = std;
       this.maximum = max;
-      this.isCheckbox = max == 1;
-      this.isSelected = std > 0;
-      this.quantitySelected = std;
-      this.subOptions = new List<CPQ_Lib_dh.SubOptionProduct>();
-      this.selectedSubOptions = new List<CPQ_Lib_dh.SubOptionProduct>();
-      this.premiumPackage = new List<String>();
-      if (this.family == 'Premium Package')
-        buildPremiumPackageDetails();
+      setRemainingAttrs();
+    }
+
+    public OptionProduct(Product2 prod, String parentProductId, Decimal std, Decimal max, String locale) {
+      super(prod, locale);
+      this.parentProductId = parentProductId;
+      this.standard = std;
+      this.maximum = max;
+      setRemainingAttrs();
     }
 
     public void buildPremiumPackageDetails() {
       for (Product_Feature_Map__c pfm : [
-        SELECT Id, Feature_Id__r.Description__c
+        SELECT Id, Feature_Id__r.Description__c, Feature_Id__r.description_fr__c
         FROM Product_Feature_Map__c
         WHERE Product_Id__c = :this.id
       ]) {
-        this.premiumPackage.add(pfm.Feature_Id__r.Description__c);
+        String feature = this.locale == 'fr' &&
+          pfm.Feature_Id__r.description_fr__c != null
+          ? pfm.Feature_Id__r.description_fr__c
+          : pfm.Feature_Id__r.Description__c;
+        this.premiumPackage.add(feature);
+      }
+    }
+
+    private void setRemainingAttrs() {
+      this.isSubOption = false;
+      this.uniqueId = this.id + this.parentProductId;
+      this.isCheckbox = this.maximum == 1;
+      this.isSelected = this.standard > 0;
+      this.quantitySelected = this.standard;
+      this.subOptions = new List<CPQ_Lib_dh.SubOptionProduct>();
+      this.selectedSubOptions = new List<CPQ_Lib_dh.SubOptionProduct>();
+      this.premiumPackage = new List<String>();
+      if (this.family == 'Premium Package') {
+        buildPremiumPackageDetails();
       }
     }
   }
@@ -627,6 +707,7 @@ public with sharing class CPQ_Lib_dh {
     public Boolean taxable;
     public List<SaleLineItem> subSaleItems { get; set; }
     public List<String> premiumPackage { get; set; }
+    public String locale = 'en_US';
 
     public SaleLineItem() {
     }
@@ -651,44 +732,38 @@ public with sharing class CPQ_Lib_dh {
     }
 
     public SaleLineItem(OpportunityLineItem oli) {
-      this.quantity = oli.Quantity;
-      this.salePrice = oli.UnitPrice;
-      this.lineItemId = oli.Id;
-      this.productId = oli.PricebookEntry.Product2Id;
-      this.productName = oli.PricebookEntry.Product2.Name;
-      this.pricebookEntryId = oli.PricebookEntryId;
-      this.parentProductId = oli.ParentProductId__c;
-      this.taxable = oli.Taxable_Provincial__c;
-      this.subSaleItems = new List<SaleLineItem>();
-      this.lineTotal = this.quantity * this.salePrice;
-      this.premiumPackage = new List<String>();
-      if (oli.PricebookEntry.Product2.Family == 'Premium Package')
-        buildPremiumPackageDetails();
+      setAttrs(oli);
+    }
+
+    public SaleLineItem(OpportunityLineItem oli, String locale) {
+      if (locale != null) {
+        this.locale = locale;
+      }
+      setAttrs(oli);
     }
 
     public SaleLineItem(QuoteLineItem qli) {
-      this.quantity = qli.Quantity;
-      this.salePrice = qli.UnitPrice;
-      this.lineItemId = qli.Id;
-      this.taxable = qli.Taxable_Provincial__c;
-      this.productId = qli.PricebookEntry.Product2Id;
-      this.productName = qli.PricebookEntry.Product2.Name;
-      this.pricebookEntryId = qli.PricebookEntryId;
-      this.parentProductId = qli.ParentProductId__c;
-      this.subSaleItems = new List<SaleLineItem>();
-      this.lineTotal = this.quantity * this.salePrice;
-      this.premiumPackage = new List<String>();
-      if (qli.PricebookEntry.Product2.Family == 'Premium Package')
-        buildPremiumPackageDetails();
+      setAttrs(qli);
+    }
+
+    public SaleLineItem(QuoteLineItem qli, String locale) {
+      if (locale != null) {
+        this.locale = locale;
+      }
+      setAttrs(qli);
     }
 
     public void buildPremiumPackageDetails() {
       for (Product_Feature_Map__c pfm : [
-        SELECT Id, Feature_Id__r.Description__c
+        SELECT Id, Feature_Id__r.Description__c, Feature_Id__r.description_fr__c
         FROM Product_Feature_Map__c
         WHERE Product_Id__c = :this.productId
       ]) {
-        this.premiumPackage.add(pfm.Feature_Id__r.Description__c);
+        String feature = this.locale == 'fr' &&
+          pfm.Feature_Id__r.description_fr__c != null
+          ? pfm.Feature_Id__r.description_fr__c
+          : pfm.Feature_Id__r.Description__c;
+        this.premiumPackage.add(feature);
       }
     }
 
@@ -700,6 +775,46 @@ public with sharing class CPQ_Lib_dh {
       obj.put('Description', this.salePrice == 0 ? 'Included' : '');
       obj.put('PricebookEntryId', this.pricebookEntryId);
       return obj;
+    }
+
+    private void setAttrs(QuoteLineItem qli) {
+      this.quantity = qli.Quantity;
+      this.salePrice = qli.UnitPrice;
+      this.lineItemId = qli.Id;
+      this.taxable = qli.Taxable_Provincial__c;
+      this.productId = qli.PricebookEntry.Product2Id;
+      this.productName = this.locale == 'fr' &&
+        qli.PricebookEntry.Product2.Name_FR__c != null
+        ? qli.PricebookEntry.Product2.Name_FR__c
+        : qli.PricebookEntry.Product2.Name;
+      this.pricebookEntryId = qli.PricebookEntryId;
+      this.parentProductId = qli.ParentProductId__c;
+      this.subSaleItems = new List<SaleLineItem>();
+      this.lineTotal = this.quantity * this.salePrice;
+      this.premiumPackage = new List<String>();
+      if (qli.PricebookEntry.Product2.Family == 'Premium Package') {
+        buildPremiumPackageDetails();
+      }
+    }
+
+    private void setAttrs(OpportunityLineItem oli) {
+      this.quantity = oli.Quantity;
+      this.salePrice = oli.UnitPrice;
+      this.lineItemId = oli.Id;
+      this.productId = oli.PricebookEntry.Product2Id;
+      this.productName = this.locale == 'fr' &&
+        oli.PricebookEntry.Product2.Name_FR__c != null
+        ? oli.PricebookEntry.Product2.Name_FR__c
+        : oli.PricebookEntry.Product2.Name;
+      this.pricebookEntryId = oli.PricebookEntryId;
+      this.parentProductId = oli.ParentProductId__c;
+      this.taxable = oli.Taxable_Provincial__c;
+      this.subSaleItems = new List<SaleLineItem>();
+      this.lineTotal = this.quantity * this.salePrice;
+      this.premiumPackage = new List<String>();
+      if (oli.PricebookEntry.Product2.Family == 'Premium Package') {
+        buildPremiumPackageDetails();
+      }
     }
   }
 

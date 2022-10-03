@@ -27,7 +27,8 @@
     <apex:outputText value="{!IF(description==null, '', description)}" />
     <span class="cost">
       <apex:outputText value="" rendered="{!cost == null}" />
-      <apex:outputText value="{!cost}" rendered="{!cost == 'Included'}" />
+      <apex:outputText value="{!$Label.Quote_Included}" rendered="{!cost == 'Included'}" />
+<!--      <apex:outputText value="{!IF(locale =='fr', 'inclus', 'included')}" rendered="{!cost == 'Included'}" />-->
       <apex:outputText value="${0, number, ###,###,###,##0.00}"
                        rendered="{!AND( cost != null, cost != 'Included' )}">
         <apex:param value="{!VALUE(cost)}"/>
