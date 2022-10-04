@@ -399,9 +399,16 @@
                           Available in {!mat.warehouseName}: {!mat.AvailableQuantitySelf}
                         </div>
                         <aura:set attribute="else">
-                          <div class="slds-text-body_small slds-theme_warning slds-align_absolute-center">
-                            Available in {!mat.warehouseName}: {!mat.AvailableQuantitySelf}
-                          </div>
+                          <aura:if isTrue="{!equals(v.saleType, 'Partner')}">
+                            <div class="slds-text-body_small slds-theme_error slds-align_absolute-center">
+                              Currently Out of Stock
+                            </div>
+                            <aura:set attribute="else">
+                              <div class="slds-text-body_small slds-theme_warning slds-align_absolute-center">
+                                Available in {!mat.warehouseName}: {!mat.AvailableQuantitySelf}
+                              </div>
+                            </aura:set>
+                          </aura:if>
                         </aura:set>
                       </aura:if>
                     </div>
