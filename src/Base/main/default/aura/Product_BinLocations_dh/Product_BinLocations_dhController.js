@@ -56,12 +56,12 @@
             console.log("result");
             console.log(JSON.parse(JSON.stringify(result)));
             var obj = {
-              inventoryParts2: parseFloat(result[0].inventoryParts2),
-              all: parseFloat(result[0].inventoryParts),
-              required: parseFloat(result[0].required),
-              available: parseFloat(result[0].inventory2),
-              onOrder: parseFloat(result[0].purchasing),
-              afterRecieving: parseFloat(result[0].expected2)
+              inventoryParts2: isNaN(result[0].inventoryParts2) ? 0 : parseFloat(result[0].inventoryParts2),
+              all: isNaN(result[0].inventoryParts) ? 0 : parseFloat(result[0].inventoryParts),
+              required: isNaN(result[0].required) ? 0 : parseFloat(result[0].required),
+              available: isNaN(result[0].inventory2) ? 0 : parseFloat(result[0].inventory2),
+              onOrder: isNaN(result[0].purchasing) ? 0 :  parseFloat(result[0].purchasing),
+              afterRecieving: isNaN(result[0].expected2) ? 0 : parseFloat(result[0].expected2)
             };
             component.set("v.selectedInventoryDetail", obj);
           }
