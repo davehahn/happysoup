@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Bank_Account_required_if_Check_Number</fullName>
+    <active>true</active>
+    <description>We can not provide a Check Number if no Bank Account is Specified</description>
+    <errorConditionFormula>AND(NOT(ISBLANK( AcctSeed__Check_Number__c )), ISBLANK( AcctSeed__Bank_Account__c ))</errorConditionFormula>
+    <errorMessage>A Bank Account must be selected if a Check Number is specified</errorMessage>
+</ValidationRule>
