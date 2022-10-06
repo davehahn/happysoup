@@ -1,4 +1,6 @@
 ({
+  currentSearchKey: '',
+  searchTimer: null,
   inConsole: function (component) {
     var workspaceAPI = component.find("workspace"),
       envType = component.get("v.environmentType");
@@ -33,7 +35,12 @@
   },
 
   searchKeyChangeHelper: function (component) {
-    var spinner = component.find("spinner");
+    const searchBusy = component.get('v.searchBusy');
+    if( searchBusy === true ) return;
+
+    component.set('v.searchBusy', true);
+    var spinner = component.find("spinner"),
+        searchKey = component.get("v.searchKey");
     this.doSearch(component)
       .then(
         $A.getCallback(function (results) {
@@ -54,30 +61,29 @@
       .finally(
         $A.getCallback(function () {
           spinner.toggle();
+          component.set('v.searchBusy', false);
         })
       );
   },
 
   doSearch: function (component) {
-    var searchKey = component.get("v.searchKey"),
-      spinner = component.find("spinner"),
+    var spinner = component.find("spinner"),
       action = component.get("c.getProductswithFamily"),
       params,
       la;
 
-    if (searchKey.length < 2) {
-      searchKey = "";
+    if (this.currentSearchKey.length < 2) {
+      this.currentSearchKey = "";
     }
 
     params = {
-      searchKey: searchKey.trim(),
+      searchKey: this.currentSearchKey.trim(),
       pFamily: JSON.stringify(component.get("v.lstProdFamily")),
       selectedIds: this.buildPdtIdString(component),
       selectedBoatModel: component.get("v.selectedBoatModel"),
       activePriceBookId: component.get("v.activePriceBookId"),
       isInternalRetail: component.get("v.saleType") === "Retail"
     };
-
     action.setParams(params);
     spinner.toggle();
     la = new LightningApex(this, action);

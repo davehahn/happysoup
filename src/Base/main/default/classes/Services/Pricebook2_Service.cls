@@ -3,30 +3,71 @@
  */
 
 public inherited sharing class Pricebook2_Service {
+  public class Pricebook2_Service_Exception extends Exception {}
+
+  private static Pricebook2_Service instance;
+  private Map<Id, Id> retail2FactoryMap {
+    get {
+      if( retail2FactoryMap == null){
+        retail2FactoryMap = Pricebook2_Service.getRetailToFactory_Map();
+      }
+      return retail2FactoryMap;
+    }
+    set{}
+  }
+  private Map<Id, Id> dealer2RetailMap {
+    get {
+      if( dealer2RetailMap == null ){
+        dealer2RetailMap = getDealerToRetail_Map();
+      }
+      return dealer2RetailMap;
+    }
+    set {}
+  }
+
+  public Id getMatchingRetailIdFromDealerId( Id dealerPbId ){
+    if( !this.dealer2RetailMap.containsKey( dealerPbId ) ){
+      throw new Pricebook2_Service_Exception('No matching Retail Pricebook found');
+    }
+    return this.dealer2RetailMap.get(dealerPbId);
+  }
+
+
+  public static Pricebook2_Service getInstance(){
+    if( instance == null ){
+      instance = new Pricebook2_Service();
+    }
+    return instance;
+  }
+
   public static Map<Id, Id> getRetailToFactory_Map() {
-    Map<Id, Id> retail2Factory_Map = new Map<Id, Id>();
-    Map<String, Id> retail_pbId2Year_Map = new Map<String, Id>();
-    Map<String, Id> factory_pbId2Year_Map = new Map<String, Id>();
-    Id retailRT = LGND_Utilities.recordTypeIdFromName('Pricebook2', 'Sales');
-    Id factoryRT = LGND_Utilities.recordTypeIdFromName('Pricebook2', 'Factory');
-    Set<Id> pbs = new Set<Id>{ retailRT, factoryRT };
-    for (Pricebook2 pb : [
-      SELECT Id, Sales_Year__c, Version__c, RecordTypeId
-      FROM Pricebook2
-      WHERE RecordTYpeId IN :pbs
-    ]) {
-      if (pb.RecordTypeId == retailRT) {
-        retail_pbId2Year_Map.put((pb.Sales_Year__c + '-' + pb.Version__c), pb.Id);
+    Application_RecordType.PriceBookRTs rts = Application_RecordType.getInstance().getPricebookRecordTypes();
+    return mapPriceBooks( rts.getSalesId(), rts.getFactoryId() );
+  }
+
+  public static Map<Id, Id> getDealerToRetail_Map() {
+    Application_RecordType.PriceBookRTs rts = Application_RecordType.getInstance().getPricebookRecordTypes();
+    return mapPriceBooks( rts.getDealerId(), rts.getSalesId() );
+  }
+
+  private static Map<Id, Id> mapPriceBooks( Id keyRtId, Id valueRtId ){
+    Map<Id, Id> result_Map = new Map<Id, Id>();
+    Map<String, Id> value_pbId2Year_Map = new Map<String, Id>();
+    Map<String, Id> key_pbId2Year_Map = new Map<String, Id>();
+    Set<Id> pbs = new Set<Id>{ keyRtId, valueRtId };
+    for (Pricebook2 pb : Pricebook_Selector.allByRecordTypeIds(pbs)) {
+      if (pb.RecordTypeId == keyRtId) {
+        key_pbId2Year_Map.put((pb.Sales_Year__c + '-' + pb.Version__c), pb.Id);
       }
-      if (pb.RecordTypeId == factoryRT) {
-        factory_pbId2Year_Map.put((pb.Sales_Year__c + '-' + pb.Version__c), pb.Id);
+      if (pb.RecordTypeId == valueRtId) {
+        value_pbId2Year_Map.put((pb.Sales_Year__c + '-' + pb.Version__c), pb.Id);
       }
     }
-    for (String year_version : retail_pbId2Year_Map.keySet()) {
-      if (factory_pbId2Year_Map.containsKey(year_version)) {
-        retail2Factory_Map.put(retail_pbId2Year_Map.get(year_version), factory_pbId2Year_Map.get(year_version));
+    for (String year_version : key_pbId2Year_Map.keySet()) {
+      if (value_pbId2Year_Map.containsKey(year_version)) {
+        result_Map.put(key_pbId2Year_Map.get(year_version), value_pbId2Year_Map.get(year_version));
       }
     }
-    return retail2Factory_Map;
+    return result_Map;
   }
 }

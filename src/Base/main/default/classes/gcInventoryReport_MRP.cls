@@ -1,4 +1,4 @@
-public with sharing class gcInventoryReport_MRP {
+public without sharing class gcInventoryReport_MRP {
   public gcInventoryReport_MRP() {
     defaultWarehouse();
   }
