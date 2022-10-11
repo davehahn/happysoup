@@ -6,7 +6,7 @@
     <label>Business Office Manager</label>
     <lookupFilter>
         <active>true</active>
-        <booleanFilter>1 OR 2</booleanFilter>
+        <booleanFilter>1 OR 2 OR 3</booleanFilter>
         <filterItems>
             <field>User.UserRole.Name</field>
             <operation>contains</operation>
@@ -16,6 +16,11 @@
             <field>User.UserRole.Name</field>
             <operation>contains</operation>
             <value>Retail Memory Making Manager</value>
+        </filterItems>
+        <filterItems>
+            <field>User.UserRole.Name</field>
+            <operation>equals</operation>
+            <value>Director of Financial Services</value>
         </filterItems>
         <isOptional>false</isOptional>
     </lookupFilter>
