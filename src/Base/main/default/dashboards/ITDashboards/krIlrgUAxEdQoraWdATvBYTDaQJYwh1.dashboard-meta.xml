@@ -9,38 +9,8 @@
     <dashboardColorPalette>unity</dashboardColorPalette>
     <dashboardGridLayout>
         <dashboardGridComponents>
-            <colSpan>3</colSpan>
+            <colSpan>6</colSpan>
             <columnIndex>0</columnIndex>
-            <dashboardComponent>
-                <autoselectColumnsFromReport>false</autoselectColumnsFromReport>
-                <chartSummary>
-                    <axisBinding>y</axisBinding>
-                    <column>FORMULA1</column>
-                </chartSummary>
-                <componentType>Gauge</componentType>
-                <decimalPrecision>-1</decimalPrecision>
-                <displayUnits>Auto</displayUnits>
-                <gaugeMax>100.0</gaugeMax>
-                <gaugeMin>0.0</gaugeMin>
-                <groupingSortProperties/>
-                <header>Meeting Agenda Accuracy</header>
-                <indicatorBreakpoint1>75.0</indicatorBreakpoint1>
-                <indicatorBreakpoint2>90.0</indicatorBreakpoint2>
-                <indicatorHighColor>#00716B</indicatorHighColor>
-                <indicatorLowColor>#C23934</indicatorLowColor>
-                <indicatorMiddleColor>#FFB75D</indicatorMiddleColor>
-                <report>ScalingUp/Meeting_Agenda_Accuracy</report>
-                <showPercentage>false</showPercentage>
-                <showRange>false</showRange>
-                <showTotal>true</showTotal>
-                <showValues>false</showValues>
-            </dashboardComponent>
-            <rowIndex>0</rowIndex>
-            <rowSpan>8</rowSpan>
-        </dashboardGridComponents>
-        <dashboardGridComponents>
-            <colSpan>3</colSpan>
-            <columnIndex>3</columnIndex>
             <dashboardComponent>
                 <autoselectColumnsFromReport>false</autoselectColumnsFromReport>
                 <chartAxisRange>Auto</chartAxisRange>
@@ -48,7 +18,7 @@
                     <axisBinding>y</axisBinding>
                     <column>RowCount</column>
                 </chartSummary>
-                <componentType>Donut</componentType>
+                <componentType>Bar</componentType>
                 <decimalPrecision>-1</decimalPrecision>
                 <displayUnits>Auto</displayUnits>
                 <drillEnabled>false</drillEnabled>
@@ -63,11 +33,11 @@
                     </groupingSorts>
                 </groupingSortProperties>
                 <header>IT Trailhead Badges</header>
-                <legendPosition>Right</legendPosition>
+                <legendPosition>Bottom</legendPosition>
                 <maxValuesDisplayed>6</maxValuesDisplayed>
                 <report>ITReports/IT_Trailhead_Badges</report>
                 <showPercentage>false</showPercentage>
-                <showTotal>true</showTotal>
+                <showPicturesOnCharts>false</showPicturesOnCharts>
                 <showValues>true</showValues>
                 <sortBy>RowLabelAscending</sortBy>
                 <useReportChart>false</useReportChart>
@@ -87,12 +57,12 @@
                 <componentType>Gauge</componentType>
                 <decimalPrecision>-1</decimalPrecision>
                 <displayUnits>Auto</displayUnits>
-                <gaugeMax>20.0</gaugeMax>
+                <gaugeMax>50.0</gaugeMax>
                 <gaugeMin>0.0</gaugeMin>
                 <groupingSortProperties/>
                 <header>Trailhead Badges KPI</header>
-                <indicatorBreakpoint1>10.0</indicatorBreakpoint1>
-                <indicatorBreakpoint2>15.0</indicatorBreakpoint2>
+                <indicatorBreakpoint1>20.0</indicatorBreakpoint1>
+                <indicatorBreakpoint2>40.0</indicatorBreakpoint2>
                 <indicatorHighColor>#00716B</indicatorHighColor>
                 <indicatorLowColor>#C23934</indicatorLowColor>
                 <indicatorMiddleColor>#FFB75D</indicatorMiddleColor>
@@ -122,7 +92,7 @@
                 <drillToDetailEnabled>false</drillToDetailEnabled>
                 <enableHover>false</enableHover>
                 <expandOthers>false</expandOthers>
-                <groupingColumn>System_Issue__c$Department__c</groupingColumn>
+                <groupingColumn>System_Issue__c$Type__c</groupingColumn>
                 <groupingSortProperties>
                     <groupingSorts>
                         <groupingLevel>g1</groupingLevel>

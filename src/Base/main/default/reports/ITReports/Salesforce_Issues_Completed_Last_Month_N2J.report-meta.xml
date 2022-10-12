@@ -11,7 +11,7 @@
         <chartType>Donut</chartType>
         <enableHoverLabels>false</enableHoverLabels>
         <expandOthers>false</expandOthers>
-        <groupingColumn>System_Issue__c$Department__c</groupingColumn>
+        <groupingColumn>System_Issue__c$Type__c</groupingColumn>
         <legendPosition>Right</legendPosition>
         <location>CHART_BOTTOM</location>
         <showAxisLabels>true</showAxisLabels>
@@ -45,6 +45,11 @@
         <language>en_US</language>
     </filter>
     <format>Summary</format>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>System_Issue__c$Type__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
     <groupingsDown>
         <dateGranularity>Day</dateGranularity>
         <field>System_Issue__c$Department__c</field>
