@@ -208,6 +208,12 @@
             </value>
         </inputAssignments>
         <inputAssignments>
+            <field>Mercury_Rebate__c</field>
+            <value>
+                <elementReference>Mercury_Rebate</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
             <field>Payable_Due_Date__c</field>
             <value>
                 <elementReference>Due_Date</elementReference>
@@ -416,6 +422,16 @@
                         <elementReference>TodayPlus10</elementReference>
                     </defaultValue>
                     <fieldText>Due Date</fieldText>
+                    <fieldType>InputField</fieldType>
+                    <isRequired>true</isRequired>
+                </fields>
+                <fields>
+                    <name>Mercury_Rebate</name>
+                    <dataType>Boolean</dataType>
+                    <defaultValue>
+                        <booleanValue>false</booleanValue>
+                    </defaultValue>
+                    <fieldText>Mercury Rebate</fieldText>
                     <fieldType>InputField</fieldType>
                     <isRequired>true</isRequired>
                 </fields>
