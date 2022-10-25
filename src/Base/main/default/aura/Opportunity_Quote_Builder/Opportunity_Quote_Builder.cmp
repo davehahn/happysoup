@@ -74,8 +74,8 @@
             label="{! if(v.showPaymentsOnPDF, 'Hide Payments','Show Payments' )}"
             onclick="{!c.toggleViewPdfPayments}"
           />
-          <aura:if isTrue="{! not(or(equals(v.selectedQuoteId, v.syncedQuoteId), v.creatingNewQuote))}">
-            <lightning:button label="Sync to Opportunity" onclick="{!c.handleSyncQuote}" />
+          <aura:if isTrue="{! not(or(equals(v.selectedQuoteId, v.syncedQuoteId), v.creatingNewQuote, !empty(v.syncedQuoteId)))}">
+          <lightning:button label="Sync to Opportunity" onclick="{!c.handleSyncQuote}" />
           </aura:if>
           <aura:if isTrue="{! not(v.isOutdated)}">
             <aura:if isTrue="{! not(v.loadCPQ) }">
