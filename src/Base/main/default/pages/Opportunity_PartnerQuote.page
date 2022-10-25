@@ -705,6 +705,14 @@
           <p>
             <apex:outputField value="{!opp.Customer_Notes__c}" />
           </p>
+          <apex:repeat value="{!disclaimers}" var="disclaimer">
+            <apex:outputPanel layout="none" rendered="{! $CurrentPage.parameters.locale == 'fr'}">
+              <p style="margin: 0; padding: 0">{!disclaimer.French__c}</p>
+            </apex:outputPanel>
+            <apex:outputPanel layout="none" rendered="{! $CurrentPage.parameters.locale == 'en_US'}">
+              <p style="margin: 0; padding: 0">{!disclaimer.English__c}</p>
+            </apex:outputPanel>
+          </apex:repeat>
         </div>
         <div style="width: 90%; margin: auto; padding: 0 10px; min-height:22px; height: auto">
           <b>{!$Label.Quote_Please_Remember}:</b>

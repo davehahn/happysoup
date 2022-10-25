@@ -8,6 +8,7 @@
           var selectedId;
           console.log(JSON.parse(JSON.stringify(result)));
           component.set("v.isOutdated", result.isOutdated);
+//          component.set('v.isPartnerOpportunity', result.isPartnerOpportunity);
           if (result.syncedQuoteId !== undefined && result.syncedQuoteId !== null) {
             component.set("v.syncedQuoteId", result.syncedQuoteId);
             component.set("v.syncedQuoteName", result.syncedQuoteName);
