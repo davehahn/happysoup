@@ -27,7 +27,6 @@
   termChange: function (component, event, helper) {
     var term = component.get("v.term"),
       amort = component.get("v.amort");
-    s;
     if (parseInt(term) > parseInt(amort)) {
       amort = term;
       component.set("v.amort", amort);

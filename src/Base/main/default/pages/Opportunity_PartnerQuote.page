@@ -447,6 +447,22 @@
           </apex:repeat>
           <!-- ============================= /BOAT OPTIONS =================== -->
 
+          <!-- +++++++++++++++++++++++++++++ ADDITIONAL ACCESSORIES +++++++++++ -->
+          <apex:outputPanel layout="none" rendered="{! NOT( theCPQ.additionalAccessories.empty )}">
+            <apex:repeat value="{!theCPQ.additionalAccessories}" var="item">
+              <c:Opportunity_PartnerQuoteOptionLine
+                rowClass="itemRow {!IF(MOD(rowCount,2)=0,'even','odd')}"
+                quantity="{!item.quantity}"
+                description="{!item.productName}, (${!item.salePrice} ea.)"
+                cost="{!TEXT(item.quantity * item.salePrice)}"
+              />
+
+              <apex:variable value="{!rowCount+1}" var="rowCount" />
+              <apex:variable value="{!optionsTotal + (item.quantity * item.salePrice) }" var="optionsTotal" />
+            </apex:repeat>
+          </apex:outputPanel>
+          <!-- ============================ /ADDITIONAL ACCESSORIES ============= -->
+
           <!-- +++++++++++++++++++++++++++++ CUSTOM PRODUCTS +++++++++++ -->
           <apex:outputPanel layout="none" rendered="{! NOT( theCPQ.customProducts.empty )}">
             <apex:repeat value="{!theCPQ.customProducts}" var="item">

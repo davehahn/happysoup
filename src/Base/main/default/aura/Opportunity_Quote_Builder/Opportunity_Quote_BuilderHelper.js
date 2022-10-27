@@ -8,7 +8,7 @@
           var selectedId;
           console.log(JSON.parse(JSON.stringify(result)));
           component.set("v.isOutdated", result.isOutdated);
-//          component.set('v.isPartnerOpportunity', result.isPartnerOpportunity);
+          component.set('v.isPartnerOpportunity', result.isPartnerOpportunity);
           if (result.syncedQuoteId !== undefined && result.syncedQuoteId !== null) {
             component.set("v.syncedQuoteId", result.syncedQuoteId);
             component.set("v.syncedQuoteName", result.syncedQuoteName);
@@ -16,7 +16,8 @@
           } else if (result.quotes.length > 0) {
             selectedId = result.quotes[0].Id;
           }
-          if (selectedId === null) {
+          if (selectedId === null || selectedId === undefined) {
+            console.log('selected ID null');
             component.set("v.loadCPQ", true);
           }
           component.set("v.url", result.url);
@@ -88,7 +89,8 @@
       "c:CPQ_dh",
       {
         recordId: isNew ? null : component.get("v.selectedQuoteId"),
-        opportunityId: component.get("v.recordId")
+        opportunityId: component.get("v.recordId"),
+        isPartnerOpportunity: component.get('v.isPartnerOpportunity')
       },
       function (cpq, status, errorMessage) {
         if (status === "SUCCESS") {
