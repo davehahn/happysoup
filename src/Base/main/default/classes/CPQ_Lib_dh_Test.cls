@@ -547,6 +547,66 @@ private class CPQ_Lib_dh_Test {
   }
 
   @isTest
+  static void CPQ_AdditionalAccessory_From_QuoteLine_Test() {
+    setupOpportunity(true);
+    Product2 part = Factory_Product.createNonSerializedProduct('Part', 'Hardware');
+    Factory_PricebookEntry.createAllDefaultEntriesEntries(part.Id, 100);
+    PricebookEntry pbe = [
+      SELECT Id, UnitPrice
+      FROM PricebookEntry
+      WHERE Product2Id = :part.Id AND Pricebook2Id = :opp.Pricebook2Id
+      LIMIT 1
+    ];
+    QuoteLineItem qli = Factory_QuoteLineItem.buildLineItem(pbe, q.Id, 1, null);
+    insert qli;
+    qli = [
+      SELECT
+        PricebookEntryId,
+        PricebookEntry.Product2Id,
+        PricebookEntry.Product2.Name,
+        PricebookEntry.Product2.Family,
+        PricebookEntry.Product2.Taxable__c,
+        PricebookEntry.UnitPrice,
+        Description,
+        Quantity,
+        UnitPrice,
+        ParentProductId__c,
+        Taxable_Provincial__c
+      FROM QuoteLineItem
+      WHERE Id = :qli.Id
+    ];
+    Test.startTest();
+    CPQ_Lib_dh.AdditionalAccessory aa = new CPQ_Lib_dh.AdditionalAccessory(qli);
+    Test.stopTest();
+    System.assertEquals(qli.Id, aa.id);
+    System.assertEquals(part.Id, aa.productId);
+    System.assertEquals(qli.Quantity, aa.quantity);
+    System.assertEquals(pbe.UnitPrice, aa.salePrice);
+  }
+
+  @IsTest
+  static void AdditionAccessory_createLineItem_Test(){
+    Product2 part = Factory_Product.createNonSerializedProduct('Part', 'Hardware');
+    Factory_PricebookEntry.createAllDefaultEntriesEntries(part.Id, 100);
+    PricebookEntry pbe = [SELECT Id, UnitPrice FROM PricebookEntry WHERE Product2Id = :part.Id LIMIT 1];
+    CPQ_Lib_dh.AdditionalAccessory aa = new CPQ_Lib_dh.AdditionalAccessory();
+    aa.quantity = 1;
+    aa.salePrice = pbe.UnitPrice;
+    aa.retailPrice = pbe.UnitPrice;
+    aa.productId = part.Id;
+    aa.pricebookEntryId = pbe.Id;
+    aa.productName = part.Name;
+
+    Test.startTest();
+    Sobject result = aa.createLineItem('QuoteLineItem');
+    Test.stopTest();
+
+    System.assertEquals( result.get('Quantity'), 1);
+    System.assertEquals( result.get('UnitPrice'), pbe.UnitPrice);
+    System.assertEquals( result.get('PricebookEntryId'), pbe.Id);
+  }
+
+  @isTest
   static void CPQ_CustomProduct_From_QuoteLine_Test() {
     setupOpportunity(true);
     Id custProdId = Utility_Products__c.getOrgDefaults().Partner_Custom_Product__c;

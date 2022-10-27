@@ -2,6 +2,7 @@
   doInit: function (component, event, helper) {
     var item = component.get("v.optionItem"),
       saleItems = component.get("v.saleItems");
+      console.log( JSON.parse( JSON.stringify( item ) ) );
     if (!item.isCheckbox) {
       var opts = [];
       for (var i = item.standard; i <= item.maximum; i++) {
@@ -23,7 +24,7 @@
           if (qtySelected > 0) {
             item.isSelected = true;
             item.quantitySelected = qtySelected;
-            component.set("v.item", item);
+            component.set("v.optionItem", item);
           }
         }
       }
@@ -38,7 +39,7 @@
       if (qtySelected > 0) {
         item.quantitySelected = qtySelected;
         item.isSelected = true;
-        component.set("v.item", item);
+        component.set("v.optionItem", item);
         helper.fetchSubOptions(component);
       } else {
         component.set("v.compLoaded", true);

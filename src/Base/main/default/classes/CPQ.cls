@@ -27,6 +27,7 @@ public class CPQ {
   public CPQ_Lib_dh.UpgradeProduct theTrollingMotor { get; set; }
   public List<CPQ_Lib_dh.OptionProduct> selectedOptions;
   public List<CPQ_Lib_dh.SavingsLine> savings { get; set; }
+  public List<CPQ_Lib_dh.AdditionalAccessory> additionalAccessories { get; set; }
   public List<CPQ_Lib_dh.CustomProduct> customProducts { get; set; }
   public CPQ_Lib_dh.TradeIn tradeIn;
   //public List<CPQ_Lib_dh> motorUpgradeOptions;
@@ -411,6 +412,7 @@ public class CPQ {
     this.activePricebookId = CPQ.defaultPricebooks.get(this.saleType);
     this.selectedOptions = new List<CPQ_Lib_dh.OptionProduct>();
     this.savings = new List<CPQ_Lib_dh.SavingsLine>();
+    this.additionalAccessories = new List<CPQ_Lib_dh.AdditionalAccessory>();
     this.customProducts = new List<CPQ_Lib_dh.CustomProduct>();
     this.tradeIn = new CPQ_Lib_dh.TradeIn();
     this.saleItems = new List<CPQ_Lib_dh.SaleLineItem>();
@@ -501,6 +503,7 @@ public class CPQ {
             PricebookEntry.Product2.Family,
             PricebookEntry.Product2.RecordTypeId,
             PricebookEntry.Product2.RecordType.Name,
+            PricebookEntry.Product2.Taxable__c,
             Quantity,
             UnitPrice
           FROM QuoteLineItems
@@ -560,6 +563,8 @@ public class CPQ {
           this.customProducts.add(new CPQ_Lib_dh.CustomProduct(qli));
         } else if (qli.PricebookEntry.Product2Id == savingsProductId) {
           this.savings.add(new CPQ_Lib_dh.SavingsLine(qli));
+        } else if (qli.ParentProductId__c == null ){
+          this.additionalAccessories.add( new CPQ_Lib_dh.AdditionalAccessory(qli));
         } else {
           options.add(qli);
         }
@@ -944,6 +949,11 @@ public class CPQ {
     if (this.savings.size() > 0) {
       for (CPQ_Lib_dh.SavingsLine sl : this.savings) {
         result.add(sl.createLineItem(recordType));
+      }
+    }
+    if (this.additionalAccessories.size() > 0) {
+      for (CPQ_Lib_dh.AdditionalAccessory aa : this.additionalAccessories) {
+        result.add(aa.createLineItem(recordType));
       }
     }
     if (this.customProducts.size() > 0) {

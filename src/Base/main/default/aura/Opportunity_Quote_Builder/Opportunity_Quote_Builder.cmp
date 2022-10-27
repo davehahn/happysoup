@@ -11,9 +11,11 @@
   <aura:handler event="c:CPQ_PaymentCalculator_PaymentsChanged_Event" action="{!c.handlePaymentChange}" />
 
   <aura:attribute name="recordId" type="String" />
+  <aura:attribute name="initComplete" type="Boolean" default="false"></aura:attribute>
   <aura:attribute name="quotes" type="Quote[]" />
   <aura:attribute name="syncedQuoteId" type="String" />
   <aura:attribute name="syncedQuoteName" type="String" />
+  <aura:attribute name="isPartnerOpportunity" type="Boolean" default="true" />
   <aura:attribute name="creatingNewQuote" type="Boolean" default="false" />
   <aura:attribute name="loadCPQ" type="Boolean" default="false" />
   <aura:attribute name="selectedQuote" type="Quote" />
@@ -58,39 +60,45 @@
         </lightning:layoutItem>
       </aura:if>
 
-      <lightning:layoutItem
-        size="12"
-        smallDeviceSize="12"
-        mediumDeviceSize="8"
-        largeDeviceSize="8"
-        padding="around-small"
-        class="slds-text-align_right"
-      >
-        <lightning:buttonGroup>
-          <lightning:button
-            label="{! if(v.showFrenchPDF, 'View English PDF', 'View French PDF')}"
-            onclick="{!c.handleLanguageToggle}"></lightning:button>
-          <lightning:button
-            label="{! if(v.showPaymentsOnPDF, 'Hide Payments','Show Payments' )}"
-            onclick="{!c.toggleViewPdfPayments}"
-          />
-          <aura:if isTrue="{! not(or(equals(v.selectedQuoteId, v.syncedQuoteId), v.creatingNewQuote))}">
+
+      <aura:if isTrue="{!v.initComplete}">
+        <lightning:layoutItem
+          size="12"
+          smallDeviceSize="12"
+          mediumDeviceSize="8"
+          largeDeviceSize="8"
+          padding="around-small"
+          class="slds-text-align_right"
+        >
+          <lightning:buttonGroup>
+            <aura:if isTrue="{! and(not(empty(v.selectedQuoteId)), not(v.loadCPQ) ) }">
+              <lightning:button
+                label="{! if(v.showFrenchPDF, 'View English PDF', 'View French PDF')}"
+                onclick="{!c.handleLanguageToggle}"></lightning:button>
+              <lightning:button
+                label="{! if(v.showPaymentsOnPDF, 'Hide Payments','Show Payments' )}"
+                onclick="{!c.toggleViewPdfPayments}"
+              />
+            </aura:if>
+            <aura:if isTrue="{! and(not(equals(v.selectedQuoteId, v.syncedQuoteId)), !v.creatingNewQuote, empty(v.syncedQuoteId))}">
             <lightning:button label="Sync to Opportunity" onclick="{!c.handleSyncQuote}" />
-          </aura:if>
-          <aura:if isTrue="{! not(v.isOutdated)}">
-            <aura:if isTrue="{! not(v.loadCPQ) }">
-              <lightning:button label="New Quote" onclick="{!c.handleNewQuote}" />
             </aura:if>
-            <aura:if isTrue="{! and( not(v.loadCPQ), !empty(v.selectedQuoteId) )}">
-              <lightning:button label="Edit Quote" onclick="{!c.handleEditQuote}" />
+            <aura:if isTrue="{! not(v.isOutdated)}">
+              <aura:if isTrue="{! not(v.loadCPQ) }">
+                <lightning:button label="New Quote" onclick="{!c.handleNewQuote}" />
+              </aura:if>
+              <aura:if isTrue="{! and( not(v.loadCPQ), !empty(v.selectedQuoteId) )}">
+                <lightning:button label="Edit Quote" onclick="{!c.handleEditQuote}" />
+              </aura:if>
+              <aura:if isTrue="{! v.loadCPQ }">
+                <lightning:button label="Cancel" onclick="{!c.cancelEditOrNew}" />
+              </aura:if>
             </aura:if>
-            <aura:if isTrue="{! v.loadCPQ }">
-              <lightning:button label="Cancel" onclick="{!c.cancelEditOrNew}" />
-            </aura:if>
-          </aura:if>
-        </lightning:buttonGroup>
-      </lightning:layoutItem>
+          </lightning:buttonGroup>
+        </lightning:layoutItem>
+      </aura:if>
     </lightning:layout>
+
 
     <lightning:layout horizontalAlign="space" verticalAlign="top" pullToBoundary="small" class="slds-m-bottom_small">
       <lightning:layoutItem

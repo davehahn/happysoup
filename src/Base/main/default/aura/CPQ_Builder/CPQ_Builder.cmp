@@ -8,6 +8,7 @@
   <aura:attribute name="allowSavings" type="Boolean" default="false" />
   <aura:attribute name="allowInactiveBoats" type="Boolean" default="false" />
   <aura:attribute name="allowCustomProducts" type="Boolean" default="false" />
+  <aura:attribute name="allowAdditionalAccessories" type="Boolean" default="false" />
   <aura:attribute name="allowTradeIns" type="Boolean" default="false" />
   <aura:attribute name="includeCostForCustomProducts" type="Boolean" default="false" />
   <aura:attribute name="enableTrollingMotors" type="Boolean" default="true" />
@@ -86,6 +87,14 @@
           </lightning:tab>
         </aura:if>
         <!-- /Options Selector -->
+
+        <!-- Additional Accessories Selector -->
+        <aura:if isTrue="{! and( not(empty(v.cpq.theBoat)), v.allowAdditionalAccessories )}">
+          <lightning:tab label="Additional Accessories" id="additional-accessories">
+            <c:CPQ_AdditionalAccessorySelector cpq="{!v.cpq}" />
+          </lightning:tab>
+        </aura:if>
+        <!-- /Additional Accessories Selector -->
 
         <!-- Savings -->
         <aura:if isTrue="{! and( not(empty(v.cpq.theBoat)), v.allowSavings )}">
