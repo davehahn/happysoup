@@ -1,7 +1,6 @@
 ({
   fetchSubOptions: function (component) {
-    var self = this,
-      item = component.get("v.optionItem");
+    var self = this;
     self.subOptionsCallout(component).then(
       $A.getCallback(function (response) {
         component.set("v.subOptions", response);

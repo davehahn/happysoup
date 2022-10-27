@@ -247,6 +247,7 @@ public with sharing class CPQ_Lib_dh {
       SObject obj = Schema.getGlobalDescribe().get(objectType).newSObject();
       obj.put('Quantity', 1);
       obj.put('Description', 'Boat Package');
+      obj.put('BoatBuilderItem__c', true);
       if (this.activePrice == null) {
         obj.put('UnitPrice', this.retailPrice);
         obj.put('PricebookEntryId', this.retailPricebookEntryId);
@@ -306,6 +307,7 @@ public with sharing class CPQ_Lib_dh {
       SObject obj = Schema.getGlobalDescribe().get(objectType).newSObject();
       obj.put('Quantity', 1);
       obj.put('Description', description);
+      obj.put('BoatBuilderItem__c', true);
       if (this.activePrice == null) {
         obj.put('UnitPrice', this.retailUpgradeCost);
         obj.put('PricebookEntryId', this.retailPricebookEntryId);
@@ -474,6 +476,7 @@ public with sharing class CPQ_Lib_dh {
         obj.put('Quantity', 1);
         obj.put('UnitPrice', price);
         obj.put('PricebookEntryId', pbe.Id);
+        obj.put('BoatBuilderItem__c', true);
         return obj;
       } catch (Exception e) {
         throw new CPQ.CPQ_Exception(e.getMessage());
@@ -510,6 +513,7 @@ public with sharing class CPQ_Lib_dh {
       obj.put('Quantity', this.quantity);
       obj.put('UnitPrice', this.salePrice);
       obj.put('PricebookEntryId', this.pricebookEntryId);
+      obj.put('BoatBuilderItem__c', true);
       return obj;
     }
 
@@ -601,6 +605,7 @@ public with sharing class CPQ_Lib_dh {
         obj.put('UnitPrice', this.amount);
         obj.put('Description', this.description);
         obj.put('PricebookEntryId', pb.Id);
+        obj.put('BoatBuilderItem__c', true);
         return obj;
       } catch (Exception e) {
         throw new CPQ.CPQ_Exception(e.getMessage());
@@ -823,6 +828,7 @@ public with sharing class CPQ_Lib_dh {
       obj.put('UnitPrice', this.salePrice);
       obj.put('Description', this.salePrice == 0 ? 'Included' : '');
       obj.put('PricebookEntryId', this.pricebookEntryId);
+      obj.put('BoatBuilderItem__c', true);
       return obj;
     }
 
