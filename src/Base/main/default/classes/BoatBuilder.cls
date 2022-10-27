@@ -1460,7 +1460,7 @@ public with sharing class BoatBuilder {
     Boolean allreadyExists = false;
     if (discountItems != null) {
       for (Discount d : discountItems.values()) {
-        if (d.description == premiumPackageProduct.Name)
+        if (d.description == premiumPackageProduct.Name || d.description == 'Premium Package Savings')
           allreadyExists = true;
       }
     }
