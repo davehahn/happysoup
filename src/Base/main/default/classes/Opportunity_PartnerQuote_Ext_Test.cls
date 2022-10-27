@@ -11,7 +11,7 @@ private class Opportunity_PartnerQuote_Ext_Test {
   static void dataSetup() {
     new Factory_TestData();
     Factory_CustomSettings.setupInventorySettings();
-    Id retailPbId = Legend_Settings__c.getOrgDefaults().Default_Retail_Pricebook__c;
+//    Id retailPbId = Legend_Settings__c.getOrgDefaults().Default_Retail_Pricebook__c;
     Account dealer = Factory_Account.insertDealerAccounts(1)[0];
     Factory_User.createPartnerUser(dealer);
   }

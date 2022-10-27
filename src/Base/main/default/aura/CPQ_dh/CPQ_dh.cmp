@@ -10,6 +10,7 @@
 
   <aura:attribute name="recordId" type="String" />
   <aura:attribute name="opportunityId" type="String" />
+  <aura:attribute name="isPartnerOpportunity" type="Boolean" default="true" />
   <aura:attribute name="cpq" type="Object" />
   <aura:attribute name="saleTotal" type="Decimal" />
   <aura:attribute name="isQuoting" type="Decimal" default="false" />
@@ -203,7 +204,8 @@
                 aura:id="cpqBuilder"
                 cpq="{!v.cpq}"
                 allowSavings="true"
-                allowCustomProducts="true"
+                allowCustomProducts="{!v.isPartnerOpportunity}"
+                allowAdditionalAccessories="{!not(v.isPartnerOpportunity)}"
                 allowTradeIns="true"
               />
             </lightning:layoutItem>

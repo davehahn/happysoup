@@ -481,6 +481,41 @@ public with sharing class CPQ_Lib_dh {
     }
   }
 
+  public virtual class AdditionalAccessory {
+    public Id id;
+    public Decimal quantity {get; set;}
+    public Decimal salePrice {get; set;}
+    public Decimal retailPrice;
+    public Id productId;
+    public Id pricebookEntryId;
+    public String productName { get; set;}
+    public Boolean isTaxable { get; set; }
+
+    public AdditionalAccessory(){}
+
+    public AdditionalAccessory( QuoteLineItem qli ){
+      this.quantity = qli.Quantity;
+      this.id = qli.Id;
+      this.salePrice = qli.UnitPrice;
+      this.retailPrice = qli.PricebookEntry.UnitPrice;
+      this.productId = qli.PricebookEntry.Product2Id;
+      this.productName = qli.PricebookEntry.Product2.Name;
+      this.pricebookEntryId = qli.PricebookEntryId;
+      this.isTaxable = qli.PricebookEntry.Product2.Taxable__c;
+
+    }
+
+    public SObject createLineItem(String objectType) {
+      SObject obj = Schema.getGlobalDescribe().get(objectType).newSObject();
+      obj.put('Quantity', this.quantity);
+      obj.put('UnitPrice', this.salePrice);
+      obj.put('PricebookEntryId', this.pricebookEntryId);
+      return obj;
+    }
+
+
+  }
+
   public virtual class CustomProduct {
     public String id;
     public Id productId;
@@ -730,6 +765,20 @@ public with sharing class CPQ_Lib_dh {
       }
       this.lineTotal = this.quantity * this.salePrice;
     }
+
+//    public SaleLineItem( AdditionalAccessory acc ){
+//      this.quantity = acc.quantity;
+//      this.salePrice = acc.salePrice;
+//      this.partnerPrice = acc.partnerPrice;
+//      this.lineItemId = null;
+//      this.productId = acc.id;
+//      this.productName = acc.name;
+//      this.taxable = acc.taxable;
+//      this.pricebookEntryId = acc.retailPricebookEntryId;
+//      this.subSaleItems = new List<SaleLineItem>();
+//      this.premiumPackage = new List<String>();
+//      this.lineTotal = this.quantity * this.salePrice;
+//    }
 
     public SaleLineItem(OpportunityLineItem oli) {
       setAttrs(oli);

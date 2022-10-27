@@ -173,6 +173,44 @@
             </table>
           </aura:if>
 
+          <!-- Additional Accessories -->
+          <aura:if isTrue="{! not(empty( v.cpq.additionalAccessories )) }">
+            <div class="slds-text-title_caps slds-m-top_large slds-text-align_left table-title">Additional Accessories</div>
+            <table
+              class="slds-table slds-table_bordered slds-table_resizable-cols slds-table_fixed-layout summary-table"
+            >
+              <thead>
+              <tr class="slds-text-title_caps">
+                <th scope="col" class="slds-border_top" style="width: 10%; text-align: left">Qty</th>
+                <th scope="col" class="slds-border_top" style="width: 65%; text-align: left">Product Name</th>
+                <th scope="col" class="slds-border_top" style="width: 25%">Cost</th>
+              </tr>
+              </thead>
+              <tbody>
+              <aura:iteration items="{!v.cpq.additionalAccessories}" var="item">
+                <tr>
+                  <td>{!item.quantity}</td>
+                  <td>{!item.productName}</td>
+                  <td class="option-price">
+                    <lightning:formattedNumber
+                      value="{!item.salePrice * item.quantity}"
+                      style="currency"
+                      currencyCode="CAD"
+                    />
+                    <aura:if isTrue="{! item.quantity > 1}">
+                      <div>
+                        <lightning:formattedNumber value="{!item.salePrice}" style="currency" currencyCode="CAD" />
+                        ea.
+                      </div>
+                    </aura:if>
+                  </td>
+                </tr>
+              </aura:iteration>
+              </tbody>
+            </table>
+          </aura:if>
+
+
           <!-- Custom Products -->
           <aura:if isTrue="{! not(empty( v.cpq.customProducts )) }">
             <div class="slds-text-title_caps slds-m-top_large slds-text-align_left table-title">Custom Products</div>
