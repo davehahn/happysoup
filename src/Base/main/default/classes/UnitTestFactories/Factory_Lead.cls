@@ -4,7 +4,6 @@ public class Factory_Lead {
 
   public static Lead buildLead(String fName, String lName) {
     Lead l = constructBasicLead(fName, lName);
-    l.Status = Lead_Service.NEW_STATUS;
     l.OwnerId = helper.getQueue().Id;
     return l;
   }
@@ -55,7 +54,7 @@ public class Factory_Lead {
     return l;
   }
 
-  private static Lead constructBasicLead(String fName, String lName) {
+  public static Lead constructBasicLead(String fName, String lName) {
     String[] langs = LGND_Utilities.getPicklistValues('Lead', 'Preferred_Language__c');
     return new Lead(
       Email = fname + '@' + lname + '.com',
@@ -63,7 +62,8 @@ public class Factory_Lead {
       LastName = lname,
       Phone = '111-111-1111',
       MobilePhone = '222-222-2222',
-      Preferred_Language__c = langs[0]
+      Preferred_Language__c = langs[0],
+      Status = Lead_Service.NEW_STATUS
     );
   }
 }
