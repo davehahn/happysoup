@@ -1,5 +1,12 @@
 .THIS.slds-card {
   position: relative;
+  border-width: 1px !important;
+  border-color: var(--slds-c-card-color-border, rgb(201,201,201)) !important;
+  border-style: solid !important;
+}
+
+.THIS.slds-card .slds-card__body.slds-card__body_inner {
+  padding: 1rem;
 }
 
 .THIS.slds-card .center-align{
@@ -16,11 +23,11 @@
   border-color: #4bca81;
 }
 
-.THIS.slds-card .slds-card__header .slds-card__header-title p {
+.THIS .slds-card__header-title p {
   font-size: 0.9rem;
 }
 
-.THIS.slds-card .slds-card__header .slds-card__header-title p:first-child {
+.THIS .slds-card__header-title p:first-child {
   font-size: 1.3rem;
 }
 

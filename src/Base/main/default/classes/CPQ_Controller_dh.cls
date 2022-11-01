@@ -124,6 +124,13 @@ public with sharing class CPQ_Controller_dh {
     return JSON.serialize(new CPQ_Lib_dh.SavingsLine());
   }
 
+  /* +++++++++++ ADDITIONAL ACCESSORY ++++++++++ */
+//  @AuraEnabled
+//  public static String fetchAdditionalAccessory( Id prodId ){
+//    return JSON.serialize( new CPQ_Lib_dh.AdditionalAccessory( prodId ) );
+//  }
+
+
   /* +++++++++++ PARTNER CUSTOM PRODUCT ++++++++ */
   @AuraEnabled
   public static String fetchNewCustomProduct() {

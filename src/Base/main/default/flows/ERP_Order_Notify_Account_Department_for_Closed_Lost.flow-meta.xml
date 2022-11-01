@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Flow xmlns="http://soap.sforce.com/2006/04/metadata">
     <apiVersion>53.0</apiVersion>
+    <formulas>
+        <name>ActivityDateplusfour</name>
+        <dataType>Date</dataType>
+        <expression>{!$Flow.CurrentDate}+4</expression>
+    </formulas>
     <interviewLabel>ERP Order : Notify Account Department for Closed Lost {!$Flow.CurrentDateTime}</interviewLabel>
     <label>ERP Order : Notify Account Department for Closed Lost</label>
     <processMetadataValues>
@@ -12,7 +17,7 @@
     <processMetadataValues>
         <name>CanvasMode</name>
         <value>
-            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+            <stringValue>FREE_FORM_CANVAS</stringValue>
         </value>
     </processMetadataValues>
     <processMetadataValues>
@@ -25,12 +30,12 @@
     <recordCreates>
         <name>Task</name>
         <label>Task</label>
-        <locationX>176</locationX>
-        <locationY>335</locationY>
+        <locationX>1949</locationX>
+        <locationY>383</locationY>
         <inputAssignments>
             <field>ActivityDate</field>
             <value>
-                <elementReference>$Flow.CurrentDate</elementReference>
+                <elementReference>ActivityDateplusfour</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -42,7 +47,7 @@
         <inputAssignments>
             <field>OwnerId</field>
             <value>
-                <stringValue>005i0000002c3PtAAI</stringValue>
+                <stringValue>00G4z000004fGDQ</stringValue>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -63,12 +68,18 @@
                 <stringValue>ERP Changed to Closed Lost</stringValue>
             </value>
         </inputAssignments>
+        <inputAssignments>
+            <field>WhatId</field>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </inputAssignments>
         <object>Task</object>
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </recordCreates>
     <start>
-        <locationX>50</locationX>
-        <locationY>0</locationY>
+        <locationX>1823</locationX>
+        <locationY>48</locationY>
         <connector>
             <targetReference>Task</targetReference>
         </connector>
@@ -95,7 +106,9 @@
     <status>Active</status>
     <textTemplates>
         <name>TaskDescription</name>
-        <isViewedAsPlainText>false</isViewedAsPlainText>
-        <text>&lt;p&gt;This ERP {!$Record.Id} - {!$Record.Name} has been changed to Closed/Lost.&lt;/p&gt;</text>
+        <isViewedAsPlainText>true</isViewedAsPlainText>
+        <text>This ERP  has been changed to Closed/Lost.  Please ensure that there are no parts in WIP, billings or cash receipts applied.
+
+This ERP {!$Record.Name} has been changed to Closed/Lost. Please ensure that there are no parts in WIP, billings or cash receipts applied and the accrual journal entries are reversed.</text>
     </textTemplates>
 </Flow>

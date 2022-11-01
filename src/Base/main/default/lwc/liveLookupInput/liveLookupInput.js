@@ -22,7 +22,7 @@ export default class LiveLookupInput extends LightningElement {
   _fieldMap;
   _searchTimer;
   _searchActive = false;
-  _delay = 500;
+  _delay = 1000;
   _defaultClass = "slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click";
 
   connectedCallback() {
@@ -39,11 +39,11 @@ export default class LiveLookupInput extends LightningElement {
   }
 
   get displaySearchIcon() {
-    return this.value === null && !this._searchActive;
+    return (this.value === null || this.value === undefined)  && !this._searchActive;
   }
 
   get displayClearIcon() {
-    return this.value !== null && !this._searchActive;
+    return this.value !== null && this.value !== undefined && !this._searchActive;
   }
 
   get displayBusyIcon() {
@@ -52,6 +52,15 @@ export default class LiveLookupInput extends LightningElement {
 
   get inputValue() {
     return this.value === undefined ? null : this.value;
+  }
+
+  get displaySearchResults() {
+    return this.displayResults != null && !this._searchActive;
+  }
+
+  @api
+  reset(){
+    this.clearInput();
   }
 
   clearInput() {
@@ -86,11 +95,9 @@ export default class LiveLookupInput extends LightningElement {
         whereClause: this.whereClause
       })
         .then((result) => {
-          console.log(JSON.parse(JSON.stringify(result)));
           this.results = result;
           this.displayResults = [];
           result.forEach((r) => this.displayResults.push(this._resultToDisplayObject(r)));
-          console.log(JSON.parse(JSON.stringify(this.displayResults)));
         })
         .catch((error) => {
           console.log("LIVE LOOKUP INPUT ERROR:");

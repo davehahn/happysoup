@@ -5,8 +5,12 @@ public with sharing class Opportunity_Quote_Builder_Controller {
     public String syncedQuoteName;
     public List<Quote> quotes;
     public Boolean isOutdated = false;
+    public Boolean isPartnerOpportunity;
 
     public InitWrapper(String oppId) {
+      Id partnerOppRecordTypeId = Application_RecordType.getInstance()
+        .getOpportunityRecordTypes()
+        .getPartnerRetailBoatSaleId();
       this.url = String.valueof(System.URL.getSalesforceBaseURL().gethost());
       Set<Id> prodRTs = new Set<Id>{
         LGND_Constants.productRTId_Boat,
@@ -14,9 +18,14 @@ public with sharing class Opportunity_Quote_Builder_Controller {
         LGND_Constants.productRTId_Trailer,
         LGND_Constants.productRTId_TrollingMotor
       };
-      Opportunity opp = [SELECT Id, Pricebook2Id, SyncedQuoteId, SyncedQuote.Name FROM Opportunity WHERE Id = :oppId];
+      Opportunity opp = [
+        SELECT Id, Pricebook2Id, SyncedQuoteId, SyncedQuote.Name, RecordTypeId
+        FROM Opportunity
+        WHERE Id = :oppId
+      ];
       this.syncedQuoteId = opp.SyncedQuoteId;
       this.syncedQuoteName = opp.SyncedQuote.Name;
+      this.isPartnerOpportunity = partnerOppRecordTypeId == opp.RecordTypeId;
       this.quotes = [
         SELECT
           Id,

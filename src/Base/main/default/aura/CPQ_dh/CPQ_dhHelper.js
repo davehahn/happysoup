@@ -135,7 +135,8 @@
     action.setParams({
       cpqJSON: JSON.stringify(cpq)
     });
-
+    console.log("THE CPQ HERE");
+    console.log( JSON.parse( JSON.stringify( cpq ) ) );
     return new LightningApex(this, action).fire();
   }
 });

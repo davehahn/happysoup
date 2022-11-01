@@ -17,6 +17,7 @@ public with sharing class Opportunity_PartnerQuote_Ext {
   public String logo { get; set; }
   public Boolean displayPayments { get; set; }
   public String locale { get; set; }
+  public List<InvoiceDisclaimer__mdt> disclaimers { get; set; }
 
   public Opportunity_PartnerQuote_Ext() {
     quoteId = ApexPages.currentPage().getParameters().get('quoteId');
@@ -27,6 +28,7 @@ public with sharing class Opportunity_PartnerQuote_Ext {
       SELECT
         Id,
         OpportunityId,
+        Opportunity.RecordTypeId,
         Deposit__c,
         Name,
         QuoteNumber,
@@ -50,6 +52,7 @@ public with sharing class Opportunity_PartnerQuote_Ext {
       WHERE Id = :quoteId
     ];
     oppId = qt.OpportunityId;
+    this.disclaimers = getDisclaimers();
     init();
   }
 
@@ -79,6 +82,7 @@ public with sharing class Opportunity_PartnerQuote_Ext {
         ContactEmail__c,
         Boat_Model_Year__c,
         Trailer_Model_Year__c,
+        Warehouse__c,
         (
           SELECT
             Id,
@@ -114,6 +118,18 @@ public with sharing class Opportunity_PartnerQuote_Ext {
     calcSavings();
   }
 
+  private List<InvoiceDisclaimer__mdt> getDisclaimers(){
+    Id partnerRecordTYpeId = Application_RecordType.getInstance().getOpportunityRecordTypes().getPartnerRetailBoatSaleId();
+    if( qt.Opportunity.RecordTypeId == partnerRecordTYpeId ){
+      return new List<InvoiceDisclaimer__mdt>();
+    }
+    return [
+      SELECT Id, English__c, French__c
+      FROM InvoiceDisclaimer__mdt
+      WHERE isActive__c = TRUE AND Invoice_Type__c = 'Quote And Sales Agreement'
+    ];
+  }
+
   private void setBuyers() {
     for (OpportunityContactRole ocr : opp.OpportunityContactRoles) {
       switch on ocr.Role {
@@ -147,6 +163,34 @@ public with sharing class Opportunity_PartnerQuote_Ext {
         FROM Account
         WHERE Id = :u.AccountId
       ];
+    }
+    if( opp.Warehouse__c != null ){
+      Id dealerRecordTypeId = Application_RecordType.getInstance().getAccountRecordTypes().getDealerId();
+      try {
+        return  [
+          SELECT
+            Id,
+            Name,
+            Phone,
+            Fax,
+            WebSite,
+            AccountEmail__c,
+            BillingStreet,
+            BillingCity,
+            BillingState,
+            BillingCountry,
+            BillingPostalCode,
+            Company_Logo__c
+          FROM Account
+          WHERE Warehouse__c = :opp.Warehouse__c
+          AND RecordTypeId = :dealerRecordTypeId
+          AND Is_Internal__c = TRUE
+          LIMIT 1
+        ];
+      }
+      catch( Exception e){
+        return null;
+      }
     }
     return null;
   }

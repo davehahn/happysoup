@@ -93,6 +93,19 @@
       }, totals.taxableTotal);
     }
 
+    if( cpq.additionalAccessories.length > 0 ){
+      totals.subTotal = cpq.additionalAccessories.reduce(function (t, aa) {
+        t += parseFloat(aa.salePrice * aa.quantity);
+        return t;
+      }, totals.subTotal);
+      totals.taxableTotal = cpq.additionalAccessories.reduce(function (t, aa) {
+        if( aa.isTaxable ){
+          t += parseFloat(aa.salePrice * aa.quantity);
+        }
+        return t;
+      }, totals.taxableTotal);
+    }
+
     if (cpq.customProducts.length > 0) {
       totals.subTotal = cpq.customProducts.reduce(function (t, cp) {
         t += parseFloat(cp.amount * cp.quantity);

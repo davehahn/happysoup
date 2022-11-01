@@ -2,7 +2,14 @@
   doInit: function (component, event, helper) {
     console.log("builder INIT ");
     helper.doInit(component).then(
-      $A.getCallback(function () {}),
+      $A.getCallback(function () {
+        component.set('v.initComplete', true);
+        let loadCPQ = component.get('v.loadCPQ');
+        if( loadCPQ ){
+          component.set('v.creatingNewQuote', true);
+          helper.loadCPQ(component);
+        }
+      }),
       $A.getCallback(function (err) {
         LightningUtils.errorToast(err);
       })
@@ -77,6 +84,7 @@
     helper.doInit(component).then(
       $A.getCallback(function () {
         component.set("v.selectedQuoteId", quoteId);
+        $A.get("e.force:refreshView").fire();
         helper.doCancel(component);
       }),
       $A.getCallback(function (err) {

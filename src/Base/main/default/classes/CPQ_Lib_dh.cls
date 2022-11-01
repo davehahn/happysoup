@@ -247,6 +247,7 @@ public with sharing class CPQ_Lib_dh {
       SObject obj = Schema.getGlobalDescribe().get(objectType).newSObject();
       obj.put('Quantity', 1);
       obj.put('Description', 'Boat Package');
+      obj.put('BoatBuilderItem__c', true);
       if (this.activePrice == null) {
         obj.put('UnitPrice', this.retailPrice);
         obj.put('PricebookEntryId', this.retailPricebookEntryId);
@@ -306,6 +307,7 @@ public with sharing class CPQ_Lib_dh {
       SObject obj = Schema.getGlobalDescribe().get(objectType).newSObject();
       obj.put('Quantity', 1);
       obj.put('Description', description);
+      obj.put('BoatBuilderItem__c', true);
       if (this.activePrice == null) {
         obj.put('UnitPrice', this.retailUpgradeCost);
         obj.put('PricebookEntryId', this.retailPricebookEntryId);
@@ -474,11 +476,48 @@ public with sharing class CPQ_Lib_dh {
         obj.put('Quantity', 1);
         obj.put('UnitPrice', price);
         obj.put('PricebookEntryId', pbe.Id);
+        obj.put('BoatBuilderItem__c', true);
         return obj;
       } catch (Exception e) {
         throw new CPQ.CPQ_Exception(e.getMessage());
       }
     }
+  }
+
+  public virtual class AdditionalAccessory {
+    public Id id;
+    public Decimal quantity {get; set;}
+    public Decimal salePrice {get; set;}
+    public Decimal retailPrice;
+    public Id productId;
+    public Id pricebookEntryId;
+    public String productName { get; set;}
+    public Boolean isTaxable { get; set; }
+
+    public AdditionalAccessory(){}
+
+    public AdditionalAccessory( QuoteLineItem qli ){
+      this.quantity = qli.Quantity;
+      this.id = qli.Id;
+      this.salePrice = qli.UnitPrice;
+      this.retailPrice = qli.PricebookEntry.UnitPrice;
+      this.productId = qli.PricebookEntry.Product2Id;
+      this.productName = qli.PricebookEntry.Product2.Name;
+      this.pricebookEntryId = qli.PricebookEntryId;
+      this.isTaxable = qli.PricebookEntry.Product2.Taxable__c;
+
+    }
+
+    public SObject createLineItem(String objectType) {
+      SObject obj = Schema.getGlobalDescribe().get(objectType).newSObject();
+      obj.put('Quantity', this.quantity);
+      obj.put('UnitPrice', this.salePrice);
+      obj.put('PricebookEntryId', this.pricebookEntryId);
+      obj.put('BoatBuilderItem__c', true);
+      return obj;
+    }
+
+
   }
 
   public virtual class CustomProduct {
@@ -566,6 +605,7 @@ public with sharing class CPQ_Lib_dh {
         obj.put('UnitPrice', this.amount);
         obj.put('Description', this.description);
         obj.put('PricebookEntryId', pb.Id);
+        obj.put('BoatBuilderItem__c', true);
         return obj;
       } catch (Exception e) {
         throw new CPQ.CPQ_Exception(e.getMessage());
@@ -731,6 +771,20 @@ public with sharing class CPQ_Lib_dh {
       this.lineTotal = this.quantity * this.salePrice;
     }
 
+//    public SaleLineItem( AdditionalAccessory acc ){
+//      this.quantity = acc.quantity;
+//      this.salePrice = acc.salePrice;
+//      this.partnerPrice = acc.partnerPrice;
+//      this.lineItemId = null;
+//      this.productId = acc.id;
+//      this.productName = acc.name;
+//      this.taxable = acc.taxable;
+//      this.pricebookEntryId = acc.retailPricebookEntryId;
+//      this.subSaleItems = new List<SaleLineItem>();
+//      this.premiumPackage = new List<String>();
+//      this.lineTotal = this.quantity * this.salePrice;
+//    }
+
     public SaleLineItem(OpportunityLineItem oli) {
       setAttrs(oli);
     }
@@ -774,6 +828,7 @@ public with sharing class CPQ_Lib_dh {
       obj.put('UnitPrice', this.salePrice);
       obj.put('Description', this.salePrice == 0 ? 'Included' : '');
       obj.put('PricebookEntryId', this.pricebookEntryId);
+      obj.put('BoatBuilderItem__c', true);
       return obj;
     }
 
