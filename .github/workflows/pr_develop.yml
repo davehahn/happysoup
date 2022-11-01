@@ -99,6 +99,13 @@ jobs:
             echo "Authenticating ${{github.actor}}"
             ./build/github/authenticate.sh ${{secrets.SFDC_SERVER_KEY}} ${{secrets.POOJA_VALIDATE_USER}} ${{secrets.POOJA_VALIDATE_CONSUMER_KEY}} https://test.salesforce.com
 
+      #Authentication if Ben is the github actor
+      - name: Authenticate Ben
+        if: ${{github.actor == 'BenFram-Legend'}}
+        run: |
+            echo "Authenticating ${{github.actor}}"
+            ./build/github/authenticate.sh ${{secrets.SFDC_SERVER_KEY}} ${{secrets.BEN_VALIDATE_USER}} ${{secrets.BEN_VALIDATE_CONSUMER_KEY}} https://test.salesforce.com
+      
       #make sure our deploy scripts are executable
       - name: CHMOD scripts
         run: |
