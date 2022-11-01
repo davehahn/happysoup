@@ -36,8 +36,10 @@ then
 fi
 
 echoOut "Cleaning up undeployable/unwanted code...."
-chmod +x scripts/clean_code.sh
-./scripts/clean_code.sh
+#chmod +x scripts/clean_code.sh
+#./scripts/clean_code.sh
+chmod +x build/github/cleancode.sh
+./build/github/cleancode.sh
 
 echoOut 'Deploying static resources'
 sfdx heber:staticresources:deploy -u $1
