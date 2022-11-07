@@ -27,7 +27,6 @@
 
   fireValueChangeEvent: function (component) {
     var evt = component.getEvent("majorProductSelected");
-
     evt
       .setParams({
         family: component.get("v.productFamily"),

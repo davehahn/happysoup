@@ -32,6 +32,7 @@
     var params = event.getParams();
     component.set("v.customProducts", []);
     helper.resetCustomProduct(component);
+    console.log( JSON.parse( JSON.stringify( params ) ) );
     helper.fetchMajorProductDetails(component, params.family, params.recordTypeName, params.productId);
   },
 
@@ -115,6 +116,8 @@
   // },
 
   handleCPQ: function (component, event, helper) {
+    console.log('handleCPQ')
+    console.log( JSON.parse( JSON.stringify( event.getParams() ) ) );
     if (event.getParam("oldValue") != null) {
       component.set("v.hasFees", helper.setHasFees(component));
       helper.calcTotals(component);
