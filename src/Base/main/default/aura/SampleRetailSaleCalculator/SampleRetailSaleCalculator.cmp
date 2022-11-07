@@ -231,7 +231,7 @@
             allowCustomProducts="true"
             includeCostForCustomProducts="true"
             allowInactiveBoats="true"
-            enableTrollingMotors="false"
+            enableTrollingMotors="true"
           />
         </lightning:layoutItem>
 
@@ -259,12 +259,12 @@
                       <th scope="col" style="width: 20%">Base Cost</th>
                     </tr>
                   </thead>
-                  <!-- Boat / Motor / Trailer -->
+                  <!-- Boat / Motor / Trailer / Trolling Motor -->
                   <tbody>
                     <aura:if isTrue="{! not(empty( v.cpq.theBoat ) ) }">
                       <tr>
                         <td><b>Boat</b></td>
-                        <td>{!v.cpq.theBoat.name}</td>
+                        <td><div class="slds-truncate">{!v.cpq.theBoat.name}</div></td>
                         <td>
                           <lightning:formattedNumber
                             value="{!v.cpq.theBoat.retailPrice}"
@@ -285,7 +285,7 @@
                     <aura:if isTrue="{! not(empty( v.cpq.theMotor ) ) }">
                       <tr>
                         <td><b>Motor</b></td>
-                        <td>{!v.cpq.theMotor.name}</td>
+                        <td><div class="slds-truncate">{!v.cpq.theMotor.name}</div></td>
                         <td>
                           <aura:if isTrue="{! equals(v.cpq.theMotor.retailUpgradeCost, 0)}">
                             Included
@@ -320,7 +320,7 @@
                     <aura:if isTrue="{! not(empty( v.cpq.theTrailer ) ) }">
                       <tr>
                         <td><b>Trailer</b></td>
-                        <td>{!v.cpq.theTrailer.name}</td>
+                        <td><div class="slds-truncate">{!v.cpq.theTrailer.name}</div></td>
                         <td>
                           <aura:if isTrue="{! equals(v.cpq.theTrailer.retailUpgradeCost, 0)}">
                             Included
@@ -340,6 +340,37 @@
                             <aura:set attribute="else">
                               <lightning:formattedNumber
                                 value="{!v.cpq.theTrailer.partnerUpgradeCost}"
+                                style="currency"
+                                currencyCode="CAD"
+                              />
+                            </aura:set>
+                          </aura:if>
+                        </td>
+                      </tr>
+                    </aura:if>
+                    <aura:if isTrue="{! not(empty( v.cpq.theTrollingMotor ) ) }">
+                      <tr>
+                        <td><b>Trolling Motor</b></td>
+                        <td><div class="slds-truncate">{!v.cpq.theTrollingMotor.name}</div></td>
+                        <td>
+                          <aura:if isTrue="{! equals(v.cpq.theTrollingMotor.retailUpgradeCost, 0)}">
+                            Included
+                            <aura:set attribute="else">
+                              <lightning:formattedNumber
+                                value="{!v.cpq.theTrollingMotor.retailUpgradeCost}"
+                                style="currency"
+                                currencyCode="CAD"
+                              />
+                            </aura:set>
+                          </aura:if>
+                        </td>
+                        <td></td>
+                        <td>
+                          <aura:if isTrue="{! equals(v.cpq.theTrollingMotor.partnerUpgradeCost, 0)}">
+                            Included
+                            <aura:set attribute="else">
+                              <lightning:formattedNumber
+                                value="{!v.cpq.theTrollingMotor.partnerUpgradeCost}"
                                 style="currency"
                                 currencyCode="CAD"
                               />
