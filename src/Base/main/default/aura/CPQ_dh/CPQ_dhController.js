@@ -60,6 +60,14 @@
     helper.doUpdateQuote(component);
   },
 
+  cloneQuote: function( component,  event, helper ){
+    let cpq = component.get('v.cpq');
+    console.log(cpq.saveToRecordId);
+    cpq.saveToRecordId = null;
+    component.set('v.cpq', cpq);
+    helper.doUpdateQuote(component);
+  },
+
   cancelQuoteDetails: function (component) {
     $A.util.toggleClass(component.find("quote-name-modal"), "slds-hide");
   },

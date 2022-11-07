@@ -119,6 +119,9 @@
         expireDate: expDate,
         taxZoneJSON: JSON.stringify(cpq.taxZone)
       };
+      console.log(oppId);
+      console.log( cpq.saveToRecordId );
+    console.log( params );
     action.setParams(params);
     return new LightningApex(this, action).fire();
   },

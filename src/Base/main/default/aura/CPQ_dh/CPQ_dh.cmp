@@ -107,6 +107,7 @@
                             </aura:if>
                             <aura:if isTrue="{! !empty( v.recordId )}">
                               <lightning:button label="Save Quote" onclick="{!c.updateQuote}" />
+                              <lightning:button label="Save New Quote" onclick="{!c.cloneQuote}" />
                             </aura:if>
                             <lightning:button label="Payment Calculator" onclick="{!c.togglePaymentCalc}" />
                           </lightning:buttonGroup>
@@ -148,6 +149,11 @@
                               <lightning:menuItem
                                 label="Save Quote"
                                 value="updateQuote"
+                                checked="{! equals(v.mobileMenuValue, 'createQuote')}"
+                              />
+                              <lightning:menuItem
+                                label="Save New Quote"
+                                value="cloneQuote"
                                 checked="{! equals(v.mobileMenuValue, 'createQuote')}"
                               />
                             </aura:if>
