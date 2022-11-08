@@ -3,7 +3,7 @@
     <fullName>Date_of_Expiry__c</fullName>
     <description>Calculated expiry date IF Financing Company is TCF than  Approval Date + 180 days ELSE Approval Date + 120 days</description>
     <externalId>false</externalId>
-    <formula>IF( ISPICKVAL( Finance_Company__c , &apos;TCF&apos; ), Date_of_Approval__c + 180,
+    <formula>IF( ISPICKVAL( Finance_Company__c , &apos;Huntington&apos; ), Date_of_Approval__c + 180,
 IF( ISPICKVAL( Finance_Company__c , &apos;TD&apos; ), Date_of_Approval__c + 60,
 Date_of_Approval__c + 120 ))</formula>
     <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
