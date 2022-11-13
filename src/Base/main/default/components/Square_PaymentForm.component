@@ -10,167 +10,142 @@
 
   <apex:slds />
 
-  <div class="slds-scope">
-    <div class="slds-grid slds-wrap sqr-payment-container">
-      <div class="slds-col
-                  slds-size_1-of-1
-                  slds-small-size_1-of-1
-                  slds-medium-size_1-of-2
-                  slds-large-size_1-of-2
-                  slds-p-left_small
-                  slds-p-right_small">
-        <label>{!$Label.sqForm_CardNumber}</label>
-        <div id="sq-card-number"></div>
+    <form id="payment-form">
+      <div class="slds-grid slds-wrap">
+        <div class="slds-col slds-size_1-of-1">
+          <div id="card-container"></div>
+        </div>
+<!--        <div class="slds-col slds-size_1-of-1">-->
+<!--          <button id="card-button" type="button" class="slds-button slds-button_brand slds-align_absolute-center" style="visibility:hidden">Pay ${!paymentAmount}</button>-->
+<!--        </div>-->
       </div>
-      <div class="slds-col
-                  slds-size_1-of-1
-                  slds-small-size_1-of-1
-                  slds-medium-size_1-of-2
-                  slds-large-size_1-of-2
-                  slds-p-left_small
-                  slds-p-right_small">
-        <label>{!$Label.sqForm_ExpirationDate}</label>
-        <div id="sq-expiration-date"></div>
-      </div>
-      <div class="slds-col
-                  slds-size_1-of-1
-                  slds-small-size_1-of-1
-                  slds-medium-size_1-of-2
-                  slds-large-size_1-of-2
-                  slds-p-left_small
-                  slds-p-right_small">
-        <label>{!$Label.sqForm_CVV}</label>
-        <div id="sq-cvv"></div>
-      </div>
-      <div class="slds-col
-                  slds-size_1-of-1
-                  slds-small-size_1-of-1
-                  slds-medium-size_1-of-2
-                  slds-large-size_1-of-2
-                  slds-p-left_small
-                  slds-p-right_small">
-        <label>{!$Label.sqForm_PostalCode}</label>
-        <div id="sq-postal-code"></div>
-      </div>
-      <!--        <button id="sq-creditcard" class="button-credit-card" onclick="onGetCardNonce(event)">Pay Invoice</button>-->
-    </div>
-  </div>
+    </form>
+<!--    <div id="payment-status-container"></div>-->
+
 
   <script type="text/javascript">
-    let _resolve, _reject, _paymentAmount, _referenceId, _postalCode;
+    const appId = "{!applicationId}";
+    const locationId = "{!locationId}";
 
-    const paymentForm = new SqPaymentForm(
-    {
-      applicationId: "{!applicationId}",
-      inputClass: 'sqr-payment-input',
-      inputStyles:
-      [{
-        fontSize: '14px',
-        color: '#666'
-      }],
-      autoBuild: false,
-      cardNumber:
-      {
-        elementId: 'sq-card-number'
-      },
-      cvv:
-      {
-        elementId: 'sq-cvv',
-        placeholder: ''
-      },
-      expirationDate:
-      {
-        elementId: 'sq-expiration-date',
-        placeholder: 'MM/YY'
-      },
-      postalCode:
-      {
-        elementId: 'sq-postal-code',
-        placeholder: ''
-      },
-      callbacks:
-      {
-        inputEventReceived: function( inputEvent )
-        {
-          if( inputEvent.eventType === 'postalCodeChanged' )
-          {
-            _postalCode = inputEvent.postalCodeValue;
-          }
-        },
-        cardNonceResponseReceived: function (errors, nonce, cardData)
-        {
-          console.log('cardNonceResponseReceived');
-          if (errors)
-          {
-            _reject( errors );
-          }
-          SquarePaymentForm_Controller.postToSquare(
-            _paymentAmount,
-            _referenceId,
-            nonce,
-            function( events, result ) {
-              console.log( result );
-              if( result.statusCode === 200 )
-              {
-
-                const response = JSON.parse( result.result );
-                if( response.errors )
-                {
-                  setErrorClassOnInput( response.errors );
-                  let errs = [];
-                  response.errors.forEach( e => errs.push( { message: e.detail } ) );
-                  _reject( errs );
-                }
-                else
-                {
-                  console.log('LOOK HERE');
-                  console.log( response.payment );
-                  response.payment.postal_code = _postalCode;
-                  _resolve(  response.payment );
-                }
-              }
-              else
-              {
-                console.log(result.message);
-                _reject( [{message: result.message}] );
-              }
-            },
-            {escape: false}
-          );
-        }
-      }
-    });
-
-    paymentForm.build();
-
-    function doPostPayment( paymentAmount, referenceId )
-    {
-
-      _reject = undefined;
-      _resolve = undefined;
-      _paymentAmount = paymentAmount;
-      _referenceId = typeof(referenceId) === 'undefined' ? null : referenceId;
-
-      return new Promise( ( resolve, reject ) => {
-        _resolve = resolve;
-        _reject = reject;
-        paymentForm.requestCardNonce();
-      });
+    async function initializeCard(payments) {
+      const card = await payments.card();
+      await card.attach('#card-container');
+      return card;
     }
 
-    function setErrorClassOnInput( errors )
-    {
-      errors.forEach( err => {
-        if( err.code === 'CVV_FAILURE')
-          document.getElementById('sq-cvv').classList.add('sqr-payment-input--error');
-        if( err.code === 'ADDRESS_VERIFICATION_FAILURE' )
-          document.getElementById('sq-postal-code').classList.add('sqr-payment-input--error');
-        if( err.code === 'INVALID_EXPIRATION' )
-          document.getElementById('sq-expiration-date').classList.add('sqr-payment-input--error');
-        if( err.code === 'GENERIC_DECLINE' )
-          document.getElementById('sq-card-number').classList.add('sqr-payment-input--error');
+    // Call this function to send a payment token, buyer name, and other details
+    // to the project server code so that a payment can be created with
+    // Payments API
+
+    async function createPayment( token, amount ){
+      let paymentResults;
+      await createPaymentViaApex( token, amount )
+      .then( (results) => {
+        paymentResults = results;
+      })
+      .catch( (error) => {
+        throw new Error( error );
+      })
+      return paymentResults;
+    }
+
+    async function createPaymentViaApex( token, amount ){
+      return new Promise( (resolve, reject) => {
+        SquarePaymentForm_Controller.postToSquare(
+        amount,
+        null,
+        token,
+        function( events, result ) {
+          if( result.statusCode === 200 ) {
+
+            const response = JSON.parse( result.result );
+            if( response.errors ) {
+              //setErrorClassOnInput( response.errors );
+              let errs = [];
+              response.errors.forEach( e => errs.push( { message: e.detail } ) );
+              reject(errs.toString() );
+            }
+            else {
+              //response.payment.postal_code = _postalCode;
+              resolve(response.payment);
+            }
+          }
+          else {
+            console.log(result.message);
+            reject(result.message);
+          }
+        },{escape: false});
       })
     }
+
+    // This function tokenizes a payment method.
+    // The ‘error’ thrown from this async function denotes a failed tokenization,
+    // which is due to buyer error (such as an expired card). It is up to the
+    // developer to handle the error and provide the buyer the chance to fix
+    // their mistakes.
+    async function tokenize(paymentMethod) {
+      const tokenResult = await paymentMethod.tokenize();
+      if (tokenResult.status === 'OK') {
+        return tokenResult.token;
+      } else {
+       let errorMessage = `Tokenization failed-status: ${tokenResult.status}`;
+       if (tokenResult.errors) {
+         errorMessage += ` and errors: ${JSON.stringify(
+           tokenResult.errors
+         )}`;
+       }
+       throw new Error(errorMessage);
+      }
+    }
+
+    function statusUpdate(message){
+      window.dispatchEvent( new CustomEvent('squareStatusUpdate', {detail: message} ) );
+    }
+
+
+    document.addEventListener('DOMContentLoaded', async function () {
+
+      if (!window.Square) {
+        throw new Error('Square.js failed to load properly');
+      }
+      const payments = window.Square.payments(appId, locationId);
+      let card;
+      try {
+        card = await initializeCard(payments);
+        const evt = new CustomEvent('paymentInit', {detail: 'success'});
+        window.dispatchEvent(evt);
+      } catch (e) {
+        console.error('Initializing Card failed', e);
+        return;
+      }
+
+      async function handlePaymentMethodSubmission(event, paymentMethod, amount) {
+         event.preventDefault();
+         let response;
+         try {
+           // disable the submit button as we await tokenization and make a
+           // payment request.
+           statusUpdate('Validating Card');
+           const token = await tokenize(paymentMethod);
+           statusUpdate('Creating Payment');
+           const paymentResults = await createPayment(token, amount);
+           console.log( paymentResults );
+           response = {'status': 'success', paymentDetails: paymentResults };
+         } catch (e) {
+           console.error(e.message);
+           response = {'status': 'error', 'errors': e.message };
+         }
+         const completeEvent = new CustomEvent( 'squarePaymentComplete', {detail: {result : response }} );
+         window.dispatchEvent(completeEvent);
+      };
+
+       window.addEventListener('createSquarePayment', async function (event) {
+         event.preventDefault();
+         const amount = event.detail.amount;
+         await handlePaymentMethodSubmission(event, card, amount);
+       });
+
+    });
 
   </script>
 
