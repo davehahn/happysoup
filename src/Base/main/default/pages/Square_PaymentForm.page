@@ -4,6 +4,7 @@
   applyHtmlTag="false"
   applyBodyTag="false"
   docType="html-5.0"
+  language="{!Square_Transaction__c.Locale__c}"
   StandardController="Square_Transaction__c"
   extensions="RunSquarePaymentFlow"
 >
@@ -11,79 +12,6 @@
   <apex:includeScript value="{!URLFOR($Resource.Libraries, 'js/handlebars.min-latest.js')}" />
 
   <style>
-    .sqr-payment-container {
-      background: #ffffff;
-    }
-
-    .sqr-payment-input {
-      background: #fff;
-      border: 1px solid transparent;
-      padding: 10px 20px;
-      border-radius: 20px;
-      font-size: 14px;
-      color: #666;
-      width: calc(100% - 1.5rem);
-      height: 39px;
-      margin: 0 0.75rem 24px 0.75rem;
-      box-sizing: border-box;
-      border-color: #808080;
-    }
-
-    .sqr-payment-input.sqr-payment-input--error {
-      border-color: red;
-    }
-
-    .sqr-payment-input--focus {
-      outline: none;
-      border: 1px solid #ccc;
-    }
-
-    .sqr-payment-container label {
-      color: #666;
-      font-size: 14px;
-      margin: 0 33px 8px;
-      display: block;
-    }
-
-    .round-button {
-      display: block;
-      position: relative;
-      margin: 0 auto 1.5em;
-      width: -moz-fit-content;
-      width: fit-content;
-      padding: 0.5em 0.5em;
-      z-index: 2;
-      font-family: "gotham-medium";
-      font-size: 1.35em;
-      font-weight: 600;
-      background: #00b2ed none !important;
-      border: 1px solid #00b2ed;
-      color: #fff;
-      border-radius: 60px;
-      margin-left: 25px;
-    }
-
-    .round-button:hover:enabled {
-      background-color: #049dd1 !important;
-      background: none;
-    }
-
-    @media all and (max-width: 600px) {
-      .orderDetails {
-        max-width: 100% !important;
-        padding: 10px;
-        margin-bottom: 35px;
-        margin-left: 35px;
-      }
-    }
-
-    .orderDetails {
-      max-width: 30%;
-      padding: 10px;
-      margin-bottom: 35px;
-      margin-left: 35px;
-    }
-
     #spinner {
       display: none;
     }
@@ -103,33 +31,85 @@
 
   <apex:outputPanel layout="none" rendered="{!Square_Transaction__c.sqStatus__c == 'INCOMPLETE'}">
     <div class="slds-scope">
-      <div id="spinner" class="slds-spinner_container">
-        <div role="status" class="slds-spinner slds-spinner--medium">
-          <span class="slds-assistive-text">Loading</span>
-          <div class="slds-spinner__dot-a"></div>
-          <div class="slds-spinner__dot-b"></div>
-        </div>
-      </div>
-
+      <div id="spinner" class="slds-spinner_container busy"></div>
       <div id="toast-container"></div>
     </div>
 
-    <div class="orderDetails">
-      <h1>Order Details</h1>
+    <div class="slds-scope">
 
-      <br /><br /> <b>Account:</b> {!Square_Transaction__c.Account__r.Name} <br />
-      <hr />
-      <b>Payment Status:</b> {!Square_Transaction__c.sqStatus__c} <br />
-      <hr />
-      <b>Description:</b> {!Square_Transaction__c.Description__c} <br />
-      <hr />
-      <b>Notes:</b> {!Square_Transaction__c.Notes__c} <br />
-      <hr />
-      <b>Amount Due:</b> ${!Square_Transaction__c.Amount__c}
+      <div id='order-details' class="slds-grid slds-wrap slds-align_absolute-center slds-container_medium slds-m-bottom_medium" style="visibility:hidden">
+        <div class="slds-col slds-size_1-of-1">
+          <div class="slds-text-heading_medium slds-m-bottom_medium">{!$Label.Square_Payment_Form_Order_Details_Header}</div>
+          <div class="slds-form" role="list">
+            <div class="slds-form__row">
+              <div class="slds-form__item" role="listitem">
+                <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent slds-form-element_1-col">
+                  <span class="slds-form-element__label slds-text-title_bold">{!$Label.Square_Payment_Form_Account}</span>
+                  <div class="slds-form-element__control">
+                    <div class="slds-form-element__static slds-text-longform">{!Square_Transaction__c.Account__r.Name}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="slds-form__row">
+              <div class="slds-form__item" role="listitem">
+                <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent slds-form-element_1-col">
+                  <span class="slds-form-element__label slds-text-title_bold">{!$Label.Square_Payment_Form_Amount}</span>
+                  <div class="slds-form-element__control">
+                    <div class="slds-form-element__static slds-text-longform">${!Square_Transaction__c.Amount__c}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="slds-form__row">
+              <div class="slds-form__item" role="listitem">
+                <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent slds-form-element_1-col">
+                  <span class="slds-form-element__label slds-text-title_bold">{!$Label.Square_Payment_Form_Description}</span>
+                  <div class="slds-form-element__control">
+                    <div class="slds-form-element__static slds-text-longform">{!Square_Transaction__c.Description__c}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="slds-form__row">
+              <div class="slds-form__item" role="listitem">
+                <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent slds-form-element_1-col">
+                  <span class="slds-form-element__label slds-text-title_bold">{!$Label.Square_Payment_Form_Notes}</span>
+                  <div class="slds-form-element__control">
+                    <div class="slds-form-element__static slds-text-longform">{!Square_Transaction__c.Notes__c}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="slds-col slds-size_1-of-1 slds-m-top_large">
+          <div class="slds-text-heading_medium slds-m-bottom_medium">{!$Label.Square_Payment_Form_Payment_Details_Header}</div>
+          <c:Square_PaymentForm />
+        </div>
+
+        <div class="slds-col slds-size_1-of-1">
+          <button id="submit-button" class="slds-button slds-button_brand slds-align_absolute-center">{!$Label.Square_Payment_Form_Pay_Button}</button>
+        </div>
+
+      </div>
     </div>
 
-    <c:Square_PaymentForm />
-    <button id="submit-button" class="round-button">Pay Now</button>
+    <script id="action-message" type="text/handlebars-template">
+      <div class="slds-notify_container slds-is-relative">
+        <div class="slds-notify slds-notify_toast slds-theme_{{state}}" role="status">
+          <span class="slds-icon_container slds-icon-utility-{{state}} slds-m-right_small slds-no-flex slds-align-top" title="Description of icon when needed">
+            <svg class="slds-icon slds-icon_small" aria-hidden="true">
+              <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{{iconUrl}}"></use>
+            </svg>
+          </span>
+          <div class="slds-notify__content" style="width:100%;">
+            <div class="slds-text-heading_small slds-text-align_center">{{message}}</div>
+          </div>
+        </div>
+      </div>
+    </script>
 
     <script id="toast-msg" type="text/handlebars-template">
       <div class="slds-notify_container slds-is-relative">
@@ -148,32 +128,84 @@
       </div>
     </script>
 
-    <script>
+    <script type="text/javascript">
 
       const total = {!Square_Transaction__c.Amount__c};
       const reference_id = "{!Square_Transaction__c.Id}";
       const toastSource = document.getElementById('toast-msg').innerHTML;
+      const messageSource = document.getElementById('action-message').innerHTML;
       const toastTMPL = Handlebars.compile( toastSource );
+      const messageTMPL = Handlebars.compile( messageSource );
       const spinner = document.getElementById('spinner');
       const toastContainer = document.getElementById('toast-container');
+      const submitButton = document.getElementById("submit-button");
 
-      console.log( reference_id );
+      showMessage("{!$Label.Square_Payment_Form_Action_Form_Loading}");
 
-      document.getElementById("submit-button").addEventListener("click",(event) => {
+      window.addEventListener('squareStatusUpdate', (event) => {
+        switch( event.detail ){
+          case 'Validating Card':
+            showMessage("{!$Label.Square_Payment_Form_Action_Validating}");
+            break;
+          case 'Creating Payment':
+            showMessage("{!$Label.Square_Payment_Form_Action_Creating}");
+            break
+        }
+      })
+
+      window.addEventListener('paymentInit', (result) => {
+        if( result.detail === 'success'){
+          document.getElementById('order-details').style.visibility = 'initial';
+          removeMessage();
+          spinner.classList.remove('busy');
+        }
+      })
+
+
+
+      submitButton.addEventListener("click",(event) => {
         event.preventDefault();
+        submitButton.disabled = true;
+        const evt = new CustomEvent('createSquarePayment', {detail: {amount: total }} );
         spinner.classList.add('busy');
         toastContainer.innerHTML = "";
-
-        doPostPayment( total, reference_id )
-        .then( (result) =>
-        {
-          handleSuccess(result);
-        })
-        .catch( (errors) => {
-          handleErrors(errors);
-         });
-
+        window.addEventListener('squarePaymentComplete', handlePaymentComplete );
+        window.dispatchEvent(evt);
       });
+
+      function handlePaymentComplete(event){
+        window.removeEventListener('squarePaymentComplete', handlePaymentComplete );
+        const result = event.detail.result;
+        if( result.status ==='success'){
+          handleSuccess(result.paymentDetails);
+        }
+        if( result.status === 'error' ){
+          handleErrors(result.errors);
+        }
+      }
+
+      function showMessage( message, state ){
+        const messageState = state === undefined || state == null ? 'warning' : state;
+        const infoIconUrl = "{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#info_alt')}";
+        const successIconUrl = "{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#success')}";
+        const messageIconUrl = messageState === 'success' ? successIconUrl : infoIconUrl;
+        toastContainer.innerHTML = "";
+        let ele = document.createElement('div');
+        const result = {
+          state: messageState,
+          iconUrl: messageIconUrl,
+          message: message
+        };
+        ele.innerHTML = messageTMPL( result );
+        toastContainer.appendChild( ele );
+        toastContainer.classList.add('has-errors');
+      }
+
+      function removeMessage(){
+        console.log('remove message');
+        toastContainer.classList.remove('has-errors');
+        toastContainer.innerHTML = "";
+      }
 
       function showToast(toastTitle, toastMessages, toastType) {
         const result = {
@@ -189,6 +221,7 @@
       }
 
       function handleSuccess(result) {
+        showMessage("{!$Label.Square_Payment_Form_Action_Updating}");
         RunSquarePaymentFlow.finalizeSquarePayment(
           '{!Square_Transaction__c.Id}',
           result.created_at,
@@ -198,14 +231,10 @@
         , ( r, event ) => {
           if( event.status )
           {
-            showToast(
-              "Thank you!",
-              [{message: "Payment was successfully processed"}],
-              "success"
-            );
+            showMessage("{!$Label.Square_Payment_Form_Action_Success}", 'success')
             setTimeout( () => {
               window.top.location.href = "https://www.legendboats.com";
-            }, 2500);
+            }, 4000);
           }
           else
           {
@@ -223,6 +252,7 @@
           errors,
           "error"
         );
+        submitButton.disabled = false;
       }
     </script>
   </apex:outputPanel>
@@ -233,12 +263,12 @@
         <div class="slds-notify slds-notify_toast slds-theme_success" role="status">
           <div class="slds-notify__content" style="width: 100%">
             <h2 class="slds-text-heading_small slds-text-align_center">
-              This payment has already been processed.<br />
-              <b>Thank you!</b>
+              {!$Label.Square_Payment_Form_Already_Processed}.<br />
+              <b>{!$Label.Square_Payment_Form_Thank_You}</b>
             </h2>
             <p class="slds-text-align_center slds-m-top_medium">
-              Come visit us at
-              <a href="http://legendboats.com"> Legend Boats</a>
+              {!$Label.Square_Payment_Form_Visit_Us}
+              <a href="http://legendboats.com">{!$Label.Legend_Boats}</a>
             </p>
           </div>
         </div>
