@@ -4,6 +4,15 @@
 
 global with sharing class SquarePaymentForm_Controller {
   public String pageLang { get; set; }
+  private SquareProcessor sqProcessor {
+    get {
+      if( sqProcessor == null ){
+        sqProcessor = SquareProcessor.getInstance();
+      }
+      return sqProcessor;
+    }
+    set{}
+  }
 
   public SquarePaymentForm_Controller() {
     String currentLanguage = ApexPages.currentPage().getParameters().get('currentLanguage');
@@ -17,10 +26,14 @@ global with sharing class SquarePaymentForm_Controller {
   }
 
   public String getApplicationId() {
-    return SquareProcessor.getApplicationId();
+    return this.sqProcessor.getAppId();
+  }
+
+  public String getLocationId() {
+    return this.sqProcessor.getLocId();
   }
 
   public String getPaymentFormJsUrl() {
-    return SquareProcessor.getPaymentFormJsUrl();
+    return this.sqProcessor.getFormJsUrl();
   }
 }
