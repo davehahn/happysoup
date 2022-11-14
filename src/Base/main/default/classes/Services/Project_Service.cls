@@ -252,6 +252,8 @@ public inherited sharing class Project_Service {
   }
 
   public static AcctSeed__Project__c buildBackOrder(AcctSeed__Project__c originalERP) {
+    /// SFISSUES-1310
+    Id idPartsService = gcConstants.idGlv2PartsAndService;
     return new AcctSeed__Project__c(
       RecordTypeId = recordTypes.getServiceWorkOrderId(),
       Salesperson__c = originalERP.Salesperson__c,
@@ -262,7 +264,8 @@ public inherited sharing class Project_Service {
       AcctSeed__Account__c = originalERP.AcctSeed__Account__c,
       GMBLASERP__Warehouse__c = originalERP.GMBLASERP__Warehouse__c,
       GL_Account_Variable_1__c = originalERP.GL_Account_Variable_1__c,
-      GL_Account_Variable_2__c = originalERP.GL_Account_Variable_2__c,
+      //GL_Account_Variable_2__c = originalERP.GL_Account_Variable_2__c,
+      GL_Account_Variable_2__c = idPartsService,
       GL_Account_Variable_3__c = originalERP.GL_Account_Variable_3__c,
       Serial_Number__c = originalERP.Serial_Number__c,
       Serial_Number__r = originalERP.Serial_Number__r,
