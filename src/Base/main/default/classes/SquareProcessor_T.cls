@@ -80,6 +80,29 @@ private class SquareProcessor_T {
   }
 
   @IsTest
+  static void singletonSquareSettings_Test() {
+    Square_Setting__mdt settings;
+    if (runningInASandbox) {
+      settings = [
+        SELECT ApplicationId__c, LocationId__c ,Payment_Form_JS__c
+        FROM Square_Setting__mdt
+        WHERE IsSandbox__c = TRUE
+      ];
+    } else {
+      settings = [
+        SELECT ApplicationId__c, LocationId__c, Payment_Form_JS__c
+        FROM Square_Setting__mdt
+        WHERE IsSandbox__c = FALSE
+      ];
+    }
+
+    SquareProcessor sp = SquareProcessor.getInstance();
+    System.assertEquals(settings.ApplicationId__c, sp.getAppId());
+    System.assertEquals(settings.Payment_Form_JS__c, sp.getFormJsUrl());
+    System.assertEquals(settings.LocationId__c, sp.getLocId());
+  }
+
+  @IsTest
   static void squareSettings_Test() {
     Square_Setting__mdt settings;
     if (runningInASandbox)
@@ -94,10 +117,10 @@ private class SquareProcessor_T {
         FROM Square_Setting__mdt
         WHERE IsSandbox__c = FALSE
       ];
-    System.assertEquals(settings.ApplicationId__c, SquareProcessor.squareSettings.ApplicationId__c);
-    System.assertEquals(settings.AuthToken__c, SquareProcessor.squareSettings.AuthToken__c);
-    System.assertEquals(settings.Version__c, SquareProcessor.squareSettings.Version__c);
-    System.assertEquals(settings.PaymentEndpoint__c, SquareProcessor.squareSettings.PaymentEndpoint__c);
+    System.assertEquals(settings.ApplicationId__c, SquareProcessor.staticSquareSettings.ApplicationId__c);
+    System.assertEquals(settings.AuthToken__c, SquareProcessor.staticSquareSettings.AuthToken__c);
+    System.assertEquals(settings.Version__c, SquareProcessor.staticSquareSettings.Version__c);
+    System.assertEquals(settings.PaymentEndpoint__c, SquareProcessor.staticSquareSettings.PaymentEndpoint__c);
   }
 
   @IsTest

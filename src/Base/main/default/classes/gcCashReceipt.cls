@@ -14,6 +14,21 @@ public without sharing class gcCashReceipt {
     }
   }
 
+  public static Boolean disableERPLockService {
+    get {
+      if (disableERPLockService == null)
+        return false;
+      else
+        return disableERPLockService;
+    }
+    set {
+      if (value == null)
+        disableERPLockService = false;
+      else
+        disableERPLockService = value;
+    }
+  }
+
   public static void triggerHandler(
     map<Id, AcctSeed__Cash_Receipt__c> oldMap,
     map<Id, AcctSeed__Cash_Receipt__c> newMap,
@@ -125,7 +140,7 @@ public without sharing class gcCashReceipt {
           lstCashReceipt.add(cr);
         }
       }
-      if (!setIdProject.isEmpty())
+      if (!setIdProject.isEmpty() && !disableERPLockService)
         gcProject.lockIfNoBalanceDueFuture(setIdProject);
 
       AcctSeed.PostResult[] postResultsAP = AcctSeed.CashReceiptPostService.postCashReceipts(lstCashReceipt);

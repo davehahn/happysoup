@@ -2137,6 +2137,7 @@ global without sharing class gcProject_Ext {
 
       if (paymentMethod != '' && paymentMethod != null) {
         Date crDate = (billingDate == null) ? Date.today() : Date.parse(billingDate);
+        gcCashReceipt.disableERPLockService = true;
         insert new AcctSeed__Cash_Receipt__c(
           AcctSeed__Amount__c = amount,
           AcctSeed__Account__c = p.AcctSeed__Account__c,

@@ -23,7 +23,6 @@
   },
 
   handleTypeSelected: function (component, event, helper) {
-    console.log("product family change");
     component.set("v.value", null);
     var spinner = component.find("spinner"),
       family = event.getParam("family"),

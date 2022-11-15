@@ -5,8 +5,16 @@
 public with sharing class SquareProcessor {
   public class SquareException extends Exception {
   }
+  private static SquareProcessor instance = null;
 
-  private static Boolean inSandbox {
+  public static SquareProcessor getInstance(){
+    if( instance == null ){
+      instance = new SquareProcessor();
+    }
+    return instance;
+  }
+
+  private Boolean inSandbox {
     get {
       if (inSandbox == null) {
         inSandbox = LGND_Constants.runningInASandbox;
@@ -17,13 +25,12 @@ public with sharing class SquareProcessor {
     }
   }
 
-  @TestVisible
-  private static Square_Setting__mdt squareSettings {
+  private Square_Setting__mdt squareSettings {
     get {
       if (squareSettings == null) {
         try {
           squareSettings = [
-            SELECT ApplicationId__c, AuthToken__c, Version__c, PaymentEndpoint__c, Payment_Form_JS__c
+            SELECT ApplicationId__c, LocationId__c, AuthToken__c, Version__c, PaymentEndpoint__c, Payment_Form_JS__c
             FROM Square_Setting__mdt
             WHERE IsSandbox__c = :inSandbox
           ];
@@ -33,6 +40,38 @@ public with sharing class SquareProcessor {
         }
       }
       return squareSettings;
+    }
+    private set {
+    }
+  }
+
+  private static Boolean staticInSandbox {
+    get {
+      if (staticInSandbox == null) {
+        staticInSandbox = LGND_Constants.runningInASandbox;
+      }
+      return staticInSandbox;
+    }
+    private set {
+    }
+  }
+
+  @TestVisible
+  private static Square_Setting__mdt staticSquareSettings {
+    get {
+      if (staticSquareSettings == null) {
+        try {
+          staticSquareSettings = [
+            SELECT ApplicationId__c, LocationId__c, AuthToken__c, Version__c, PaymentEndpoint__c, Payment_Form_JS__c
+            FROM Square_Setting__mdt
+            WHERE IsSandbox__c = :staticInSandbox
+          ];
+        } catch (Exception e) {
+          String env = staticInSandbox ? 'Sandbox' : 'Production';
+          throw new SquareException('Square setting for ' + env + ' not found. Please contact your administrator');
+        }
+      }
+      return staticSquareSettings;
     }
     private set {
     }
@@ -76,12 +115,28 @@ public with sharing class SquareProcessor {
     }
   }
 
+  public String getAppId() {
+    return this.squareSettings.ApplicationId__c;
+  }
+
+  public String getLocId() {
+    return this.squareSettings.LocationId__c;
+  }
+
+  public String getFormJsUrl() {
+    return this.squareSettings.Payment_Form_JS__c;
+  }
+
   public static String getApplicationId() {
-    return squareSettings.ApplicationId__c;
+    return staticSquareSettings.ApplicationId__c;
+  }
+
+  public static String getLocationId() {
+    return staticSquareSettings.LocationId__c;
   }
 
   public static String getPaymentFormJsUrl() {
-    return squareSettings.Payment_Form_JS__c;
+    return staticSquareSettings.Payment_Form_JS__c;
   }
 
   public class Payment {

@@ -189,7 +189,7 @@
   calcTotals: function (component) {
     var self = this,
       cpq = component.get("v.cpq");
-    console.log(JSON.parse(JSON.stringify(cpq)));
+    //console.log(JSON.parse(JSON.stringify(cpq)));
     if (Object.keys(cpq).indexOf("theBoat") >= 0 && cpq.theBoat != null) self.calcLegendDiscounts(component);
     if (Object.keys(cpq).indexOf("theMotor") >= 0) {
       self.calcPartnerMotorCost(component);
@@ -251,17 +251,41 @@
       promo = parseFloat(component.get("v.retailPromotionTotal")),
       total = 0;
 
-    if (Object.keys(cpq).indexOf("theBoat") >= 0 && cpq.theBoat != null) {
+    if (
+      Object.keys(cpq).indexOf("theBoat") >= 0 &&
+      cpq.theBoat != null &&
+      cpq.boatId !== null &&
+      cpq.boatId.length > 0
+    ) {
       total += cpq.theBoat.retailPrice;
       total += self.calcFees(cpq.theBoat, "retailAmount");
     }
-    if (Object.keys(cpq).indexOf("theMotor") >= 0 && cpq.theMotor != null) {
+    if (
+      Object.keys(cpq).indexOf("theMotor") >= 0 &&
+      cpq.theMotor != null &&
+      cpq.motorId !== null &&
+      cpq.motorId.length > 0
+    ) {
       total += cpq.theMotor.retailUpgradeCost;
       total += self.calcFees(cpq.theMotor, "retailAmount");
     }
-    if (Object.keys(cpq).indexOf("theTrailer") >= 0 && cpq.theTrailer != null) {
+    if (
+      Object.keys(cpq).indexOf("theTrailer") >= 0 &&
+      cpq.theTrailer != null &&
+      cpq.trailerId !== null &&
+      cpq.trailerId.length > 0
+    ) {
       total += cpq.theTrailer.retailUpgradeCost;
       total += self.calcFees(cpq.theTrailer, "retailAmount");
+    }
+    if (
+      Object.keys(cpq).indexOf("theTrollingMotor") >= 0 &&
+      cpq.theTrollingMotor != null &&
+      cpq.trollingMotorId !== null &&
+      cpq.trollingMotorId.length > 0
+    ) {
+      total += cpq.theTrollingMotor.retailUpgradeCost;
+      total += self.calcFees(cpq.theTrollingMotor, "retailAmount");
     }
     if (opts.length > 0) {
       for (let o of opts) {
@@ -299,9 +323,23 @@
       total += motorCost;
       total += self.calcFees(cpq.theMotor, "partnerAmount");
     }
-    if (Object.keys(cpq).indexOf("theTrailer") >= 0 && cpq.theTrailer != null) {
+    if (
+      Object.keys(cpq).indexOf("theTrailer") >= 0 &&
+      cpq.theTrailer != null &&
+      cpq.trailerId !== null &&
+      cpq.trailerId.length > 0
+    ) {
       total += cpq.theTrailer.partnerUpgradeCost;
       total += self.calcFees(cpq.theTrailer, "partnerAmount");
+    }
+    if (
+      Object.keys(cpq).indexOf("theTrollingMotor") >= 0 &&
+      cpq.theTrollingMotor != null &&
+      cpq.trollingMotorId !== null &&
+      cpq.trollingMotorId.length > 0
+    ) {
+      total += cpq.theTrollingMotor.partnerUpgradeCost;
+      total += self.calcFees(cpq.theTrollingMotor, "partnerAmount");
     }
     if (opts.length > 0) {
       for (let o of opts) {

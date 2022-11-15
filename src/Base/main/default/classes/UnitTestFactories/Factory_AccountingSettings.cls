@@ -88,6 +88,11 @@ public class Factory_AccountingSettings {
   }
 
   private AcctSeed__Ledger__c buildLedger() {
+    AcctSeed__Tax_Settings__c taxSetting = new AcctSeed__Tax_Settings__c(
+      Name = 'Test Tax Setting',
+      AcctSeed__Tax_Settings_Method__c = 'Accounting Seed Native Tax'
+    );
+    insert taxSetting;
     AcctSeed__Ledger__c l = new AcctSeed__Ledger__c(
       Name = 'Actual',
       AcctSeed__Type__c = 'Transactional',
@@ -96,7 +101,8 @@ public class Factory_AccountingSettings {
       AcctSeed__Default_Bank_Account__c = defaultBankAccount.Id,
       AcctSeed__Default_Billing_Format__c = defaultBillingFormat.Id,
       AcctSeed__Default_Purchase_Order_Format__c = purchaseOrderStatementFormat.Id,
-      AcctSeed__Default_Packing_Slip_Format__c = packingSlipStatementFormat.Id
+      AcctSeed__Default_Packing_Slip_Format__c = packingSlipStatementFormat.Id,
+      AcctSeed__Tax_Settings__c = taxSetting.Id
     );
     insert l;
     return l;

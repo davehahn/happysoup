@@ -75,6 +75,7 @@
     action.setParams(params);
     new LightningApex(this, action).fire().then(
       $A.getCallback(function (result) {
+        console.log( JSON.parse( JSON.stringify( result ) ) );
         component.set("v.value", result);
         if (result != null) {
           component.set("v.originalValueId", result.id);
@@ -95,11 +96,12 @@
               }
             }
           }
-          component.set("v.cpq", cpq);
+
         } else {
           component.set("v.originalValueId", result);
           component.set("v.optionsCount", result);
         }
+        component.set("v.cpq", cpq);
       }),
       $A.getCallback(function (err) {
         LightningUtils.errorToast(err);

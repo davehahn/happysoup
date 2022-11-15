@@ -49,7 +49,7 @@ private class SquarePaymentForm_Controller_T {
   @IsTest
   static void getter_Tests() {
     Square_Setting__mdt settings = [
-      SELECT ApplicationId__c, AuthToken__c, Version__c, PaymentEndpoint__c, Payment_Form_JS__c
+      SELECT ApplicationId__c, AuthToken__c, LocationId__c, Version__c, PaymentEndpoint__c, Payment_Form_JS__c
       FROM Square_Setting__mdt
       WHERE IsSandbox__c = :runningInASandbox
     ];
@@ -57,5 +57,6 @@ private class SquarePaymentForm_Controller_T {
 
     System.assertEquals(settings.ApplicationId__c, ctr.getApplicationId());
     System.assertEquals(settings.Payment_Form_JS__c, ctr.getPaymentFormJsUrl());
+    System.assertEquals(settings.LocationId__c, ctr.getLocationId());
   }
 }
