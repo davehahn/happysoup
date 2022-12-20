@@ -174,7 +174,7 @@ export default class FactoryStoreCurrentInventoryList extends NavigationMixin(Li
                         // TODO - check to see if retail upgrade cost !== undefined, else set to 0.
                         //												console.log('trailer.RetailUpgradeCost boat ' + index + ': ', trailer.RetailUpgradeCost);
                         //												retailUpgradeCost += trailer.RetailUpgradeCost;
-                        let upgradeCost = trailer.RetailUpgradeCost;
+                        let upgradeCost = (typeof trailer.RetailUpgradeCost !== 'undefined') ? trailer.RetailUpgradeCost : trailer.RetailPrice;
                         console.log("trailer.RetailUpgradeCost boat " + index + ": ", upgradeCost);
                         if (upgradeCost === void 0) {
                           //												  console.log('%ctrailer upgrade cost is undefined, set to 0', 'font-size:2rem;color:lightblue;');
