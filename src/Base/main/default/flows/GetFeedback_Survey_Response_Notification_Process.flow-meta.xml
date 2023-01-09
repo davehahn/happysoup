@@ -4,7 +4,7 @@
         <name>Chatter_John_Craig_New_NPS_Survey</name>
         <label>Chatter John Craig New NPS Survey</label>
         <locationX>248</locationX>
-        <locationY>815</locationY>
+        <locationY>935</locationY>
         <actionName>chatterPost</actionName>
         <actionType>chatterPost</actionType>
         <connector>
@@ -72,7 +72,7 @@
                 </rightValue>
             </conditions>
             <connector>
-                <targetReference>Get_Yves_Lavallee_User_ID</targetReference>
+                <targetReference>Get_User_Tony_A</targetReference>
             </connector>
             <label>Internal Survey</label>
         </rules>
@@ -81,7 +81,7 @@
         <name>Validate_John_Craig</name>
         <label>Validate John Craig and Yves Lavallee</label>
         <locationX>380</locationX>
-        <locationY>695</locationY>
+        <locationY>815</locationY>
         <defaultConnector>
             <targetReference>Warehouse_Split</targetReference>
         </defaultConnector>
@@ -91,13 +91,6 @@
             <conditionLogic>and</conditionLogic>
             <conditions>
                 <leftValueReference>JohnCraigUserID</leftValueReference>
-                <operator>IsNull</operator>
-                <rightValue>
-                    <booleanValue>false</booleanValue>
-                </rightValue>
-            </conditions>
-            <conditions>
-                <leftValueReference>YvesLavalleeUserID</leftValueReference>
                 <operator>IsNull</operator>
                 <rightValue>
                     <booleanValue>false</booleanValue>
@@ -119,7 +112,7 @@
             <name>Active_User</name>
             <conditionLogic>and</conditionLogic>
             <conditions>
-                <leftValueReference>BrittanyUserID</leftValueReference>
+                <leftValueReference>NancyUserID</leftValueReference>
                 <operator>IsNull</operator>
                 <rightValue>
                     <booleanValue>false</booleanValue>
@@ -149,7 +142,7 @@
         <name>Warehouse_Split</name>
         <label>Warehouse Split</label>
         <locationX>380</locationX>
-        <locationY>1031</locationY>
+        <locationY>1151</locationY>
         <defaultConnectorLabel>Else</defaultConnectorLabel>
         <rules>
             <name>Whitefish</name>
@@ -169,7 +162,7 @@
                 </rightValue>
             </conditions>
             <connector>
-                <targetReference>Get_BWright_User_ID</targetReference>
+                <targetReference>Get_NDegen_User_ID</targetReference>
             </connector>
             <label>Whitefish</label>
         </rules>
@@ -197,40 +190,10 @@
     </processMetadataValues>
     <processType>AutoLaunchedFlow</processType>
     <recordLookups>
-        <name>Get_BWright_User_ID</name>
-        <label>Get BWright User ID</label>
-        <locationX>182</locationX>
-        <locationY>1151</locationY>
-        <assignNullValuesIfNoRecordsFound>true</assignNullValuesIfNoRecordsFound>
-        <connector>
-            <targetReference>Get_Jurnee_User_ID</targetReference>
-        </connector>
-        <filterLogic>and</filterLogic>
-        <filters>
-            <field>Username</field>
-            <operator>Contains</operator>
-            <value>
-                <stringValue>bwright@legendboats.com</stringValue>
-            </value>
-        </filters>
-        <filters>
-            <field>IsActive</field>
-            <operator>EqualTo</operator>
-            <value>
-                <booleanValue>true</booleanValue>
-            </value>
-        </filters>
-        <object>User</object>
-        <outputAssignments>
-            <assignToReference>BrittanyUserID</assignToReference>
-            <field>Id</field>
-        </outputAssignments>
-    </recordLookups>
-    <recordLookups>
         <name>Get_John_Craig_User_ID</name>
         <label>Get John Craig User ID</label>
         <locationX>380</locationX>
-        <locationY>575</locationY>
+        <locationY>695</locationY>
         <assignNullValuesIfNoRecordsFound>true</assignNullValuesIfNoRecordsFound>
         <connector>
             <targetReference>Validate_John_Craig</targetReference>
@@ -257,8 +220,8 @@
         </outputAssignments>
     </recordLookups>
     <recordLookups>
-        <name>Get_Jurnee_User_ID</name>
-        <label>Get Jurnee User ID</label>
+        <name>Get_NDegen_User_ID</name>
+        <label>Get NDegen User ID</label>
         <locationX>182</locationX>
         <locationY>1271</locationY>
         <assignNullValuesIfNoRecordsFound>true</assignNullValuesIfNoRecordsFound>
@@ -270,7 +233,7 @@
             <field>Username</field>
             <operator>Contains</operator>
             <value>
-                <stringValue>jparisottocharron@legendboats.com</stringValue>
+                <stringValue>ndegen@legendboats.com</stringValue>
             </value>
         </filters>
         <filters>
@@ -282,19 +245,46 @@
         </filters>
         <object>User</object>
         <outputAssignments>
-            <assignToReference>JurneeUserID</assignToReference>
+            <assignToReference>NancyUserID</assignToReference>
             <field>Id</field>
-        </outputAssignments>
-        <outputAssignments>
-            <assignToReference>JurneeManagerID</assignToReference>
-            <field>ManagerId</field>
         </outputAssignments>
     </recordLookups>
     <recordLookups>
-        <name>Get_Yves_Lavallee_User_ID</name>
-        <label>Get Yves Lavallee User ID</label>
+        <description>Gets Tony Acosta&apos;s user id to be used later.</description>
+        <name>Get_User_Tony_A</name>
+        <label>Get User Tony A</label>
         <locationX>380</locationX>
         <locationY>455</locationY>
+        <assignNullValuesIfNoRecordsFound>true</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Get_Vince_ID</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Username</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>vpotter@legendboats.com</stringValue>
+            </value>
+        </filters>
+        <filters>
+            <field>IsActive</field>
+            <operator>EqualTo</operator>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </filters>
+        <object>User</object>
+        <outputAssignments>
+            <assignToReference>tonyAid</assignToReference>
+            <field>Id</field>
+        </outputAssignments>
+    </recordLookups>
+    <recordLookups>
+        <name>Get_Vince_ID</name>
+        <label>Get Vince ID</label>
+        <locationX>380</locationX>
+        <locationY>575</locationY>
         <assignNullValuesIfNoRecordsFound>true</assignNullValuesIfNoRecordsFound>
         <connector>
             <targetReference>Get_John_Craig_User_ID</targetReference>
@@ -304,7 +294,7 @@
             <field>Username</field>
             <operator>Contains</operator>
             <value>
-                <stringValue>ylavallee@legendboats.com</stringValue>
+                <stringValue>vpotter@legendboats.com</stringValue>
             </value>
         </filters>
         <filters>
@@ -316,7 +306,7 @@
         </filters>
         <object>User</object>
         <outputAssignments>
-            <assignToReference>YvesLavalleeUserID</assignToReference>
+            <assignToReference>VincePotterUserID</assignToReference>
             <field>Id</field>
         </outputAssignments>
     </recordLookups>
@@ -334,20 +324,13 @@
     <textTemplates>
         <name>ChatterBodyJohnCraig</name>
         <isViewedAsPlainText>true</isViewedAsPlainText>
-        <text>@[{!JohnCraigUserID}] @[{!YvesLavalleeUserID}] A new NPS Survey response has been received.</text>
+        <text>@[{!JohnCraigUserID}] @[{!VincePotterUserID}] {!tonyAid} A new NPS Survey response has been received.</text>
     </textTemplates>
     <textTemplates>
         <name>ChatterBodyWhitefishCES</name>
         <isViewedAsPlainText>true</isViewedAsPlainText>
-        <text>@[{!JurneeUserID}] @[{!BrittanyUserID}] This survey has been completed by a Whitefish retail customer. @[{!JurneeManagerID}]</text>
+        <text>@[{!NancyUserID}] This survey has been completed by a Whitefish retail customer.</text>
     </textTemplates>
-    <variables>
-        <name>BrittanyUserID</name>
-        <dataType>String</dataType>
-        <isCollection>false</isCollection>
-        <isInput>false</isInput>
-        <isOutput>false</isOutput>
-    </variables>
     <variables>
         <name>JohnCraigUserID</name>
         <dataType>String</dataType>
@@ -370,7 +353,22 @@
         <isOutput>false</isOutput>
     </variables>
     <variables>
-        <name>YvesLavalleeUserID</name>
+        <name>NancyUserID</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <description>Captures Tony Acosta&apos;s ID</description>
+        <name>tonyAid</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>VincePotterUserID</name>
         <dataType>String</dataType>
         <isCollection>false</isCollection>
         <isInput>false</isInput>
