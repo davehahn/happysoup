@@ -171,42 +171,6 @@ global without sharing class gcMaterial {
     }
   }
 
-  /*private static void updateReservedForRetail( List<AcctSeedERP__Material__c> matls )
-	{
-		System.debug('Materials with Serial now set ' + matls);
-		Set<Id> pIds = new Set<Id>();
-		Set<Id> serIds = new Set<Id>();
-		for( AcctSeedERP__Material__c matl : matls )
-		{
-			serIds.add( matl.GMBLASERP__Serial_Number__c );
-			pIds.add( matl.AcctSeedERP__Product__c );
-		}
-
-		GMBLASERP__Serial_Number__c[] serials = [SELECT Id, GMBLASERP__Lot__c, GMBLASERP__Product__c
-																						 FROM GMBLASERP__Serial_Number__c
-																						 WHERE Id IN :serIds ];
-		Map<String, ProductLotReservation__c> plrMap = new Map<String, ProductLotReservation__c>();
-		for( ProductLotReservation__c plr : [SELECT Id, Product__c, Lot__c, Reserved_For_Retail_Sale__c
-																				 FROM ProductLotReservation__c
-																				 WHERE Product__c IN :pIds] )
-		{
-			String idString = plr.Product__c;
-			if( plr.Lot__c != null )
-				idString += ('-' + plr.Lot__c );
-			plrMap.put( idString, plr );
-			System.debug('IdString1 = ' + idString);
-		}
-		for( GMBLASERP__Serial_Number__c ser : serials )
-		{
-			String idString = ser.GMBLASERP__Product__c + '-' + ser.GMBLASERP__Lot__c;
-			System.debug('IdString2 = ' + idString);
-			if( plrMap.containsKey( idString ) &&
-				  plrMap.get(idString).Reserved_For_Retail_Sale__c != null )
-				plrMap.get(idString).Reserved_For_Retail_Sale__c -= 1;
-		}
-		update plrMap.values();
-	}*/
-
   global static void updateAndValidate(
     map<Id, AcctSeedERP__Material__c> oldMap,
     map<Id, AcctSeedERP__Material__c> newMap,
@@ -395,7 +359,35 @@ global without sharing class gcMaterial {
 
       if (boolIsDelete) {
         refreshStatics(oldMap.values());
+        /// Only for delete we are checking if there is any other related record.
+        /// Then do not allow deletion SFISSUES-2361
+        Map<Id,AcctSeedERP__Material__c> mapMaterialDelete = new Map<Id,AcctSeedERP__Material__c>();
+        for(AcctSeedERP__Material__c matl :
+          [SELECT Id,
+                  (SELECT Id FROM GMBLASERP__Billing_Lines__r LIMIT 1),
+                  (SELECT Id FROM Journal_Entry_Lines__r LIMIT 1),
+                  (SELECT Id FROM Commission_Line_Items2__r LIMIT 1)
+          FROM AcctSeedERP__Material__c
+          WHERE Id IN:oldMap.keySet()])
+        {
+          mapMaterialDelete.put(matl.Id,matl);
+        }
         for (AcctSeedERP__Material__c matl : oldMap.values()) {
+          /// Before deleting check for BLs, JELs or CLIs
+          AcctSeedERP__Material__c matlData = mapMaterialDelete.get(matl.Id);
+          System.debug('matlData');
+          System.debug(matlData.GMBLASERP__Billing_Lines__r.size());
+          System.debug(matlData.Journal_Entry_Lines__r.size());
+          System.debug(matlData.Commission_Line_Items2__r.size());
+          if(!matlData.GMBLASERP__Billing_Lines__r.isEmpty()){
+            matl.addError('ERP Order Item Cannot be deleted as there are billing lines.');
+          }
+          else if(!matlData.Journal_Entry_Lines__r.isEmpty()){
+            matl.addError('ERP Order Item Cannot be deleted as there are Journal Entry lines.');
+          }
+          else if(!matlData.Commission_Line_Items2__r.isEmpty()){
+            matl.addError('ERP Order Item Cannot be deleted as there are Commission lines.');
+          }
           AcctSeed__Project__c project;
           if (matl.AcctSeedERP__Project__c != null) {
             project = mapProject.get(matl.AcctSeedERP__Project__c);
