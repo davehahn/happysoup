@@ -365,8 +365,7 @@ global without sharing class gcMaterial {
         for(AcctSeedERP__Material__c matl :
           [SELECT Id,
                   (SELECT Id FROM GMBLASERP__Billing_Lines__r LIMIT 1),
-                  (SELECT Id FROM Journal_Entry_Lines__r LIMIT 1),
-                  (SELECT Id FROM Commission_Line_Items2__r LIMIT 1)
+                  (SELECT Id FROM Journal_Entry_Lines__r LIMIT 1)
           FROM AcctSeedERP__Material__c
           WHERE Id IN:oldMap.keySet()])
         {
@@ -378,15 +377,11 @@ global without sharing class gcMaterial {
           System.debug('matlData');
           System.debug(matlData.GMBLASERP__Billing_Lines__r.size());
           System.debug(matlData.Journal_Entry_Lines__r.size());
-          System.debug(matlData.Commission_Line_Items2__r.size());
           if(!matlData.GMBLASERP__Billing_Lines__r.isEmpty()){
             matl.addError('ERP Order Item Cannot be deleted as there are billing lines.');
           }
           else if(!matlData.Journal_Entry_Lines__r.isEmpty()){
             matl.addError('ERP Order Item Cannot be deleted as there are Journal Entry lines.');
-          }
-          else if(!matlData.Commission_Line_Items2__r.isEmpty()){
-            matl.addError('ERP Order Item Cannot be deleted as there are Commission lines.');
           }
           AcctSeed__Project__c project;
           if (matl.AcctSeedERP__Project__c != null) {
