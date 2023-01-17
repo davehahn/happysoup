@@ -77,6 +77,8 @@ public inherited sharing class Lead_Service {
   public LeadSaveResult insertOrUpdateDuplicate() {
     Database.DMLOptions dml = new Database.DMLOptions();
     dml.optAllOrNone = false;
+    dml.emailHeader.triggerUserEmail = true;
+    dml.assignmentRuleHeader.useDefaultRule = true;
     return handleSaveResult(Database.insert(this.theLead, dml));
   }
 

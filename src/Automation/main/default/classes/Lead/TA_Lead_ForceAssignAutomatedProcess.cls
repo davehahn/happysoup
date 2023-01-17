@@ -5,11 +5,11 @@
 public without sharing class TA_Lead_ForceAssignAutomatedProcess implements TriggerAction.AfterInsert
 {
   public void afterInsert( List<Lead> newList ){
-    String autoProcName = 'Automated Process';
+    Set<String> autoProcNames = new Set<String>{'Automated Process', 'Legendary Devs'};
     Map<Id, Lead> newMap = new Map<Id, Lead>(newList);
     List<Lead> ownedByAutomatedProcess = new List<Lead>();
     for( Lead l : [SELECT Id, Owner.Name FROM Lead WHERE Id IN :newMap.keySet() ]){
-      if( l.Owner.Name == autoProcName ){
+      if( autoProcNames.contains( l.Owner.Name ) ){
         ownedByAutomatedProcess.add(l);
       }
     }
