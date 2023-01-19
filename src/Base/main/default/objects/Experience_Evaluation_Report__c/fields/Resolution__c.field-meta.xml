@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Resolution__c</fullName>
+    <description>How was this incident resolved?</description>
+    <externalId>false</externalId>
+    <inlineHelpText>How was this incident resolved?</inlineHelpText>
+    <label>Resolution / Outcome</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>MultiselectPicklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Monetary</fullName>
+                <default>false</default>
+                <label>Monetary</label>
+            </value>
+            <value>
+                <fullName>Customer Interaction</fullName>
+                <default>false</default>
+                <label>Customer Interaction</label>
+            </value>
+            <value>
+                <fullName>Process Exception</fullName>
+                <default>false</default>
+                <label>Process Exception</label>
+            </value>
+            <value>
+                <fullName>Other</fullName>
+                <default>false</default>
+                <label>Other</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+    <visibleLines>4</visibleLines>
+</CustomField>

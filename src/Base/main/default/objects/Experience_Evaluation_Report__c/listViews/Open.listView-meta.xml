@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Open</fullName>
+    <columns>NAME</columns>
+    <columns>Impacted_Account__c</columns>
+    <columns>Executive_Overview__c</columns>
+    <columns>Cost_of_Incident__c</columns>
+    <columns>Cost_of_Resolution__c</columns>
+    <columns>CREATEDBY_USER</columns>
+    <columns>CREATED_DATE</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>Status__c</field>
+        <operation>notEqual</operation>
+        <value>Closed</value>
+    </filters>
+    <label>Open</label>
+</ListView>
