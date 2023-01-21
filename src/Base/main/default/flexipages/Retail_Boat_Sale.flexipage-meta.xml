@@ -3,11 +3,6 @@
     <flexiPageRegions>
         <itemInstances>
             <componentInstance>
-                <componentName>runtime_sales_cadence:cadenceStepsCard</componentName>
-            </componentInstance>
-        </itemInstances>
-        <itemInstances>
-            <componentInstance>
                 <componentInstanceProperties>
                     <name>collapsed</name>
                     <value>false</value>
@@ -25,6 +20,7 @@
                     <value>3</value>
                 </componentInstanceProperties>
                 <componentName>force:highlightsPanel</componentName>
+                <identifier>force_highlightsPanel</identifier>
             </componentInstance>
         </itemInstances>
         <itemInstances>
@@ -34,6 +30,13 @@
                     <value>false</value>
                 </componentInstanceProperties>
                 <componentName>force:relatedListQuickLinksContainer</componentName>
+                <identifier>force_relatedListQuickLinksContainer</identifier>
+            </componentInstance>
+        </itemInstances>
+        <itemInstances>
+            <componentInstance>
+                <componentName>runtime_sales_cadence:cadenceStepsCard</componentName>
+                <identifier>runtime_sales_cadence_cadenceStepsCard</identifier>
             </componentInstance>
         </itemInstances>
         <name>header</name>
@@ -43,6 +46,7 @@
         <itemInstances>
             <componentInstance>
                 <componentName>runtime_sales_activities:activityPanel</componentName>
+                <identifier>runtime_sales_activities_activityPanel</identifier>
             </componentInstance>
         </itemInstances>
         <name>facet-78821107-8273-45ba-b152-ac613365536e</name>
@@ -56,6 +60,7 @@
                     <value>NONE</value>
                 </componentInstanceProperties>
                 <componentName>force:relatedListContainer</componentName>
+                <identifier>force_relatedListContainer</identifier>
             </componentInstance>
         </itemInstances>
         <name>facet-03ebf077-f8e0-4c72-abec-ad9f06f6fd95</name>
@@ -65,6 +70,7 @@
         <itemInstances>
             <componentInstance>
                 <componentName>force:detailPanel</componentName>
+                <identifier>force_detailPanel</identifier>
             </componentInstance>
         </itemInstances>
         <name>facet-7aae7635-422c-4290-9984-b902414a9068</name>
@@ -74,6 +80,7 @@
         <itemInstances>
             <componentInstance>
                 <componentName>forceChatter:recordFeedContainer</componentName>
+                <identifier>forceChatter_recordFeedContainer</identifier>
             </componentInstance>
         </itemInstances>
         <name>facet-a92900b9-f27d-4b32-abb8-1e38992ff817</name>
@@ -99,6 +106,7 @@
                     <value>true</value>
                 </componentInstanceProperties>
                 <componentName>flexipage:visualforcePage</componentName>
+                <identifier>flexipage_visualforcePage</identifier>
             </componentInstance>
         </itemInstances>
         <name>facet-8aad78a5-b2e3-48fa-b9e3-4fc0195eb7da</name>
@@ -108,6 +116,7 @@
         <itemInstances>
             <componentInstance>
                 <componentName>BusinessOfficeTools_dh</componentName>
+                <identifier>BusinessOfficeTools_dh</identifier>
             </componentInstance>
         </itemInstances>
         <name>facet-bd39ce03-625b-4edf-9221-18e844b3ab71</name>
@@ -117,6 +126,7 @@
         <itemInstances>
             <componentInstance>
                 <componentName>Profit_Analysis</componentName>
+                <identifier>Profit_Analysis</identifier>
             </componentInstance>
         </itemInstances>
         <name>Facet-88b7c948-eeb6-44ab-861f-cf6c8a81a5e4</name>
@@ -134,6 +144,7 @@
                     <value>&lt;p style=&quot;text-align: center;&quot;&gt;&lt;strong style=&quot;font-size: 26px; color: rgb(244, 47, 47);&quot;&gt;BETA TESTING IN PROGRESS&lt;/strong&gt;&lt;/p&gt;&lt;p style=&quot;text-align: center;&quot;&gt;&lt;span style=&quot;font-size: 16px; color: rgb(244, 47, 47);&quot;&gt;You currently do not have access to the Beta feature. &lt;/span&gt;&lt;/p&gt;&lt;p style=&quot;text-align: center;&quot;&gt;&lt;span style=&quot;font-size: 16px; color: rgb(244, 47, 47);&quot;&gt; Active testing is currently in progress&lt;/span&gt;&lt;/p&gt;&lt;p style=&quot;text-align: center;&quot;&gt;&lt;span style=&quot;font-size: 16px; color: rgb(244, 47, 47);&quot;&gt;We hope this feature will be generally available very soon &lt;/span&gt;&lt;/p&gt;</value>
                 </componentInstanceProperties>
                 <componentName>flexipage:richText</componentName>
+                <identifier>flexipage_richText</identifier>
                 <visibilityRule>
                     <criteria>
                         <leftValue>{!$Permission.CustomPermission.Opportunity_Beta_Quotes}</leftValue>
@@ -146,6 +157,7 @@
         <itemInstances>
             <componentInstance>
                 <componentName>Opportunity_Quote_Builder</componentName>
+                <identifier>Opportunity_Quote_Builder</identifier>
                 <visibilityRule>
                     <criteria>
                         <leftValue>{!$Permission.CustomPermission.Opportunity_Beta_Quotes}</leftValue>
@@ -170,6 +182,7 @@
                     <value>Standard.Tab.activity</value>
                 </componentInstanceProperties>
                 <componentName>flexipage:tab</componentName>
+                <identifier>activityTab</identifier>
             </componentInstance>
         </itemInstances>
         <itemInstances>
@@ -187,6 +200,7 @@
                     <value>Standard.Tab.relatedLists</value>
                 </componentInstanceProperties>
                 <componentName>flexipage:tab</componentName>
+                <identifier>relatedListsTab</identifier>
             </componentInstance>
         </itemInstances>
         <itemInstances>
@@ -204,6 +218,7 @@
                     <value>Standard.Tab.detail</value>
                 </componentInstanceProperties>
                 <componentName>flexipage:tab</componentName>
+                <identifier>detailTab</identifier>
             </componentInstance>
         </itemInstances>
         <itemInstances>
@@ -217,6 +232,7 @@
                     <value>Standard.Tab.collaborate</value>
                 </componentInstanceProperties>
                 <componentName>flexipage:tab</componentName>
+                <identifier>collaborateTab</identifier>
             </componentInstance>
         </itemInstances>
         <itemInstances>
@@ -230,6 +246,7 @@
                     <value>Quotes</value>
                 </componentInstanceProperties>
                 <componentName>flexipage:tab</componentName>
+                <identifier>customTab</identifier>
             </componentInstance>
         </itemInstances>
         <itemInstances>
@@ -243,6 +260,7 @@
                     <value>Business Office</value>
                 </componentInstanceProperties>
                 <componentName>flexipage:tab</componentName>
+                <identifier>customTab2</identifier>
             </componentInstance>
         </itemInstances>
         <itemInstances>
@@ -256,6 +274,7 @@
                     <value>Gross Margin</value>
                 </componentInstanceProperties>
                 <componentName>flexipage:tab</componentName>
+                <identifier>customTab3</identifier>
             </componentInstance>
         </itemInstances>
         <itemInstances>
@@ -269,6 +288,7 @@
                     <value>Quotes (Beta )</value>
                 </componentInstanceProperties>
                 <componentName>flexipage:tab</componentName>
+                <identifier>customTab4</identifier>
             </componentInstance>
         </itemInstances>
         <name>facet-6303efaa-ea8d-41c0-a815-47927912d91b</name>
@@ -286,6 +306,7 @@
                     <value>linear</value>
                 </componentInstanceProperties>
                 <componentName>runtime_sales_pathassistant:pathAssistant</componentName>
+                <identifier>runtime_sales_pathassistant_pathAssistant</identifier>
             </componentInstance>
         </itemInstances>
         <itemInstances>
@@ -295,6 +316,7 @@
                     <value>facet-6303efaa-ea8d-41c0-a815-47927912d91b</value>
                 </componentInstanceProperties>
                 <componentName>flexipage:tabset</componentName>
+                <identifier>flexipage_tabset</identifier>
             </componentInstance>
         </itemInstances>
         <name>main</name>
