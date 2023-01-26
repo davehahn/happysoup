@@ -13,17 +13,20 @@
   <aura:attribute name="isPartnerOpportunity" type="Boolean" default="true" />
   <aura:attribute name="cpq" type="Object" />
   <aura:attribute name="saleTotal" type="Decimal" />
+  <aura:attribute name="preInsuranceTotal" type="Decimal" />
   <aura:attribute name="isQuoting" type="Decimal" default="false" />
   <aura:attribute name="quoteName" type="String" />
   <aura:attribute name="quoteExpireDate" type="String" />
   <aura:attribute name="mobileMenuValue" type="String" default="builder" />
   <aura:attribute name="readOnly" type="Boolean" default="false" />
+  <aura:attribute name="hasInsuranceTermErrors" type="Boolean" default="false" />
 
   <aura:registerEvent name="cpqSavedForQuote" type="c:CPQ_SavedForQuote_Event" />
   <aura:handler event="force:refreshView" action="{!c.handleRefresh}" />
 
   <aura:handler event="c:Retail_Sales_Tool_OppCreated_Event" action="{!c.handleOppCreated}" />
   <aura:handler name="change" value="{!v.saleTotal}" action="{!c.saleTotalChange}" />
+  <aura:handler name="change" value="{!v.preInsuranceTotal}" action="{!c.handlePreInsuranceTotalChange}" />
 
   <div>
     <c:Lgnd_Spinner_dh aura:id="spinner" />
@@ -186,6 +189,7 @@
                 isTaxExempt="{!v.cpq.isTaxExempt}"
                 lockTaxExempt="{!v.cpq.isTaxExemptStatusFixed}"
                 recordId="{!v.cpq.saveToRecordId}"
+                hasInsuranceTermErrors="{!v.hasInsuranceTermErrors}"
               />
             </div>
           </aura:if>
@@ -202,7 +206,7 @@
               size="12"
               smallDeviceSize="12"
               mediumDeviceSize="12"
-              largeDeviceSize="5"
+              largeDeviceSize="6"
               padding="horizontal-small"
               class="{! if( equals(v.mobileMenuValue, 'builder'), 'builder mobile-visible', 'builder mobile-hidden') }"
             >
@@ -213,6 +217,8 @@
                 allowCustomProducts="{!v.isPartnerOpportunity}"
                 allowAdditionalAccessories="{!not(v.isPartnerOpportunity)}"
                 allowTradeIns="true"
+                allowInsurance="{!v.cpq.allowInsurance}"
+                hasInsuranceTermErrors="{!v.hasInsuranceTermErrors}"
               />
             </lightning:layoutItem>
 
@@ -221,11 +227,11 @@
               size="12"
               smallDeviceSize="12"
               mediumDeviceSize="12"
-              largeDeviceSize="{! if( v.readOnly, 12, 7 ) }"
+              largeDeviceSize="{! if( v.readOnly, 12, 6 ) }"
               padding="horizontal-small"
               class="{! if( equals(v.mobileMenuValue, 'summary'), 'summary mobile-visible', 'summary mobile-hidden') }"
             >
-              <c:CPQ_RetailDetails cpq="{!v.cpq}" />
+              <c:CPQ_RetailDetails cpq="{!v.cpq}" preInsuranceTotal="{!v.preInsuranceTotal}" />
             </lightning:layoutItem>
           </lightning:layout>
         </div>

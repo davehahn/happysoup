@@ -53,6 +53,12 @@ public with sharing class QuoteLineItem_TriggerHandler {
       PricebookEntry pb = pbEntries.get(qli.PricebookEntryId);
       qli.Taxable_Federal__c = pb.Product2.Taxable__c;
       qli.Taxable_Provincial__c = pb.Product2.Taxable__c;
+      if (pb.Product2.RecordType.Name == 'Insurance') {
+        qli.Taxable_Federal__c = false;
+        qli.Taxable_Provincial__c = false;
+        qli.Taxable_Retail__c = true;
+        qli.isInsurance__c = true;
+      }
       if (pb.Product2.Family == 'Discount')
         qli.isDiscount__c = true;
     }

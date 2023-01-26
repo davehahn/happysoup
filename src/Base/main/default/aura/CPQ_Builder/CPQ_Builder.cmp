@@ -10,8 +10,13 @@
   <aura:attribute name="allowCustomProducts" type="Boolean" default="false" />
   <aura:attribute name="allowAdditionalAccessories" type="Boolean" default="false" />
   <aura:attribute name="allowTradeIns" type="Boolean" default="false" />
+  <aura:attribute name="allowInsurance" type="Boolean" default="true" />
   <aura:attribute name="includeCostForCustomProducts" type="Boolean" default="false" />
   <aura:attribute name="enableTrollingMotors" type="Boolean" default="true" />
+  <aura:attribute name="preInsuranceTotal" type="Decimal" />
+  <aura:attribute name="selectedTab" type="String" default="boat" />
+  <aura:attribute name="uiFullyLoaded" type="Boolean" default="false" />
+  <aura:attribute name="hasInsuranceTermErrors" type="Boolean" default="false" />
 
   <aura:handler
     name="boatTypeSelected"
@@ -25,7 +30,13 @@
     action="{!c.handleMajorProductSelected}"
   />
 
+  <aura:handler name="change" value="{!v.cpq}" action="{!c.handleCpqChange}" />
+
+  <aura:handler event="c:CPQ_PaymentCalculator_PaymentsChanged_Event" action="{!c.handlePaymentChange}" />
+
   <aura:handler name="optionChanged" event="c:CPQ_OptionLine_ChangeEvent" action="{!c.handleOptionChange}" />
+
+  <aura:method name="preInsuranceAmountChanged" action="{!c.handlePreInsuranceTotalChange}" />
 
   <c:CPQ_Utils aura:id="CpqUtils" />
 
@@ -33,7 +44,7 @@
 
   <div class="slds-card">
     <div>
-      <lightning:tabset variant="scoped">
+      <lightning:tabset variant="scoped" selectedTabId="{!v.selectedTab}" aura:id="builder-tabs">
         <lightning:tab label="Boat" id="boat">
           <c:CPQ_MajorProductSelector
             aura:id="majorSelector"
@@ -118,6 +129,20 @@
           </lightning:tab>
         </aura:if>
         <!-- /Trade In Selector -->
+
+        <!-- Insurance Products -->
+        <aura:if isTrue="{! and( not(empty(v.cpq.theBoat)), v.allowInsurance )}">
+          <lightning:tab label="Insurance" id="insurance">
+            <c:cpqInsuranceSelector
+              cpq="{!v.cpq}"
+              onitemschange="{!c.handleInsuranceChange}"
+              oninsurancetermapplied="{!c.handleInsuranceTermApplied}"
+              preInsuranceTotal="{!v.preInsuranceTotal}"
+              aura:id="insurance-selector"
+            />
+          </lightning:tab>
+        </aura:if>
+        <!-- /Insurance Products -->
       </lightning:tabset>
     </div>
   </div>

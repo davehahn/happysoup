@@ -34,6 +34,10 @@
     helper.calculate(component);
   },
 
+  insuranceTermChange: function (component, event, helper) {
+    helper.calculate(component);
+  },
+
   amortChange: function (component, event, helper) {
     var term = component.get("v.term"),
       amort = component.get("v.amort");
@@ -63,6 +67,7 @@
         biWeeklyPayment: component.get("v.biWeeklyPayment"),
         weeklyPayment: component.get("v.weeklyPayment"),
         term: component.get("v.term"),
+        insuranceTerm: component.get('v.insuranceTerm'),
         interestRate: component.get("v.interestRate"),
         amort: component.get("v.amort"),
         deposit: component.get("v.deposit"),

@@ -534,6 +534,47 @@
 
         <!-- =========================== ADDITIONAL FEES ======================= -->
 
+        <!-- ++++++++++++++++++++++++++++ INSURANCE PRODUCTS ++++++++++++++++++++++ -->
+
+        <apex:outputPanel layout="none" rendered="{!NOT(theCPQ.insuranceProducts.empty)}">
+          <table class="itemsTable" style="margin-top: 10px">
+            <thead>
+              <tr>
+                <!-- TODO: create custom Label -->
+                <!--              <td colspan="2">{!$Label.Quote_Additional_Fees_Header}</td>-->
+                <td colspan="2">Insurance</td>
+              </tr>
+            </thead>
+            <tbody>
+              <apex:variable value="{!1}" var="rowCount" />
+              <apex:variable value="{!0}" var="insuranceTotal" />
+              <apex:repeat value="{!theCPQ.insuranceProducts}" var="item">
+                <tr class="{!IF(MOD(rowCount,2)=0,'even','odd')}">
+                  <td class="w70">
+                    <apex:outputText value="{!item.name}" />
+                  </td>
+                  <td class="w30 right">
+                    <apex:outputText value="$ {!item.unitPrice}" />
+                  </td>
+                </tr>
+                <apex:variable value="{!rowCount+1}" var="rowCount" />
+                <apex:variable value="{!insuranceTotal + item.unitPrice}" var="insuranceTotal" />
+              </apex:repeat>
+              <tr class="subTotal">
+                <td colspan="1">{!$Label.Quote_Sub_Total}</td>
+                <td class="w30 right">
+                  <apex:outputText value="${0, number, ###,###,###,##0.00}">
+                    <apex:param value="{!insuranceTotal}" />
+                  </apex:outputText>
+                </td>
+              </tr>
+              <apex:variable value="{!rowCount+1}" var="rowCount" />
+            </tbody>
+          </table> </apex:outputPanel
+        ><!-- /Additional Fees -->
+
+        <!-- =========================== INSURANCE PRODUCTS ======================= -->
+
         <!-- +++++++++++++++++++++++++++ PROTECTION PRODUCTS AND SERVICES ++++++ -->
         <!-- <apex:outputPanel layout="none" rendered="{!boatBuilder.renderProtectionProducts}">
           <table class="itemsTable" style="margin-top:10px;">
@@ -730,7 +771,7 @@
             </apex:outputPanel>
           </apex:repeat>
         </div>
-        <div style="width: 90%; margin: auto; padding: 0 10px; min-height:22px; height: auto">
+        <div style="width: 90%; margin: auto; padding: 0 10px; min-height: 22px; height: auto">
           <b>{!$Label.Quote_Please_Remember}:</b>
           <apex:outputText value="{!$Label.Quote_Reminder}" />
         </div>
@@ -784,7 +825,7 @@
               <td>TAX ({!theCPQ.taxZone.taxName}): {!qt.Tax_Rate_Federal__c + qt.Tax_Rate_Provincial__c}%:</td>
               <td>
                 <apex:outputText value="${0, number, ###,###,###,##0.00}">
-                  <apex:param value="{!qt.Tax_Amount_Total__c}" />
+                  <apex:param value="{!qt.Tax_Amount_Federal__c + qt.Tax_Amount_Provincial__c}" />
                 </apex:outputText>
               </td>
             </tr>
@@ -808,16 +849,16 @@
               </td>
             </tr>
           </apex:outputPanel>
-          <!-- <apex:outputPanel layout="none" rendered="{!IF(boatbuilder.Opportunity.Tax_Amount_Retail__c > 0, true, false)}">
+          <apex:outputPanel layout="none" rendered="{!qt.Tax_Amount_Retail__c > 0}">
             <tr>
-              <td>TAX (RST): {!boatBuilder.opportunity.Tax_Rate_Retail__c}%:</td>
+              <td>TAX (RST): {!qt.Tax_Rate_Retail__c}%:</td>
               <td>
                 <apex:outputText value="${0, number, ###,###,###,##0.00}">
-                  <apex:param value="{!boatbuilder.Opportunity.Tax_Amount_Retail__c}"/>
+                  <apex:param value="{!qt.Tax_Amount_Retail__c}" />
                 </apex:outputText>
               </td>
             </tr>
-          </apex:outputPanel> -->
+          </apex:outputPanel>
           <tr>
             <td>{!UPPER($Label.Quote_Deposit)}:</td>
             <td class="">

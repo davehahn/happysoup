@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>Tax_Amount_Total__c</fullName>
-    <description>The sum of all applicable taxes on the line Items</description>
+    <fullName>Tax_Amount_Retail__c</fullName>
     <externalId>false</externalId>
-    <formula>Tax_Amount_Federal__c +  Tax_Amount_Provincial__c + Tax_Amount_Retail__c</formula>
+    <formula>IF( TotalPrice &lt; TradeInAmount__c ,
+0,
+( Taxable_Amount_Retail__c - TradeInAmount__c ) * Tax_Rate_Retail__c
+)</formula>
     <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
-    <label>Tax Amount Total</label>
+    <label>Tax Amount (Retail)</label>
     <precision>18</precision>
     <required>false</required>
     <scale>2</scale>

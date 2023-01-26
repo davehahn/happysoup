@@ -20,7 +20,13 @@
   },
 
   saleTotalChange: function (component, event) {
-    console.log(`SaleTotal Change ${event.getParam("value")}`);
+    //console.log(`SaleTotal Change ${event.getParam("value")}`);
+    //component.find('cpqBuilder').saleTotalChanged(event.getParam("value"));
+  },
+
+  handlePreInsuranceTotalChange: function(component, event) {
+    console.log('cpq-preInsuranceAmountChange')
+    component.find('cpqBuilder').preInsuranceAmountChanged(event.getParam("value"));
   },
 
   doInit: function (component, event, helper) {
@@ -29,7 +35,6 @@
 
   handleRefresh: function (component, event, helper) {
     var readOnly = component.get("v.readOnly");
-    console.log(`handleRefresh - ${readOnly}`);
     if (readOnly) helper.doInit(component);
   },
 
@@ -53,7 +58,10 @@
   },
 
   togglePaymentCalc: function (component, event, helper) {
-    helper.toggleCalc(component);
+    const hasTermError = component.get('v.hasInsuranceTermErrors');
+    if(!hasTermError ){
+      helper.toggleCalc(component);
+    }
   },
 
   updateQuote: function (component, event, helper) {
@@ -62,7 +70,6 @@
 
   cloneQuote: function( component,  event, helper ){
     let cpq = component.get('v.cpq');
-    console.log(cpq.saveToRecordId);
     cpq.saveToRecordId = null;
     component.set('v.cpq', cpq);
     helper.doUpdateQuote(component);

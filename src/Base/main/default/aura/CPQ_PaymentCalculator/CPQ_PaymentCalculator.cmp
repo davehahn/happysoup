@@ -5,6 +5,7 @@
   <aura:attribute name="amount" type="Decimal" />
   <aura:attribute name="amountWithoutDeposit" type="Decimal" />
   <aura:attribute name="term" type="Integer" default="60" />
+  <aura:attribute name="insuranceTerm" type="Integer" default="60" />
   <aura:attribute name="amort" type="Integer" default="120" />
   <aura:attribute name="deposit" type="Decimal" default="0" />
   <aura:attribute name="interestRate" type="Decimal" default="4.99" />
@@ -20,6 +21,8 @@
   <aura:attribute name="updateViaButton" type="Boolean" default="false" />
   <aura:attribute name="isTaxExempt" type="Boolean" default="false" />
   <aura:attribute name="lockTaxExempt" type="Boolean" default="false" />
+  <aura:attribute name="allowInsurance" type="Boolean" default="false" />
+  <aura:attribute name="hasInsuranceTermErrors" type="Boolean" default="false" />
 
   <ltng:require
     scripts="{!join(',', $Resource.Libraries +'/js/LightningApex.js',
@@ -38,8 +41,16 @@
 
   <div class="slds-card">
     <aura:if isTrue="{!v.isLoaded}">
-      <h1>Payment Calculator</h1>
+      <h1>Payment Calculator {!v.hasInsuranceTermErrors}</h1>
       <div style="padding-top: 1rem">
+        <aura:if isTrue="{!v.hasInsuranceTermErrors}">
+          <div class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_error slds-is-absolute">
+            <h2>
+              One or more selected Insurance items is not available for the selected term <br /> Calculations are not
+              accurate. Please lower the term and fix the problem
+            </h2>
+          </div>
+        </aura:if>
         <lightning:layout>
           <lightning:layoutItem size="4" class="payment-cell">
             <span>Weekly</span>
@@ -90,6 +101,29 @@
           </lightning:layoutItem>
         </lightning:layout>
 
+        <aura:if isTrue="{!v.allowInsurance}">
+          <lightning:layout class="range-row">
+            <lightning:layoutItem size="9">
+              <lightning:input
+                type="range"
+                label="Insurance Term"
+                name="insuranceTerm"
+                min="12"
+                max="240"
+                step="12"
+                class="termSlider"
+                value="{!v.insuranceTerm}"
+                onchange="{!c.insuranceTermChange}"
+              />
+            </lightning:layoutItem>
+            <lightning:layoutItem size="3" class="value-container">
+              <span class="range-value">{!v.insuranceTerm}</span>
+              <span>mths</span>
+            </lightning:layoutItem>
+          </lightning:layout>
+        </aura:if>
+
+
         <lightning:layout class="range-row">
           <lightning:layoutItem size="9">
             <lightning:input
@@ -112,7 +146,7 @@
         <lightning:layout pullToBoundary="small" horizontalAlign="center" class="ir-deposit-row">
           <lightning:layoutItem size="5" padding="horizontal-small">
             <div class="slds-form-element">
-              <label class="slds-form-element__label" for="deposit">Intrest Rate </label>
+              <label class="slds-form-element__label" for="deposit">Interest Rate </label>
               <div class="slds-form-element__control">
                 <lightning:input
                   type="number"

@@ -69,6 +69,7 @@
 
   calculateTotals: function (component) {
     var cpq = component.get("v.cpq"),
+        preInsuranceTotal = component.get('v.preInsuranceTotal'),
       cpqUtils = component.find("CpqUtils"),
       totals = cpqUtils.calcCpqTotals(cpq);
 
@@ -76,6 +77,8 @@
     component.set("v.savingsTotal", totals.savingsTotal);
     component.set("v.federalTaxTotal", totals.fedTax);
     component.set("v.provincialTaxTotal", totals.provTax);
+    component.set('v.retailTaxTotal', totals.retailTax);
+    component.set('v.preInsuranceTotal', totals.preInsuranceTotal);
     component.set("v.grandTotal", totals.grandTotal);
   }
 });

@@ -28,6 +28,7 @@ public class CPQ {
   public List<CPQ_Lib_dh.OptionProduct> selectedOptions;
   public List<CPQ_Lib_dh.SavingsLine> savings { get; set; }
   public List<CPQ_Lib_dh.AdditionalAccessory> additionalAccessories { get; set; }
+  public List<CPQ_Lib_dh.InsuranceProduct> insuranceProducts { get; set; }
   public List<CPQ_Lib_dh.CustomProduct> customProducts { get; set; }
   public CPQ_Lib_dh.TradeIn tradeIn;
   //public List<CPQ_Lib_dh> motorUpgradeOptions;
@@ -44,6 +45,7 @@ public class CPQ {
   public static Map<String, Id> defaultPricebooks = CPQ_Lib_dh.defaultPricebooks;
 
   public String locale = 'en_US';
+  public Boolean allowInsurance {get; set;}
 
   public CPQ(String saleType) {
     init(saleType);
@@ -413,11 +415,14 @@ public class CPQ {
     this.selectedOptions = new List<CPQ_Lib_dh.OptionProduct>();
     this.savings = new List<CPQ_Lib_dh.SavingsLine>();
     this.additionalAccessories = new List<CPQ_Lib_dh.AdditionalAccessory>();
+    this.insuranceProducts = new List<CPQ_Lib_dh.InsuranceProduct>();
     this.customProducts = new List<CPQ_Lib_dh.CustomProduct>();
     this.tradeIn = new CPQ_Lib_dh.TradeIn();
     this.saleItems = new List<CPQ_Lib_dh.SaleLineItem>();
     this.saleProvince = findSaleProvince();
     this.taxZone = findTaxZone(this.saleProvince);
+    //TODO: figure out a permission for business office
+    this.allowInsurance = UserInfo.getUserType() == 'Standard';
   }
 
   private String findSaleProvince() {
@@ -504,8 +509,12 @@ public class CPQ {
             PricebookEntry.Product2.RecordTypeId,
             PricebookEntry.Product2.RecordType.Name,
             PricebookEntry.Product2.Taxable__c,
+            PricebookEntry.Product2.Is_Residual_Insurance__c,
+            PricebookEntry.Product2.InsurancePlan__c,
             Quantity,
-            UnitPrice
+            UnitPrice,
+            InsuranceCoverage__c,
+            Insurance_Rate__c
           FROM QuoteLineItems
         )
       FROM Quote
@@ -568,6 +577,9 @@ public class CPQ {
         } else {
           options.add(qli);
         }
+      }
+      if(qli.PricebookEntry.Product2.RecordTYpe.Name == 'Insurance'){
+        this.insuranceProducts.add( new CPQ_Lib_dh.InsuranceProduct(qli));
       }
     }
 
@@ -959,6 +971,14 @@ public class CPQ {
     if (this.customProducts.size() > 0) {
       for (CPQ_Lib_dh.CustomProduct sl : this.customProducts) {
         result.add(sl.createLineItem(recordType));
+      }
+    }
+
+    if(this.insuranceProducts.size() > 0 ){
+      for( CPQ_Lib_dh.InsuranceProduct ip : this.insuranceProducts){
+        sObject insurance = ip.createLineItem(recordType);
+        System.debug(insurance);
+        result.add(insurance);
       }
     }
     return result;

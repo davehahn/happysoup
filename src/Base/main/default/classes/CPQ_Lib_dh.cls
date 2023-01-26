@@ -434,6 +434,53 @@ public with sharing class CPQ_Lib_dh {
     }
   }
 
+  public virtual class InsuranceProduct extends CPQ_Product {
+    public String coverage { get; set; }
+    public String type { get; set; }
+    public Decimal insuranceRate { get; set; }
+    public Boolean isResidual { get; set; }
+    public Decimal unitPrice { get; set; }
+
+    public InsuranceProduct(OpportunityLineItem lineItem){
+      super((SObject)lineItem);
+      this.coverage = lineItem.InsuranceCoverage__c;
+      this.insuranceRate = lineItem.Insurance_Rate__c;
+      this.unitPrice = lineItem.UnitPrice;
+      this.isResidual = lineItem.PricebookEntry.Product2.Is_Residual_Insurance__c;
+      this.type = lineItem.PricebookEntry.Product2.Family;
+    }
+
+    public InsuranceProduct(QuoteLineItem lineItem){
+      super((SObject)lineItem);
+      this.coverage = lineItem.InsuranceCoverage__c;
+      this.insuranceRate = lineItem.Insurance_Rate__c;
+      this.unitPrice = lineItem.UnitPrice;
+      this.isResidual = lineItem.PricebookEntry.Product2.Is_Residual_Insurance__c;
+      this.type = lineItem.PricebookEntry.Product2.Family;
+    }
+    public InsuranceProduct(AcctSeedERP__Material__c lineItem){
+      super((SObject)lineItem);
+      this.coverage = lineItem.Insurance_Coverage__c;
+      this.insuranceRate = lineItem.Insurance_Rate__c;
+      this.unitPrice = lineItem.GMBLASERP__Unit_Price__c;
+      this.isResidual = lineItem.AcctSeedERP__Product__r.Is_Residual_Insurance__c;
+      this.type = lineItem.AcctSeedERP__Product__r.Family;
+    }
+
+    public SObject createLineItem(String objectType) {
+      SObject obj = Schema.getGlobalDescribe().get(objectType).newSObject();
+      obj.put('Quantity', 1);
+      obj.put('UnitPrice', this.unitPrice);
+      obj.put('PricebookEntryId', this.activePricebookEntryId);
+      obj.put('BoatBuilderItem__c', true);
+      obj.put('isInsurance__c', true);
+      obj.put('InsuranceCoverage__c', this.coverage);
+      obj.put('Insurance_Rate__c', this.insuranceRate);
+      return obj;
+    }
+
+  }
+
   public virtual class SubOptionProduct extends OptionProduct {
     public SubOptionProduct(Product2 prod, String parentProductId, Decimal std, Decimal max) {
       super(prod, parentProductId, std, max);

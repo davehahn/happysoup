@@ -1,0 +1,42 @@
+/**
+ * Created by dave on 2023-01-21.
+ */
+.insurance-item-row{}
+.insurance-item-row.term-out-of-range td {
+  opacity: 0.2;
+}
+.insurance-item-row.term-out-of-range.selected td{
+  opacity:1;
+  background: #c23934;
+  color:white;
+}
+
+td:first-child {
+  width: 5%;
+}
+
+td:first-child + td {
+  width: 45%;
+}
+
+td:first-child + td + td {
+  width: 15%;
+}
+
+td:first-child + td + td + td {
+  width: 15%;
+  text-align: center;
+}
+
+td:first-child + td + td + td + td {
+  width: 20%;
+  text-align: center;
+}
+
+.unit-price-input {
+  visibility: hidden;
+}
+
+.unit-price-input.selected {
+  visibility: visible;
+}

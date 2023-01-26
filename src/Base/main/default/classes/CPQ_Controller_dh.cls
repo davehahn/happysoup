@@ -77,6 +77,7 @@ public with sharing class CPQ_Controller_dh {
   @AuraEnabled
   public static String saveCPQ(String cpqJSON) {
     CPQ theCPQ = (CPQ) JSON.deserialize(cpqJSON, CPQ.class);
+    System.debug('saveToRecordId = ' + theCPQ.saveToRecordId);
     try {
       return theCPQ.save();
     } catch (Exception e) {

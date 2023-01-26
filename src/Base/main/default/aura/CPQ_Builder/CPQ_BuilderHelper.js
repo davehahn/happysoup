@@ -50,14 +50,12 @@
 
   updateCPQ: function (component, action) {
     var spinner = component.find("spinner");
-    console.log("calling update CPQ");
     spinner.toggle();
     return new Promise(function (resolve, reject) {
       new LightningApex(this, action)
         .fire()
         .then(
           $A.getCallback(function (result) {
-            console.log(JSON.parse(JSON.stringify(result)));
             component.set("v.cpq", result);
           }),
           $A.getCallback(function (err) {

@@ -1,0 +1,41 @@
+<!--
+ - Created by dave on 2023-01-21.
+ -->
+
+<!-- Cpq Insurance Selector -->
+<template>
+  <template if:true={ready}>
+    <lightning-layout multiple-rows="true">
+      <!-- Plan Selection -->
+      <lightning-layout-item size="12">
+        <div class="slds-align_absolute-center">
+          <lightning-combobox
+            name="planSelect"
+            label="Select a Plan"
+            value={selectedPlanId}
+            placeholder="Select A Plan"
+            options={planOptions}
+            onchange={handlePlanSelect}
+          ></lightning-combobox>
+        </div>
+      </lightning-layout-item>
+
+      <template if:true={hasPlanItems}>
+        <template for:each={groupedPlanItems} for:item="items">
+          <div key={items.key} class="slds-text-heading_small">{items.groupName}</div>
+          <table key={items.key} class="slds-table slds-table_bordered slds-m-bottom_small" role="grid">
+            <tbody>
+              <template for:each={items.planItems} for:item="item">
+                <c-cpq-insurance-plan-item
+                  key={item.Id}
+                  item={item}
+                  oncoveragetypechanged={handleCoverageTypeChange}
+                  onselected={handleSelected} ></c-cpq-insurance-plan-item>
+              </template>
+            </tbody>
+          </table>
+        </template>
+      </template>
+    </lightning-layout>
+  </template>
+</template>
