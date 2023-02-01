@@ -20,12 +20,10 @@
   },
 
   saleTotalChange: function (component, event) {
-    //console.log(`SaleTotal Change ${event.getParam("value")}`);
     //component.find('cpqBuilder').saleTotalChanged(event.getParam("value"));
   },
 
   handlePreInsuranceTotalChange: function(component, event) {
-    console.log('cpq-preInsuranceAmountChange')
     component.find('cpqBuilder').preInsuranceAmountChanged(event.getParam("value"));
   },
 

@@ -75,7 +75,6 @@
     action.setParams(params);
     new LightningApex(this, action).fire().then(
       $A.getCallback(function (result) {
-        console.log( JSON.parse( JSON.stringify( result ) ) );
         component.set("v.value", result);
         if (result != null) {
           component.set("v.originalValueId", result.id);

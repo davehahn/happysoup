@@ -19,7 +19,6 @@
     interestRate = interestRate === null ? 0 : interestRate;
     deposit = deposit === null ? 0 : deposit;
     const amountFinanced = amount;
-    console.log(`%camountFinanced - ${amountFinanced}`, 'font-size:18px;color:green');
 
     term = term === null ? 0 : term;
     amort = amort === null ? 0 : amort;

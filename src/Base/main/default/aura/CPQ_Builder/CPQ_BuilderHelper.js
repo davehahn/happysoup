@@ -31,14 +31,6 @@
 
     cpq.baseProductRecordType_Name = recordType;
     cpq.baseProductFamily = family;
-
-    // if( typeof(productId) !== 'string' )
-    // {
-    //   if( typeof( cpq.boatId ) === 'string' )
-    //     self.unSelectMajorProduct( component );
-    // }
-    // else
-    // {
     cpq.boatId = productId;
     component.set("v.cpq", cpq);
     action.setParams({

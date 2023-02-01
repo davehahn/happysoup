@@ -434,6 +434,46 @@ public with sharing class CPQ_Lib_dh {
     }
   }
 
+  public virtual class WarrantyOptionProduct extends OptionProduct{
+    public WarrantyOptionProduct(Product2 prod, String parentProductId, Decimal std, Decimal max){
+      super(prod, parentProductId,std, max);
+    }
+
+    public WarrantyOptionProduct(Product2 prod, String parentProductId, Decimal std, Decimal max, String locale){
+      super(prod, parentProductId,std, max, locale);
+    }
+  }
+
+  public virtual class MaintentanceServicePlanOptionProduct extends OptionProduct{
+    public Boolean isPrepayable;
+    public Boolean isPrepaid;
+    public MaintentanceServicePlanOptionProduct(Product2 prod, String parentProductId, Decimal std, Decimal max){
+      super(prod, parentProductId,std, max);
+    }
+
+    public MaintentanceServicePlanOptionProduct(Product2 prod, String parentProductId, Decimal std, Decimal max, String locale){
+      super(prod, parentProductId,std, max, locale);
+    }
+  }
+
+  public virtual class ServiceAndWarrantyProduct extends OptionProduct {
+    public Boolean isPrepayable;
+    public Boolean isPrepaid;
+
+    public ServiceAndWarrantyProduct(Product2 prod, String parentProductId, Decimal std, Decimal max){
+      super(prod, parentProductId,std, max);
+      this.isPrepayable = prod.isPrepayable__c;
+    }
+
+    public ServiceAndWarrantyProduct(Product2 prod, String parentProductId, Decimal std, Decimal max, String locale){
+      super(prod, parentProductId,std, max, locale);
+      this.isPrepayable = prod.isPrepayable__c;
+    }
+
+  }
+
+
+
   public virtual class InsuranceProduct extends CPQ_Product {
     public String coverage { get; set; }
     public String type { get; set; }

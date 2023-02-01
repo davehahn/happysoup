@@ -1,10 +1,8 @@
 ({
   handleCpqChange: function(component){
-    console.log('builder.doInit')
     const cpq = component.get('v.cpq');
     const loaded = component.get('v.uiFullyLoaded');
     const allowInsurance = component.get('v.allowInsurance');
-    console.log( JSON.parse( JSON.stringify( cpq ) ) );
     if( loaded ){
       return;
     }
@@ -14,7 +12,6 @@
     if( typeof(cpq.theBoat) !== undefined && cpq.theBoat !== null ){
       component.set('v.uiFullyLoaded', true);
       if(cpq.insuranceProducts.length > 0 ){
-        console.log('we have insuranceProducts');
         component.find('builder-tabs').set('v.selectedTabId', 'insurance');
       }
     }
@@ -42,11 +39,9 @@
   },
 
   handlePreInsuranceTotalChange: function(component, event, helper){
-    console.log('builder-preInsuranceAmountChange');
     const preInsuranceAmount = event.getParam('arguments')[0];
     component.set('v.preInsuranceTotal', preInsuranceAmount);
     const insuranceSelector = component.find('insurance-selector');
-    console.log(  insuranceSelector );
     if(insuranceSelector){
       insuranceSelector.preInsuranceAmountChanged(preInsuranceAmount);
     }
@@ -60,8 +55,6 @@
   },
 
   handleInsuranceTermApplied: function(component, event){
-    console.log('%cInsuranceTermApplied', 'font-size:23px; color:black; background:white')
-    console.log( event.getParam('hasErrors') );
     component.set('v.hasInsuranceTermErrors', event.getParam('hasErrors') );
   }
 });

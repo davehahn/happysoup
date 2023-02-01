@@ -47,6 +47,27 @@ public class CPQ {
   public String locale = 'en_US';
   public Boolean allowInsurance {get; set;}
 
+  private void reset(){
+    this.motorId = null;
+    this.trailerId = null;
+    this.trollingMotorId = null;
+    this.boatLine = null;
+    this.motorLine = null;
+    this.trailerLine  = null;
+    this.trollingMotorLine = null;
+    this.theBoat = null;
+    this.theMotor = null;
+    this.theTrailer = null;
+    this.theTrollingMotor = null;
+    this.baseProductOptions = new List<CPQ_Lib_dh.OptionsWrapper>();
+    this.selectedOptions = new List<CPQ_Lib_dh.OptionProduct>();
+    this.savings = new List<CPQ_Lib_dh.SavingsLine>();
+    this.additionalAccessories = new List<CPQ_Lib_dh.AdditionalAccessory>();
+    this.insuranceProducts = new List<CPQ_Lib_dh.InsuranceProduct>();
+    this.customProducts = new List<CPQ_Lib_dh.CustomProduct>();
+    this.saleItems = new List<CPQ_Lib_dh.SaleLineItem>();
+  }
+
   public CPQ(String saleType) {
     init(saleType);
   }
@@ -92,10 +113,16 @@ public class CPQ {
   }
 
   public void selectBoat() {
-    if (this.boatLine == null) {
+    if (this.boatLine != null) {
+      if( this.boatLine.getSObject('PricebookEntry').get('Product2Id') == this.boatId )
+      {
+        this.theBoat = new CPQ_Lib_dh.Boat(this.boatLine, this.saleProvince, this.locale);
+      } else {
+        this.reset();
+      }
+    }
+    if(this.boatLine == null ){
       this.theBoat = new CPQ_Lib_dh.Boat(this.boatId, this.saleProvince, this.locale);
-    } else {
-      this.theBoat = new CPQ_Lib_dh.Boat(this.boatLine, this.saleProvince, this.locale);
     }
     if (this.motorId == null)
       this.motorId = this.theBoat.standardMotorId;
@@ -314,11 +341,16 @@ public class CPQ {
     CPQ_Lib_dh.addRetailOverridePricebook(activePricebookId);
     Map<Id, Product_Option__c> optionMap = new Map<Id, Product_Option__c>();
     List<CPQ_Lib_dh.OptionProduct> result = new List<CPQ_Lib_dh.OptionProduct>();
-    Id partId = LGND_Constants.productRtId_Part;
+    //Id partId = LGND_Constants.productRtId_Part;
+  Application_RecordType.ProductRTs prodRts = Application_RecordType.getInstance().getProductRecordTypes();
+    Set<Id> optionRtIds = new Set<Id>{
+      prodRts.getPartId(),
+      prodRts.getProtectionAndServiceId()
+    };
     for (Product_Option__c po : [
       SELECT Id, From_Product__c, Standard__c, Maximum__c
       FROM Product_Option__c
-      WHERE To_Product__c = :parentProductId AND From_Product__r.RecordTypeId = :partId
+      WHERE To_Product__c = :parentProductId AND From_Product__r.RecordTypeId IN :optionRtIds
     ]) {
       /*
         don't allow selected and not selectable options ( standard == maximum)
@@ -421,8 +453,7 @@ public class CPQ {
     this.saleItems = new List<CPQ_Lib_dh.SaleLineItem>();
     this.saleProvince = findSaleProvince();
     this.taxZone = findTaxZone(this.saleProvince);
-    //TODO: figure out a permission for business office
-    this.allowInsurance = UserInfo.getUserType() == 'Standard';
+    this.allowInsurance = false;
   }
 
   private String findSaleProvince() {
@@ -457,6 +488,7 @@ public class CPQ {
 
   private void populateExisting() {
     String sObjectType = LGND_Utilities.sObjectNameFromId(this.saveToRecordId);
+    this.allowInsurance = UserInfo.getUserType() == 'Standard' && this.saveToRecordId != null;
     switch on sObjectType {
       when 'Opportunity' {
         populateFromOpportunity();

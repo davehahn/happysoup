@@ -52,9 +52,9 @@
             productFamily="{!v.cpq.baseProductFamily}"
             productRecordType="{!v.cpq.baseProductRecordType_Name}"
             allowInactiveBoats="{!v.allowInactiveBoats}"
+            isDisabled="{!not(empty(v.cpq.saveToRecordId))}"
             value="{!v.cpq.boatId}"
           />
-
           <aura:if isTrue="{! not(empty(v.cpq.theBoat))}">
             <!-- Motor Selector -->
             <c:CPQ_UpgradeSelector_dh
@@ -139,6 +139,16 @@
               oninsurancetermapplied="{!c.handleInsuranceTermApplied}"
               preInsuranceTotal="{!v.preInsuranceTotal}"
               aura:id="insurance-selector"
+            />
+          </lightning:tab>
+        </aura:if>
+        <!-- /Insurance Products -->
+        <!-- Warrant & Service Products -->
+        <aura:if isTrue="{! and( not(empty(v.cpq.theBoat)), v.allowInsurance )}">
+          <lightning:tab label="Warranty &amp; Service" id="warranty">
+            <c:cpqWarrAndService
+              cpq="{!v.cpq}"
+              aura:id="war-service"
             />
           </lightning:tab>
         </aura:if>

@@ -85,6 +85,8 @@ export default class CpqInsuranceSelector extends LightningElement {
 
   @api preInsuranceAmountChanged( amount ){
     console.log('lwc-preInsuranceAmountChange');
+    if(!this.ready) return;
+
     this.initInsurance.preInsuranceAmount = amount;
     if( this.groupedPlanItems ){
       this._recalculateSelected();
