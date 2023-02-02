@@ -110,7 +110,8 @@ public with sharing class SmokercraftAPI_Callout {
     data += 'dealer_number=' + dealerNumber + '&';
     data += 'contact_name=' + warrantyRecoverable.customerName + '&';
     data += 'contact_phone=' + warrantyRecoverable.customerPhone + '&';
-    data += 'contact_email=' + warrantyRecoverable.customerEmail;
+    //data += 'contact_email=' + warrantyRecoverable.customerEmail;
+    data += 'contact_email=';
     return data;
   }
 
