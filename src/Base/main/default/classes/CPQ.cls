@@ -30,6 +30,8 @@ public class CPQ {
   public List<CPQ_Lib_dh.AdditionalAccessory> additionalAccessories { get; set; }
   public List<CPQ_Lib_dh.InsuranceProduct> insuranceProducts { get; set; }
   public List<CPQ_Lib_dh.CustomProduct> customProducts { get; set; }
+  public List<CPQ_Lib_dh.WarrantyOptionProduct> warrantyOptions { get; set; }
+  public List<CPQ_Lib_dh.MaintenanceServicePlanOptionProduct> maintenanceServicePlanOptions { get; set; }
   public CPQ_Lib_dh.TradeIn tradeIn;
   //public List<CPQ_Lib_dh> motorUpgradeOptions;
   //public List<CPQ_Lib_dh> trailerUpgradeOptions;
@@ -41,6 +43,7 @@ public class CPQ {
   public CPQ_Lib_dh.TaxZone taxZone { get; set; }
   public Boolean isTaxExempt { get; set; }
   public Boolean isTaxExemptStatusFixed { get; set; }
+  public Set<Id> selectedProductIds { get; set; }
 
   public static Map<String, Id> defaultPricebooks = CPQ_Lib_dh.defaultPricebooks;
 
@@ -60,6 +63,8 @@ public class CPQ {
     this.theTrailer = null;
     this.theTrollingMotor = null;
     this.baseProductOptions = new List<CPQ_Lib_dh.OptionsWrapper>();
+    this.warrantyOptions = new List<CPQ_Lib_dh.WarrantyOptionProduct>();
+    this.maintenanceServicePlanOptions = new List<CPQ_Lib_dh.MaintenanceServicePlanOptionProduct>();
     this.selectedOptions = new List<CPQ_Lib_dh.OptionProduct>();
     this.savings = new List<CPQ_Lib_dh.SavingsLine>();
     this.additionalAccessories = new List<CPQ_Lib_dh.AdditionalAccessory>();
@@ -445,6 +450,8 @@ public class CPQ {
     this.saleType = saleType;
     this.activePricebookId = CPQ.defaultPricebooks.get(this.saleType);
     this.selectedOptions = new List<CPQ_Lib_dh.OptionProduct>();
+    this.warrantyOptions = new List<CPQ_Lib_dh.WarrantyOptionProduct>();
+    this.maintenanceServicePlanOptions = new List<CPQ_Lib_dh.MaintenanceServicePlanOptionProduct>();
     this.savings = new List<CPQ_Lib_dh.SavingsLine>();
     this.additionalAccessories = new List<CPQ_Lib_dh.AdditionalAccessory>();
     this.insuranceProducts = new List<CPQ_Lib_dh.InsuranceProduct>();
@@ -454,6 +461,7 @@ public class CPQ {
     this.saleProvince = findSaleProvince();
     this.taxZone = findTaxZone(this.saleProvince);
     this.allowInsurance = false;
+    this.selectedProductIds = new Set<Id>();
   }
 
   private String findSaleProvince() {
@@ -503,6 +511,7 @@ public class CPQ {
   }
 
   private void populateFromQuote() {
+    Application_RecordType.ProductRTs productRts = Application_RecordType.getInstance().getProductRecordTypes();
     Map<Id, List<CPQ_Lib_dh.SaleLineItem>> subSaleItemsMap = new Map<Id, List<CPQ_Lib_dh.SaleLineItem>>();
     Set<Id> serializedIds = new Set<Id>();
     Id customProdId = LGND_Constants.partnerCustomProductId;
@@ -543,10 +552,12 @@ public class CPQ {
             PricebookEntry.Product2.Taxable__c,
             PricebookEntry.Product2.Is_Residual_Insurance__c,
             PricebookEntry.Product2.InsurancePlan__c,
+            PricebookEntry.Product2.isPrepayable__c,
             Quantity,
             UnitPrice,
             InsuranceCoverage__c,
-            Insurance_Rate__c
+            Insurance_Rate__c,
+            IsPrepaid__c
           FROM QuoteLineItems
         )
       FROM Quote
@@ -576,30 +587,48 @@ public class CPQ {
     }
     // Sort the Opportunity Line Items
     for (QuoteLineItem qli : q.QuoteLineItems) {
-      if (qli.PricebookEntry.Product2.RecordType.Name == 'Boat') {
+      Id productRtId = qli.PricebookEntry.Product2.RecordTypeId;
+      this.selectedProductIds.add(qli.PricebookEntry.Product2Id);
+      if( qli.PricebookEntry.Product2.Family == 'Extended Warranty' ){
+        this.warrantyOptions.add(new CPQ_Lib_dh.WarrantyOptionProduct(qli));
+        continue;
+      }
+      if (productRtId == productRts.getBoatId()) {
         serializedIds.add(qli.PricebookEntry.Product2Id);
         this.boatId = qli.PricebookEntry.Product2Id;
         this.baseProductFamily = qli.PricebookEntry.Product2.Family;
         this.baseProductRecordType_Name = qli.PricebookEntry.Product2.RecordType.Name;
         this.baseProductRecordType_Id = qli.PricebookEntry.Product2.RecordTypeId;
         this.boatLine = qli;
+        continue;
       }
-      if (qli.PricebookEntry.Product2.RecordType.Name == 'Motor') {
+      if (productRtId == productRts.getMotorId()) {
         serializedIds.add(qli.PricebookEntry.Product2Id);
         this.motorId = qli.PricebookEntry.Product2Id;
         this.motorLine = qli;
+        continue;
       }
-      if (qli.PricebookEntry.Product2.RecordType.Name == 'Trailer') {
+      if (productRtId == productRts.getTrailerId()) {
         serializedIds.add(qli.PricebookEntry.Product2Id);
         this.trailerId = qli.PricebookEntry.Product2Id;
         this.trailerLine = qli;
+        continue;
       }
-      if (qli.PricebookEntry.Product2.RecordType.Name == 'Trolling Motor') {
+      if (productRtId == productRts.getTrollingMotorId()) {
         serializedIds.add(qli.PricebookEntry.Product2Id);
         this.trollingMotorId = qli.PricebookEntry.Product2Id;
         this.trollingMotorLine = qli;
+        continue;
       }
-      if (qli.PricebookEntry.Product2.RecordType.Name == 'Part') {
+      if(productRtId == productRts.getInsuranceId()){
+        this.insuranceProducts.add( new CPQ_Lib_dh.InsuranceProduct(qli));
+        continue;
+      }
+      if(productRtId == productRts.getProtectionAndServiceId() || productRtId == productRts.getPackageBundleId() ){
+        this.maintenanceServicePlanOptions.add( new CPQ_Lib_dh.MaintenanceServicePlanOptionProduct(qli));
+        continue;
+      }
+      if (productRtId == productRts.getPartId()) {
         if (qli.PricebookEntry.Product2Id == customProdId) {
           this.customProducts.add(new CPQ_Lib_dh.CustomProduct(qli));
         } else if (qli.PricebookEntry.Product2Id == savingsProductId) {
@@ -609,10 +638,9 @@ public class CPQ {
         } else {
           options.add(qli);
         }
+        continue;
       }
-      if(qli.PricebookEntry.Product2.RecordTYpe.Name == 'Insurance'){
-        this.insuranceProducts.add( new CPQ_Lib_dh.InsuranceProduct(qli));
-      }
+
     }
 
     // Build Sale Items from the options and find the subOptions
@@ -1011,6 +1039,20 @@ public class CPQ {
         sObject insurance = ip.createLineItem(recordType);
         System.debug(insurance);
         result.add(insurance);
+      }
+    }
+
+    if(this.warrantyOptions.size() > 0 ){
+      for(CPQ_Lib_dh.WarrantyOptionProduct item : this.warrantyOptions){
+        sObject lineItem = item.createLineItem(recordType);
+        result.add(lineItem);
+      }
+    }
+
+    if(this.maintenanceServicePlanOptions.size() > 0 ){
+      for(CPQ_Lib_dh.MaintenanceServicePlanOptionProduct item : this.maintenanceServicePlanOptions){
+        sObject lineItem = item.createLineItem(recordType);
+        result.add(lineItem);
       }
     }
     return result;

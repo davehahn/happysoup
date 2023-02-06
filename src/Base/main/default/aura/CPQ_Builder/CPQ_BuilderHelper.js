@@ -176,5 +176,24 @@
 
     cpq.saleItems = saleItems;
     component.set("v.cpq", cpq);
+  },
+
+  handleWarrantyServiceItem: function( component, item ){
+    let cpq = component.get('v.cpq');
+    let currentItems = cpq[item.cpqListName];
+    let itemIndex = currentItems.findIndex( currentItem => currentItem.id === item.id );
+    if( item.isSelected ){
+      if(itemIndex >= 0){
+        currentItems[itemIndex] = item;
+      } else {
+        currentItems.push(item);
+      }
+    } else {
+      currentItems = currentItems.filter( currentItem => currentItem.id !== item.id );
+    }
+    cpq[item.cpqListName] = currentItems;
+    component.set('v.cpq', cpq);
   }
+
+
 });

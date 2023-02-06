@@ -56,5 +56,11 @@
 
   handleInsuranceTermApplied: function(component, event){
     component.set('v.hasInsuranceTermErrors', event.getParam('hasErrors') );
+  },
+  
+  handleWarrantyAndServiceItemChange: function(component, event, helper){
+    const item = event.getParam('item');
+    helper.handleWarrantyServiceItem(component, item);
   }
+
 });

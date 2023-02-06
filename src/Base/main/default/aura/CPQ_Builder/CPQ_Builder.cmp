@@ -148,6 +148,7 @@
           <lightning:tab label="Warranty &amp; Service" id="warranty">
             <c:cpqWarrAndService
               cpq="{!v.cpq}"
+              oncpq_warrantyserviceitemchange="{!c.handleWarrantyAndServiceItemChange}"
               aura:id="war-service"
             />
           </lightning:tab>

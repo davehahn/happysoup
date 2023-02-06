@@ -2,25 +2,31 @@
  * Created by dave on 2023-01-27.
  */
 
-import { LightningElement, api } from 'lwc';
+import { LightningElement, api, track } from 'lwc';
 import fetchSubOptions from '@salesforce/apex/CPQ_WarrantyService_Controller.fetchSubOptions';
 
 export default class CpqSWoptionLine extends LightningElement {
   @api optionLine;
   @api activePricebookId;
   @api className='';
+  @api type;
 
   quantityOptions;
   ready=false;
-  item;
+  @track item;
   //currentValue;
 
   get currentValue(){
-    return this.optionLine.quantitySelected.toString();
+    return this.item.quantitySelected.toString();
+  }
+
+  get isPrepaybleDisabled(){
+    return !this.item.isSelected;
   }
 
   connectedCallback(){
     this.item = {...this.optionLine};
+    console.log( JSON.parse( JSON.stringify( this.item ) ) );
     if( !this.item.isCheckbox ){
       this.quantityOptions = [];
       const standard = this.item.standard;
@@ -31,25 +37,28 @@ export default class CpqSWoptionLine extends LightningElement {
          label: i.toString()
        });
       }
-      console.log( JSON.parse( JSON.stringify( this.quantityOptions ) ) );
     }
     this.ready = true;
   }
 
-  handleToggle(){
-    console.log('toggle change');
-    this._fetchSubOptions();
+  handleToggle(event){
+    this.item.isSelected = event.currentTarget.checked;
+    this.item.quantitySelected = this.item.isSelected ? 1 : 0;
+    this._postChangeEvent();
+    //this._fetchSubOptions();
   }
 
   handleSelect(event){
-    console.log('select changed');
     const value = event.currentTarget.value;
     this.item.quantitySelected = parseInt(value);
-    this._fetchSubOptions();
+    this.item.isSelected = this.item.quantitySelected > 0;
+    this._postChangeEvent();
+    //this._fetchSubOptions();
   }
 
-  handlePrepaid(){
-    console.log('prePaid changed');
+  handlePrepaid(event){
+    this.item.isPrepaid = event.currentTarget.checked;
+    this._postChangeEvent();
   }
 
   _fetchSubOptions(){
@@ -61,6 +70,11 @@ export default class CpqSWoptionLine extends LightningElement {
     .catch( error => {
       console.log( JSON.parse( JSON.stringify( error ) ) );
     })
+  }
+
+  _postChangeEvent(){
+    const evt = new CustomEvent('cpq_warrantyserviceitemchange', {bubbles: true, composed: true, detail: {item: this.item}});
+    this.dispatchEvent(evt);
   }
 
 }

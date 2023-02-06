@@ -4,38 +4,41 @@
 
 <!-- Cpq Warr And Service -->
 <template>
+  <c-legend-spinner variant="contained" visible="true"></c-legend-spinner>
   <lightning-layout multiple-rows="true">
     <lightning-layout-item padding="around-small" size="12">
-
       <lightning-card>
         <h3 slot="title">
-          <lightning-icon icon-name="custom:custom60" class="slds-m-right_small">
-          </lightning-icon>
+          <lightning-icon icon-name="custom:custom60" class="slds-m-right_small"> </lightning-icon>
           Extended Warranty Options
         </h3>
         <div>
           <template for:each={warrantyProducts} for:item="item">
-            <c-cpq-s-woption-line key={item.productId} option-line={item}></c-cpq-s-woption-line>
+            <c-cpq-s-woption-line
+              key={item.productId}
+              option-line={item}
+              active-pricebook-id={cpq.activePricebookId}
+            ></c-cpq-s-woption-line>
           </template>
         </div>
       </lightning-card>
-
     </lightning-layout-item>
     <lightning-layout-item padding="around-small" size="12">
-
       <lightning-card>
         <h3 slot="title">
-          <lightning-icon icon-name="custom:custom19" class="slds-m-right_small">
-          </lightning-icon>
+          <lightning-icon icon-name="custom:custom19" class="slds-m-right_small"> </lightning-icon>
           Maintenance &amp; Service Packages
         </h3>
         <div>
           <template for:each={serviceProducts} for:item="item">
-            <c-cpq-s-woption-line key={item.productId} option-line={item} active-pricebook-id={cpq.activePricebookId}></c-cpq-s-woption-line>
+            <c-cpq-s-woption-line
+              key={item.productId}
+              option-line={item}
+              active-pricebook-id={cpq.activePricebookId}
+            ></c-cpq-s-woption-line>
           </template>
         </div>
       </lightning-card>
-
     </lightning-layout-item>
   </lightning-layout>
 </template>

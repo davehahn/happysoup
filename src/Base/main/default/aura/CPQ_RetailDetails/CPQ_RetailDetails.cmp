@@ -212,6 +212,71 @@
             </table>
           </aura:if>
 
+          <!-- Extended Warrantyy Products -->
+          <aura:if isTrue="{! not(empty( v.cpq.warrantyOptions )) }">
+            <div class="slds-text-title_caps slds-m-top_large slds-text-align_left table-title">Extended Warranty</div>
+            <table
+              class="slds-table slds-table_bordered slds-table_resizable-cols slds-table_fixed-layout summary-table"
+            >
+              <thead>
+              <tr class="slds-text-title_caps">
+                <th scope="col" class="slds-border_top" style="width: 75%; text-align: left">Description</th>
+                <th scope="col" class="slds-border_top" style="width: 25%">Cost</th>
+              </tr>
+              </thead>
+              <tbody>
+              <aura:iteration items="{!v.cpq.warrantyOptions}" var="item">
+                <tr>
+                  <td>{!item.name}</td>
+                  <td class="option-price">
+                    <lightning:formattedNumber
+                      value="{!item.retailPrice}"
+                      style="currency"
+                      currencyCode="CAD"
+                    />
+                  </td>
+                </tr>
+              </aura:iteration>
+              </tbody>
+            </table>
+          </aura:if>
+
+          <!-- MAintenance and Service PAckages -->
+          <aura:if isTrue="{! not(empty( v.cpq.maintenanceServicePlanOptions )) }">
+            <div class="slds-text-title_caps slds-m-top_large slds-text-align_left table-title">Maintenance &amp; Service Packages</div>
+            <table
+              class="slds-table slds-table_bordered slds-table_resizable-cols slds-table_fixed-layout summary-table"
+            >
+              <thead>
+              <tr class="slds-text-title_caps">
+                <th scope="col" class="slds-border_top" style="width: 75%; text-align: left">Description</th>
+                <th scope="col" class="slds-border_top" style="width: 25%">Cost</th>
+              </tr>
+              </thead>
+              <tbody>
+              <aura:iteration items="{!v.cpq.maintenanceServicePlanOptions}" var="item">
+                <tr>
+                  <td>
+                    <aura:if isTrue="{!or(not(item.isCheckbox), empty(item.isCheckbox))}">
+                      <span class="slds-p-right_small">
+                        {!item.quantitySelected} x
+                      </span>
+                    </aura:if>
+                    {!item.name}
+                  </td>
+                  <td class="option-price">
+                    <lightning:formattedNumber
+                      value="{!item.retailPrice * item.quantitySelected}"
+                      style="currency"
+                      currencyCode="CAD"
+                    />
+                  </td>
+                </tr>
+              </aura:iteration>
+              </tbody>
+            </table>
+          </aura:if>
+
           <!-- Insurance Products -->
           <aura:if isTrue="{! not(empty( v.cpq.insuranceProducts )) }">
             <div class="slds-text-title_caps slds-m-top_large slds-text-align_left table-title">Insurance Products</div>

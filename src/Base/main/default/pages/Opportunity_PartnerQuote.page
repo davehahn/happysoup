@@ -534,6 +534,84 @@
 
         <!-- =========================== ADDITIONAL FEES ======================= -->
 
+        <!-- ++++++++++++++++++++++++++++ EXTENDED WARRANTY ++++++++++++++++++++++ -->
+        <apex:outputPanel layout="none" rendered="{!NOT(theCPQ.warrantyOptions.empty)}">
+          <table class="itemsTable" style="margin-top: 10px">
+            <thead>
+            <tr>
+              <!-- TODO: create custom Label -->
+              <!--              <td colspan="2">{!$Label.Quote_Additional_Fees_Header}</td>-->
+              <td colspan="2">Extended Warranty</td>
+            </tr>
+            </thead>
+            <tbody>
+            <apex:variable value="{!1}" var="rowCount" />
+            <apex:variable value="{!0}" var="sectionTotal" />
+            <apex:repeat value="{!theCPQ.warrantyOptions}" var="item">
+              <tr class="{!IF(MOD(rowCount,2)=0,'even','odd')}">
+                <td class="w70">
+                  <apex:outputText value="{!item.name}" />
+                </td>
+                <td class="w30 right">
+                  <apex:outputText value="$ {!item.retailPrice}" />
+                </td>
+              </tr>
+              <apex:variable value="{!rowCount+1}" var="rowCount" />
+              <apex:variable value="{!sectionTotal + item.retailPrice}" var="sectionTotal" />
+            </apex:repeat>
+            <tr class="subTotal">
+              <td colspan="1">{!$Label.Quote_Sub_Total}</td>
+              <td class="w30 right">
+                <apex:outputText value="${0, number, ###,###,###,##0.00}">
+                  <apex:param value="{!sectionTotal}" />
+                </apex:outputText>
+              </td>
+            </tr>
+            <apex:variable value="{!rowCount+1}" var="rowCount" />
+            </tbody>
+          </table>
+        </apex:outputPanel>
+        <!-- =========================== EXTENDED WARRANTY ======================= -->
+
+        <!-- ++++++++++++++++++++++++++++ MAINTENANCE AND SERVICE PACKAGES ++++++++++++++++++++++ -->
+        <apex:outputPanel layout="none" rendered="{!NOT(theCPQ.maintenanceServicePlanOptions.empty)}">
+          <table class="itemsTable" style="margin-top: 10px">
+            <thead>
+            <tr>
+              <!-- TODO: create custom Label -->
+              <!--              <td colspan="2">{!$Label.Quote_Additional_Fees_Header}</td>-->
+              <td colspan="3">Maintenance &amp; Service Packages</td>
+            </tr>
+            </thead>
+            <tbody>
+            <apex:variable value="{!1}" var="rowCount" />
+            <apex:variable value="{!0}" var="sectionTotal" />
+            <apex:repeat value="{!theCPQ.maintenanceServicePlanOptions}" var="item">
+              <tr class="{!IF(MOD(rowCount,2)=0,'even','odd')}">
+                <td class="w70">
+                  <apex:outputText value="{!item.name + ' x ' + TEXT(item.quantitySelected)}" />
+                </td>
+                <td class="w30 right">
+                  <apex:outputText value="$ {!item.retailPrice}" />
+                </td>
+              </tr>
+              <apex:variable value="{!rowCount+1}" var="rowCount" />
+              <apex:variable value="{!sectionTotal + item.retailPrice}" var="sectionTotal" />
+            </apex:repeat>
+            <tr class="subTotal">
+              <td colspan="1">{!$Label.Quote_Sub_Total}</td>
+              <td class="w30 right">
+                <apex:outputText value="${0, number, ###,###,###,##0.00}">
+                  <apex:param value="{!sectionTotal}" />
+                </apex:outputText>
+              </td>
+            </tr>
+            <apex:variable value="{!rowCount+1}" var="rowCount" />
+            </tbody>
+          </table>
+        </apex:outputPanel>
+        <!-- =========================== MAINTENANCE AND SERVICE PACKAGES ======================= -->
+
         <!-- ++++++++++++++++++++++++++++ INSURANCE PRODUCTS ++++++++++++++++++++++ -->
 
         <apex:outputPanel layout="none" rendered="{!NOT(theCPQ.insuranceProducts.empty)}">
@@ -570,8 +648,8 @@
               </tr>
               <apex:variable value="{!rowCount+1}" var="rowCount" />
             </tbody>
-          </table> </apex:outputPanel
-        ><!-- /Additional Fees -->
+          </table>
+        </apex:outputPanel>
 
         <!-- =========================== INSURANCE PRODUCTS ======================= -->
 

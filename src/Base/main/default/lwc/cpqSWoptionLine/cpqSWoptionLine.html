@@ -13,7 +13,7 @@
             name={item.productId}
             label=""
             variant="label-hidden"
-            checked={item.isChecked}
+            checked={item.isSelected}
             onchange={handleToggle}
             message-toggle-active=""
             message-toggle-inactive=""
@@ -31,11 +31,11 @@
         </template>
       </lightning-layout-item>
       <lightning-layout-item size="8" padding="around-small" class="slds-border_top">
-        <div class="slds-truncate">{item.productName}</div>
+        <div class="slds-truncate">{item.name}</div>
       </lightning-layout-item>
       <lightning-layout-item size="2" padding="around-small" class="slds-border_top">
         <lightning-formatted-number
-          value={item.unitCost}
+          value={item.retailPrice}
           currency-code="CAD"
           format-style="currency"
           class="bold-currency"
@@ -45,6 +45,7 @@
             <lightning-input
               type="checkbox"
               label="Prepaid"
+              disabled={isPrepaybleDisabled}
               checked={item.isPrepaid}
               onchange={handlePrepaid}
             ></lightning-input>

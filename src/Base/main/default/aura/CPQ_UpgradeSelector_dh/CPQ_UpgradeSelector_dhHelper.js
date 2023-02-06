@@ -27,6 +27,13 @@
         resolve();
       }
 
+      console.log(cpq.selectedProductIds.length);
+      console.log( cpq.selectedProductIds.filter( pId => pId === oldValueId ).length)
+      cpq.selectedProductIds = cpq.selectedProductIds.filter( pId => pId !== oldValueId );
+      console.log(cpq.selectedProductIds.length);
+      cpq.warrantyOptions = cpq.warrantyOptions.filter( opt => opt.parentProductId !== oldValueId );
+      cpq.maintenanceServicePlanOptions = cpq.maintenanceServicePlanOptions.filter( opt => opt.parentProductId !== oldValueId );
+
       cpq.saleItems
         .reduce(function (list, saleItem, index) {
           if (saleItem.parentProductId == oldValueId) list.push(index);
@@ -63,12 +70,14 @@
   },
 
   setSelected: function (component) {
+    console.log('setSelected')
     var action = component.get("c.setSelectedUpgrade"),
+      valueId = component.get("v.valueId"),
       cpq = component.get("v.cpq"),
       cpqUtils = component.find("CpqUtils"),
       params = {
         fromId: component.get("v.standardProductId"),
-        toId: component.get("v.valueId"),
+        toId: valueId,
         activePricebookId: cpq.activePricebookId,
         province: cpq.saleProvince
       };
@@ -76,6 +85,9 @@
     new LightningApex(this, action).fire().then(
       $A.getCallback(function (result) {
         component.set("v.value", result);
+        if( valueId != null && cpq.selectedProductIds.indexOf(valueId) < 0 ){
+          cpq.selectedProductIds.push(valueId);
+        }
         if (result != null) {
           component.set("v.originalValueId", result.id);
           component.set("v.optionsCount", result.options.length);

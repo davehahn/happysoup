@@ -107,6 +107,26 @@
       }, totals.retailOnlyTaxableTotal);
     }
 
+    if (cpq.warrantyOptions.length > 0) {
+      cpq.warrantyOptions.forEach((item) => {
+        const lineTotal = parseFloat(item.retailPrice * item.quantitySelected);
+        totals.subTotal += lineTotal;
+        if (item.taxable) {
+          totals.taxableTotal += lineTotal;
+        }
+      });
+    }
+
+    if (cpq.maintenanceServicePlanOptions.length > 0) {
+      cpq.maintenanceServicePlanOptions.forEach((item) => {
+        const lineTotal = parseFloat(item.retailPrice * item.quantitySelected);
+        totals.subTotal += lineTotal;
+        if (item.taxable) {
+          totals.taxableTotal += lineTotal;
+        }
+      });
+    }
+
     if (cpq.additionalAccessories.length > 0) {
       totals.subTotal = cpq.additionalAccessories.reduce(function (t, aa) {
         t += parseFloat(aa.salePrice * aa.quantity);
@@ -139,7 +159,8 @@
     totals.fedTax = cpq.isTaxExempt ? 0 : (totals.taxableTotal * cpq.taxZone.federalRate) / 100;
     totals.provTax = cpq.isTaxExempt ? 0 : (totals.taxableTotal * cpq.taxZone.provincialRate) / 100;
     totals.retailTax = cpq.isTaxExempt ? 0 : (totals.retailOnlyTaxableTotal * cpq.taxZone.provincialRate) / 100;
-    totals.preTaxTotal = totals.subTotal + totals.insuranceTotal + totals.savingsTotal - deposit - (cpq.tradeIn.value - cpq.tradeIn.lien);
+    totals.preTaxTotal =
+      totals.subTotal + totals.insuranceTotal + totals.savingsTotal - deposit - (cpq.tradeIn.value - cpq.tradeIn.lien);
 
     totals.grandTotal =
       totals.subTotal +
