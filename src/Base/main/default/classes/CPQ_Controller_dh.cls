@@ -77,7 +77,6 @@ public with sharing class CPQ_Controller_dh {
   @AuraEnabled
   public static String saveCPQ(String cpqJSON) {
     CPQ theCPQ = (CPQ) JSON.deserialize(cpqJSON, CPQ.class);
-    System.debug('saveToRecordId = ' + theCPQ.saveToRecordId);
     try {
       return theCPQ.save();
     } catch (Exception e) {
@@ -184,7 +183,6 @@ public with sharing class CPQ_Controller_dh {
         if this is for a partner
         ***** CURRENTLY ONLY IN SAMPLE RETAIL CALCULATOR ********
       */
-      System.debug('***** Product Option - ' + po);
       if (!(CPQ_Lib_dh.defaultPricebooks.get('partner') == activePricebookId && po.Standard__c == po.Maximum__c)) {
         optionMap.put(po.From_Product__c, po);
       }

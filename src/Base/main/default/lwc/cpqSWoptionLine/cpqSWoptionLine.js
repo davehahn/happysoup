@@ -14,7 +14,6 @@ export default class CpqSWoptionLine extends LightningElement {
   quantityOptions;
   ready=false;
   @track item;
-  //currentValue;
 
   get currentValue(){
     return this.item.quantitySelected.toString();
@@ -26,7 +25,6 @@ export default class CpqSWoptionLine extends LightningElement {
 
   connectedCallback(){
     this.item = {...this.optionLine};
-    console.log( JSON.parse( JSON.stringify( this.item ) ) );
     if( !this.item.isCheckbox ){
       this.quantityOptions = [];
       const standard = this.item.standard;

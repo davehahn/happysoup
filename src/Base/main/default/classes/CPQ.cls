@@ -349,8 +349,7 @@ public class CPQ {
     //Id partId = LGND_Constants.productRtId_Part;
   Application_RecordType.ProductRTs prodRts = Application_RecordType.getInstance().getProductRecordTypes();
     Set<Id> optionRtIds = new Set<Id>{
-      prodRts.getPartId(),
-      prodRts.getProtectionAndServiceId()
+      prodRts.getPartId()
     };
     for (Product_Option__c po : [
       SELECT Id, From_Product__c, Standard__c, Maximum__c

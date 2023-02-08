@@ -13,8 +13,6 @@ export default class CpqInsuranceSelector extends LightningElement {
   @api preInsuranceTotal;
 
   @track selectedPlanId;
-//  @track hasChanges=false;
-//  @track isFromQuebec=false;
 
   planOptions=[];
   @track groupedPlanItems;
@@ -39,8 +37,6 @@ export default class CpqInsuranceSelector extends LightningElement {
   }
 
   _init(){
-    console.log('%cInitInsurance', 'font-size:18px;color:red');
-    console.log( JSON.parse( JSON.stringify( this.initInsurance ) ) );
     this.selectedItems = this.initInsurance.selectedItems;
     this.selectedPlanId = this.initInsurance.planId;
     if(typeof(this.preInsuranceTotal) !== undefined && this.initInsurance.preInsuranceAmount !== this.preInsuranceTotal ){
@@ -53,6 +49,7 @@ export default class CpqInsuranceSelector extends LightningElement {
       }
       this.ready=true;
     }
+    this.template.querySelector('c-legend-spinner').close();
   }
 
   /*
@@ -68,8 +65,6 @@ export default class CpqInsuranceSelector extends LightningElement {
     }
   */
   @api paymentDetailsChanged(paymentDetails){
-    console.log('%cPaymentDetails', 'font-size:18px;color:purple');
-    console.log( JSON.parse( JSON.stringify( paymentDetails ) ) );
     const termChanged = this.initInsurance.term !== parseFloat(paymentDetails.insuranceTerm);
     this.initInsurance.term = parseFloat(paymentDetails.insuranceTerm);
     this.initInsurance.amort = parseFloat(paymentDetails.amort);
@@ -174,7 +169,6 @@ export default class CpqInsuranceSelector extends LightningElement {
   }
 
   _applyNewInsuranceRate(){
-    console.log('%capplyNewInsuranceRate', 'font-size:22px');
     let hasTermError=false;
     this.groupedPlanItems.forEach( plan => {
       plan.planItems.forEach( item => {
@@ -184,7 +178,6 @@ export default class CpqInsuranceSelector extends LightningElement {
          }
       })
     });
-    console.log(`%chasTErmErrors ${hasTermError}`, 'font-size:16px; color:red');
     const evt = new CustomEvent('insurancetermapplied', {detail: {hasErrors: hasTermError}});
     this.dispatchEvent(evt);
   }

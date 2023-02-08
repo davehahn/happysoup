@@ -16,10 +16,8 @@ export default class CpqWarrAndService extends LightningElement {
 
   @wire(findWarAndServiceOptions, {selectedProductIds: '$cpq.selectedProductIds', pricebookId: '$cpq.activePricebookId'})
     wiredInit({error, data}){
-      console.log('warrAndService Wire RAN');
       if( data ){
         const initData = JSON.parse(data);
-        console.log( JSON.parse( JSON.stringify( initData ) ) );
         const selectedWarr = new Map();
         const selectedMainAndServ = new Map();
         this.cpq.warrantyOptions.forEach( item => {
@@ -48,10 +46,6 @@ export default class CpqWarrAndService extends LightningElement {
       if(error){
         console.log( JSON.parse( JSON.stringify( error ) ) );
       }
-    }
-    
-    connectedCallback(){
-      console.log( JSON.parse( JSON.stringify( this.cpq ) ) );
     }
 
 }

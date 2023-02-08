@@ -23,6 +23,7 @@
   <aura:attribute name="lockTaxExempt" type="Boolean" default="false" />
   <aura:attribute name="allowInsurance" type="Boolean" default="false" />
   <aura:attribute name="hasInsuranceTermErrors" type="Boolean" default="false" />
+  <aura:attribute name="readOnly" type="Boolean" default="false" />
 
   <ltng:require
     scripts="{!join(',', $Resource.Libraries +'/js/LightningApex.js',
@@ -92,6 +93,7 @@
               step="12"
               class="termSlider"
               value="{!v.term}"
+              disabled="{!v.readOnly}"
               onchange="{!c.termChange}"
             />
           </lightning:layoutItem>
@@ -113,6 +115,7 @@
                 step="12"
                 class="termSlider"
                 value="{!v.insuranceTerm}"
+                disabled="{!v.readOnly}"
                 onchange="{!c.insuranceTermChange}"
               />
             </lightning:layoutItem>
@@ -134,6 +137,7 @@
               max="240"
               step="12"
               value="{!v.amort}"
+              disabled="{!v.readOnly}"
               onchange="{!c.amortChange}"
             />
           </lightning:layoutItem>
@@ -156,6 +160,7 @@
                   step="0.01"
                   min="0"
                   value="{!v.interestRate}"
+                  disabled="{!v.readOnly}"
                   onchange="{!c.rate_deposit_change}"
                 />
                 <span>%</span>
@@ -174,6 +179,7 @@
                   class="un-stylize"
                   name="deposit"
                   value="{!v.deposit}"
+                  disabled="{!v.readOnly}"
                   onchange="{!c.rate_deposit_change}"
                 />
               </div>
@@ -197,7 +203,7 @@
               label=""
               checked="{!v.isTaxExempt}"
               variant="label-hidden"
-              disabled="{!v.lockTaxExempt}"
+              disabled="{!or(v.lockTaxExempt,v.readOnly)}"
               messageToggleActive=""
               messageToggleInactive=""
             />
@@ -208,7 +214,7 @@
               label="Tax Zone"
               value="{!v.currentTaxZoneId}"
               onchange="{!c.handleTaxZoneChange}"
-              disabled="{! v.isTaxExempt }"
+              disabled="{! or(v.isTaxExempt,v.readOnly) }"
             >
               <aura:iteration items="{!v.taxZones}" var="taxZone">
                 <option value="{!taxZone.id}">{!taxZone.name}</option>
@@ -229,7 +235,7 @@
 
       <aura:if isTrue="{!v.updateViaButton}">
         <div class="slds-align_absolute-center slds-p-top_medium">
-          <lightning:button label="Update Quote" onclick="{!c.handleUpdate}" />
+          <lightning:button label="Update Quote" onclick="{!c.handleUpdate}" disabled="{!v.readOnly}" />
         </div>
       </aura:if>
     </aura:if>

@@ -68,8 +68,9 @@
 
   cloneQuote: function( component,  event, helper ){
     let cpq = component.get('v.cpq');
-    cpq.saveToRecordId = null;
+    cpq.saveToRecordId = component.get("v.opportunityId");
     component.set('v.cpq', cpq);
+    helper.buildQuoteName(component);
     helper.doUpdateQuote(component);
   },
 
@@ -82,16 +83,8 @@
   },
 
   handleOppCreated: function (component, event, helper) {
-    var oppId = event.getParam("opportunityId"),
-      cpq = component.get("v.cpq"),
-      quoteName = "";
-    if (cpq.theBoat !== undefined) {
-      quoteName += cpq.theBoat.name;
-    }
-    if (cpq.theMotor !== undefined) {
-      quoteName += " / " + cpq.theMotor.name;
-    }
-    component.set("v.quoteName", quoteName);
+    var oppId = event.getParam("opportunityId");
+    helper.buildQuoteName(component);
     component.set("v.recordId", oppId);
     //component.set('v.opportunityId', oppId);
     $A.util.toggleClass(component.find("quote-name-modal"), "slds-hide");
@@ -107,6 +100,7 @@
       .createQuote(component)
       .then(
         $A.getCallback(function (result) {
+          console.log(`%cSAVETORECORDID = ${result}`, 'font-size:18px;color:red;');
           quoteId = result;
           return helper.saveCPQ(component, quoteId);
         }),
