@@ -103,6 +103,18 @@
     }
   },
 
+  buildQuoteName: function(component){
+    let cpq = component.get("v.cpq"),
+      quoteName = "";
+    if (cpq.theBoat !== undefined) {
+      quoteName += cpq.theBoat.name;
+    }
+    if (cpq.theMotor !== undefined) {
+      quoteName += " / " + cpq.theMotor.name;
+    }
+    component.set("v.quoteName", quoteName);
+  },
+
   doUpdateQuote: function (component) {
     $A.util.toggleClass(component.find("quote-name-modal"), "slds-hide");
   },
@@ -114,12 +126,15 @@
       quoteName = component.get("v.quoteName"),
       expDate = component.get("v.quoteExpireDate"),
       params = {
-        recordId: cpq.saveToRecordId === null ? oppId : cpq.saveToRecordId,
+        recordId: cpq.saveToRecordId === null || typeof(cpq.saveToRecordId) === undefined ? oppId : cpq.saveToRecordId,
         name: quoteName,
         expireDate: expDate,
         taxZoneJSON: JSON.stringify(cpq.taxZone)
       };
     action.setParams(params);
+    console.log('%cPARAMS', 'font-size:18px; color:green');
+    console.log( JSON.parse( JSON.stringify( cpq.taxZone ) ) );
+    console.log( JSON.parse( JSON.stringify( params ) ) );
     return new LightningApex(this, action).fire();
   },
 
@@ -135,8 +150,6 @@
     action.setParams({
       cpqJSON: JSON.stringify(cpq)
     });
-    console.log("THE CPQ HERE");
-    console.log( JSON.parse( JSON.stringify( cpq ) ) );
     return new LightningApex(this, action).fire();
   }
 });

@@ -52,7 +52,7 @@ public class PartnerProgram_Executor_T {
   }
 
   private static void createDealerOrder(Integer quantity) {
-    order = Factory_DealerOrder.createDealerOrder(partner);
+    order = Factory_DealerOrder.createDealerOrder(partner, 2022);
     order.Is_Booking_Order__c = true;
     update order;
     order = [

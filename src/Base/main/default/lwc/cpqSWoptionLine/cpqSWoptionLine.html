@@ -1,0 +1,57 @@
+<!--
+ - Created by dave on 2023-01-27.
+ -->
+
+<!-- Cpq S W option Line -->
+<template>
+  <template if:true={ready}>
+    <lightning-layout multiple-rows="true" class={className} vertical-align="stretch" horizontal-align="center">
+      <lightning-layout-item size="2" padding="around-small" class="slds-border_top">
+        <template if:true={item.isCheckbox}>
+          <lightning-input
+            type="toggle"
+            name={item.productId}
+            label=""
+            variant="label-hidden"
+            checked={item.isSelected}
+            onchange={handleToggle}
+            message-toggle-active=""
+            message-toggle-inactive=""
+          ></lightning-input>
+        </template>
+        <template if:false={item.isCheckbox}>
+          <lightning-combobox
+            options={quantityOptions}
+            value={currentValue}
+            label=""
+            placeholder=""
+            variant="label-hidden"
+            onchange={handleSelect}
+          ></lightning-combobox>
+        </template>
+      </lightning-layout-item>
+      <lightning-layout-item size="8" padding="around-small" class="slds-border_top">
+        <div class="slds-truncate">{item.name}</div>
+      </lightning-layout-item>
+      <lightning-layout-item size="2" padding="around-small" class="slds-border_top">
+        <lightning-formatted-number
+          value={item.retailPrice}
+          currency-code="CAD"
+          format-style="currency"
+          class="bold-currency"
+        ></lightning-formatted-number>
+        <template if:true={item.isPrepayable}>
+          <div>
+            <lightning-input
+              type="checkbox"
+              label="Prepaid"
+              disabled={isPrepaybleDisabled}
+              checked={item.isPrepaid}
+              onchange={handlePrepaid}
+            ></lightning-input>
+          </div>
+        </template>
+      </lightning-layout-item>
+    </lightning-layout>
+  </template>
+</template>

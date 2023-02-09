@@ -6,10 +6,15 @@ public with sharing class BusinessOffice_Controller {
     String objType = objType(recordId);
     Id pbId;
     Opportunity opp;
+    Quote qt;
     AcctSeed__Project__c erp;
     if (objType == 'Opportunity') {
       opp = [SELECT Id, Pricebook2Id FROM Opportunity WHERE Id = :recordId];
       pbId = opp.Pricebook2Id;
+    }
+    if (objType == 'Quote') {
+      qt = [SELECT Id, Pricebook2Id FROM Quote WHERE Id = :recordId];
+      pbId = qt.Pricebook2Id;
     }
     if (objType == 'AcctSeed__Project__c') {
       erp = [
@@ -99,6 +104,9 @@ public with sharing class BusinessOffice_Controller {
     if (objType == 'AcctSeed__Project__c') {
       result.value = [SELECT Financing_Account__c FROM AcctSeed__Project__c WHERE Id = :recordId LIMIT 1]
       .Financing_Account__c;
+    } else if( objType == 'Quote')
+    {
+      result.value = [SELECT Financing_Account__c FROM Quote WHERE Id = :recordId LIMIT 1].Financing_Account__c;
     } else {
       result.value = [SELECT Financing_Account__c FROM Opportunity WHERE Id = :recordId LIMIT 1].Financing_Account__c;
     }
@@ -110,10 +118,16 @@ public with sharing class BusinessOffice_Controller {
   public static void updateFinancialInstitution(String recordId, String fi_value) {
     String ot = objType(recordId);
     sObject record;
-    if (ot == 'AcctSeed__Project__c') {
-      record = [SELECT Id FROM AcctSeed__Project__c WHERE Id = :recordId LIMIT 1];
-    } else {
-      record = [SELECT Id FROM Opportunity WHERE Id = :recordId LIMIT 1];
+    switch on ot {
+      when 'AcctSeed__Project__c' {
+        record = [SELECT Id FROM AcctSeed__Project__c WHERE Id = :recordId LIMIT 1];
+      }
+      when 'Quote' {
+        record = [SELECT Id FROM Quote WHERE Id = :recordId LIMIT 1];
+      }
+      when 'Opportunity' {
+        record = [SELECT Id FROM Opportunity WHERE Id = :recordId LIMIT 1];
+      }
     }
     try {
       record.put('Financing_Account__c', fi_value);
@@ -136,13 +150,20 @@ public with sharing class BusinessOffice_Controller {
   @AuraEnabled
   public static String savePPSALine(String lineId, String value, String parentId, String pricebookEntryId) {
     String objType = objType(parentId);
-    if (objType == 'Opportunity') {
-      return handleOpportunityLineItem(lineId, value, parentId, pricebookEntryId);
+    switch on objType {
+      when 'Opportunity' {
+        return handleOpportunityLineItem(lineId, value, parentId, pricebookEntryId);
+      }
+      when 'Quote' {
+        return handleQuoteLineItem(lineId, value, parentId, pricebookEntryId);
+      }
+      when 'AcctSeed__Project__c'{
+        return handleMaterialLineItem(lineId, value, parentId, pricebookEntryId);
+      }
+      when else {
+        return null;
+      }
     }
-    if (objType == 'AcctSeed__Project__c') {
-      return handleMaterialLineItem(lineId, value, parentId, pricebookEntryId);
-    }
-    return null;
   }
 
   private static void findPPSALineItem(Id recordId, Id pricebookId, Map<String, String> result) {
@@ -162,6 +183,21 @@ public with sharing class BusinessOffice_Controller {
           result.put('ppsa_value', null);
         }
       }
+      if (objType == 'Quote') {
+        try {
+          QuoteLineItem qli = [
+            SELECT Id, UnitPrice
+            FROM QuoteLineItem
+            WHERE QuoteId = :recordId AND PricebookEntryId = :pricebookId
+          ];
+          result.put('ppsa_id', qli.Id);
+          result.put('ppsa_value', String.valueOf(qli.UnitPrice));
+        } catch (Exception e) {
+          result.put('ppsa_id', null);
+          result.put('ppsa_value', null);
+        }
+      }
+
 
       if (objType == 'AcctSeed__Project__c') {
         try {
@@ -218,6 +254,33 @@ public with sharing class BusinessOffice_Controller {
       upsert oli;
       result.put('ppsa_id', oli.Id);
       result.put('ppsa_value', String.valueOf(oli.UnitPrice));
+    }
+    return JSON.serialize(result);
+  }
+
+  private static String handleQuoteLineItem(
+    String lineId,
+    String value,
+    String parentId,
+    String pricebookEntryId
+  ) {
+    Map<String, String> result = new Map<String, String>();
+    if (lineId != null && (value == null || value == '' || Decimal.valueOf(value) == 0)) {
+      QuoteLineItem qli = [SELECT Id FROM QuoteLineItem WHERE Id = :lineId];
+      delete qli;
+      result.put('ppsa_id', null);
+      result.put('ppsa_value', null);
+    } else {
+      QuoteLineItem qli = new QuoteLineItem(
+        Id = lineId,
+        QuoteId = parentId,
+        PriceBookEntryId = pricebookEntryId,
+        UnitPrice = Decimal.valueOf(value),
+        Quantity = 1
+      );
+      upsert qli;
+      result.put('ppsa_id', qli.Id);
+      result.put('ppsa_value', String.valueOf(qli.UnitPrice));
     }
     return JSON.serialize(result);
   }
@@ -288,6 +351,8 @@ public with sharing class BusinessOffice_Controller {
       String objType = LGND_Utilities.sObjectNameFromId(recordId);
       if (objType == 'Opportunity')
         initForOpp(recordId);
+      if (objType == 'Quote')
+        initForQuote(recordId);
       if (objType == 'AcctSeed__Project__c')
         initForERP(recordId);
     }
@@ -336,6 +401,54 @@ public with sharing class BusinessOffice_Controller {
         this.planId = opp.OpportunityLineItems[0].Product2.InsurancePlan__c;
         for (OpportunityLineItem oli : opp.OpportunityLineItems) {
           this.selectedItems.put(oli.Product2Id, new BusinessOffice_Controller.SelectedInsuranceItem(oli));
+        }
+      }
+    }
+
+    private void initForQuote(String recordId) {
+      Quote qt = [
+        SELECT
+          Id,
+          Pre_Insurance_Total__c,
+          Deposit__c,
+          Finance_Ammortization__c,
+          Finance_Annual_Interest__c,
+          Finance_Term__c,
+          Insurance_Term__c,
+          GL_Account_Variable_3__c,
+          Tax_Rate_Retail__c,
+          Account.BillingState,
+        (
+          SELECT
+            Id,
+            Insurance_Rate__c,
+            InsuranceCoverage__c,
+            PricebookEntryId,
+            Product2Id,
+            Product2.InsurancePlan__c,
+            Product2.Is_Residual_Insurance__c,
+            Product2.Family,
+            UnitPrice,
+            isPrepaid__c
+          FROM QuoteLineItems
+          WHERE IsInsurance__c = TRUE
+        )
+        FROM Quote
+        WHERE Id = :recordId
+      ];
+      this.isFromQuebec = qt.Account.BillingState == 'Quebec';
+      this.term = Integer.valueOf(qt.Insurance_Term__c);
+      this.finTerm = Integer.valueOf(qt.Finance_Term__c);
+      this.amort = Integer.valueOf(qt.Finance_Ammortization__c);
+      this.intrestRate =qt.Finance_Annual_Interest__c;
+      this.preInsuranceAmount = qt.Pre_Insurance_Total__c;
+      this.deposit = qt.Deposit__c;
+      this.taxZoneId = qt.GL_Account_Variable_3__c;
+      this.insuranceTaxRate = qt.Tax_Rate_Retail__c;
+      if (qt.QuoteLineItems.size() > 0) {
+        this.planId = qt.QuoteLineItems[0].Product2.InsurancePlan__c;
+        for (QuoteLineItem qli : qt.QuoteLineItems) {
+          this.selectedItems.put(qli.Product2Id, new BusinessOffice_Controller.SelectedInsuranceItem(qli));
         }
       }
     }
@@ -421,6 +534,17 @@ public with sharing class BusinessOffice_Controller {
       this.type = oli.Product2.Family;
     }
 
+    public SelectedInsuranceItem(QuoteLineItem qli) {
+      this.recordId = qli.Id;
+      this.pricebookEntryId = qli.PricebookEntryId;
+      this.productId = qli.Product2Id;
+      this.coverage = qli.InsuranceCoverage__c;
+      this.insuranceRate = qli.Insurance_Rate__c;
+      this.unitPrice = qli.UnitPrice;
+      this.isResidual = qli.Product2.Is_Residual_Insurance__c;
+      this.type = qli.Product2.Family;
+    }
+
     public SelectedInsuranceItem(AcctSeedERP__Material__c mat) {
       this.recordId = mat.Id;
       this.pricebookEntryId = null;
@@ -435,9 +559,11 @@ public with sharing class BusinessOffice_Controller {
 
   public class insurancePlanWrapper {
     public String groupName { get; set; }
+    public String key { get; set; }
     public List<Map<String, String>> planItems { get; set; }
 
     public insurancePlanWrapper(String name, List<Map<String, String>> items) {
+      this.key = LGND_Utilities.generateRandomString(8);
       this.groupName = name;
       this.planItems = items;
     }
@@ -465,10 +591,17 @@ public with sharing class BusinessOffice_Controller {
     System.debug('AHOY');
     System.debug(items);
     String objType = objType(parentRecordId);
-    if (objType == 'Opportunity')
-      handleSaveInsuranceItem_OLI(parentRecordId, items, deleteRecordIds);
-    if (objType == 'AcctSeed__Project__c')
-      handleSaveInsuranceItem_Material(parentRecordId, items, deleteRecordIds);
+    switch on objType {
+      when 'Opportunity' {
+        handleSaveInsuranceItem_OLI(parentRecordId, items, deleteRecordIds);
+      }
+      when 'Quote' {
+        handleSaveInsuranceItem_QLI(parentRecordId, items, deleteRecordIds);
+      }
+      when 'AcctSeed__Project__c' {
+        handleSaveInsuranceItem_Material(parentRecordId, items, deleteRecordIds);
+      }
+    }
   }
 
   private static void handleSaveInsuranceItem_OLI(String parentRecordId, String items, List<String> deleteRecordIds) {
@@ -491,6 +624,30 @@ public with sharing class BusinessOffice_Controller {
       );
     }
     upsert olis;
+    if (deleteRecordIds.size() > 0)
+      delete [SELECT Id FROM OpportunityLineItem WHERE Id IN :deleteRecordIds];
+  }
+
+  private static void handleSaveInsuranceItem_QLI(String parentRecordId, String items, List<String> deleteRecordIds) {
+    List<SelectedInsuranceItem> saveItems = (List<SelectedInsuranceItem>) JSON.deserialize(
+      items,
+      List<SelectedInsuranceItem>.class
+    );
+    List<QuoteLineItem> qlis = new List<QuoteLineItem>();
+    for (SelectedInsuranceItem i : saveItems) {
+      qlis.add(
+        new QuoteLineItem(
+          Id = i.recordId,
+          QuoteId = parentRecordId,
+          Insurance_Rate__c = i.insuranceRate,
+          InsuranceCoverage__c = i.coverage,
+          PricebookEntryId = i.pricebookEntryId,
+          UnitPrice = i.unitPrice,
+          Quantity = 1
+        )
+      );
+    }
+    upsert qlis;
     if (deleteRecordIds.size() > 0)
       delete [SELECT Id FROM OpportunityLineItem WHERE Id IN :deleteRecordIds];
   }
@@ -632,11 +789,20 @@ public with sharing class BusinessOffice_Controller {
   @AuraEnabled
   public static String initServiceAndWarranty(String recordId, String pbId) {
     String objType = objType(recordId);
-    if (objType == 'Opportunity')
-      return initSW_Opp(recordId, pbId);
-    if (objType == 'AcctSeed__Project__c')
-      return initSW_Erp(recordId, pbId);
-    return null;
+    switch on objType {
+      when 'Opportunity' {
+        return initSW_Opp(recordId, pbId);
+      }
+      when 'Quote' {
+        return initSW_Quote(recordId, pbId);
+      }
+      when 'AcctSeed__Project__c' {
+        return initSW_Erp(recordId, pbId);
+      }
+      when else {
+        return null;
+      }
+    }
   }
 
   @AuraEnabled
@@ -646,10 +812,17 @@ public with sharing class BusinessOffice_Controller {
       List<CPQ_Lib_dh.OptionWrapper>.class
     );
     String objType = objType(recordId);
-    if (objType == 'Opportunity')
-      handleWarrantyAndServiceSave_forOpp(itemsList, recordId, lineIdsToDelete);
-    if (objType == 'AcctSeed__Project__c')
-      handleWarrantyAndServiceSave_forERP(itemsList, recordId, lineIdsToDelete);
+    switch on objType {
+      when 'Opportunity' {
+        handleWarrantyAndServiceSave_forOpp(itemsList, recordId, lineIdsToDelete);
+      }
+      when 'Quote' {
+        handleWarrantyAndServiceSave_forQuote(itemsList, recordId, lineIdsToDelete);
+      }
+      when 'AcctSeed__Project__c' {
+        handleWarrantyAndServiceSave_forERP(itemsList, recordId, lineIdsToDelete);
+      }
+    }
   }
 
   private static void handleWarrantyAndServiceSave_forOpp(
@@ -679,6 +852,36 @@ public with sharing class BusinessOffice_Controller {
     if (lineIdsToDelete.size() > 0) {
       OpportunityLineItem[] olis2Delete = [SELECT Id FROM OpportunityLineItem WHERE Id IN :lineIdsToDelete];
       delete olis2Delete;
+    }
+  }
+
+  private static void handleWarrantyAndServiceSave_forQuote(
+    CPQ_Lib_dh.OptionWrapper[] itemsList,
+    String recordId,
+    List<String> lineIdsToDelete
+  ) {
+    QuoteLineItem[] qlis = new List<QuoteLineItem>();
+    for (CPQ_Lib_dh.OptionWrapper item : itemsList) {
+      System.debug(item);
+      QuoteLineItem qli = new QuoteLineItem(
+        Id = item.lineId,
+        PricebookEntryId = item.pricebookEntryId,
+        ParentProductId__c = item.parentProductId,
+        UnitPrice = item.unitCost,
+        Quantity = item.quantitySelected,
+        QuoteId = recordId,
+        Description = item.productName,
+        BoatBuilderItem__c = true
+      );
+      if (item.isPrepaid != null)
+        qli.isPrepaid__c = item.isPrepaid;
+      qlis.add(qli);
+    }
+    upsert qlis;
+
+    if (lineIdsToDelete.size() > 0) {
+      QuoteLineItem[] qlis2Delete = [SELECT Id FROM QuoteLineItem WHERE Id IN :lineIdsToDelete];
+      delete qlis2Delete;
     }
   }
 
@@ -752,6 +955,41 @@ public with sharing class BusinessOffice_Controller {
         productId_lineId_map.put(oli.PricebookEntry.Product2Id, oli.Id);
         productId_quantity_map.put(oli.PricebookEntry.Product2Id, oli.Quantity);
         productId_prepaid_map.put(oli.PricebookEntry.Product2Id, oli.isPrepaid__c);
+      }
+      result = buildAvailableWarrantyAndServiceItems(
+        productId_lineId_map,
+        productId_quantity_map,
+        productId_prepaid_map,
+        recordId,
+        pbId
+      );
+    }
+    return JSON.serialize(result);
+  }
+
+  private static String initSW_Quote(String recordId, String pbId) {
+    WarrantyAndServiceInitWrapper result = new WarrantyAndServiceInitWrapper();
+    QuoteLineItem[] quoteLineItems = [
+      SELECT
+        Id,
+        PricebookEntryId,
+        PricebookEntry.Pricebook2Id,
+        PricebookEntry.Product2Id,
+        ParentProductId__c,
+        Quantity,
+        QuoteId,
+        isPrepaid__c
+      FROM QuoteLineItem
+      WHERE QuoteId = :recordId
+    ];
+    if (!quoteLineItems.isEmpty()) {
+      Map<Id, Id> productId_lineId_map = new Map<Id, Id>();
+      Map<Id, Decimal> productId_quantity_map = new Map<Id, Decimal>();
+      Map<Id, Boolean> productId_prepaid_map = new Map<Id, Boolean>();
+      for (QuoteLineItem qli : quoteLineItems) {
+        productId_lineId_map.put(qli.PricebookEntry.Product2Id, qli.Id);
+        productId_quantity_map.put(qli.PricebookEntry.Product2Id, qli.Quantity);
+        productId_prepaid_map.put(qli.PricebookEntry.Product2Id, qli.isPrepaid__c);
       }
       result = buildAvailableWarrantyAndServiceItems(
         productId_lineId_map,

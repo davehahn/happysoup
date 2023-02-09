@@ -1,10 +1,11 @@
 ({
   selectType: function (component, event, helper) {
-    console.log("selectType selected");
     event.preventDefault();
     var ele = event.currentTarget,
       eleData = ele.dataset,
-      evt = component.getEvent("boatTypeSelected");
+      evt = component.getEvent("boatTypeSelected"),
+      disabled = component.get('v.isDisabled');
+    if( disabled ) return;
     component.set("v.productRecordType", eleData.recordType);
     component.set("v.family", eleData.family);
 

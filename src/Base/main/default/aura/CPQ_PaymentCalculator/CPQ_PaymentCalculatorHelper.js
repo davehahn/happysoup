@@ -4,6 +4,7 @@
       deposit = component.get("v.deposit"),
       interestRate = component.get("v.interestRate"),
       term = component.get("v.term"),
+      insuranceTerm = component.get("v.insuranceTerm"),
       amort = component.get("v.amort"),
       compound_per_year = 12,
       compoundInterest,
@@ -44,18 +45,18 @@
     component.set("v.remaining", remaining);
 
     if (fireEvent) {
-      evt
-        .setParams({
-          monthlyPayment: m_payment,
-          biWeeklyPayment: bw_payment,
-          weeklyPayment: w_payment,
-          term: term,
-          interestRate: interestRate,
-          amort: amort,
-          deposit: deposit,
-          recordId: component.get("v.recordId")
-        })
-        .fire();
+      const params = {
+        monthlyPayment: m_payment,
+        biWeeklyPayment: bw_payment,
+        weeklyPayment: w_payment,
+        term: term,
+        insuranceTerm: insuranceTerm,
+        interestRate: interestRate,
+        amort: amort,
+        deposit: deposit,
+        recordId: component.get("v.recordId")
+      }
+      evt.setParams(params).fire();
     }
   },
 
