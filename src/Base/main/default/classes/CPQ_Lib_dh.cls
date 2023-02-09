@@ -81,6 +81,7 @@ public with sharing class CPQ_Lib_dh {
     private String locale = 'en_US';
 
     public CPQ_Product(String prodId) {
+      System.debug('Product Constructor');
       this.id = prodId;
       this.prod = findProduct();
       construct();
@@ -384,13 +385,14 @@ public with sharing class CPQ_Lib_dh {
     public Decimal maximum;
     public Boolean isCheckbox;
     public Boolean isSelected;
-    public Decimal quantitySelected;
+    public Decimal quantitySelected { get; set; }
     public List<CPQ_Lib_dh.OptionProduct> subOptions;
     public List<CPQ_Lib_dh.OptionProduct> selectedSubOptions;
     public List<String> premiumPackage;
 
     public OptionProduct(Product2 prod, String parentProductId, Decimal std, Decimal max) {
       super(prod);
+      System.debug('Option Constructor');
       this.parentProductId = parentProductId;
       this.standard = std;
       this.maximum = max;
@@ -403,6 +405,11 @@ public with sharing class CPQ_Lib_dh {
       this.standard = std;
       this.maximum = max;
       setRemainingAttrs();
+    }
+
+    public OptionProduct(SObject lineItem) {
+      super((Sobject)lineItem);
+      this.parentProductId = (String)lineItem.get('ParentProductId__c');
     }
 
     public void buildPremiumPackageDetails() {
@@ -432,6 +439,134 @@ public with sharing class CPQ_Lib_dh {
         buildPremiumPackageDetails();
       }
     }
+  }
+
+  public virtual class WarrantyOptionProduct extends OptionProduct{
+    public String cpqListName;
+    public WarrantyOptionProduct(Product2 prod, Product2 parentProduct, Decimal std, Decimal max){
+      super(prod, parentProduct.Id,std, max);
+      this.cpqListName ='warrantyOptions';
+    }
+
+    public WarrantyOptionProduct(QuoteLineItem lineItem)
+    {
+      super((SObject) lineItem);
+      this.cpqListName = 'warrantyOptions';
+      this.quantitySelected = lineItem.Quantity;
+    }
+
+    public SObject createLineItem(String objectType) {
+      SObject obj = Schema.getGlobalDescribe().get(objectType).newSObject();
+      obj.put('Quantity', this.quantitySelected);
+      obj.put('UnitPrice', this.retailPrice);
+      obj.put('PricebookEntryId', this.retailPricebookEntryId);
+      obj.put('BoatBuilderItem__c', true);
+      obj.put('ParentProductId__c', this.parentProductId);
+      return obj;
+    }
+
+  }
+
+  public virtual class MaintenanceServicePlanOptionProduct extends OptionProduct{
+    public Boolean isPrepayable;
+    public Boolean isPrepaid;
+    public String cpqListName;
+    public MaintenanceServicePlanOptionProduct(Product2 prod, Product2 parentProduct, Decimal std, Decimal max){
+      super(prod, parentProduct.Id, std, max);
+      init();
+    }
+
+    public MaintenanceServicePlanOptionProduct(QuoteLineItem lineItem)
+    {
+      super((SObject) lineItem);
+      this.cpqListName = 'maintenanceServicePlanOptions';
+      this.isPrepayable = lineItem.PricebookEntry.Product2.isPrepayable__c;
+      this.isPrepaid = lineItem.IsPrepaid__c;
+      this.quantitySelected = lineItem.Quantity;
+
+    }
+
+    private void init(){
+      this.isPrepayable = this.prod.isPrepayable__c;
+      this.isPrepaid = false;
+      this.cpqListName = 'maintenanceServicePlanOptions';
+    }
+
+    public SObject createLineItem(String objectType) {
+      SObject obj = Schema.getGlobalDescribe().get(objectType).newSObject();
+      obj.put('Quantity', this.quantitySelected);
+      obj.put('UnitPrice', this.retailPrice);
+      obj.put('PricebookEntryId', this.retailPricebookEntryId);
+      obj.put('BoatBuilderItem__c', true);
+      obj.put('IsPrepaid__c', this.isPrepaid);
+      obj.put('ParentProductId__c', this.parentProductId);
+      return obj;
+    }
+  }
+
+//  public virtual class ServiceAndWarrantyProduct extends OptionProduct {
+//    public Boolean isPrepayable;
+//    public Boolean isPrepaid;
+//
+//    public ServiceAndWarrantyProduct(Product2 prod, String parentProductId, Decimal std, Decimal max){
+//      super(prod, parentProductId,std, max);
+//      this.isPrepayable = prod.isPrepayable__c;
+//    }
+//
+//    public ServiceAndWarrantyProduct(Product2 prod, String parentProductId, Decimal std, Decimal max, String locale){
+//      super(prod, parentProductId,std, max, locale);
+//      this.isPrepayable = prod.isPrepayable__c;
+//    }
+//
+//  }
+
+
+
+  public virtual class InsuranceProduct extends CPQ_Product {
+    public String coverage { get; set; }
+    public String type { get; set; }
+    public Decimal insuranceRate { get; set; }
+    public Boolean isResidual { get; set; }
+    public Decimal unitPrice { get; set; }
+
+    public InsuranceProduct(OpportunityLineItem lineItem){
+      super((SObject)lineItem);
+      this.coverage = lineItem.InsuranceCoverage__c;
+      this.insuranceRate = lineItem.Insurance_Rate__c;
+      this.unitPrice = lineItem.UnitPrice;
+      this.isResidual = lineItem.PricebookEntry.Product2.Is_Residual_Insurance__c;
+      this.type = lineItem.PricebookEntry.Product2.Family;
+    }
+
+    public InsuranceProduct(QuoteLineItem lineItem){
+      super((SObject)lineItem);
+      this.coverage = lineItem.InsuranceCoverage__c;
+      this.insuranceRate = lineItem.Insurance_Rate__c;
+      this.unitPrice = lineItem.UnitPrice;
+      this.isResidual = lineItem.PricebookEntry.Product2.Is_Residual_Insurance__c;
+      this.type = lineItem.PricebookEntry.Product2.Family;
+    }
+    public InsuranceProduct(AcctSeedERP__Material__c lineItem){
+      super((SObject)lineItem);
+      this.coverage = lineItem.Insurance_Coverage__c;
+      this.insuranceRate = lineItem.Insurance_Rate__c;
+      this.unitPrice = lineItem.GMBLASERP__Unit_Price__c;
+      this.isResidual = lineItem.AcctSeedERP__Product__r.Is_Residual_Insurance__c;
+      this.type = lineItem.AcctSeedERP__Product__r.Family;
+    }
+
+    public SObject createLineItem(String objectType) {
+      SObject obj = Schema.getGlobalDescribe().get(objectType).newSObject();
+      obj.put('Quantity', 1);
+      obj.put('UnitPrice', this.unitPrice);
+      obj.put('PricebookEntryId', this.activePricebookEntryId);
+      obj.put('BoatBuilderItem__c', true);
+      obj.put('isInsurance__c', true);
+      obj.put('InsuranceCoverage__c', this.coverage);
+      obj.put('Insurance_Rate__c', this.insuranceRate);
+      return obj;
+    }
+
   }
 
   public virtual class SubOptionProduct extends OptionProduct {

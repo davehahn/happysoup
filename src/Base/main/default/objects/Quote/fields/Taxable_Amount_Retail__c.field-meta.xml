@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Taxable_Amount_Retail__c</fullName>
+    <externalId>false</externalId>
+    <label>Taxable Amount (Retail)</label>
+    <summarizedField>QuoteLineItem.UnitPrice</summarizedField>
+    <summaryFilterItems>
+        <field>QuoteLineItem.Taxable_Retail__c</field>
+        <operation>equals</operation>
+        <value>True</value>
+    </summaryFilterItems>
+    <summaryForeignKey>QuoteLineItem.QuoteId</summaryForeignKey>
+    <summaryOperation>sum</summaryOperation>
+    <type>Summary</type>
+</CustomField>

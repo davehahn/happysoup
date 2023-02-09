@@ -1,6 +1,5 @@
 ({
   doInit: function (component, event, helper) {
-    console.log("builder INIT ");
     helper.doInit(component).then(
       $A.getCallback(function () {
         component.set('v.initComplete', true);
@@ -17,22 +16,18 @@
   },
 
   onRender: function (component, event, helper) {
-    console.log('onrender')
     var iframe = component.find("pdf-iframe"),
       btns = component.find("button-container"),
       ele;
     if (iframe !== null && iframe !== undefined) {
-      console.log('iframe')
       ele = iframe.getElement();
       ele.classList.add("loading");
       $A.util.addClass(btns, "loading");
       if (!ele.getAttribute("data-event-loaded")) {
-        console.log('ele data event not loaded')
         ele.setAttribute("data-event-loaded", "true");
         ele.addEventListener(
           "load",
           $A.getCallback(function () {
-            console.log("iframe loaded");
             ele.classList.remove("loading");
             $A.util.removeClass(btns, "loading");
           })
@@ -133,7 +128,6 @@
   },
 
   handlePaymentChange: function (component, event, helper) {
-    console.log("handlePaymentChange");
     var params = event.getParams(),
       quote = {},
       spinner = component.find("spinner"),

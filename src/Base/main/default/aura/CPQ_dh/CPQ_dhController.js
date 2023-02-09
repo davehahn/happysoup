@@ -20,7 +20,11 @@
   },
 
   saleTotalChange: function (component, event) {
-    console.log(`SaleTotal Change ${event.getParam("value")}`);
+    //component.find('cpqBuilder').saleTotalChanged(event.getParam("value"));
+  },
+
+  handlePreInsuranceTotalChange: function(component, event) {
+    component.find('cpqBuilder').preInsuranceAmountChanged(event.getParam("value"));
   },
 
   doInit: function (component, event, helper) {
@@ -29,7 +33,6 @@
 
   handleRefresh: function (component, event, helper) {
     var readOnly = component.get("v.readOnly");
-    console.log(`handleRefresh - ${readOnly}`);
     if (readOnly) helper.doInit(component);
   },
 
@@ -53,10 +56,21 @@
   },
 
   togglePaymentCalc: function (component, event, helper) {
-    helper.toggleCalc(component);
+    const hasTermError = component.get('v.hasInsuranceTermErrors');
+    if(!hasTermError ){
+      helper.toggleCalc(component);
+    }
   },
 
   updateQuote: function (component, event, helper) {
+    helper.doUpdateQuote(component);
+  },
+
+  cloneQuote: function( component,  event, helper ){
+    let cpq = component.get('v.cpq');
+    cpq.saveToRecordId = component.get("v.opportunityId");
+    component.set('v.cpq', cpq);
+    helper.buildQuoteName(component);
     helper.doUpdateQuote(component);
   },
 
@@ -69,16 +83,8 @@
   },
 
   handleOppCreated: function (component, event, helper) {
-    var oppId = event.getParam("opportunityId"),
-      cpq = component.get("v.cpq"),
-      quoteName = "";
-    if (cpq.theBoat !== undefined) {
-      quoteName += cpq.theBoat.name;
-    }
-    if (cpq.theMotor !== undefined) {
-      quoteName += " / " + cpq.theMotor.name;
-    }
-    component.set("v.quoteName", quoteName);
+    var oppId = event.getParam("opportunityId");
+    helper.buildQuoteName(component);
     component.set("v.recordId", oppId);
     //component.set('v.opportunityId', oppId);
     $A.util.toggleClass(component.find("quote-name-modal"), "slds-hide");
@@ -94,6 +100,7 @@
       .createQuote(component)
       .then(
         $A.getCallback(function (result) {
+          console.log(`%cSAVETORECORDID = ${result}`, 'font-size:18px;color:red;');
           quoteId = result;
           return helper.saveCPQ(component, quoteId);
         }),

@@ -5,6 +5,7 @@
   <aura:attribute name="allowInactiveBoats" type="Boolean" default="false" />
   <aura:attribute name="value" type="String" default="" />
   <aura:attribute name="productSelectOptions" type="List" />
+  <aura:attribute name="isDisabled" type="Boolean" default="false" />
 
   <ltng:require
     scripts="{!join(',', $Resource.Libraries +'/js/LightningApex.js',
@@ -24,6 +25,7 @@
       allowTrailers="false"
       allowMotors="false"
       allowTrollingMotors="false"
+      isDisabled="{!v.isDisabled}"
       aura:id="productTypeSelector-CMP"
     />
 
@@ -34,6 +36,7 @@
         label="{!'Select ' + v.productRecordType}"
         value="{!v.value}"
         onchange="{!c.handleValueChange}"
+        disabled="{!v.isDisabled}"
       >
         <option value="">-- None --</option>
         <aura:iteration items="{!v.productSelectOptions}" var="prod">

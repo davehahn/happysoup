@@ -19,6 +19,12 @@ public class Factory_DealerOrder {
     return order;
   }
 
+  public static Dealer_Order__c createDealerOrder(Account dealer, Integer programYear) {
+    order = buildDealerOrder(dealer, String.valueOf(programYear));
+    insert order;
+    return order;
+  }
+
   public static Dealer_Order__c createDealerOrder(Account dealer, String stage) {
     order = new Dealer_Order__c(
       Account__c = dealer.Id,

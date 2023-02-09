@@ -6,9 +6,11 @@
   <aura:attribute name="trollingMotorSaleItems" type="Array" />
   <aura:attribute name="hasFees" type="boolean" default="false" />
   <aura:attribute name="subTotal" type="Decimal" />
+  <aura:attribute name="preInsuranceTotal" type="Decimal" />
   <aura:attribute name="savingsTotal" type="Decimal" />
   <aura:attribute name="federalTaxTotal" type="Decimal" />
   <aura:attribute name="provincialTaxTotal" type="Decimal" />
+  <aura:attribute name="retailTaxTotal" type="Decimal" />
   <aura:attribute name="grandTotal" type="Decimal" />
 
   <ltng:require
@@ -203,6 +205,100 @@
                         ea.
                       </div>
                     </aura:if>
+                  </td>
+                </tr>
+              </aura:iteration>
+              </tbody>
+            </table>
+          </aura:if>
+
+          <!-- Extended Warrantyy Products -->
+          <aura:if isTrue="{! not(empty( v.cpq.warrantyOptions )) }">
+            <div class="slds-text-title_caps slds-m-top_large slds-text-align_left table-title">Extended Warranty</div>
+            <table
+              class="slds-table slds-table_bordered slds-table_resizable-cols slds-table_fixed-layout summary-table"
+            >
+              <thead>
+              <tr class="slds-text-title_caps">
+                <th scope="col" class="slds-border_top" style="width: 75%; text-align: left">Description</th>
+                <th scope="col" class="slds-border_top" style="width: 25%">Cost</th>
+              </tr>
+              </thead>
+              <tbody>
+              <aura:iteration items="{!v.cpq.warrantyOptions}" var="item">
+                <tr>
+                  <td>{!item.name}</td>
+                  <td class="option-price">
+                    <lightning:formattedNumber
+                      value="{!item.retailPrice}"
+                      style="currency"
+                      currencyCode="CAD"
+                    />
+                  </td>
+                </tr>
+              </aura:iteration>
+              </tbody>
+            </table>
+          </aura:if>
+
+          <!-- MAintenance and Service PAckages -->
+          <aura:if isTrue="{! not(empty( v.cpq.maintenanceServicePlanOptions )) }">
+            <div class="slds-text-title_caps slds-m-top_large slds-text-align_left table-title">Maintenance &amp; Service Packages</div>
+            <table
+              class="slds-table slds-table_bordered slds-table_resizable-cols slds-table_fixed-layout summary-table"
+            >
+              <thead>
+              <tr class="slds-text-title_caps">
+                <th scope="col" class="slds-border_top" style="width: 75%; text-align: left">Description</th>
+                <th scope="col" class="slds-border_top" style="width: 25%">Cost</th>
+              </tr>
+              </thead>
+              <tbody>
+              <aura:iteration items="{!v.cpq.maintenanceServicePlanOptions}" var="item">
+                <tr>
+                  <td>
+                    <aura:if isTrue="{!or(not(item.isCheckbox), empty(item.isCheckbox))}">
+                      <span class="slds-p-right_small">
+                        {!item.quantitySelected} x
+                      </span>
+                    </aura:if>
+                    {!item.name}
+                  </td>
+                  <td class="option-price">
+                    <lightning:formattedNumber
+                      value="{!item.retailPrice * item.quantitySelected}"
+                      style="currency"
+                      currencyCode="CAD"
+                    />
+                  </td>
+                </tr>
+              </aura:iteration>
+              </tbody>
+            </table>
+          </aura:if>
+
+          <!-- Insurance Products -->
+          <aura:if isTrue="{! not(empty( v.cpq.insuranceProducts )) }">
+            <div class="slds-text-title_caps slds-m-top_large slds-text-align_left table-title">Insurance Products</div>
+            <table
+              class="slds-table slds-table_bordered slds-table_resizable-cols slds-table_fixed-layout summary-table"
+            >
+              <thead>
+              <tr class="slds-text-title_caps">
+                <th scope="col" class="slds-border_top" style="width: 75%; text-align: left">Description</th>
+                <th scope="col" class="slds-border_top" style="width: 25%">Cost</th>
+              </tr>
+              </thead>
+              <tbody>
+              <aura:iteration items="{!v.cpq.insuranceProducts}" var="item">
+                <tr>
+                  <td>{!item.name}</td>
+                  <td class="option-price">
+                    <lightning:formattedNumber
+                      value="{!item.unitPrice}"
+                      style="currency"
+                      currencyCode="CAD"
+                    />
                   </td>
                 </tr>
               </aura:iteration>
@@ -523,6 +619,32 @@
                   class="slds-p-right_x-small"
                 />
               </lightning:layoutItem>
+              <!-- Retail TAX -->
+              <lightning:layoutItem
+                size="6"
+                largeDeviceSize="10"
+                mediumDeviceSize="10"
+                smallDeviceSize="7"
+                padding="horizontal-small"
+                class="slds-text-align_right"
+              >
+                <span>RST:</span>
+              </lightning:layoutItem>
+              <lightning:layoutItem
+                size="6"
+                largeDeviceSize="2"
+                mediumDeviceSize="2"
+                smallDeviceSize="5"
+                padding="horizontal-small"
+                class="slds-text-align_right"
+              >
+                <lightning:formattedNumber
+                  value="{!v.retailTaxTotal}"
+                  style="currency"
+                  currencyCode="CAD"
+                  class="slds-p-right_x-small"
+                />
+              </lightning:layoutItem>
             </aura:if>
 
             <!-- NON HARMONIZED TAXES -->
@@ -580,6 +702,32 @@
                   class="slds-p-right_x-small"
                 />
               </lightning:layoutItem>
+              <!-- Retail TAX -->
+              <lightning:layoutItem
+                size="6"
+                largeDeviceSize="10"
+                mediumDeviceSize="10"
+                smallDeviceSize="7"
+                padding="horizontal-small"
+                class="slds-text-align_right"
+              >
+                <span>RST:</span>
+              </lightning:layoutItem>
+              <lightning:layoutItem
+                size="6"
+                largeDeviceSize="2"
+                mediumDeviceSize="2"
+                smallDeviceSize="5"
+                padding="horizontal-small"
+                class="slds-text-align_right"
+              >
+                <lightning:formattedNumber
+                  value="{!v.retailTaxTotal}"
+                  style="currency"
+                  currencyCode="CAD"
+                  class="slds-p-right_x-small"
+                />
+              </lightning:layoutItem>
             </aura:if>
 
             <!--  Total -->
@@ -602,7 +750,7 @@
               class="slds-text-align_right"
             >
               <lightning:formattedNumber
-                value="{!v.subTotal + v.savingsTotal + v.federalTaxTotal + v.provincialTaxTotal - (v.cpq.tradeIn.value - v.cpq.tradeIn.lien) }"
+                value="{!v.subTotal + v.savingsTotal + v.federalTaxTotal + v.provincialTaxTotal + v.retailTaxTotal - (v.cpq.tradeIn.value - v.cpq.tradeIn.lien) }"
                 style="currency"
                 currencyCode="CAD"
                 class="slds-p-right_x-small"
