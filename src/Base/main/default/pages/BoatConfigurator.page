@@ -92,6 +92,10 @@
 
   <c:LegendMainAjaxIndicator id="ajaxInd" />
 
+  <apex:outputPanel layout="none" rendered="{!gen2Quoting}">
+    <h1>This Opportunity currently uses Gen2 Quoting and therefore the Boat Configurator is now Deprecated</h1>
+  </apex:outputPanel>
+
   <apex:outputPanel layout="none" rendered="{!renderBuilder}" id="boatBuilder">
     <div id="pageContainer" class="row fullRow">
       <!-- ++++++++++++++ Tax Form ++++++++++++++ -->
