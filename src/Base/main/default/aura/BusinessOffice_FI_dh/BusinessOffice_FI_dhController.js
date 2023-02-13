@@ -7,6 +7,7 @@
         console.log(result.options);
         component.set("v.institutionOptions", result.options);
         component.set("v.financingInstitution", result.value);
+        component.set('v.isDeprecated', result.isDeprecated);
       }),
       $A.getCallback(function (err) {
         LightningUtils.errorToast(err);
@@ -21,9 +22,12 @@
   reInit: function (component, event, helper) {
     console.log("FI reinit");
     var insCMP = component.find("insurance_CMP"),
-      finCalcCmp = component.find("finCalc_CMP");
-    insCMP.reInit();
-    finCalcCmp.reInit();
+      finCalcCmp = component.find("finCalc_CMP"),
+      isDeprecated = component.get('v.isDeprecated');
+    if(!isDeprecated){
+      insCMP.reInit();
+      finCalcCmp.reInit();
+    }
   },
 
   reset: function (component, event, helper) {

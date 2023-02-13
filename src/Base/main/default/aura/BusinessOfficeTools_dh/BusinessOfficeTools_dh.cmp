@@ -14,6 +14,7 @@
   <aura:attribute name="pricebookName" type="String" />
   <aura:attribute name="loading" type="Boolean" default="true" />
   <aura:attribute name="canViewInsuranceDocs" type="Boolean" default="false" />
+  <aura:attribute name="oppUsingGen2Quoting" type="Boolean" default="false" />
 
   <aura:handler event="force:refreshView" action="{!c.doInit}" />
 
@@ -51,23 +52,24 @@
             />
           </div>
         </lightning:tab>
+        <aura:if isTrue="{!not(v.oppUsingGen2Quoting)}">
+          <lightning:tab label="Financing &amp; Insurance" onactive="{!c.reInitInsurance}">
+            <c:BusinessOffice_FI_dh
+              recordId="{!v.recordId}"
+              pricebookId="{!v.pricebookId}"
+              pricebookName="{!v.pricebookName}"
+              aura:id="fi_CMP"
+            />
+          </lightning:tab>
 
-        <lightning:tab label="Financing &amp; Insurance" onactive="{!c.reInitInsurance}">
-          <c:BusinessOffice_FI_dh
-            recordId="{!v.recordId}"
-            pricebookId="{!v.pricebookId}"
-            pricebookName="{!v.pricebookName}"
-            aura:id="fi_CMP"
-          />
-        </lightning:tab>
-
-        <lightning:tab label="Warranty &amp; Service">
-          <c:BusinessOffice_WarrService_dh
-            recordId="{!v.recordId}"
-            pricebookId="{!v.pricebookId}"
-            pricebookName="{!v.pricebookName}"
-          />
-        </lightning:tab>
+          <lightning:tab label="Warranty &amp; Service">
+            <c:BusinessOffice_WarrService_dh
+              recordId="{!v.recordId}"
+              pricebookId="{!v.pricebookId}"
+              pricebookName="{!v.pricebookName}"
+            />
+          </lightning:tab>
+        </aura:if>
 
         <aura:if isTrue="{!v.canViewInsuranceDocs}">
           <lightning:tab label="Insurance Documents" onactive="{!c.reInitInsuranceDocs}">
