@@ -8,6 +8,7 @@
         component.set("v.originalSelectedLineIds", result.selectedLineIds);
         component.set("v.warrantItems", result.warranty);
         component.set("v.serviceItems", result.service);
+        component.set("v.isDeprecated", result.isDeprecated);
         component.set("v.changed", false);
       }),
       $A.getCallback(function (err) {

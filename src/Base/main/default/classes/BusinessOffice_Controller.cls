@@ -8,9 +8,13 @@ public with sharing class BusinessOffice_Controller {
     Opportunity opp;
     Quote qt;
     AcctSeed__Project__c erp;
+    String gen2Quoting='false';
     if (objType == 'Opportunity') {
-      opp = [SELECT Id, Pricebook2Id FROM Opportunity WHERE Id = :recordId];
+      opp = [SELECT Id, Pricebook2Id, (SELECT Id FROM Quotes) FROM Opportunity WHERE Id = :recordId];
       pbId = opp.Pricebook2Id;
+      if( opp.Quotes.size() > 0 ){
+        gen2Quoting='true';
+      }
     }
     if (objType == 'Quote') {
       qt = [SELECT Id, Pricebook2Id FROM Quote WHERE Id = :recordId];
@@ -46,6 +50,7 @@ public with sharing class BusinessOffice_Controller {
       result.put('Name', pb.Name);
       result.put('sObjectType', objType);
       result.put('documentsAccessible', String.valueOf(canAccess));
+      result.put('gen2Quoting', gen2Quoting);
       //result.put('institutions', JSON.serialize(institutions) );
       return JSON.serialize(result);
     }
@@ -84,11 +89,13 @@ public with sharing class BusinessOffice_Controller {
   /* +++++ FINANCIAL INSTITUTION +++++*/
 
   public class FinancingInstitutionDetails {
+    public Boolean isDeprecated { get;set;}
     public String value { get; set; }
     public List<Account> options { get; set; }
 
     public FinancingInstitutionDetails() {
       this.options = new List<Account>();
+      this.isDeprecated=false;
     }
   }
 
@@ -108,7 +115,11 @@ public with sharing class BusinessOffice_Controller {
     {
       result.value = [SELECT Financing_Account__c FROM Quote WHERE Id = :recordId LIMIT 1].Financing_Account__c;
     } else {
-      result.value = [SELECT Financing_Account__c FROM Opportunity WHERE Id = :recordId LIMIT 1].Financing_Account__c;
+      Opportunity opp = [SELECT Financing_Account__c, (SELECT Id FROM Quotes) FROM Opportunity WHERE Id = :recordId LIMIT 1];
+      result.value = opp.Financing_Account__c;
+      if(opp.Quotes.size() > 0 ){
+        result.isDeprecated=true;
+      }
     }
     result.options = [SELECT Id, Name, BillingStreet, BillingState FROM Account WHERE Financing_Vendor__c = TRUE];
     return JSON.serialize(result);
@@ -778,11 +789,13 @@ public with sharing class BusinessOffice_Controller {
     public CPQ_Lib_dh.OptionWrapper[] warranty { get; set; }
     public CPQ_Lib_dh.OptionWrapper[] service { get; set; }
     public Set<Id> selectedLineIds { get; set; }
+    public Boolean isDeprecated {get; set;}
 
     public WarrantyAndServiceInitWrapper() {
       this.warranty = new List<CPQ_Lib_dh.OptionWrapper>();
       this.service = new List<CPQ_Lib_dh.OptionWrapper>();
       this.selectedLineIds = new Set<Id>();
+      this.isDeprecated = false;
     }
   }
 
@@ -934,6 +947,7 @@ public with sharing class BusinessOffice_Controller {
 
   private static String initSW_Opp(String recordId, String pbId) {
     WarrantyAndServiceInitWrapper result = new WarrantyAndServiceInitWrapper();
+    List<Quote> quotes = [SELECT Id FROM Quote WHERE OpportunityId = :recordId];
     OpportunityLineItem[] oppLineItems = [
       SELECT
         Id,
@@ -963,6 +977,9 @@ public with sharing class BusinessOffice_Controller {
         recordId,
         pbId
       );
+    }
+    if(quotes.size() > 0){
+      result.isDeprecated = true;
     }
     return JSON.serialize(result);
   }

@@ -165,6 +165,7 @@ public with sharing class BoatBuilder {
 
   public Map<String, Discount> discountItems { get; set; }
 
+  public Boolean gen2Quoting {get; set;}
   private ApexPages.StandardController std;
   private Id currentUserId;
   public Boolean soldToBusiness { get; set; }
@@ -484,6 +485,7 @@ public with sharing class BoatBuilder {
     isEditable = false;
     isValid = true;
     defaultView = 'showConfig';
+    gen2Quoting=false;
     String dateString = ApexPages.currentPage().getParameters().get('quote_valid_date');
     try {
       quoteValidDate = Date.parse(dateString);
@@ -493,50 +495,62 @@ public with sharing class BoatBuilder {
 
     if (opportunity_id != null) {
       opportunity = findOpportunity();
-      //if( opportunity.RecordTypeId == LGND_Utilities.recordTypeIdFromName('Opportunity', 'Partner Boat Sale') )
-      //{
-      //  isDealerOrder = true;
-      //}
-      if (opportunity.Account.recordTypeId == LGND_Utilities.recordTypeIdFromName('Account', 'Business Account'))
-        soldToBusiness = true;
-      //a public view will never have an opportunity so ....
-      isPublicView = false;
-      //Let check to see if the opportunity is locked
-      Set<String> statuses = new Set<String>{ 'Pending', 'Approved' };
-      List<Processinstance> pi = [
-        SELECT Id, Status
-        FROM Processinstance
-        WHERE TargetObjectId = :opportunity_id AND Status IN :statuses
-      ];
-      /* might need to find a better way to determine if the opportunity can be edited
-         but for now it stands as if the current User is a System admin OR the
-        Opportunity has not been submitted for approval then we can edit the boat
-        Configurator
-      */
-      isEditable = true;
-      //set the default view to display
-      String view = ApexPages.currentPage().getParameters().get('defaultView');
-      if (view != null) {
-        defaultView = isEditable ? view : 'showSummary';
-      } else {
-        defaultView = isEditable ? 'showConfig' : 'showSummary';
-      }
-      //pull buyer and cobuyer out
-      for (OpportunityContactRole ocr : opportunity.OpportunityContactRoles) {
-        if (ocr.Role == 'Buyer')
-          buyer = ocr;
-        if (ocr.Role == 'Co-Buyer')
-          cobuyer = ocr;
+
+      if(opportunity.quotes.size() > 0 ){
+        gen2Quoting=true;
+      } else
+      {
+
+        if (opportunity.Account.recordTypeId == LGND_Utilities.recordTypeIdFromName('Account', 'Business Account'))
+          soldToBusiness = true;
+        //a public view will never have an opportunity so ....
+        isPublicView = false;
+        //Let check to see if the opportunity is locked
+        Set<String> statuses = new Set<String>
+        {
+          'Pending', 'Approved'
+        };
+        List<Processinstance> pi = [
+          SELECT Id, Status
+          FROM Processinstance
+          WHERE TargetObjectId = :opportunity_id AND Status IN :statuses
+        ];
+        /* might need to find a better way to determine if the opportunity can be edited
+           but for now it stands as if the current User is a System admin OR the
+          Opportunity has not been submitted for approval then we can edit the boat
+          Configurator
+        */
+        isEditable = true;
+        //set the default view to display
+        String view = ApexPages.currentPage().getParameters().get('defaultView');
+        if (view != null)
+        {
+          defaultView = isEditable ? view : 'showSummary';
+        } else
+        {
+          defaultView = isEditable ? 'showConfig' : 'showSummary';
+        }
+        //pull buyer and cobuyer out
+        for (OpportunityContactRole ocr : opportunity.OpportunityContactRoles)
+        {
+          if (ocr.Role == 'Buyer')
+            buyer = ocr;
+          if (ocr.Role == 'Co-Buyer')
+            cobuyer = ocr;
+        }
       }
     }
+    if( !gen2Quoting)
+    {
+      renderBuilder = true;
+      selectedBoat = null;
+      setup_Taxes_User_and_Fees();
+      buildUpgradeCostMap();
 
-    renderBuilder = true;
-    selectedBoat = null;
-    setup_Taxes_User_and_Fees();
-    buildUpgradeCostMap();
-
-    if (this.opportunity != null && opportunity.OpportunityLineItems.size() > 0) {
-      buildFromOpportunity();
+      if (this.opportunity != null && opportunity.OpportunityLineItems.size() > 0)
+      {
+        buildFromOpportunity();
+      }
     }
   }
 
@@ -2059,6 +2073,7 @@ public with sharing class BoatBuilder {
         Owner.Warehouse__c,
         Owner.FirstName,
         Owner.LastName,
+        (SELECT Id FROM Quotes),
         (SELECT Id FROM Trade_In_Records__r LIMIT 1),
         (
           SELECT
