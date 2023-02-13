@@ -29,14 +29,15 @@
       <table width="100%">
         <tr>
           <td align="center">
-            <button class="slds-button slds-button_brand" onclick="previousPeriod()">&larr; Previous Period</button
+            <button class="slds-button slds-button_brand period-change-btn" onclick="previousPeriod()" disabled="true">&larr; Previous Period</button
             >&nbsp;
             <select name="periodSelector" id="periodSelector" onchange="refreshGrid_report()">
+              <option value="" label="-- Select Period --"></option>
               <apex:repeat value="{!periods}" var="p">
                 <option value="{!p.Id}">{!p.Name}</option>
               </apex:repeat>
             </select>
-            &nbsp;<button class="slds-button slds-button_brand" onclick="nextPeriod()">Next Period &rarr;</button>
+            &nbsp;<button class="slds-button slds-button_brand period-change-btn" onclick="nextPeriod()" disabled="true">Next Period &rarr;</button>
           </td>
         </tr>
         <tr>
@@ -65,6 +66,7 @@
     function setFocusOnLoad() {}
   </script>
   <script type="text/javascript">
+    Visualforce.remoting.timeout = 120000; // Set timeout at page level
     $j = jQuery.noConflict();
     var currentTheme = "{!$User.UITheme}";
 
@@ -238,15 +240,28 @@
         gGrid.refreshTotal($j(this), ui.dataModel.data);
       });
 
-      refreshGrid_report();
+      var idPeriod = $j("#periodSelector").val();
+
+      if( idPeriod.length > 0 ){
+        refreshGrid_report();
+      }
 
       gridObj = null;
     }
 
     function refreshGrid_report() {
+      console.log('refresh grid');
       gSpinner.show();
       var $gridDiv = $j("#reportdiv");
       var idPeriod = $j("#periodSelector").val();
+      if( idPeriod.length > 0 ){
+        $j('.period-change-btn').prop('disabled', false);
+        $j('#periodSelector option').each(function(){
+          if($j(this).val().length === 0 ){
+            $j(this).remove();
+          }
+        });
+      }
       Visualforce.remoting.Manager.invokeAction(
         "{!$RemoteAction.AccountReceivableByGL_ar.retrieveAccountTxnDetails}",
         idPeriod,
