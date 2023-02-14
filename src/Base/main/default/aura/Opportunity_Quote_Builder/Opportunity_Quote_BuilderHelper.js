@@ -1,12 +1,10 @@
 ({
   doInit: function (component) {
-    console.log("helper.doInit");
     var self = this;
     return new Promise(function (resolve, reject) {
       self.doFetchQuotes(component).then(
         $A.getCallback(function (result) {
           var selectedId;
-          console.log(JSON.parse(JSON.stringify(result)));
           component.set("v.isOutdated", result.isOutdated);
           component.set('v.isPartnerOpportunity', result.isPartnerOpportunity);
           if (result.syncedQuoteId !== undefined && result.syncedQuoteId !== null) {
@@ -17,7 +15,6 @@
             selectedId = result.quotes[0].Id;
           }
           if (selectedId === null || selectedId === undefined) {
-            console.log('selected ID null');
             component.set("v.loadCPQ", true);
           }
           component.set("v.url", result.url);
@@ -74,7 +71,6 @@
   },
 
   toggleQuoteList: function (component) {
-    console.log("toggle Quote List");
     var ql = component.find("quote-list-container"),
       mask = component.find("menu-mask");
     $A.util.toggleClass(ql, "open");

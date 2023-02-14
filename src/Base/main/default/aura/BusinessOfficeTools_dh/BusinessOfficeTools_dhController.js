@@ -7,6 +7,7 @@
         component.set("v.pricebookName", result.Name);
         component.set("v.sObjectType", result.sObjectType);
         component.set("v.canViewInsuranceDocs", result.documentsAccessible);
+        component.set('v.oppUsingGen2Quoting', result.gen2Quoting === 'true');
         component.set("v.loading", false);
       }),
       $A.getCallback(function (err) {

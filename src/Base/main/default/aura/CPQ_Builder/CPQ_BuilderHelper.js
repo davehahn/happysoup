@@ -31,14 +31,6 @@
 
     cpq.baseProductRecordType_Name = recordType;
     cpq.baseProductFamily = family;
-
-    // if( typeof(productId) !== 'string' )
-    // {
-    //   if( typeof( cpq.boatId ) === 'string' )
-    //     self.unSelectMajorProduct( component );
-    // }
-    // else
-    // {
     cpq.boatId = productId;
     component.set("v.cpq", cpq);
     action.setParams({
@@ -50,14 +42,12 @@
 
   updateCPQ: function (component, action) {
     var spinner = component.find("spinner");
-    console.log("calling update CPQ");
     spinner.toggle();
     return new Promise(function (resolve, reject) {
       new LightningApex(this, action)
         .fire()
         .then(
           $A.getCallback(function (result) {
-            console.log(JSON.parse(JSON.stringify(result)));
             component.set("v.cpq", result);
           }),
           $A.getCallback(function (err) {
@@ -186,5 +176,24 @@
 
     cpq.saleItems = saleItems;
     component.set("v.cpq", cpq);
+  },
+
+  handleWarrantyServiceItem: function( component, item ){
+    let cpq = component.get('v.cpq');
+    let currentItems = cpq[item.cpqListName];
+    let itemIndex = currentItems.findIndex( currentItem => currentItem.id === item.id );
+    if( item.isSelected ){
+      if(itemIndex >= 0){
+        currentItems[itemIndex] = item;
+      } else {
+        currentItems.push(item);
+      }
+    } else {
+      currentItems = currentItems.filter( currentItem => currentItem.id !== item.id );
+    }
+    cpq[item.cpqListName] = currentItems;
+    component.set('v.cpq', cpq);
   }
+
+
 });

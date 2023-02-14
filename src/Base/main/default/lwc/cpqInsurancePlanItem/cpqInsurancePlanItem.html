@@ -1,0 +1,45 @@
+<!--
+ - Created by dave on 2023-01-21.
+ -->
+
+<!-- Cpq Insurance Plan Item -->
+<template>
+  <tr class={rowClass} if:true={initialized}>
+    <td>
+      <lightning-input
+        type="checkbox"
+        label="l"
+        name={item.Id}
+        variant="label-hidden"
+        disabled={item.termOutOfRange}
+        checked={item.isSelected}
+        onchange={handleSelected}
+      ></lightning-input>
+    </td>
+    <td>{item.Name}</td>
+    <td>
+      <lightning-combobox
+        options={coverageTypeOptions}
+        name=""
+        label=""
+        value={item.coverageType}
+        variant="label-hidden"
+        disabled={coverageTypeEnabled}
+        onchange={handleCoverageTypeChange}
+      ></lightning-combobox>
+    </td>
+    <td>{item.rate}</td>
+    <td>
+      <lightning-input
+        type="number"
+        label="cost"
+        value={item.unitPrice}
+        formatter="currency"
+        variant="label-hidden"
+        step="0.01"
+        disabled="true"
+        class={unitPriceClass}
+      ></lightning-input>
+    </td>
+  </tr>
+</template>

@@ -183,7 +183,6 @@ public with sharing class CPQ_Controller_dh {
         if this is for a partner
         ***** CURRENTLY ONLY IN SAMPLE RETAIL CALCULATOR ********
       */
-      System.debug('***** Product Option - ' + po);
       if (!(CPQ_Lib_dh.defaultPricebooks.get('partner') == activePricebookId && po.Standard__c == po.Maximum__c)) {
         optionMap.put(po.From_Product__c, po);
       }

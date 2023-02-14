@@ -6,6 +6,7 @@
   <aura:attribute name="warrantItems" type="List" />
   <aura:attribute name="serviceItems" type="List" />
   <aura:attribute name="originalSelectedLineIds" type="List" />
+  <aura:attribute name="isDeprecated" type="Boolean" default="false" />
   <aura:attribute name="changed" type="Boolean" default="false" />
 
   <ltng:require
@@ -18,7 +19,16 @@
   <aura:handler name="optionChanged" event="c:CPQ_OptionLine_ChangeEvent_dh" action="{!c.handleOptionChange}" />
   <aura:handler event="force:refreshView" action="{!c.doInit}" />
 
-  <div class="slds-card">
+  <aura:if isTrue="{!v.isDeprecated}">
+    <div class="slds-notify slds-notify_alert slds-alert_error" role="alert">
+      <span class="slds-assistive-text">error</span>
+      <lightning:icon name="utility:error" size="x-small"></lightning:icon>
+      <h2>This Opportunity uses Generation 2 Quoting and this tool is now deprecated</h2>
+    </div>
+  </aura:if>
+
+  <aura:if isTrue="{!not(v.isDeprecated)}">
+    <div class="slds-card">
     <aura:if isTrue="{!v.loading}">
       <div class="slds-spinner_container">
         <div role="status" class="slds-spinner slds-spinner_medium">
@@ -132,4 +142,5 @@
       </lightning:layout>
     </aura:if>
   </div>
+  </aura:if>
 </aura:component>

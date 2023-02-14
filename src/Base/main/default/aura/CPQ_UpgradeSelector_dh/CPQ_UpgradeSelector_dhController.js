@@ -26,6 +26,10 @@
   },
 
   handleValueChange: function (component, event, helper) {
+    const valueId = component.get('v.valueId');
+    const originalValueId = component.get('v.originalValueId');
+    console.log(`valueId = ${valueId}, originalValueId = ${originalValueId}`);
+    console.log( JSON.parse( JSON.stringify( event.getParams() ) ) );
     helper.removeSelectedOptions(component).then(
       $A.getCallback(function () {
         helper.setSelected(component);

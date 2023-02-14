@@ -2,7 +2,6 @@
   doInit: function (component, event, helper) {
     var item = component.get("v.optionItem"),
       saleItems = component.get("v.saleItems");
-      console.log( JSON.parse( JSON.stringify( item ) ) );
     if (!item.isCheckbox) {
       var opts = [];
       for (var i = item.standard; i <= item.maximum; i++) {
