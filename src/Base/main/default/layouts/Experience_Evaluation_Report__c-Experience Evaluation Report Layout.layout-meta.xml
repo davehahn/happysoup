@@ -45,6 +45,18 @@
                 <behavior>Edit</behavior>
                 <field>Executive_Overview__c</field>
             </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>Root_Cause__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>Potential_Risk__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>Potential_Risk_Cost__c</field>
+            </layoutItems>
         </layoutColumns>
         <layoutColumns>
             <layoutItems>
@@ -91,8 +103,21 @@
                 <behavior>Edit</behavior>
                 <field>Detailed_Summary__c</field>
             </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>Experience_and_Process_Gaps__c</field>
+            </layoutItems>
         </layoutColumns>
-        <layoutColumns/>
+        <layoutColumns>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>Steps_to_Resolve_w_o_Case_Escalation__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>Actual_Cost_to_Resolve_w_o_Case_Escalati__c</field>
+            </layoutItems>
+        </layoutColumns>
         <style>TwoColumnsLeftToRight</style>
     </layoutSections>
     <layoutSections>
@@ -124,6 +149,10 @@
         <layoutColumns/>
         <style>CustomLinks</style>
     </layoutSections>
+    <miniLayout>
+        <fields>Status__c</fields>
+        <fields>Root_Cause__c</fields>
+    </miniLayout>
     <platformActionList>
         <actionListContext>Record</actionListContext>
         <platformActionListItems>
