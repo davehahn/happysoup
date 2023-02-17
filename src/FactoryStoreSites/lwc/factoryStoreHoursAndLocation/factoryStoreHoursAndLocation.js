@@ -87,7 +87,7 @@ export default class FactoryStoreHoursAndLocation extends LightningElement {
 
   updateLocationDetails() {
     this.parseAddress();
-    this.currentHours = this.parsePeriods();
+    this.currentHours = (this.gpResult.opening_hours.open_now) ? this.parsePeriods() : false;
     this.statusClass = this.gpResult.opening_hours.open_now
       ? "currentStatus currentStatus--open"
       : "currentStatus currentStatus--closed";
@@ -161,14 +161,30 @@ export default class FactoryStoreHoursAndLocation extends LightningElement {
   }
 
   parsePeriods() {
-    const n = new Date().getDay() - 1;
-    const open = this.gpResult.opening_hours.periods[n].open.time;
+    console.log('Opening Hours: ', this.gpResult.opening_hours.periods);
+    const n = new Date().getDay();
+    const periods = this.gpResult.opening_hours.periods;
+    const numPeriods = periods.length;
+    let open = null;
+    let close = null;
+    for(let i = 0; i < numPeriods; i++){
+      console.log('n: ', n);
+      console.log('periods[i].open.day: ', periods[i].open.day);
+      if(parseInt(periods[i].open.day) === n){
+        console.log('periods[i].open.time: ', periods[i].open.time);
+        open = periods[i].open.time;
+      }
+      if(parseInt(periods[i].open.day) === n){
+        close = periods[i].close.time;
+      }
+    }
+//    const open = this.gpResult.opening_hours.periods[n].open.time;
     let openHr = open.substr(0, 2);
     let openMin = open.substr(2, 2);
     let openAMPM = openHr >= 12 ? "pm" : "am";
     openHr = openHr % 12 || 12;
 
-    const close = this.gpResult.opening_hours.periods[n].close.time;
+//    const close = this.gpResult.opening_hours.periods[n].close.time;
     let closeHr = close.substr(0, 2);
     let closeMin = close.substr(2, 2);
     let closeAMPM = closeHr >= 12 ? "pm" : "am";
