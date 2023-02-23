@@ -7,7 +7,8 @@
     <customButtons>Transaction_Detail</customButtons>
     <customButtons>Create_AP_Statement</customButtons>
     <customButtons>Dealer_Reserve_Receipt</customButtons>
-    <excludeButtons>DataDotComClean</excludeButtons>
+    <excludeButtons>DataDotComAccountInsights</excludeButtons>
+    <excludeButtons>DataDotComCompanyHierarchy</excludeButtons>
     <excludeButtons>DisableCustomerPortalAccount</excludeButtons>
     <excludeButtons>DisablePartnerPortalAccount</excludeButtons>
     <excludeButtons>IncludeOffline</excludeButtons>
@@ -179,7 +180,7 @@
         <layoutColumns>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>WOW_Notes__pc</field>
+                <field>WOW_Notes__c</field>
             </layoutItems>
         </layoutColumns>
         <layoutColumns/>
@@ -292,21 +293,6 @@
     <platformActionList>
         <actionListContext>Record</actionListContext>
         <platformActionListItems>
-            <actionName>ChangeTargetAssignee</actionName>
-            <actionType>StandardButton</actionType>
-            <sortOrder>41</sortOrder>
-        </platformActionListItems>
-        <platformActionListItems>
-            <actionName>PauseCadenceByTargetId</actionName>
-            <actionType>StandardButton</actionType>
-            <sortOrder>42</sortOrder>
-        </platformActionListItems>
-        <platformActionListItems>
-            <actionName>ResumeCadenceByTargetId</actionName>
-            <actionType>StandardButton</actionType>
-            <sortOrder>43</sortOrder>
-        </platformActionListItems>
-        <platformActionListItems>
             <actionName>Account.Collect_Payment</actionName>
             <actionType>QuickAction</actionType>
             <sortOrder>0</sortOrder>
@@ -337,24 +323,9 @@
             <sortOrder>5</sortOrder>
         </platformActionListItems>
         <platformActionListItems>
-            <actionName>Account.Contact</actionName>
-            <actionType>QuickAction</actionType>
-            <sortOrder>10</sortOrder>
-        </platformActionListItems>
-        <platformActionListItems>
             <actionName>LogACall</actionName>
             <actionType>QuickAction</actionType>
             <sortOrder>6</sortOrder>
-        </platformActionListItems>
-        <platformActionListItems>
-            <actionName>Account.Opportunity</actionName>
-            <actionType>QuickAction</actionType>
-            <sortOrder>11</sortOrder>
-        </platformActionListItems>
-        <platformActionListItems>
-            <actionName>Account.Task</actionName>
-            <actionType>QuickAction</actionType>
-            <sortOrder>12</sortOrder>
         </platformActionListItems>
         <platformActionListItems>
             <actionName>Account.Image_Capture</actionName>
@@ -367,19 +338,29 @@
             <sortOrder>8</sortOrder>
         </platformActionListItems>
         <platformActionListItems>
-            <actionName>Account.Child_Account</actionName>
-            <actionType>QuickAction</actionType>
-            <sortOrder>13</sortOrder>
-        </platformActionListItems>
-        <platformActionListItems>
             <actionName>FeedItem.PollPost</actionName>
             <actionType>QuickAction</actionType>
             <sortOrder>9</sortOrder>
         </platformActionListItems>
         <platformActionListItems>
-            <actionName>EmailHighlightAction</actionName>
-            <actionType>ProductivityAction</actionType>
-            <sortOrder>37</sortOrder>
+            <actionName>Account.Contact</actionName>
+            <actionType>QuickAction</actionType>
+            <sortOrder>10</sortOrder>
+        </platformActionListItems>
+        <platformActionListItems>
+            <actionName>Account.Opportunity</actionName>
+            <actionType>QuickAction</actionType>
+            <sortOrder>11</sortOrder>
+        </platformActionListItems>
+        <platformActionListItems>
+            <actionName>Account.Task</actionName>
+            <actionType>QuickAction</actionType>
+            <sortOrder>12</sortOrder>
+        </platformActionListItems>
+        <platformActionListItems>
+            <actionName>Account.Child_Account</actionName>
+            <actionType>QuickAction</actionType>
+            <sortOrder>13</sortOrder>
         </platformActionListItems>
         <platformActionListItems>
             <actionName>Account.Case</actionName>
@@ -437,19 +418,9 @@
             <sortOrder>24</sortOrder>
         </platformActionListItems>
         <platformActionListItems>
-            <actionName>WebsiteHighlightAction</actionName>
-            <actionType>ProductivityAction</actionType>
-            <sortOrder>38</sortOrder>
-        </platformActionListItems>
-        <platformActionListItems>
             <actionName>AccountHierarchy</actionName>
             <actionType>StandardButton</actionType>
             <sortOrder>25</sortOrder>
-        </platformActionListItems>
-        <platformActionListItems>
-            <actionName>AddToCadence</actionName>
-            <actionType>StandardButton</actionType>
-            <sortOrder>39</sortOrder>
         </platformActionListItems>
         <platformActionListItems>
             <actionName>JigsawSearch</actionName>
@@ -465,11 +436,6 @@
             <actionName>ViewCustomerPortalUser</actionName>
             <actionType>StandardButton</actionType>
             <sortOrder>28</sortOrder>
-        </platformActionListItems>
-        <platformActionListItems>
-            <actionName>RemoveFromCadence</actionName>
-            <actionType>StandardButton</actionType>
-            <sortOrder>40</sortOrder>
         </platformActionListItems>
         <platformActionListItems>
             <actionName>AcctSeed__Create_Statement</actionName>
@@ -510,6 +476,41 @@
             <actionName>SmsHighlightAction</actionName>
             <actionType>ProductivityAction</actionType>
             <sortOrder>36</sortOrder>
+        </platformActionListItems>
+        <platformActionListItems>
+            <actionName>EmailHighlightAction</actionName>
+            <actionType>ProductivityAction</actionType>
+            <sortOrder>37</sortOrder>
+        </platformActionListItems>
+        <platformActionListItems>
+            <actionName>WebsiteHighlightAction</actionName>
+            <actionType>ProductivityAction</actionType>
+            <sortOrder>38</sortOrder>
+        </platformActionListItems>
+        <platformActionListItems>
+            <actionName>AddToCadence</actionName>
+            <actionType>StandardButton</actionType>
+            <sortOrder>39</sortOrder>
+        </platformActionListItems>
+        <platformActionListItems>
+            <actionName>RemoveFromCadence</actionName>
+            <actionType>StandardButton</actionType>
+            <sortOrder>40</sortOrder>
+        </platformActionListItems>
+        <platformActionListItems>
+            <actionName>ChangeTargetAssignee</actionName>
+            <actionType>StandardButton</actionType>
+            <sortOrder>41</sortOrder>
+        </platformActionListItems>
+        <platformActionListItems>
+            <actionName>PauseCadenceByTargetId</actionName>
+            <actionType>StandardButton</actionType>
+            <sortOrder>42</sortOrder>
+        </platformActionListItems>
+        <platformActionListItems>
+            <actionName>ResumeCadenceByTargetId</actionName>
+            <actionType>StandardButton</actionType>
+            <sortOrder>43</sortOrder>
         </platformActionListItems>
     </platformActionList>
     <quickActionList>
