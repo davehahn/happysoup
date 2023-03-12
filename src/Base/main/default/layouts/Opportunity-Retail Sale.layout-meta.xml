@@ -25,10 +25,6 @@
         <label>Opportunity Information</label>
         <layoutColumns>
             <layoutItems>
-                <behavior>Readonly</behavior>
-                <field>IqScore</field>
-            </layoutItems>
-            <layoutItems>
                 <behavior>Edit</behavior>
                 <field>OwnerId</field>
             </layoutItems>
@@ -223,6 +219,10 @@
             <layoutItems>
                 <behavior>Edit</behavior>
                 <field>Finance_Ammortization__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>Insurance_Term__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
@@ -428,21 +428,6 @@
     <platformActionList>
         <actionListContext>Record</actionListContext>
         <platformActionListItems>
-            <actionName>Opportunity.Boat_Appraisal</actionName>
-            <actionType>QuickAction</actionType>
-            <sortOrder>0</sortOrder>
-        </platformActionListItems>
-        <platformActionListItems>
-            <actionName>FeedItem.TextPost</actionName>
-            <actionType>QuickAction</actionType>
-            <sortOrder>1</sortOrder>
-        </platformActionListItems>
-        <platformActionListItems>
-            <actionName>LogACall</actionName>
-            <actionType>QuickAction</actionType>
-            <sortOrder>2</sortOrder>
-        </platformActionListItems>
-        <platformActionListItems>
             <actionName>SendEmail</actionName>
             <actionType>QuickAction</actionType>
             <sortOrder>3</sortOrder>
@@ -473,6 +458,11 @@
             <sortOrder>8</sortOrder>
         </platformActionListItems>
         <platformActionListItems>
+            <actionName>LogACall</actionName>
+            <actionType>QuickAction</actionType>
+            <sortOrder>2</sortOrder>
+        </platformActionListItems>
+        <platformActionListItems>
             <actionName>Business_Office</actionName>
             <actionType>CustomButton</actionType>
             <sortOrder>9</sortOrder>
@@ -488,9 +478,14 @@
             <sortOrder>11</sortOrder>
         </platformActionListItems>
         <platformActionListItems>
-            <actionName>OpportunityMultiAddToCadence</actionName>
-            <actionType>StandardButton</actionType>
-            <sortOrder>12</sortOrder>
+            <actionName>Opportunity.Boat_Appraisal</actionName>
+            <actionType>QuickAction</actionType>
+            <sortOrder>0</sortOrder>
+        </platformActionListItems>
+        <platformActionListItems>
+            <actionName>FeedItem.TextPost</actionName>
+            <actionType>QuickAction</actionType>
+            <sortOrder>1</sortOrder>
         </platformActionListItems>
     </platformActionList>
     <quickActionList>
@@ -530,6 +525,16 @@
             </layoutItem>
         </relatedContentItems>
     </relatedContent>
+    <relatedLists>
+        <fields>QUOTE.QUOTENUMBER</fields>
+        <fields>QUOTE.NAME</fields>
+        <fields>QUOTE.ISSYNCING</fields>
+        <fields>QUOTE.EXPIRATIONDATE</fields>
+        <fields>QUOTE.SUBTOTAL</fields>
+        <fields>QUOTE.TOTALPRICE</fields>
+        <fields>CreatedBy</fields>
+        <relatedList>RelatedQuoteList</relatedList>
+    </relatedLists>
     <relatedLists>
         <fields>Product2</fields>
         <fields>Description</fields>
@@ -595,6 +600,14 @@
         <fields>Actor</fields>
         <fields>Comments</fields>
         <relatedList>RelatedProcessHistoryList</relatedList>
+    </relatedLists>
+    <relatedLists>
+        <fields>CAMPAIGN.NAME</fields>
+        <fields>CONTACT.FULL_NAME</fields>
+        <fields>OCR.ROLE</fields>
+        <fields>CM.RESPONDED</fields>
+        <fields>PRIMARY</fields>
+        <relatedList>RelatedCampaignInfluenceList</relatedList>
     </relatedLists>
     <relatedLists>
         <fields>ContactName</fields>
