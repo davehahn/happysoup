@@ -3,13 +3,14 @@
     <actionCalls>
         <name>Create_Article_Translation</name>
         <label>Create Article Translation</label>
-        <locationX>988</locationX>
-        <locationY>111</locationY>
+        <locationX>314</locationX>
+        <locationY>1238</locationY>
         <actionName>submitKnowledgeArticleForTranslation</actionName>
         <actionType>submitKnowledgeArticleForTranslation</actionType>
         <connector>
             <targetReference>Create_Translation_Case</targetReference>
         </connector>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
         <inputParameters>
             <name>articleId</name>
             <value>
@@ -26,13 +27,14 @@
     <actionCalls>
         <name>Submit_Article_for_Translation</name>
         <label>Submit Article for Translation</label>
-        <locationX>865</locationX>
-        <locationY>111</locationY>
+        <locationX>314</locationX>
+        <locationY>1118</locationY>
         <actionName>General_Information__kav.Submit_Article_for_Translation_External</actionName>
         <actionType>emailAlert</actionType>
         <connector>
             <targetReference>Create_Article_Translation</targetReference>
         </connector>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
         <inputParameters>
             <name>SObjectRowId</name>
             <value>
@@ -40,35 +42,28 @@
             </value>
         </inputParameters>
     </actionCalls>
+    <apiVersion>49.0</apiVersion>
     <choices>
         <name>Translator1</name>
-        <choiceText>cregimbald@me.com</choiceText>
+        <choiceText>vpotter@legendboats.com</choiceText>
         <dataType>String</dataType>
         <value>
-            <stringValue>cregimbald@me.com</stringValue>
+            <stringValue>vpotter@legendboats.com</stringValue>
         </value>
     </choices>
     <choices>
         <name>Translator2</name>
-        <choiceText>snadeau@legendboats.com</choiceText>
+        <choiceText>tacosta@legendboats.com</choiceText>
         <dataType>String</dataType>
         <value>
-            <stringValue>snadeau@legendboats.com</stringValue>
-        </value>
-    </choices>
-    <choices>
-        <name>Translator3</name>
-        <choiceText>tpeterson@legendboats.com</choiceText>
-        <dataType>String</dataType>
-        <value>
-            <stringValue>tpeterson@legendboats.com</stringValue>
+            <stringValue>tacosta@legendboats.com</stringValue>
         </value>
     </choices>
     <decisions>
         <name>Check_Already_Translated</name>
         <label>Check Already Translated</label>
-        <locationX>326</locationX>
-        <locationY>336</locationY>
+        <locationX>842</locationX>
+        <locationY>398</locationY>
         <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
         <rules>
             <name>CaseNull</name>
@@ -104,8 +99,8 @@
     <decisions>
         <name>Check_Published</name>
         <label>Check Published</label>
-        <locationX>498</locationX>
-        <locationY>337</locationY>
+        <locationX>314</locationX>
+        <locationY>518</locationY>
         <defaultConnector>
             <targetReference>Select_Translator</targetReference>
         </defaultConnector>
@@ -129,8 +124,8 @@
     <decisions>
         <name>Translator_Validator</name>
         <label>Translator Validator</label>
-        <locationX>677</locationX>
-        <locationY>345</locationY>
+        <locationX>578</locationX>
+        <locationY>878</locationY>
         <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
         <rules>
             <name>TranslatorValid</name>
@@ -163,13 +158,20 @@
             <label>TranslatorError</label>
         </rules>
     </decisions>
-    <description>Removed Translator on KB and moved to Case (for Dave&#39;s deployment)</description>
+    <description>Removed Translator on KB and moved to Case (for Dave&apos;s deployment)</description>
+    <environments>Default</environments>
     <interviewLabel>Submit Article for External Translation {!$Flow.CurrentDateTime}</interviewLabel>
     <label>Submit Article for External Translation</label>
     <processMetadataValues>
         <name>BuilderType</name>
         <value>
             <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
         </value>
     </processMetadataValues>
     <processMetadataValues>
@@ -182,8 +184,8 @@
     <recordCreates>
         <name>Create_Translation_Case</name>
         <label>Create Translation Case</label>
-        <locationX>988</locationX>
-        <locationY>303</locationY>
+        <locationX>314</locationX>
+        <locationY>1358</locationY>
         <assignRecordIdToReference>caseId</assignRecordIdToReference>
         <connector>
             <targetReference>Update_Article_Case_Detais</targetReference>
@@ -211,12 +213,13 @@
     <recordLookups>
         <name>Get_Translated_Article</name>
         <label>Get Translated Article</label>
-        <locationX>1238</locationX>
-        <locationY>304</locationY>
+        <locationX>314</locationX>
+        <locationY>1598</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
             <targetReference>Update_Translated_Article_Case_Details</targetReference>
         </connector>
+        <filterLogic>and</filterLogic>
         <filters>
             <field>Id</field>
             <operator>NotEqualTo</operator>
@@ -247,12 +250,13 @@
     <recordLookups>
         <name>getArticle</name>
         <label>getArticle</label>
-        <locationX>334</locationX>
-        <locationY>103</locationY>
+        <locationX>842</locationX>
+        <locationY>278</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
             <targetReference>Check_Already_Translated</targetReference>
         </connector>
+        <filterLogic>and</filterLogic>
         <filters>
             <field>Id</field>
             <operator>EqualTo</operator>
@@ -285,11 +289,12 @@
     <recordUpdates>
         <name>Update_Article_Case_Detais</name>
         <label>Update Article Case Detais</label>
-        <locationX>1112</locationX>
-        <locationY>303</locationY>
+        <locationX>314</locationX>
+        <locationY>1478</locationY>
         <connector>
             <targetReference>Get_Translated_Article</targetReference>
         </connector>
+        <filterLogic>and</filterLogic>
         <filters>
             <field>Id</field>
             <operator>EqualTo</operator>
@@ -309,11 +314,12 @@
         <description>Update EN KB Translator</description>
         <name>Update_KB_Translator</name>
         <label>Update KB Translator</label>
-        <locationX>756</locationX>
-        <locationY>111</locationY>
+        <locationX>314</locationX>
+        <locationY>998</locationY>
         <connector>
             <targetReference>Submit_Article_for_Translation</targetReference>
         </connector>
+        <filterLogic>and</filterLogic>
         <filters>
             <field>Id</field>
             <operator>EqualTo</operator>
@@ -332,11 +338,12 @@
     <recordUpdates>
         <name>Update_Translated_Article_Case_Details</name>
         <label>Update Translated Article Case Details</label>
-        <locationX>1382</locationX>
-        <locationY>304</locationY>
+        <locationX>314</locationX>
+        <locationY>1718</locationY>
         <connector>
             <targetReference>Email_Confirmation</targetReference>
         </connector>
+        <filterLogic>and</filterLogic>
         <filters>
             <field>Id</field>
             <operator>EqualTo</operator>
@@ -361,8 +368,8 @@
     <screens>
         <name>Email_Confirmation</name>
         <label>Email Confirmation</label>
-        <locationX>1382</locationX>
-        <locationY>131</locationY>
+        <locationX>314</locationX>
+        <locationY>1838</locationY>
         <allowBack>false</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -377,8 +384,8 @@
     <screens>
         <name>Email_Failed</name>
         <label>Email Failed</label>
-        <locationX>677</locationX>
-        <locationY>535</locationY>
+        <locationX>578</locationX>
+        <locationY>998</locationY>
         <allowBack>false</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -393,8 +400,8 @@
     <screens>
         <name>Email_Failed_Published</name>
         <label>Email Failed</label>
-        <locationX>504</locationX>
-        <locationY>545</locationY>
+        <locationX>50</locationX>
+        <locationY>638</locationY>
         <allowBack>false</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -409,8 +416,8 @@
     <screens>
         <name>Email_Failed_Translated</name>
         <label>Email Failed</label>
-        <locationX>334</locationX>
-        <locationY>554</locationY>
+        <locationX>1106</locationX>
+        <locationY>518</locationY>
         <allowBack>false</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -425,8 +432,8 @@
     <screens>
         <name>Email_Preview_Screen</name>
         <label>Email Preview</label>
-        <locationX>618</locationX>
-        <locationY>106</locationY>
+        <locationX>578</locationX>
+        <locationY>758</locationY>
         <allowBack>false</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -449,8 +456,8 @@
     <screens>
         <name>Select_Translator</name>
         <label>Select Translator</label>
-        <locationX>502</locationX>
-        <locationY>106</locationY>
+        <locationX>578</locationX>
+        <locationY>638</locationY>
         <allowBack>false</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -461,7 +468,6 @@
             <name>Select_a_Translator</name>
             <choiceReferences>Translator1</choiceReferences>
             <choiceReferences>Translator2</choiceReferences>
-            <choiceReferences>Translator3</choiceReferences>
             <dataType>String</dataType>
             <fieldText>Select a Translator</fieldText>
             <fieldType>DropdownBox</fieldType>
@@ -473,8 +479,8 @@
     <screens>
         <name>Submit_for_Translation</name>
         <label>Submit for Translation</label>
-        <locationX>207</locationX>
-        <locationY>103</locationY>
+        <locationX>842</locationX>
+        <locationY>158</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -485,8 +491,8 @@
         <showHeader>true</showHeader>
     </screens>
     <start>
-        <locationX>50</locationX>
-        <locationY>103</locationY>
+        <locationX>716</locationX>
+        <locationY>0</locationY>
         <connector>
             <targetReference>Submit_for_Translation</targetReference>
         </connector>
@@ -494,10 +500,12 @@
     <status>Active</status>
     <textTemplates>
         <name>article_content</name>
+        <isViewedAsPlainText>false</isViewedAsPlainText>
         <text>&lt;p&gt;{!store_article_content}&lt;/p&gt;</text>
     </textTemplates>
     <textTemplates>
         <name>article_title</name>
+        <isViewedAsPlainText>false</isViewedAsPlainText>
         <text>&lt;p&gt;{!store_article_title}&lt;/p&gt;</text>
     </textTemplates>
     <variables>
