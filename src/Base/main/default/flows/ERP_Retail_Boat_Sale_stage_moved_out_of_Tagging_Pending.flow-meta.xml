@@ -4,8 +4,8 @@
     <decisions>
         <name>Check_SERP_Stage</name>
         <label>Check SERP Stage</label>
-        <locationX>182</locationX>
-        <locationY>335</locationY>
+        <locationX>1016</locationX>
+        <locationY>383</locationY>
         <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
         <rules>
             <name>ERP_stage_was_Tagging_Pending</name>
@@ -23,6 +23,13 @@
             <label>ERP stage was Tagging Pending?</label>
         </rules>
     </decisions>
+    <environments>Default</environments>
+    <formulas>
+        <description>Sets Due Date of task to be today&apos;s date plus one</description>
+        <name>TodaysDatePlusOne</name>
+        <dataType>Date</dataType>
+        <expression>Today()+1</expression>
+    </formulas>
     <interviewLabel>ERP {!$Flow.CurrentDateTime}</interviewLabel>
     <label>ERP : Retail Boat Sale - stage moved out of Tagging Pending</label>
     <processMetadataValues>
@@ -34,7 +41,7 @@
     <processMetadataValues>
         <name>CanvasMode</name>
         <value>
-            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+            <stringValue>FREE_FORM_CANVAS</stringValue>
         </value>
     </processMetadataValues>
     <processMetadataValues>
@@ -47,8 +54,14 @@
     <recordCreates>
         <name>Task</name>
         <label>Task</label>
-        <locationX>50</locationX>
-        <locationY>575</locationY>
+        <locationX>884</locationX>
+        <locationY>623</locationY>
+        <inputAssignments>
+            <field>ActivityDate</field>
+            <value>
+                <elementReference>TodaysDatePlusOne</elementReference>
+            </value>
+        </inputAssignments>
         <inputAssignments>
             <field>Description</field>
             <value>
@@ -85,8 +98,8 @@
     <recordLookups>
         <name>Get_Task_Owner</name>
         <label>Get Task Owner</label>
-        <locationX>50</locationX>
-        <locationY>455</locationY>
+        <locationX>884</locationX>
+        <locationY>503</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
             <targetReference>Task</targetReference>
@@ -111,8 +124,8 @@
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </recordLookups>
     <start>
-        <locationX>56</locationX>
-        <locationY>0</locationY>
+        <locationX>890</locationX>
+        <locationY>48</locationY>
         <connector>
             <targetReference>Check_SERP_Stage</targetReference>
         </connector>
