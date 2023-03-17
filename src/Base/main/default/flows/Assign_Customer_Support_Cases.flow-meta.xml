@@ -1,68 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Flow xmlns="http://soap.sforce.com/2006/04/metadata">
-    <actionCalls>
-        <processMetadataValues>
-            <name>emailAlertSelection</name>
-            <value>
-                <stringValue>Notify_Service_Team_of_new_Service_Case_Whitefish</stringValue>
-            </value>
-        </processMetadataValues>
-        <name>myRule_1_A2</name>
-        <label>Email Service Staff Whitefish</label>
-        <locationX>100</locationX>
-        <locationY>300</locationY>
-        <actionName>Case.Notify_Service_Team_of_new_Service_Case_Whitefish</actionName>
-        <actionType>emailAlert</actionType>
-        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
-        <inputParameters>
-            <name>SObjectRowId</name>
-            <value>
-                <elementReference>myVariable_current.Id</elementReference>
-            </value>
-        </inputParameters>
-    </actionCalls>
-    <actionCalls>
-        <processMetadataValues>
-            <name>emailAlertSelection</name>
-            <value>
-                <stringValue>Notify_Service_Team_of_new_Service_Case_Barrie</stringValue>
-            </value>
-        </processMetadataValues>
-        <name>myRule_3_A2</name>
-        <label>Email Service Staff Barrie</label>
-        <locationX>300</locationX>
-        <locationY>300</locationY>
-        <actionName>Case.Notify_Service_Team_of_new_Service_Case_Barrie</actionName>
-        <actionType>emailAlert</actionType>
-        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
-        <inputParameters>
-            <name>SObjectRowId</name>
-            <value>
-                <elementReference>myVariable_current.Id</elementReference>
-            </value>
-        </inputParameters>
-    </actionCalls>
-    <actionCalls>
-        <processMetadataValues>
-            <name>emailAlertSelection</name>
-            <value>
-                <stringValue>Notify_Service_Team_of_new_Service_Case_Montreal</stringValue>
-            </value>
-        </processMetadataValues>
-        <name>myRule_5_A2</name>
-        <label>Email Service Staff Montreal</label>
-        <locationX>500</locationX>
-        <locationY>300</locationY>
-        <actionName>Case.Notify_Service_Team_of_new_Service_Case_Montreal</actionName>
-        <actionType>emailAlert</actionType>
-        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
-        <inputParameters>
-            <name>SObjectRowId</name>
-            <value>
-                <elementReference>myVariable_current.Id</elementReference>
-            </value>
-        </inputParameters>
-    </actionCalls>
     <apiVersion>53.0</apiVersion>
     <decisions>
         <processMetadataValues>
@@ -406,7 +343,7 @@
         </rules>
     </decisions>
     <description>Assigns Customer Support Cases to Employees since Global Actions don&apos;t trigger assignment rules.</description>
-    <interviewLabel>Assign_Customer_Support_Cases-10_InterviewLabel</interviewLabel>
+    <interviewLabel>Assign_Customer_Support_Cases-11_InterviewLabel</interviewLabel>
     <label>Assign Customer Support Cases</label>
     <processMetadataValues>
         <name>ObjectType</name>
@@ -462,9 +399,6 @@
         <label>Change Ownership</label>
         <locationX>100</locationX>
         <locationY>200</locationY>
-        <connector>
-            <targetReference>myRule_1_A2</targetReference>
-        </connector>
         <filterLogic>and</filterLogic>
         <filters>
             <processMetadataValues>
@@ -552,9 +486,6 @@
         <label>Change Ownership</label>
         <locationX>300</locationX>
         <locationY>200</locationY>
-        <connector>
-            <targetReference>myRule_3_A2</targetReference>
-        </connector>
         <filterLogic>and</filterLogic>
         <filters>
             <processMetadataValues>
@@ -642,9 +573,6 @@
         <label>Change Ownership</label>
         <locationX>500</locationX>
         <locationY>200</locationY>
-        <connector>
-            <targetReference>myRule_5_A2</targetReference>
-        </connector>
         <filterLogic>and</filterLogic>
         <filters>
             <processMetadataValues>
