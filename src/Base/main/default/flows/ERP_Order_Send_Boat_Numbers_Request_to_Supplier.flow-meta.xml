@@ -81,6 +81,7 @@
         </rules>
     </decisions>
     <description>Sends an email requesting Boat Numbers to the Supplier</description>
+    <environments>Default</environments>
     <interviewLabel>ERP Order - Send Boat Numbers Request to Supplier {!$Flow.CurrentDateTime}</interviewLabel>
     <label>ERP Order - Send Boat Numbers Request to Supplier</label>
     <processMetadataValues>
@@ -109,6 +110,7 @@
             <targetReference>Location_Branch</targetReference>
         </connector>
         <doesRequireRecordChangedToMeetCriteria>true</doesRequireRecordChangedToMeetCriteria>
+        <filterFormula>NOT(ISBLANK({!$Record.Boat_numbers_erp__c})) &amp;&amp; NOT(CONTAINS({!$Record.AcctSeed__Opportunity__r.BoatId__r.Name}, &apos;Loose&apos;)) &amp;&amp; NOT(ISPICKVAL({!$Record.Serial_Number__r.Status__c}, &apos;Used&apos;))</filterFormula>
         <object>AcctSeed__Project__c</object>
         <recordTriggerType>CreateAndUpdate</recordTriggerType>
         <triggerType>RecordAfterSave</triggerType>

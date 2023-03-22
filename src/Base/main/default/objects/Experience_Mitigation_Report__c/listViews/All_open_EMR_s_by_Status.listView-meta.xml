@@ -9,6 +9,11 @@
     <columns>Initial_Presentation__c</columns>
     <columns>CREATED_DATE</columns>
     <filterScope>Everything</filterScope>
+    <filters>
+        <field>Status__c</field>
+        <operation>notEqual</operation>
+        <value>Closed</value>
+    </filters>
     <label>All open EMR&apos;s by Status</label>
     <sharedTo>
         <group>National_Customer_Support</group>
