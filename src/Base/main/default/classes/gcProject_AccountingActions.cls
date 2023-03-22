@@ -1984,6 +1984,7 @@ public without sharing class gcProject_AccountingActions {
         AcctSeedERP__Product__r.Loaded_Cost__c,
         AcctSeedERP__Product__r.AcctSeed__Inventory_GL_Account__c,
         AcctSeedERP__Product__r.AcctSeed__Expense_GL_Account__c,
+        AcctSeedERP__Product__r.AcctSeed__Revenue_GL_Account__c,
         AcctSeedERP__Project__c,
         AcctSeedERP__Project__r.RecordTypeId,
         AcctSeedERP__Project__r.Internal_Labour_Service__c,
@@ -2089,8 +2090,10 @@ public without sharing class gcProject_AccountingActions {
             matl.AcctSeedERP__Product__r.RecordType.Name == gcConstants.internalProductRecordTypeName &&
             matl.AcctSeedERP__Project__r.Internal_Labour_Service__c
           ) {
-            idDebitGL = idGlWagesLabour;
+            //idDebitGL = idGlWagesLabour;
+            idDebitGL = matl.AcctSeedERP__Product__r.AcctSeed__Expense_GL_Account__c;
             idCreditGL = idGlInternalLabour;
+            //idCreditGL = matl.AcctSeedERP__Product__r.AcctSeed__Revenue_GL_Account__c;
             amt = (matl.GMBLASERP__Unit_Price__c == null ? 0 : matl.GMBLASERP__Unit_Price__c) * qty;
           }
           Boolean noERP = false;
