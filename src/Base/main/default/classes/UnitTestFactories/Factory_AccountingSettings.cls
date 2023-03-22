@@ -22,8 +22,10 @@ public class Factory_AccountingSettings {
   public AcctSeed__Billing_Format__c billingOutstandingStatementFormat;
   public AcctSeed__Billing_Format__c purchaseOrderStatementFormat;
   public AcctSeed__Billing_Format__c packingSlipStatementFormat;
+  public List<AcctSeed__GL_Account_Default__c> defaultGls = new List<AcctSeed__GL_Account_Default__c>();
 
   public Factory_AccountingSettings() {
+
     setGlAccounts();
     setPDFFormats();
     defaultLedger = buildLedger();
@@ -35,38 +37,94 @@ public class Factory_AccountingSettings {
     List<sObject> glAccts = Test.loadData(AcctSeed__GL_Account__c.sObjectType, 'TestData_GL_Accounts');
     for (sObject o : glAccts) {
       AcctSeed__GL_Account__c glAcct = (AcctSeed__GL_Account__c) o;
-      if (glAcct.Name.contains('1050'))
+      if (glAcct.Name.contains('1050')) {
         defaultBankAccount = glAcct;
-      if (glAcct.Name.contains('3525'))
+      }
+      if (glAcct.Name.contains('3525')) {
         currentYearEarningGL = glAcct;
-      if (glAcct.Name.contains('3500'))
+        defaultGls.add( new AcctSeed__GL_Account_Default__c(
+          AcctSeed__GL_Account_Specification__c = 'Current_Year_Earnings_GL_Account',
+          AcctSeed__GL_Account__c = glAcct.Id
+        ));
+      }
+      if (glAcct.Name.contains('3500')) {
         retainedEarningGL = glAcct;
-      if (glAcct.Name.contains('4000'))
+        defaultGls.add( new AcctSeed__GL_Account_Default__c(
+          AcctSeed__GL_Account_Specification__c = 'Retained_Earnings_GL_Account',
+          AcctSeed__GL_Account__c = glAcct.Id
+        ));
+      }
+      if (glAcct.Name.contains('4000')) {
         defaultRevenueGL = glAcct;
-      if (glAcct.Name.contains('1100'))
+      }
+      if (glAcct.Name.contains('1100')) {
         arControlGL = glAcct;
-      if (glAcct.Name.contains('1101'))
+        defaultGls.add( new AcctSeed__GL_Account_Default__c(
+          AcctSeed__GL_Account_Specification__c = 'AR_Control_GL_Account',
+          AcctSeed__GL_Account__c = glAcct.Id
+        ));
+      }
+      if (glAcct.Name.contains('1101')) {
         unappliedCashGL = glAcct;
-      if (glAcct.Name.contains('4900'))
+        defaultGls.add( new AcctSeed__GL_Account_Default__c(
+          AcctSeed__GL_Account_Specification__c = 'Unapplied_Cash_GL_Account',
+          AcctSeed__GL_Account__c = glAcct.Id
+        ));
+      }
+      if (glAcct.Name.contains('4900')) {
         customerPaymentAdjGL = glAcct;
-      if (glAcct.Name.contains('2100'))
+      }
+      if (glAcct.Name.contains('2100')) {
         apControlGL = glAcct;
-      if (glAcct.Name.contains('5185'))
+        defaultGls.add( new AcctSeed__GL_Account_Default__c(
+          AcctSeed__GL_Account_Specification__c = 'AP_Control_GL_Account',
+          AcctSeed__GL_Account__c = glAcct.Id
+        ));
+      }
+      if (glAcct.Name.contains('5185')) {
         vendorPaymentDiscountGL = glAcct;
-      if (glAcct.Name.contains('5882'))
+        defaultGls.add( new AcctSeed__GL_Account_Default__c(
+          AcctSeed__GL_Account_Specification__c = 'Payment_Discount_GL_Account',
+          AcctSeed__GL_Account__c = glAcct.Id
+        ));
+      }
+      if (glAcct.Name.contains('5882')) {
         laborClearingGL = glAcct;
-      if (glAcct.Name.contains('5883'))
+        defaultGls.add( new AcctSeed__GL_Account_Default__c(
+          AcctSeed__GL_Account_Specification__c = 'Labor_GL_Account',
+          AcctSeed__GL_Account__c = glAcct.Id
+        ));
+      }
+      if (glAcct.Name.contains('5883')) {
         defaultProjectTaskLaborGL = glAcct;
-      if (glAcct.Name.contains('2105'))
+        defaultGls.add( new AcctSeed__GL_Account_Default__c(
+          AcctSeed__GL_Account_Specification__c = 'Default_Project_Task_Labor_GL_Account',
+          AcctSeed__GL_Account__c = glAcct.Id
+        ));
+      }
+      if (glAcct.Name.contains('2105')) {
         vouchersPayableGL = glAcct;
-      if (glAcct.Name.contains('5195'))
+        defaultGls.add( new AcctSeed__GL_Account_Default__c(
+          AcctSeed__GL_Account_Specification__c = 'Vouchers_Payable_GL_Account',
+          AcctSeed__GL_Account__c = glAcct.Id
+        ));
+      }
+      if (glAcct.Name.contains('5195')) {
         inventoryVarianceGL = glAcct;
-      if (glAcct.Name.contains('1300'))
+      }
+      if (glAcct.Name.contains('1300')) {
         workInProgressGL = glAcct;
-      if (glAcct.Name.contains('2280'))
+        defaultGls.add( new AcctSeed__GL_Account_Default__c(
+          AcctSeed__GL_Account_Specification__c = 'Work_in_Process_GL_Account',
+          AcctSeed__GL_Account__c = glAcct.Id
+        ));
+      }
+      if (glAcct.Name.contains('2280')) {
         salesTaxCollected = glAcct;
-      if (glAcct.Name.contains('2281'))
+      }
+      if (glAcct.Name.contains('2281')) {
         salesTaxPaid = glAcct;
+      }
     }
   }
 
@@ -144,5 +202,10 @@ public class Factory_AccountingSettings {
     );
     rec.AcctSeed__Inventory_Valuation_Method__c = 'Standard Cost';
     insert rec;
+
+    for( AcctSeed__GL_Account_Default__c d : defaultGls ){
+      d.AcctSeed__Ledger__c = defaultLedger.Id;
+    }
+    insert defaultGls;
   }
 }
