@@ -13,9 +13,8 @@ public with sharing class FactoryStore_InventoryController {
   @AuraEnabled(Cacheable=true)
   public static List<Product2> fetchBoatsBySeries(String seriesName) {
     Set<String> series = new Set<String>();
-    if (seriesName != 'R') {
-      series.add(seriesName);
-    } else {
+    series.add(seriesName);
+    if (seriesName == 'R') {
       series.add('WideBody');
       series.add('ProSport');
       series.add('Angler');
