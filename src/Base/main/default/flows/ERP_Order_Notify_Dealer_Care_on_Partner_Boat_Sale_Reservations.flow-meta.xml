@@ -69,7 +69,7 @@
         <connector>
             <targetReference>Validate_ERP_Record_Type</targetReference>
         </connector>
-        <filterLogic>or</filterLogic>
+        <filterLogic>and</filterLogic>
         <filters>
             <field>Name</field>
             <operator>EqualTo</operator>
@@ -97,33 +97,12 @@
             <targetReference>Get_Partner_Boat_Sale_RecordTypeID</targetReference>
         </connector>
         <doesRequireRecordChangedToMeetCriteria>true</doesRequireRecordChangedToMeetCriteria>
-        <filterLogic>(1 and 2) or (3 and 4)</filterLogic>
-        <filters>
-            <field>Retail_ERP__c</field>
-            <operator>IsNull</operator>
-            <value>
-                <booleanValue>true</booleanValue>
-            </value>
-        </filters>
+        <filterLogic>and</filterLogic>
         <filters>
             <field>Reserved_For_Customer_Account__c</field>
             <operator>IsNull</operator>
             <value>
                 <booleanValue>false</booleanValue>
-            </value>
-        </filters>
-        <filters>
-            <field>Retail_ERP__c</field>
-            <operator>IsNull</operator>
-            <value>
-                <booleanValue>false</booleanValue>
-            </value>
-        </filters>
-        <filters>
-            <field>Reserved_For_Customer_Account__c</field>
-            <operator>IsNull</operator>
-            <value>
-                <booleanValue>true</booleanValue>
             </value>
         </filters>
         <object>AcctSeed__Project__c</object>
