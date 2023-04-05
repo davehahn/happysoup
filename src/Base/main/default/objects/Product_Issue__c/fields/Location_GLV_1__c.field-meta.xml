@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Location_GLV_1__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <description>The Location where the product issue stems from (Accounting Variable GLV1)</description>
+    <externalId>false</externalId>
+    <label>Location</label>
+    <lookupFilter>
+        <active>true</active>
+        <filterItems>
+            <field>AcctSeed__Accounting_Variable__c.AcctSeed__Type__c</field>
+            <operation>equals</operation>
+            <value>GL Account Variable 1</value>
+        </filterItems>
+        <isOptional>false</isOptional>
+    </lookupFilter>
+    <referenceTo>AcctSeed__Accounting_Variable__c</referenceTo>
+    <relationshipLabel>Product Issues (Location)</relationshipLabel>
+    <relationshipName>Product_Issues_Location</relationshipName>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>
