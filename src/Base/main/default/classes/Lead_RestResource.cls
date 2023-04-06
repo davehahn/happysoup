@@ -1,12 +1,11 @@
 /**
  * Created by dave on 2021-04-21.
  */
-@RestResource(urlMapping='/WebToLead/*')
+@RestResource(UrlMapping='/WebToLead/*')
 global with sharing class Lead_RestResource {
   global class RestResult {
     public String status;
     public WebToLeadWrapper data;
-    public LeadSubmissionHistoryWrapper lfhdata;
     public String errorMessage;
     public RestResult() {
     }
@@ -35,32 +34,37 @@ global with sharing class Lead_RestResource {
     public String leadSource;
     public String description;
     public Boolean leadNotificationPending;
-    public String closestDealer;
+    public Map<String, String> boatAppraisalData;
+    public Map<String, String> financingApplicationData;
+//    public String closestDealer;
 
     public WebToLeadWrapper() {
     }
 
     public WebToLeadWrapper toLeadObject() {
       this.record = new Lead(
-        FirstName = this.firstName,
-        LastName = this.lastName,
-        Street = this.street,
-        City = this.city,
-        State = this.province,
-        Country = this.country,
-        PostalCode = this.postalCode,
-        Email = this.email,
-        Phone = this.phone,
-        Description = this.description,
-        hubspot_plan_to_purchase__c = this.purchaseByDate,
-        hubspot_Boat_Type__c = this.boatType,
-        BoatModel__c = this.boatModel,
-        hubspot_subscribe_legend_newsletter__c = this.subscribeToNewsletter,
-        Preferred_Language__c = this.language,
-        Marketing_Cloud_Notes__c = this.notes,
-        LeadSource = this.leadSource,
-        Lead_Notification_Pending__c = true
+              FirstName = this.firstName,
+              LastName = this.lastName,
+              Street = this.street,
+              City = this.city,
+              State = this.province,
+              Country = this.country,
+              PostalCode = this.postalCode,
+              Email = this.email,
+              Phone = this.phone,
+              Description = this.description,
+              hubspot_plan_to_purchase__c = this.purchaseByDate,
+              hubspot_Boat_Type__c = this.boatType,
+              hubspot_subscribe_legend_newsletter__c = this.subscribeToNewsletter,
+              Preferred_Language__c = this.language,
+              Marketing_Cloud_Notes__c = this.notes,
+              LeadSource = this.leadSource,
+              Lead_Notification_Pending__c = true
+//              CreatedById = '2F005i0000002c3UY'
       );
+      if(this.boatModel != ''){
+        this.record.BoatModel__c = this.boatModel;
+      }
       return this;
     }
 
@@ -100,81 +104,18 @@ global with sharing class Lead_RestResource {
         insert new CampaignMember(LeadId = this.id, CampaignId = this.campaignId);
       }
     }
-  }
 
-  public class LeadSubmissionHistoryWrapper {
-    private Lead_Submission_History__c submission;
-
-    public String id;
-    public String firstName;
-    public String lastName;
-    public String phone;
-    public String street;
-    public String city;
-    public String province;
-    public String country;
-    public String postalCode;
-    public String email;
-    public String purchaseByDate;
-    public String boatType;
-    public String boatSeries;
-    public String boatModel;
-    public String boatName;
-    public String modelOfInterestSerialNumber;
-    public String modelOfInterestSerialNumberId;
-    public String subscribeToNewsletter;
-    public String campaignId;
-    public String conversionId;
-    public String language;
-    public String notes;
-    public String leadSource;
-    public String description;
-    public String formName;
-    public String specialConditions;
-    public Boolean leadNotificationPending;
-    public String closestDealer;
-    public String leadStatus;
-
-    public LeadSubmissionHistoryWrapper() {
+    public void createBoatAppraisalRecord(String data){
+      BoatAppraisal_Service baService = new BoatAppraisal_Service();
+      System.debug('in create appraisal ' + data);
+      System.debug('this.id: ' + this.id);
+      baService.insertBoatAppraisalRequest(data, this.id);
     }
 
-    public LeadSubmissionHistoryWrapper toSubmissionHistoryObject(RestResult result) {
-      String listName = this.firstName + ' ' + this.lastName + ': ' + date.today().format();
-      this.submission = new Lead_Submission_History__c(
-        Lead_ID__c = result.data.id,
-        Name = listName,
-        First_Name__c = this.firstName,
-        Last_Name__c = this.lastName,
-        Address__c = this.street,
-        City__c = this.city,
-        Province__c = this.province,
-        Postal_Code__c = this.postalCode,
-        Email__c = this.email,
-        Phone_Number__c = this.phone,
-        Description__c = this.description,
-        Purchase_By_Date__c = this.purchaseByDate,
-        Boat_Type__c = this.boatType,
-        Boat_Series__c = this.boatSeries,
-        Boat_Model__c = this.boatModel,
-        Boat_Name__c = this.boatName,
-        Model_of_Interest_Serial_Number__c = this.modelOfInterestSerialNumber,
-        Model_of_Interest_Serial_Number_Lookup__c = this.modelOfInterestSerialNumberId,
-        Subscribe_to_Newsletter__c = this.subscribeToNewsletter,
-        Preferred_Language__c = this.language,
-        Notes__c = this.notes,
-        Lead_Source__c = this.leadSource,
-        Form_Name__c = this.formName,
-        Campaign__c = this.campaignId,
-        Conversion_Id__c = this.conversionId,
-        Special_Conditions__c = this.specialConditions,
-        Lead_Notification_Pending__c = true
-        //              Closest_Dealer__c = result.data.closestDealer
-      );
-      return this;
-    }
-
-    public Lead_Submission_History__c lshGetRecord() {
-      return this.submission;
+    public void createFinancingApplicationRecord(String data){
+      FinancingApplication_Service faService = new FinancingApplication_Service();
+      System.debug('in financing Application ' + data);
+      faService.insertFinancingApplication(data, this.id);
     }
   }
 
@@ -183,33 +124,14 @@ global with sharing class Lead_RestResource {
     RestRequest req = RestContext.request;
     RestResponse res = RestContext.response;
     String jsonWrapper = req.requestBody.toString();
-    WebToLeadWrapper wrapper = (WebToLeadWrapper) JSON.deserialize(jsonWrapper, WebToLEadWrapper.class);
+    WebToLeadWrapper wrapper = (WebToLeadWrapper) JSON.deserialize(jsonWrapper, WebToLeadWrapper.class);
     RestResult result = handlePost(wrapper);
     if (result.status == 'success') {
       res.statusCode = 200;
       res.responseBody = Blob.valueOf('{"status": "success", "id": "' + result.data.id + '"}');
-
       // Add record to Lead Submission History
-      LeadSubmissionHistoryWrapper lshWrapper = (LeadSubmissionHistoryWrapper) JSON.deserialize(
-        jsonWrapper,
-        LeadSubmissionHistoryWrapper.class
-      );
-      try {
-        insert lshWrapper.toSubmissionHistoryObject(result).lshGetRecord();
-        res.responseBody = Blob.valueOf(
-          '{"status": "success", "id": "' +
-          result.data.id +
-          '", "lshStatus": "success"}'
-        );
-      } catch (Exception error) {
-        res.responseBody = Blob.valueOf(
-          '{"status": "success", "id": "' +
-          result.data.id +
-          '", "lshStatus": "error", "lshError": "' +
-          error.getMessage() +
-          '"}'
-        );
-      }
+      createLeadSubmissionHistoryRecord(req, result);
+
     } else {
       res.statusCode = 500;
       res.responseBody = Blob.valueOf('{"status": "error", "message": "' + result.errorMessage + '"}');
@@ -217,10 +139,17 @@ global with sharing class Lead_RestResource {
     return;
   }
 
+  public static void createLeadSubmissionHistoryRecord(RestRequest req, RestResult result){
+    LeadSubmissionHistories_Service lshService = new LeadSubmissionHistories_Service();
+    lshService.insertLeadSubmissionHistory(req, result);
+  }
+
   @TestVisible
   private static RestResult handlePost(WebToLeadWrapper wrapper) {
     System.Savepoint savePoint = Database.setSavepoint();
     RestResult response = new RestResult();
+//    System.debug(wrapper);
+//    System.debug(wrapper.boatAppraisalData);
     System.debug(wrapper.toLeadObject().getRecord());
     Lead_Service service = new Lead_Service(wrapper.toLeadObject().getRecord());
     Lead_Service.LeadSaveResult sr = service.insertOrUpdateDuplicate();
@@ -237,29 +166,31 @@ global with sharing class Lead_RestResource {
           response.data = null;
         }
       }
+      if (wrapper.boatAppraisalData != null) {
+        try{
+          wrapper.createBoatAppraisalRecord(JSON.serialize((wrapper.boatAppraisalData)));
+        } catch(Exception e){
+          Database.rollback(savePoint);
+          response.status = 'error';
+          response.errorMessage = 'Boat Appraisal error: ' + e.getMessage();
+          response.data = null;
+        }
+      }
+      if(wrapper.financingApplicationData != null){
+        try{
+          wrapper.createFinancingApplicationRecord(JSON.serialize((wrapper.financingApplicationData)));
+        } catch (Exception e){
+          Database.rollback(savePoint);
+          response.status = 'error';
+          response.errorMessage = 'Finance Application error: ' + e.getMessage();
+          response.data = null;
+        }
+      }
+
       return response;
     }
     response.status = 'error';
     response.errorMessage = sr.getErrors()[0];
     return response;
   }
-
-  //  @TestVisible
-  //  private static RestResult handleSubmissionHistory( LeadSubmissionHistoryWrapper lshWrapper )
-  //  {
-  //    RestResult response = new RestResult();
-  //    Database.DMLOptions dml = new Database.DMLOptions();
-  //    dml.optAllOrNone = false;
-  //    Lead_Submission_History__c theSubmission;
-  //    Database.SaveResult saveResult = Database.insert( theSubmission, dml );
-  //    if( saveResult.isSuccess() )
-  //    {
-  //      response.status = 'success';
-  //    }
-  //    else
-  //    {
-  //      response.status = 'error';
-  //    }
-  //    return response;
-  //  }
 }
