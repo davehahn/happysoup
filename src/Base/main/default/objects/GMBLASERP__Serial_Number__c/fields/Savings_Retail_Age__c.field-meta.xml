@@ -3,10 +3,10 @@
     <fullName>Savings_Retail_Age__c</fullName>
     <description>Retail Age Savings Formula.</description>
     <externalId>false</externalId>
-    <formula>ROUND( Promotion_Amount__c  * Retail_Age_Savings_Percent__c , 2)</formula>
+    <formula>- FLOOR(  Current_Retail_Price__c   * Retail_Age_Savings_Percent__c / IF(Current_Retail_Price__c&gt;25000, 500, 250)) * IF(Current_Retail_Price__c&gt;25000, 500, 250)</formula>
     <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
     <inlineHelpText>Retail Age Savings Formula. 
-Promotion Amount x Retail Age Savings %</inlineHelpText>
+Current Retail Price x Retail Age Savings %</inlineHelpText>
     <label>Savings: Retail Age</label>
     <precision>18</precision>
     <required>false</required>
