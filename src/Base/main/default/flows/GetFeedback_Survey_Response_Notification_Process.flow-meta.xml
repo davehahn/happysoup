@@ -4,7 +4,7 @@
         <name>Chatter_John_Craig_New_NPS_Survey</name>
         <label>Chatter John Craig New NPS Survey</label>
         <locationX>248</locationX>
-        <locationY>935</locationY>
+        <locationY>1295</locationY>
         <actionName>chatterPost</actionName>
         <actionType>chatterPost</actionType>
         <connector>
@@ -29,7 +29,7 @@
         <name>Chatter_Whitefish_CES</name>
         <label>Chatter Whitefish CES</label>
         <locationX>50</locationX>
-        <locationY>1511</locationY>
+        <locationY>1871</locationY>
         <actionName>chatterPost</actionName>
         <actionType>chatterPost</actionType>
         <flowTransactionModel>CurrentTransaction</flowTransactionModel>
@@ -71,8 +71,15 @@
                     <stringValue>Customer Experience FollowUp Survey</stringValue>
                 </rightValue>
             </conditions>
+            <conditions>
+                <leftValueReference>$Record.Name</leftValueReference>
+                <operator>NotEqualTo</operator>
+                <rightValue>
+                    <stringValue>GetFeedback Survey Response: The Legend Service Experience 2.0 NPS ONLY</stringValue>
+                </rightValue>
+            </conditions>
             <connector>
-                <targetReference>Get_User_Tony_A</targetReference>
+                <targetReference>NPS_Scores</targetReference>
             </connector>
             <label>Internal Survey</label>
         </rules>
@@ -81,7 +88,7 @@
         <name>Validate_John_Craig</name>
         <label>Validate John Craig and Yves Lavallee</label>
         <locationX>380</locationX>
-        <locationY>815</locationY>
+        <locationY>1175</locationY>
         <defaultConnector>
             <targetReference>Warehouse_Split</targetReference>
         </defaultConnector>
@@ -106,7 +113,7 @@
         <name>Validate_Users</name>
         <label>Validate Users</label>
         <locationX>182</locationX>
-        <locationY>1391</locationY>
+        <locationY>1751</locationY>
         <defaultConnectorLabel>Else</defaultConnectorLabel>
         <rules>
             <name>Active_User</name>
@@ -142,7 +149,7 @@
         <name>Warehouse_Split</name>
         <label>Warehouse Split</label>
         <locationX>380</locationX>
-        <locationY>1151</locationY>
+        <locationY>1511</locationY>
         <defaultConnectorLabel>Else</defaultConnectorLabel>
         <rules>
             <name>Whitefish</name>
@@ -168,6 +175,7 @@
         </rules>
     </decisions>
     <description>Handles GetFeedback Survey notifications for all RecordTypes and Retail Locations.</description>
+    <environments>Default</environments>
     <interviewLabel>GetFeedback Survey Response: Notification Process {!$Flow.CurrentDateTime}</interviewLabel>
     <label>GetFeedback Survey Response: Notification Process</label>
     <processMetadataValues>
@@ -190,13 +198,43 @@
     </processMetadataValues>
     <processType>AutoLaunchedFlow</processType>
     <recordLookups>
+        <name>Get_ID_Marianne_F</name>
+        <label>Get ID Marianne F</label>
+        <locationX>380</locationX>
+        <locationY>935</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Get_NancyD_ID</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Email</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>mfrench@legendboats.com</stringValue>
+            </value>
+        </filters>
+        <filters>
+            <field>IsActive</field>
+            <operator>EqualTo</operator>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </filters>
+        <object>User</object>
+        <outputAssignments>
+            <assignToReference>MFrenchID</assignToReference>
+            <field>Id</field>
+        </outputAssignments>
+    </recordLookups>
+    <recordLookups>
         <name>Get_John_Craig_User_ID</name>
         <label>Get John Craig User ID</label>
         <locationX>380</locationX>
-        <locationY>695</locationY>
+        <locationY>815</locationY>
         <assignNullValuesIfNoRecordsFound>true</assignNullValuesIfNoRecordsFound>
         <connector>
-            <targetReference>Validate_John_Craig</targetReference>
+            <targetReference>Get_ID_Marianne_F</targetReference>
         </connector>
         <filterLogic>and</filterLogic>
         <filters>
@@ -220,10 +258,40 @@
         </outputAssignments>
     </recordLookups>
     <recordLookups>
+        <name>Get_NancyD_ID</name>
+        <label>Get NancyD ID</label>
+        <locationX>380</locationX>
+        <locationY>1055</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Validate_John_Craig</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Username</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>ndegen@legendboats.com</stringValue>
+            </value>
+        </filters>
+        <filters>
+            <field>IsActive</field>
+            <operator>EqualTo</operator>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </filters>
+        <object>User</object>
+        <outputAssignments>
+            <assignToReference>NDegenID</assignToReference>
+            <field>Id</field>
+        </outputAssignments>
+    </recordLookups>
+    <recordLookups>
         <name>Get_NDegen_User_ID</name>
         <label>Get NDegen User ID</label>
         <locationX>182</locationX>
-        <locationY>1271</locationY>
+        <locationY>1631</locationY>
         <assignNullValuesIfNoRecordsFound>true</assignNullValuesIfNoRecordsFound>
         <connector>
             <targetReference>Validate_Users</targetReference>
@@ -254,7 +322,7 @@
         <name>Get_User_Tony_A</name>
         <label>Get User Tony A</label>
         <locationX>380</locationX>
-        <locationY>455</locationY>
+        <locationY>575</locationY>
         <assignNullValuesIfNoRecordsFound>true</assignNullValuesIfNoRecordsFound>
         <connector>
             <targetReference>Get_Vince_ID</targetReference>
@@ -264,7 +332,7 @@
             <field>Username</field>
             <operator>EqualTo</operator>
             <value>
-                <stringValue>vpotter@legendboats.com</stringValue>
+                <stringValue>tacosta@legendboats.com</stringValue>
             </value>
         </filters>
         <filters>
@@ -284,7 +352,7 @@
         <name>Get_Vince_ID</name>
         <label>Get Vince ID</label>
         <locationX>380</locationX>
-        <locationY>575</locationY>
+        <locationY>695</locationY>
         <assignNullValuesIfNoRecordsFound>true</assignNullValuesIfNoRecordsFound>
         <connector>
             <targetReference>Get_John_Craig_User_ID</targetReference>
@@ -310,6 +378,29 @@
             <field>Id</field>
         </outputAssignments>
     </recordLookups>
+    <recordLookups>
+        <name>NPS_Scores</name>
+        <label>NPS Score</label>
+        <locationX>380</locationX>
+        <locationY>455</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Get_User_Tony_A</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </filters>
+        <object>GetFeedback_Survey_Response__c</object>
+        <outputAssignments>
+            <assignToReference>NPS_Score</assignToReference>
+            <field>NPS_Score__c</field>
+        </outputAssignments>
+    </recordLookups>
     <start>
         <locationX>485</locationX>
         <locationY>0</locationY>
@@ -324,7 +415,7 @@
     <textTemplates>
         <name>ChatterBodyJohnCraig</name>
         <isViewedAsPlainText>true</isViewedAsPlainText>
-        <text>@[{!JohnCraigUserID}] @[{!VincePotterUserID}] {!tonyAid} A new NPS Survey response has been received.</text>
+        <text>@[{!JohnCraigUserID}] @[{!VincePotterUserID}] @[{!tonyAid}] @[{!MFrenchID}] @[{!NDegenID}] A new NPS Survey response has been received. NPS Score = {!NPS_Score}!</text>
     </textTemplates>
     <textTemplates>
         <name>ChatterBodyWhitefishCES</name>
@@ -353,11 +444,32 @@
         <isOutput>false</isOutput>
     </variables>
     <variables>
+        <name>MFrenchID</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
         <name>NancyUserID</name>
         <dataType>String</dataType>
         <isCollection>false</isCollection>
         <isInput>false</isInput>
         <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>NDegenID</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>NPS_Score</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>true</isOutput>
     </variables>
     <variables>
         <description>Captures Tony Acosta&apos;s ID</description>
