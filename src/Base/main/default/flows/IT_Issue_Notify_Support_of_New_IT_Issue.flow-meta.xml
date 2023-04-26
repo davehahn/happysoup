@@ -2,7 +2,7 @@
 <Flow xmlns="http://soap.sforce.com/2006/04/metadata">
     <actionCalls>
         <name>Send_Email_to_Ben_Fram</name>
-        <label>Send Email to Ben Fram</label>
+        <label>Send Email to IT support Team</label>
         <locationX>176</locationX>
         <locationY>335</locationY>
         <actionName>emailSimple</actionName>
@@ -17,7 +17,7 @@
         <inputParameters>
             <name>emailAddresses</name>
             <value>
-                <stringValue>bfram@legendboats.com, snadeau@legendboats.com, dhahn@legendboats.com</stringValue>
+                <stringValue>dhahn@legendboats.com, jdewar@legendboats.com</stringValue>
             </value>
         </inputParameters>
         <inputParameters>
@@ -34,7 +34,8 @@
         </inputParameters>
     </actionCalls>
     <apiVersion>52.0</apiVersion>
-    <description>Sends an email notification to Steven Nadeau when a new IT Issue record is created.</description>
+    <description>Sends an email notification to IT support Team when a new IT Issue record is created.</description>
+    <environments>Default</environments>
     <interviewLabel>IT Issue: Notify Support of New IT Issue {!$Flow.CurrentDateTime}</interviewLabel>
     <label>IT Issue: Notify Support of New IT Issue</label>
     <processMetadataValues>
