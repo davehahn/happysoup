@@ -56,8 +56,44 @@
                 <field>Subject__c</field>
             </layoutItems>
             <layoutItems>
-                <behavior>Edit</behavior>
+                <behavior>Required</behavior>
                 <field>Description__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>Missing_Skills__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>Gaps__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>Departments_Affected__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>Desired_Outcome__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>Current_Documentation__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>Missing_Documentation__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>Required_Training__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>Measures__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>Meets_Needs__c</field>
             </layoutItems>
         </layoutColumns>
         <style>OneColumn</style>
@@ -105,6 +141,35 @@
         <layoutColumns/>
         <style>CustomLinks</style>
     </layoutSections>
+    <miniLayout>
+        <fields>Type__c</fields>
+        <fields>Priority__c</fields>
+        <fields>Location_GLV1__c</fields>
+        <fields>Department_GLV2__c</fields>
+        <fields>Subject__c</fields>
+        <fields>Requested_Due_Date__c</fields>
+        <fields>Description__c</fields>
+        <fields>Missing_Skills__c</fields>
+        <fields>Gaps__c</fields>
+        <fields>Departments_Affected__c</fields>
+        <fields>Desired_Outcome__c</fields>
+        <fields>Current_Documentation__c</fields>
+        <fields>Missing_Documentation__c</fields>
+        <fields>Required_Training__c</fields>
+        <fields>Measures__c</fields>
+        <fields>Meets_Needs__c</fields>
+        <relatedLists>
+            <relatedList>RelatedNoteList</relatedList>
+        </relatedLists>
+        <relatedLists>
+            <fields>NAME</fields>
+            <relatedList>Support_Request_Stakeholder__c.Support_Request__c</relatedList>
+        </relatedLists>
+        <relatedLists>
+            <fields>NAME</fields>
+            <relatedList>Support_Request_Affected_Party__c.Support_Request__c</relatedList>
+        </relatedLists>
+    </miniLayout>
     <platformActionList>
         <actionListContext>Record</actionListContext>
         <platformActionListItems>
@@ -142,6 +207,17 @@
         <relatedList>RelatedFileList</relatedList>
     </relatedLists>
     <relatedLists>
+        <relatedList>RelatedNoteList</relatedList>
+    </relatedLists>
+    <relatedLists>
+        <fields>NAME</fields>
+        <relatedList>Support_Request_Stakeholder__c.Support_Request__c</relatedList>
+    </relatedLists>
+    <relatedLists>
+        <fields>NAME</fields>
+        <relatedList>Support_Request_Affected_Party__c.Support_Request__c</relatedList>
+    </relatedLists>
+    <relatedLists>
         <relatedList>RelatedEntityHistoryList</relatedList>
     </relatedLists>
     <showEmailCheckbox>false</showEmailCheckbox>
@@ -150,7 +226,7 @@
     <showRunAssignmentRulesCheckbox>false</showRunAssignmentRulesCheckbox>
     <showSubmitAndAttachButton>false</showSubmitAndAttachButton>
     <summaryLayout>
-        <masterLabel>00hf0000001J3ZH</masterLabel>
+        <masterLabel>00h4z00000O7j9a</masterLabel>
         <sizeX>4</sizeX>
         <sizeY>0</sizeY>
         <summaryLayoutStyle>Default</summaryLayoutStyle>
